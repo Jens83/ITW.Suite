@@ -1,0 +1,174 @@
+﻿@model ITW.Web.ViewModels.Account.PasswortAendernViewModel
+
+@{
+    Layout = null;
+    ViewData["Title"] = "Passwort ändern";
+
+    var returnUrl = Model?.ReturnUrl ?? string.Empty;
+
+    if (string.IsNullOrWhiteSpace(returnUrl))
+    {
+        returnUrl = Context.Request.Query["returnUrl"].ToString();
+    }
+
+    if (string.IsNullOrWhiteSpace(returnUrl) && Context.Request.HasFormContentType)
+    {
+        returnUrl = Context.Request.Form["returnUrl"].ToString();
+    }
+
+    var authThemeClass = "theme-itw";
+    var zielbereichName = "Intensivtransport";
+
+    if (!string.IsNullOrWhiteSpace(returnUrl))
+    {
+        if (returnUrl.Contains("/Verwaltung", StringComparison.OrdinalIgnoreCase))
+        {
+            authThemeClass = "theme-admin";
+            zielbereichName = "Verwaltung";
+        }
+        else if (returnUrl.Contains("/Geschaeftsfuehrung", StringComparison.OrdinalIgnoreCase))
+        {
+            authThemeClass = "theme-gf";
+            zielbereichName = "Geschäftsführung";
+        }
+        else if (returnUrl.Contains("/Intensivtransport", StringComparison.OrdinalIgnoreCase))
+        {
+            authThemeClass = "theme-itw";
+            zielbereichName = "Intensivtransport";
+        }
+    }
+}
+
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Intensivtransport Neubrandenburg</title>
+
+    <partial name="~/Views/Shared/Komponenten/_AppHeadResources.cshtml" />
+</head>
+<body class="@authThemeClass app-auth-body app-loading-boot">
+    <partial name="~/Views/Shared/Komponenten/_AppLoadingOverlay.cshtml" />
+
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-12 col-md-8 col-lg-5 col-xl-4">
+                <div class="app-auth-shell">
+                    <div class="app-auth-card w-100">
+                        <div class="app-auth-card__body">
+                            <header class="app-auth-hero">
+                                <div class="app-auth-hero__label">
+                                    <i class="bi bi-shield-lock"></i>
+                                    Zugang aktualisieren
+                                </div>
+
+                                <div class="app-auth-hero__brand">
+                                    <span class="app-brand-name">
+                                        <span class="app-brand-name__primary">Intensivtransport</span>
+                                        <span class="app-brand-name__accent">Neubrandenburg</span>
+                                    </span>
+                                </div>
+
+                                <p class="app-auth-hero__text">
+                                    Ändern Sie Ihr Passwort, um den Zugriff auf den Bereich @zielbereichName sicher fortzusetzen.
+                                </p>
+                            </header>
+
+                            <hr class="app-auth-divider" />
+
+                            @if (Model?.IstErzwungen == true)
+                            {
+                                <div class="app-auth-note app-auth-note--warning">
+                                    <div class="app-auth-note__icon">
+                                        <i class="bi bi-exclamation-triangle"></i>
+                                    </div>
+
+                                    <div>
+                                        <p class="app-auth-note__title">Passwortänderung erforderlich</p>
+                                        <p class="app-auth-note__text">
+                                            Für dieses Benutzerkonto wurde ein temporäres Passwort gesetzt.
+                                            Bitte ändern Sie das Passwort jetzt sofort, bevor Sie andere Bereiche der Anwendung verwenden.
+                                        </p>
+                                    </div>
+                                </div>
+                            }
+
+                            <div class="app-auth-form-header">
+                                <h1 class="app-auth-form-title">Passwort ändern</h1>
+                                <p class="app-auth-form-text">Bitte geben Sie Ihr aktuelles und anschließend das neue Passwort ein.</p>
+                            </div>
+
+                            <form asp-action="PasswortAendern"
+                                  asp-route-returnUrl="@returnUrl"
+                                  method="post"
+                                  novalidate
+                                  data-app-loading-form
+                                  data-app-loading-text="Passwort wird gespeichert...">
+                                @Html.AntiForgeryToken()
+                                <input asp-for="ReturnUrl" type="hidden" value="@returnUrl" />
+                                <input asp-for="IstErzwungen" type="hidden" />
+
+                                <div asp-validation-summary="ModelOnly" class="app-auth-validation"></div>
+
+                                <div class="app-auth-field">
+                                    <label asp-for="AktuellesPasswort" class="form-label app-auth-label"></label>
+                                    <div class="itw-input-wrapper shadow-sm">
+                                        <i class="bi bi-key"></i>
+                                        <input asp-for="AktuellesPasswort"
+                                               type="password"
+                                               class="form-control"
+                                               autocomplete="current-password"
+                                               placeholder="Aktuelles Passwort" />
+                                    </div>
+                                    <span asp-validation-for="AktuellesPasswort" class="app-auth-error"></span>
+                                </div>
+
+                                <div class="app-auth-field">
+                                    <label asp-for="NeuesPasswort" class="form-label app-auth-label"></label>
+                                    <div class="itw-input-wrapper shadow-sm">
+                                        <i class="bi bi-shield-lock"></i>
+                                        <input asp-for="NeuesPasswort"
+                                               type="password"
+                                               class="form-control"
+                                               autocomplete="new-password"
+                                               placeholder="Neues Passwort" />
+                                    </div>
+                                    <span asp-validation-for="NeuesPasswort" class="app-auth-error"></span>
+                                </div>
+
+                                <div class="app-auth-field">
+                                    <label asp-for="NeuesPasswortBestaetigung" class="form-label app-auth-label"></label>
+                                    <div class="itw-input-wrapper shadow-sm">
+                                        <i class="bi bi-shield-check"></i>
+                                        <input asp-for="NeuesPasswortBestaetigung"
+                                               type="password"
+                                               class="form-control"
+                                               autocomplete="new-password"
+                                               placeholder="Neues Passwort wiederholen" />
+                                    </div>
+                                    <span asp-validation-for="NeuesPasswortBestaetigung" class="app-auth-error"></span>
+                                </div>
+
+                                <div class="app-auth-actions">
+                                    <button type="submit" class="app-btn app-btn-accent app-btn-lg app-btn-block">
+                                        <i class="bi bi-save"></i>
+                                        Passwort speichern
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="app-auth-footer">
+                    &copy; 2026 Intensivtransport Neubrandenburg
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <partial name="~/Views/Shared/Komponenten/_AppScriptResources.cshtml" />
+    <partial name="~/Views/Shared/_ValidationScriptsPartial.cshtml" />
+</body>
+</html>

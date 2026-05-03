@@ -1,0 +1,361 @@
+﻿@model ITW.Web.Areas.Intensivtransport.ViewModels.Dienstplan.DienstplanIndexViewModel
+
+@{
+    Layout = ViewData["AreaLayoutPath"]?.ToString();
+    ViewData["Title"] = "Dienstplan";
+
+    var finalError = TempData["ErrorMessage"] as string;
+    if (string.IsNullOrEmpty(finalError) && Model != null && !Model.IsSuccess)
+    {
+        finalError = Model.ErrorMessage ?? "Die Dienstplandaten konnten nicht geladen werden.";
+    }
+
+    var successMessage = TempData["SuccessMessage"] as string;
+    var hatModel = Model != null;
+    var hatAktivePeriode = hatModel && Model!.AktivePeriodeId.HasValue && Model.HatOffeneWunschphase;
+
+    var heroText = "Übersicht der offenen Wunschphasen und Abgabe Ihrer Dienstwünsche.";
+    if (hatModel && Model!.IstFestangestellt)
+    {
+        heroText = "Geben Sie Wunschtage ab und markieren Sie bei Bedarf Tage, an denen Sie nicht verfügbar sind.";
+    }
+    else if (hatModel && Model!.IstFreelancer)
+    {
+        heroText = "Geben Sie Ihre Wunschtage für die offene Periode ab. Vorher muss die gewünschte Monatsanzahl gespeichert werden.";
+    }
+}
+
+<div class="app-wunsch-page">
+    <header class="app-wunsch-hero">
+        <div class="app-wunsch-hero__label">
+            <i class="bi bi-calendar3"></i>
+            Dienstplan
+        </div>
+
+        <h1 class="app-wunsch-hero__title">Wunschkalender</h1>
+        <p class="app-wunsch-hero__text">@heroText</p>
+    </header>
+
+    @if (!string.IsNullOrWhiteSpace(successMessage) || !string.IsNullOrWhiteSpace(finalError))
+    {
+        <div class="app-status-stack">
+            @if (!string.IsNullOrWhiteSpace(successMessage))
+            {
+                @await Html.PartialAsync(
+                "~/Views/Shared/Komponenten/_AppStatusMessage.cshtml",
+                successMessage,
+                new ViewDataDictionary(ViewData)
+                {
+                    ["Variant"] = "success",
+                    ["Title"] = "Erfolgreich gespeichert",
+                    ["AutoHide"] = true,
+                    ["AutoHideMilliseconds"] = 3000
+                })
+                }
+
+            @if (!string.IsNullOrWhiteSpace(finalError))
+            {
+                @await Html.PartialAsync(
+                "~/Views/Shared/Komponenten/_AppStatusMessage.cshtml",
+                finalError,
+                new ViewDataDictionary(ViewData)
+                {
+                    ["Variant"] = "danger",
+                    ["Title"] = "System-Hinweis",
+                    ["AutoHide"] = false
+                })
+                }
+        </div>
+    }
+
+    @if (hatModel && !hatAktivePeriode)
+    {
+        <section class="app-wunsch-empty">
+            <div class="app-wunsch-empty__body">
+                <div class="app-wunsch-empty__icon">
+                    <i class="bi bi-calendar-x"></i>
+                </div>
+
+                <h2 class="app-wunsch-empty__title">Derzeit ist keine Wunschphase geöffnet</h2>
+                <p class="app-wunsch-empty__text">
+                    Sobald für eine neue Periode die Wunschphase geöffnet wurde, erscheint hier automatisch Ihr Kalender zur Dienstwunsch-Abgabe.
+                    Aktuell sind keine Eingaben erforderlich.
+                </p>
+
+                <div class="app-wunsch-empty__actions">
+                    <a asp-area="Intensivtransport"
+                       asp-controller="Dashboard"
+                       asp-action="Index"
+                       class="app-btn app-btn-neutral"
+                       data-app-loading-link
+                       data-app-loading-text="Startseite wird geöffnet...">
+                        <i class="bi bi-house-door"></i>
+                        Zur Startseite
+                    </a>
+                </div>
+            </div>
+        </section>
+    }
+
+    @if (hatModel && hatAktivePeriode)
+    {
+        @if (Model!.IstFreelancer)
+        {
+            <section class="app-wunsch-panel app-wunsch-panel--soft">
+                <header class="app-wunsch-panel__header">
+                    <div>
+                        <div class="app-wunsch-panel__eyebrow">Freelancer-Regel</div>
+                        <h2 class="app-wunsch-panel__title">Gewünschte Monatsanzahl festlegen</h2>
+                        <p class="app-wunsch-panel__text">
+                            Speichern Sie zuerst, wie viele Dienste Sie in dieser Periode übernehmen möchten. Erst danach können Wunschtage im Kalender markiert werden.
+                        </p>
+                    </div>
+
+                    <div class="app-wunsch-kpi">
+                        <span class="app-wunsch-kpi__value">
+                            @(Model.FreelancerGewuenschteDienste?.ToString() ?? "–")
+                        </span>
+                        <span class="app-wunsch-kpi__label">Monatsanzahl</span>
+                    </div>
+                </header>
+
+                <div class="app-wunsch-panel__body">
+                    <form asp-area="Intensivtransport"
+                          asp-controller="DienstplanMitarbeiter"
+                          asp-action="FreelancerMonatswunschSpeichern"
+                          method="post"
+                          class="app-wunsch-form-grid"
+                          data-app-loading-form
+                          data-app-loading-text="Monatsanzahl wird gespeichert...">
+                        @Html.AntiForgeryToken()
+                        <input type="hidden" name="periodeId" value="@Model.AktivePeriodeId" />
+
+                        <div>
+                            <label class="form-label app-auth-label">Gewünschte Dienste in dieser Periode</label>
+                            <select name="gewuenschteDienste"
+                                    asp-items="Model.FreelancerDienstanzahlOptionen"
+                                    class="form-select border-2 py-2">
+                            </select>
+                        </div>
+
+                        <div>
+                            <button type="submit" class="app-btn app-btn-neutral app-btn-lg">
+                                <i class="bi bi-save"></i>
+                                Monatsanzahl speichern
+                            </button>
+                        </div>
+                    </form>
+
+                    @if (!Model.DarfWunschTageWaehlen)
+                    {
+                        <div class="app-wunsch-note app-wunsch-note--warning">
+                            Bitte speichern Sie zuerst Ihre gewünschte Monatsanzahl. Erst danach können Wunschtage im Kalender ausgewählt werden.
+                        </div>
+                    }
+                </div>
+            </section>
+        }
+
+        <section class="app-wunsch-panel">
+            <header class="app-wunsch-panel__header">
+                <div>
+                    <div class="app-wunsch-panel__eyebrow">Aktive Periode</div>
+                    <h2 class="app-wunsch-panel__title">@(Model.AktivePeriodeBezeichnung ?? "Aktuelle Periode")</h2>
+                    <p class="app-wunsch-panel__text">
+                        Wählen Sie passende Tage aus. Feiertage, Urlaubstage und Wochenenden werden farblich hervorgehoben und sind nicht auswählbar.
+                    </p>
+                </div>
+
+                <div class="app-wunsch-kpi">
+                    <span class="app-wunsch-kpi__value" data-wunsch-count>@Model.AnzahlWunschTage</span>
+                    <span class="app-wunsch-kpi__label">Wünsche aktiv</span>
+                </div>
+            </header>
+
+            <div class="app-wunsch-panel__body">
+                <div class="app-wunsch-legend">
+                    <span class="app-wunsch-legend__item">
+                        <span class="app-wunsch-legend__swatch app-wunsch-legend__swatch--wish"></span>
+                        Wunsch
+                    </span>
+                    @if (Model.IstFestangestellt)
+                    {
+                        <span class="app-wunsch-legend__item">
+                            <span class="app-wunsch-legend__swatch app-wunsch-legend__swatch--block"></span>
+                            Nicht verfügbar
+                        </span>
+                    }
+                    <span class="app-wunsch-legend__item">
+                        <span class="app-wunsch-legend__swatch app-wunsch-legend__swatch--holiday"></span>
+                        Feiertag
+                    </span>
+                    <span class="app-wunsch-legend__item">
+                        <span class="app-wunsch-legend__swatch app-wunsch-legend__swatch--vacation"></span>
+                        Urlaub
+                    </span>
+                    <span class="app-wunsch-legend__item">
+                        <span class="app-wunsch-legend__swatch app-wunsch-legend__swatch--weekend"></span>
+                        Wochenende
+                    </span>
+                </div>
+
+                <div class="app-wunsch-calendar js-wunsch-calendar">
+                    <div class="app-wunsch-calendar__weekdays">
+                        <div>Montag</div>
+                        <div>Dienstag</div>
+                        <div>Mittwoch</div>
+                        <div>Donnerstag</div>
+                        <div>Freitag</div>
+                        <div class="is-weekend">Samstag</div>
+                        <div class="is-weekend">Sonntag</div>
+                    </div>
+
+                    <div class="app-wunsch-calendar__days">
+                        @foreach (var woche in Model.KalenderWochen)
+                        {
+                            foreach (var tag in woche.Tage)
+                            {
+                                if (!tag.IstImAktivenMonat)
+                                {
+                                    <div class="app-wunsch-day app-wunsch-day--empty d-none d-md-block"></div>
+                                    continue;
+                                }
+
+                                var statusClass = tag.IstAlsWunschMarkiert
+                                ? "is-wish"
+                                : tag.IstAlsNichtVerfuegbarMarkiert
+                                ? "is-blocked"
+                                : string.Empty;
+
+                                var lockedStateClass = tag.IstFeiertag
+                                ? "app-wunsch-day--holiday"
+                                : tag.IstUrlaub
+                                ? "app-wunsch-day--vacation"
+                                : tag.IstWochenende
+                                ? "app-wunsch-day--weekend"
+                                : string.Empty;
+
+                                <article class="app-wunsch-day @(tag.IstAuswaehlbar ? "app-wunsch-day--interactive" : "app-wunsch-day--locked") @lockedStateClass @statusClass @(tag.IstHeute ? "is-today" : "")"
+                                         data-wunsch-day>
+                                    <div class="app-wunsch-day__inner">
+                                        <div class="app-wunsch-day__top">
+                                            <div class="app-wunsch-day__date-wrap">
+                                                <span class="app-wunsch-day__date">@tag.Datum.Day</span>
+                                                <span class="app-wunsch-day__weekday d-md-none">@tag.Datum.ToString("dddd")</span>
+                                            </div>
+
+                                            @if (tag.IstHeute)
+                                            {
+                                                <span class="app-wunsch-day__today">Heute</span>
+                                            }
+                                        </div>
+
+                                        @if (!tag.IstAuswaehlbar)
+                                        {
+                                            <div class="app-wunsch-day__badges">
+                                                @if (tag.IstFeiertag)
+                                                {
+                                                    <span class="app-wunsch-day__flag app-wunsch-day__flag--holiday">Feiertag</span>
+                                                }
+                                                else if (tag.IstUrlaub)
+                                                {
+                                                    <span class="app-wunsch-day__flag app-wunsch-day__flag--vacation">Urlaub</span>
+                                                }
+                                                else if (tag.IstWochenende)
+                                                {
+                                                    <span class="app-wunsch-day__flag app-wunsch-day__flag--weekend">Wochenende</span>
+                                                }
+                                                else
+                                                {
+                                                    <span class="app-wunsch-day__flag app-wunsch-day__flag--locked">Gesperrt</span>
+                                                }
+                                            </div>
+
+                                            <div class="app-wunsch-day__reason">
+                                                @(tag.SperrgrundText ?? "Nicht verfügbar")
+                                            </div>
+
+                                            @if (tag.IstFeiertag)
+                                            {
+                                                <div class="app-wunsch-day__subreason">
+                                                    An Feiertagen ist keine Auswahl möglich.
+                                                </div>
+                                            }
+                                        }
+                                        else
+                                        {
+                                            <div class="app-wunsch-day__status" data-wunsch-status>
+                                                @if (tag.IstAlsWunschMarkiert)
+                                                {
+                                                    <i class="bi bi-heart-fill text-accent"></i>
+                                                    <span>Wunsch aktiv</span>
+                                                }
+                                                else if (tag.IstAlsNichtVerfuegbarMarkiert)
+                                                {
+                                                    <i class="bi bi-slash-circle-fill text-danger"></i>
+                                                    <span>Nicht verfügbar</span>
+                                                }
+                                                else
+                                                {
+                                                    <span>Noch keine Auswahl</span>
+                                                }
+                                            </div>
+
+                                            <div class="app-wunsch-day__actions">
+                                                <form asp-area="Intensivtransport"
+                                                      asp-controller="DienstplanMitarbeiter"
+                                                      asp-action="ToggleWunsch"
+                                                      method="post"
+                                                      class="js-wunsch-toggle-form">
+                                                    @Html.AntiForgeryToken()
+                                                    <input type="hidden" name="periodeId" value="@Model.AktivePeriodeId" />
+                                                    <input type="hidden" name="jahr" value="@tag.Datum.Year" />
+                                                    <input type="hidden" name="monat" value="@tag.Datum.Month" />
+                                                    <input type="hidden" name="tag" value="@tag.Datum.Day" />
+                                                    <input type="hidden" name="wunschTyp" value="Wunsch" />
+                                                    <button type="submit"
+                                                            class="app-wunsch-day__button app-wunsch-day__button--wish @(tag.IstAlsWunschMarkiert ? "is-active" : "")"
+                                                            data-wunsch-button
+                                                            @(Model.DarfWunschTageWaehlen ? null : "disabled")>
+                                                        <i class="bi bi-heart"></i>
+                                                        <span class="app-wunsch-day__button-text">Wünschen</span>
+                                                    </button>
+                                                </form>
+
+                                                @if (Model.IstFestangestellt)
+                                                {
+                                                    <form asp-area="Intensivtransport"
+                                                          asp-controller="DienstplanMitarbeiter"
+                                                          asp-action="ToggleWunsch"
+                                                          method="post"
+                                                          class="js-wunsch-toggle-form">
+                                                        @Html.AntiForgeryToken()
+                                                        <input type="hidden" name="periodeId" value="@Model.AktivePeriodeId" />
+                                                        <input type="hidden" name="jahr" value="@tag.Datum.Year" />
+                                                        <input type="hidden" name="monat" value="@tag.Datum.Month" />
+                                                        <input type="hidden" name="tag" value="@tag.Datum.Day" />
+                                                        <input type="hidden" name="wunschTyp" value="NichtVerfuegbar" />
+                                                        <button type="submit"
+                                                                class="app-wunsch-day__button app-wunsch-day__button--block @(tag.IstAlsNichtVerfuegbarMarkiert ? "is-active" : "")"
+                                                                data-wunsch-button>
+                                                            <i class="bi bi-slash-circle"></i>
+                                                            <span class="app-wunsch-day__button-text">Blocken</span>
+                                                        </button>
+                                                    </form>
+                                                }
+                                            </div>
+                                        }
+                                    </div>
+                                </article>
+                            }
+                        }
+                    </div>
+                </div>
+            </div>
+        </section>
+    }
+</div>
+
+@section Scripts {
+    <script src="~/js/app-wunschkalender.js" asp-append-version="true"></script>
+}
