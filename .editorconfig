@@ -1,0 +1,87 @@
+# ====================================================================
+#  ITW.Suite – .editorconfig
+#  Einheitlicher Code-Stil über alle Editoren (VS, VS Code, Rider).
+#  Dokumentation: https://editorconfig.org
+# ====================================================================
+
+root = true
+
+# --- Allgemein -------------------------------------------------------
+[*]
+charset                  = utf-8-bom
+end_of_line              = crlf
+indent_style             = space
+indent_size              = 4
+insert_final_newline     = true
+trim_trailing_whitespace = true
+
+# --- XML / Build-Dateien (2 Spaces) ---------------------------------
+[*.{csproj,vbproj,proj,props,targets,xml,config,nuspec,resx}]
+indent_size = 2
+
+# --- Web / JSON / YAML / Markdown -----------------------------------
+[*.{cshtml,html,js,ts,css,scss,json,yml,yaml}]
+indent_size = 2
+
+[*.md]
+trim_trailing_whitespace = false
+
+# --- C# Sprach- und Stil-Regeln -------------------------------------
+[*.cs]
+
+# Namespaces & Datei-Aufbau
+csharp_style_namespace_declarations         = file_scoped:warning
+csharp_using_directive_placement            = outside_namespace:warning
+dotnet_sort_system_directives_first         = true
+dotnet_separate_import_directive_groups     = false
+
+# Modernes C# bevorzugen
+csharp_prefer_braces                        = true:warning
+csharp_style_var_when_type_is_apparent      = true:suggestion
+csharp_style_var_for_built_in_types         = false:suggestion
+csharp_style_pattern_matching_over_is_with_cast_check = true:suggestion
+csharp_style_pattern_matching_over_as_with_null_check = true:suggestion
+csharp_style_expression_bodied_methods      = when_on_single_line:silent
+csharp_style_expression_bodied_properties   = true:silent
+csharp_style_expression_bodied_constructors = false:silent
+
+# Null-Checks
+dotnet_style_coalesce_expression            = true:warning
+dotnet_style_null_propagation               = true:warning
+
+# Felder / Properties
+dotnet_style_qualification_for_field        = false:warning
+dotnet_style_qualification_for_property     = false:warning
+dotnet_style_readonly_field                 = true:warning
+dotnet_style_require_accessibility_modifiers = always:warning
+
+# Namens-Konventionen: private fields beginnen mit _
+dotnet_naming_rule.private_fields_should_be_camel_case_with_underscore.severity                  = warning
+dotnet_naming_rule.private_fields_should_be_camel_case_with_underscore.symbols                   = private_fields
+dotnet_naming_rule.private_fields_should_be_camel_case_with_underscore.style                     = camel_case_with_underscore
+
+dotnet_naming_symbols.private_fields.applicable_kinds                                            = field
+dotnet_naming_symbols.private_fields.applicable_accessibilities                                  = private
+
+dotnet_naming_style.camel_case_with_underscore.required_prefix                                   = _
+dotnet_naming_style.camel_case_with_underscore.capitalization                                    = camel_case
+
+# Wichtige Roslyn-Regeln auf Warning
+dotnet_diagnostic.CA2007.severity = none           # ConfigureAwait in App-Code nicht nötig
+dotnet_diagnostic.CA2016.severity = warning        # CancellationToken weiterreichen
+dotnet_diagnostic.CA1816.severity = warning        # Dispose-Methoden
+dotnet_diagnostic.CA1822.severity = suggestion     # Mark members as static
+dotnet_diagnostic.IDE0011.severity = warning       # Add braces
+dotnet_diagnostic.IDE0040.severity = warning       # Accessibility modifier
+dotnet_diagnostic.IDE0055.severity = warning       # Format violation
+dotnet_diagnostic.IDE0161.severity = warning       # File-scoped namespace
+
+# Nullable-Warnungen scharf (Laufzeit-Null-Sicherheit)
+dotnet_diagnostic.CS8600.severity = warning
+dotnet_diagnostic.CS8601.severity = warning
+dotnet_diagnostic.CS8602.severity = warning
+dotnet_diagnostic.CS8603.severity = warning
+dotnet_diagnostic.CS8604.severity = warning
+# CS8618 ("Konstruktor initialisiert nicht") bleibt Warnung,
+# wird in Phase 5 gemeinsam mit dem Konstruktor-Boilerplate-Cleanup behandelt.
+dotnet_diagnostic.CS8618.severity = warning

@@ -1,0 +1,14 @@
+# ====================================================================
+#  ITW.Suite – BannedSymbols.txt
+#
+#  Wirkung: ergänzt das Roslyn-Analyzer-Paket
+#           Microsoft.CodeAnalysis.BannedApiAnalyzers
+#
+#  Diese Datei ist aktuell LEER, weil das NuGet-Paket noch nicht
+#  referenziert ist. Befüllung folgt in Phase 6 (DateTime-Sanity).
+#
+#  Beispiel-Einträge (ab Phase 6 aktiv):
+#    M:System.DateTime.get_Now;Stattdessen IDateTimeProvider.Now verwenden
+#    M:System.DateTime.get_Today;Stattdessen IDateTimeProvider.Today verwenden
+#    M:System.DateTime.get_UtcNow;Stattdessen IDateTimeProvider.UtcNow verwenden
+# ====================================================================

@@ -1,0 +1,68 @@
+# ====================================================================
+#  ITW.Suite – .gitignore
+#  Standard Visual Studio / .NET-Vorlage, leicht angepasst
+# ====================================================================
+
+# --- Visual Studio --------------------------------------------------
+.vs/
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+*.userprefs
+
+# --- Build-Ergebnisse ----------------------------------------------
+[Bb]in/
+[Oo]bj/
+[Oo]ut/
+[Ll]og/
+[Ll]ogs/
+*.pdb
+*.dll.config
+*.exe.config
+
+# --- Rider / VS Code -----------------------------------------------
+.idea/
+.vscode/
+*.swp
+
+# --- ReSharper -----------------------------------------------------
+_ReSharper*/
+*.[Rr]e[Ss]harper
+*.DotSettings.user
+
+# --- NuGet ---------------------------------------------------------
+*.nupkg
+*.snupkg
+.nuget/
+packages/
+!**/.meta/packages/
+
+# --- ASP.NET Core --------------------------------------------------
+appsettings.Development.json.user
+appsettings.Local.json
+*.pfx
+secrets.json
+
+# --- EF Core / Datenbank-Artefakte ---------------------------------
+*.mdf
+*.ldf
+*.bak
+
+# --- Sonstiges -----------------------------------------------------
+TestResults/
+coverage/
+*.coverage
+*.coveragexml
+*.lcov
+node_modules/
+*.log
+
+# --- Betriebssystem ------------------------------------------------
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+.DS_Store
+
+# --- Audit-Tooling (lokal) -----------------------------------------
+# build-audit.js / build-frontend-audit.js werden außerhalb des Repos gehalten

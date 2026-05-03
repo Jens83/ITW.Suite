@@ -1,0 +1,57 @@
+<!--
+  ITW.Suite – Directory.Build.props (Solution-weit)
+  ==================================================
+
+  Diese Datei wird von MSBuild beim Build JEDES Projekts unterhalb dieses
+  Verzeichnisses automatisch eingelesen. Hier stehen Einstellungen, die
+  für ALLE Projekte gelten sollen.
+
+  WICHTIG:
+  - Werte aus den einzelnen csproj-Dateien überschreiben diese Defaults.
+    Das heißt: bestehende csproj-Einstellungen (TargetFramework etc.) bleiben
+    aktiv, bis sie dort entfernt und hier zentral verwaltet werden.
+  - Diese Datei ist bewusst additiv und sollte deinen Build NICHT brechen.
+  - Bei Problemen: Datei umbenennen in Directory.Build.props.disabled,
+    um den Effekt vorübergehend abzuschalten.
+-->
+<Project>
+
+  <PropertyGroup>
+    <!-- Nur ein moderner Compiler, latest C#-Sprachfeatures -->
+    <LangVersion>latest</LangVersion>
+
+    <!-- Roslyn-Analyzer aktivieren mit empfohlenem Regel-Set -->
+    <EnableNETAnalyzers>true</EnableNETAnalyzers>
+    <AnalysisLevel>latest-Recommended</AnalysisLevel>
+
+    <!-- Code-Style-Regeln aus .editorconfig auch beim CLI-Build prüfen -->
+    <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
+
+    <!-- Selektiv: die wirklich kritischen Null-Safety-Warnungen werden Errors.
+         CS8600-CS8604 betreffen Laufzeit-Null-Sicherheit (Dereferenzierung,
+         Zuweisung, Argumente). CA2016 sorgt für korrekt durchgereichte
+         CancellationToken. CS8618 (Konstruktor initialisiert nicht) bleibt
+         bewusst Warnung – ist bei EF-Core-Entities ein häufiges
+         False-Positive und wird in Phase 5 sauber gemacht. -->
+    <WarningsAsErrors>CS8600;CS8601;CS8602;CS8603;CS8604;CA2016</WarningsAsErrors>
+
+    <!-- Deterministische Builds (gleicher Input = gleicher Output) -->
+    <Deterministic>true</Deterministic>
+
+    <!-- Nicht-essentielle Diagnose ausblenden -->
+    <NoWarn>$(NoWarn);CS1591</NoWarn>
+
+    <!-- Standard-Encoding für generierte Files -->
+    <NeutralLanguage>de-DE</NeutralLanguage>
+  </PropertyGroup>
+
+  <!--
+    Ab hier könnte später Folgendes ergänzt werden:
+    - <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
+      (zusammen mit Directory.Packages.props, dann müssen aber alle csproj
+      die Version-Attribute verlieren)
+    - <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+      (sobald die Warning-Bereinigung abgeschlossen ist)
+  -->
+
+</Project>
