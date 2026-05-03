@@ -1,0 +1,160 @@
+﻿@using ITW.Application.Organisation.Contracts
+@using ITW.Web.Security.CurrentUser
+@inject ITW.Web.Security.CurrentUser.ICurrentUserContextAccessor CurrentUserContextAccessor
+
+@{
+    ViewData["Title"] = "Startseite";
+
+    var currentUserLookup = await CurrentUserContextAccessor.GetCurrentAsync();
+    var currentUser = currentUserLookup.CurrentUser;
+
+    var hatAbrechnung = currentUser.HatModul(ModulCode.Abrechnung);
+    var hatBuchhaltung = currentUser.HatModul(ModulCode.Buchhaltung);
+    var hatPersonal = currentUser.HatModul(ModulCode.Personal);
+
+    var hatMindestensEinModul =
+        hatAbrechnung ||
+        hatBuchhaltung ||
+        hatPersonal;
+}
+
+<div class="app-dashboard-page">
+    <div class="app-dashboard-header">
+        <div class="app-dashboard-header__content">
+            <div class="app-dashboard-header__label">
+                <i class="bi bi-building-gear"></i>
+                Verwaltung
+            </div>
+
+            <h1 class="app-dashboard-header__title">Verwaltungszentrum</h1>
+            <p class="app-dashboard-header__text">
+                Es werden nur die Module angezeigt, die der Geschäftsführer Ihrer Rolle in der Verwaltung zugewiesen hat.
+            </p>
+        </div>
+
+        <div class="app-dashboard-header__badge">
+            <i class="bi bi-briefcase"></i>
+            Bereich Verwaltung
+        </div>
+    </div>
+
+    @if (!hatMindestensEinModul)
+    {
+        <section class="app-surface">
+            <div class="app-surface__body">
+                <div class="app-form-note">
+                    Für Ihre Rolle sind im Bereich Verwaltung aktuell keine Module freigeschaltet.
+                </div>
+            </div>
+        </section>
+    }
+    else
+    {
+        <div class="row app-dashboard-grid">
+            @if (hatAbrechnung)
+            {
+                <div class="col-12 col-md-6 col-xl-4">
+                    <article class="app-dashboard-card">
+                        <div class="app-dashboard-card__body">
+                            <div class="app-dashboard-card__meta">Kaufmännisch</div>
+
+                            <div class="app-dashboard-card__top">
+                                <div class="app-dashboard-card__icon">
+                                    <i class="bi bi-receipt"></i>
+                                </div>
+
+                                <div>
+                                    <h2 class="app-dashboard-card__title">Rechnungswesen</h2>
+                                    <p class="app-dashboard-card__text">
+                                        Abrechnung von Transportleistungen, Kostenstellen und spätere Fakturierung vorbereiten.
+                                    </p>
+                                </div>
+                            </div>
+
+                            <div class="app-dashboard-card__footer">
+                                <button type="button"
+                                        class="app-btn app-btn-neutral app-dashboard-action"
+                                        disabled>
+                                    <i class="bi bi-hourglass-split"></i>
+                                    In Vorbereitung
+                                    <i class="bi bi-arrow-right"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </article>
+                </div>
+            }
+
+            @if (hatBuchhaltung)
+            {
+                <div class="col-12 col-md-6 col-xl-4">
+                    <article class="app-dashboard-card">
+                        <div class="app-dashboard-card__body">
+                            <div class="app-dashboard-card__meta">Finanzen</div>
+
+                            <div class="app-dashboard-card__top">
+                                <div class="app-dashboard-card__icon">
+                                    <i class="bi bi-bank"></i>
+                                </div>
+
+                                <div>
+                                    <h2 class="app-dashboard-card__title">Buchhaltung</h2>
+                                    <p class="app-dashboard-card__text">
+                                        Finanzbuchführung, Kontenklärung und betriebswirtschaftliche Auswertung strukturiert vorbereiten.
+                                    </p>
+                                </div>
+                            </div>
+
+                            <div class="app-dashboard-card__footer">
+                                <button type="button"
+                                        class="app-btn app-btn-neutral app-dashboard-action"
+                                        disabled>
+                                    <i class="bi bi-hourglass-split"></i>
+                                    In Vorbereitung
+                                    <i class="bi bi-arrow-right"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </article>
+                </div>
+            }
+
+            @if (hatPersonal)
+            {
+                <div class="col-12 col-md-6 col-xl-4">
+                    <article class="app-dashboard-card">
+                        <div class="app-dashboard-card__body">
+                            <div class="app-dashboard-card__meta">Personal</div>
+
+                            <div class="app-dashboard-card__top">
+                                <div class="app-dashboard-card__icon">
+                                    <i class="bi bi-person-vcard"></i>
+                                </div>
+
+                                <div>
+                                    <h2 class="app-dashboard-card__title">Personalwesen</h2>
+                                    <p class="app-dashboard-card__text">
+                                        Benutzer, Personalstamm und organisatorische Grunddaten der Verwaltung öffnen.
+                                    </p>
+                                </div>
+                            </div>
+
+                            <div class="app-dashboard-card__footer">
+                                <a asp-area="Verwaltung"
+                                   asp-controller="Benutzer"
+                                   asp-action="Index"
+                                   class="btn-outline-accent app-dashboard-action"
+                                   data-app-loading-link
+                                   data-app-loading-text="Personalwesen wird geöffnet...">
+                                    <i class="bi bi-person-lines-fill"></i>
+                                    Personalstamm öffnen
+                                    <i class="bi bi-arrow-right"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </article>
+                </div>
+            }
+        </div>
+    }
+</div>

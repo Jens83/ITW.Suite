@@ -1,0 +1,202 @@
+﻿@using Microsoft.AspNetCore.Mvc.ViewFeatures
+@model ITW.Web.Areas.Intensivtransport.ViewModels.Fahrzeugmanagement.FahrzeugPruefstatusViewModel
+
+@{
+    Layout = ViewData["AreaLayoutPath"]?.ToString();
+    ViewData["Title"] = "Prüfstatus";
+
+    var successMessage = TempData["FahrzeugPruefstatus.Erfolg"]?.ToString();
+    var errorMessage = TempData["FahrzeugPruefstatus.Fehler"]?.ToString();
+}
+
+<div class="app-page">
+    <header class="app-page-header">
+        <div class="app-page-heading">
+            <div class="app-page-heading__eyebrow">
+                <i class="bi bi-tools"></i>
+                Fahrzeugmanagement
+            </div>
+
+            <h1 class="app-page-heading__title">@Model.Navigation.Kennzeichen</h1>
+            <p class="app-page-heading__text">
+                @Model.Navigation.InterneNummer · Prüfstatus
+            </p>
+        </div>
+
+        <div class="app-page-actions">
+            <a asp-action="Details"
+               asp-route-id="@Model.FahrzeugId"
+               class="app-btn app-btn-outline-accent"
+               data-app-loading-link
+               data-app-loading-text="Fahrzeugübersicht wird geöffnet...">
+                <i class="bi bi-arrow-left"></i>
+                Zur Übersicht
+            </a>
+        </div>
+    </header>
+
+    @if (!string.IsNullOrWhiteSpace(successMessage) || !string.IsNullOrWhiteSpace(errorMessage))
+    {
+        <div class="app-status-stack">
+            @if (!string.IsNullOrWhiteSpace(successMessage))
+            {
+                @await Html.PartialAsync(
+                "~/Views/Shared/Komponenten/_AppStatusMessage.cshtml",
+                successMessage,
+                new ViewDataDictionary(ViewData)
+                {
+                    ["Variant"] = "success",
+                    ["Title"] = "Erfolgreich gespeichert",
+                    ["AutoHide"] = true,
+                    ["AutoHideMilliseconds"] = 3000
+                })
+                }
+
+            @if (!string.IsNullOrWhiteSpace(errorMessage))
+            {
+                @await Html.PartialAsync(
+                "~/Views/Shared/Komponenten/_AppStatusMessage.cshtml",
+                errorMessage,
+                new ViewDataDictionary(ViewData)
+                {
+                    ["Variant"] = "danger",
+                    ["Title"] = "System-Hinweis",
+                    ["AutoHide"] = false
+                })
+                }
+        </div>
+    }
+
+    <div class="app-employee-detail-grid">
+        <aside class="app-employee-detail-sidebar">
+            <partial name="~/Areas/Intensivtransport/Views/Shared/_FahrzeugDetailNavigation.cshtml" model="Model.Navigation" />
+        </aside>
+
+        <div class="app-employee-detail-content">
+            <section class="app-employee-card">
+                <header class="app-employee-card__header app-employee-card__header--row">
+                    <div>
+                        <h2 class="app-employee-card__title">
+                            <i class="bi bi-traffic-light"></i>
+                            Aktueller Prüfstatus
+                        </h2>
+                        <p class="app-employee-card__text">
+                            Grün ist in Ordnung, gelb wird bald fällig, rot ist überfällig.
+                        </p>
+                    </div>
+                </header>
+
+                <div class="app-employee-card__body">
+                    <div class="table-responsive">
+                        <table class="table table-hover align-middle mb-0">
+                            <thead>
+                                <tr>
+                                    <th>Prüfpunkt</th>
+                                    <th>Fällig am</th>
+                                    <th>Letzte Erledigung</th>
+                                    <th>Status</th>
+                                    <th>Bemerkung</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var pruefung in Model.Pruefungen)
+                                {
+                                    <tr>
+                                        <td>
+                                            <strong>@pruefung.TypText</strong>
+                                        </td>
+                                        <td>@pruefung.FaelligAmText</td>
+                                        <td>@pruefung.LetzteErledigungAmText</td>
+                                        <td>
+                                            <span class="badge @pruefung.AmpelCssClass">
+                                                @pruefung.StatusText
+                                            </span>
+                                        </td>
+                                        <td>@pruefung.BemerkungText</td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <section class="app-employee-card">
+                <header class="app-employee-card__header app-employee-card__header--row">
+                    <div>
+                        <h2 class="app-employee-card__title">
+                            <i class="bi bi-pencil-square"></i>
+                            Prüfstatus eintragen
+                        </h2>
+                        <p class="app-employee-card__text">
+                            Trage hier die nächste Fälligkeit ein oder aktualisiere einen vorhandenen Prüfpunkt.
+                        </p>
+                    </div>
+                </header>
+
+                <div class="app-employee-card__body">
+                    <form asp-action="PruefungSpeichern"
+                          method="post"
+                          data-app-loading-form
+                          data-app-loading-text="Prüfstatus wird gespeichert...">
+                        @Html.AntiForgeryToken()
+
+                        <input asp-for="FahrzeugId" type="hidden" />
+
+                        <div class="app-employee-form-grid">
+                            <div>
+                                <label asp-for="Typ" class="form-label small fw-bold text-muted">
+                                    Prüfpunkt
+                                </label>
+                                <select asp-for="Typ"
+                                        asp-items="Model.PruefungTypOptionen"
+                                        class="form-select shadow-sm">
+                                    <option value="">Bitte wählen...</option>
+                                </select>
+                            </div>
+
+                            <div>
+                                <label asp-for="FaelligAm" class="form-label small fw-bold text-muted">
+                                    Fällig am
+                                </label>
+                                <input asp-for="FaelligAm"
+                                       type="date"
+                                       class="form-control shadow-sm" />
+                            </div>
+
+                            <div>
+                                <label asp-for="LetzteErledigungAm" class="form-label small fw-bold text-muted">
+                                    Letzte Erledigung
+                                </label>
+                                <input asp-for="LetzteErledigungAm"
+                                       type="date"
+                                       class="form-control shadow-sm" />
+                            </div>
+
+                            <div class="app-employee-form-grid__full">
+                                <label asp-for="Bemerkung" class="form-label small fw-bold text-muted">
+                                    Bemerkung
+                                </label>
+                                <textarea asp-for="Bemerkung"
+                                          class="form-control shadow-sm"
+                                          rows="3"
+                                          placeholder="z. B. Termin muss noch mit Werkstatt abgestimmt werden."></textarea>
+                            </div>
+                        </div>
+
+                        <div class="app-form-actions">
+                            <button type="submit" class="app-btn app-btn-accent">
+                                <i class="bi bi-save"></i>
+                                <span>Prüfstatus speichern</span>
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </section>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

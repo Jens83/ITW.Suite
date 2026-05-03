@@ -1,0 +1,127 @@
+﻿@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+
+:root {
+    --font-family-base: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    --accent-color: #0f6cbd;
+    --accent-rgb: 15, 108, 189;
+    --success-color: #15803d;
+    --success-rgb: 21, 128, 61;
+    --warning-color: #b7791f;
+    --warning-rgb: 183, 121, 31;
+    --danger-color: #c2414b;
+    --danger-rgb: 194, 65, 75;
+    --info-color: #0f6cbd;
+    --info-rgb: 15, 108, 189;
+    --page-bg: #f4f7fb;
+    --surface-bg: #ffffff;
+    --surface-bg-soft: #f8fbfd;
+    --surface-bg-muted: #f1f5f9;
+    --border-color: #dbe4ee;
+    --border-color-strong: #c5d2df;
+    --text-color: #334155;
+    --text-color-strong: #0f172a;
+    --text-color-muted: #64748b;
+    --shadow-xs: 0 1px 2px rgba(15, 23, 42, 0.04);
+    --shadow-sm: 0 8px 22px rgba(15, 23, 42, 0.05);
+    --shadow-md: 0 16px 38px rgba(15, 23, 42, 0.08);
+    --shadow-lg: 0 28px 54px rgba(15, 23, 42, 0.12);
+    --radius-xs: 10px;
+    --radius-sm: 14px;
+    --radius-md: 18px;
+    --radius-lg: 24px;
+    --radius-xl: 30px;
+    --radius-pill: 999px;
+    --navbar-height: 68px;
+    --menu-width: 320px;
+    --btn-height: 44px;
+    --btn-height-sm: 36px;
+    --btn-height-lg: 50px;
+    --btn-radius: 14px;
+    --btn-font-size: 0.94rem;
+    --btn-font-size-sm: 0.84rem;
+    --btn-font-size-lg: 0.98rem;
+    --btn-font-weight: 700;
+    --input-height: 48px;
+    --input-radius: 16px;
+    --page-title-size: clamp(1.7rem, 2.15vw, 2.4rem);
+    --surface-title-size: 1.16rem;
+    --accent-color-hover: color-mix(in srgb, var(--accent-color), #000 14%);
+}
+
+.theme-itw {
+    --accent-color: #0f6cbd;
+    --accent-rgb: 15, 108, 189;
+}
+
+.theme-admin {
+    --accent-color: #475467;
+    --accent-rgb: 71, 84, 103;
+}
+
+.theme-gf {
+    --accent-color: #8b2332;
+    --accent-rgb: 139, 35, 50;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    background: radial-gradient(circle at top right, rgba(var(--accent-rgb), 0.07), transparent 28%), linear-gradient(180deg, #f8fbfe 0%, var(--page-bg) 100%);
+    color: var(--text-color);
+    font-family: var(--font-family-base);
+    overflow-x: hidden;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+a {
+    color: var(--accent-color);
+}
+
+    a:hover {        
+        color: var(--accent-color-hover);
+    }
+
+#app {
+    min-height: 100vh;
+}
+
+main.container-fluid,
+main.container {
+    padding-top: 1.5rem;
+    padding-bottom: 1.5rem;
+}
+
+.text-accent {
+    color: var(--accent-color) !important;
+}
+
+.text-muted-ui {
+    color: var(--text-color-muted) !important;
+}
+
+.app-brand-name {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+    flex-wrap: wrap;
+    line-height: 1.2;
+}
+
+.app-brand-name__primary {
+    color: var(--text-color-strong);
+    font-weight: 700;
+}
+
+.app-brand-name__accent {
+    color: var(--accent-color);
+    font-weight: 800;
+}
+
+.breadcrumb-separator {
+    color: var(--accent-color);
+    font-weight: 900;
+    opacity: 0.8;
+}

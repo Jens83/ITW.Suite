@@ -1,0 +1,27 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net9.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\ITW.Domain\ITW.Domain.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Application\Dienstwuensche\" />
+    <Folder Include="Application\ReadModels\" />
+    <Folder Include="Application\Veroeffentlichung\" />
+    <Folder Include="Domain\Events\" />
+    <Folder Include="Domain\Rules\" />
+    <Folder Include="Infrastructure\" />
+    <Folder Include="Integration\HolidayProvider\" />
+    <Folder Include="Integration\NotificationPublisher\" />
+    <Folder Include="Integration\QualificationLookup\" />
+    <Folder Include="Integration\UserLookup\" />
+    <Folder Include="Shared\" />
+  </ItemGroup>
+
+</Project>

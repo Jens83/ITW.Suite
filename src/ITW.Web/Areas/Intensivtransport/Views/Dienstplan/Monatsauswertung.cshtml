@@ -1,0 +1,266 @@
+﻿@using ITW.Web.ViewModels.UI
+@model ITW.Web.Areas.Intensivtransport.ViewModels.Dienstplan.MonatsauswertungViewModel
+
+@{
+    Layout = ViewData["AreaLayoutPath"]?.ToString();
+    ViewData["Title"] = Model.Titel;
+
+    var headerModel = new AppPageHeaderViewModel
+    {
+        Title = Model.Titel,
+        Description = Model.Beschreibung,
+        Eyebrow = "Analyse",
+        EyebrowIconCssClass = "bi bi-bar-chart-line"
+    };
+}
+
+
+<div class="app-page app-report-page">
+    <header class="app-page-header">
+        <partial name="~/Views/Shared/Komponenten/_AppPageHeader.cshtml" model="headerModel" />
+
+        <div class="app-page-actions">
+            <a asp-area="Intensivtransport"
+               asp-controller="Dienstplan"
+               asp-action="Index"
+               class="btn btn-neutral">
+                <i class="bi bi-arrow-left"></i>Zurück zur Übersicht
+            </a>           
+        </div>
+    </header>
+
+    @if (!Model.IsSuccess)
+    {
+        <div class="app-report-alert">
+            <div class="app-report-alert__icon">
+                <i class="bi bi-exclamation-octagon-fill"></i>
+            </div>
+            <div>
+                <div class="app-report-alert__title">Datenladefehler</div>
+                <p class="app-report-alert__text">@(Model.ErrorMessage ?? "Die Monatsauswertung konnte nicht geladen werden.")</p>
+            </div>
+        </div>
+    }
+
+    @if (Model.AusgewaehltePeriodeId.HasValue)
+    {
+        <section class="app-report-filter">
+            <div class="app-report-filter__body">
+                <div class="app-report-filter__grid">
+                    <div>
+                        <div class="app-report-filter__eyebrow">Monatsübersicht</div>
+                        <h2 class="app-report-filter__title">@Model.AusgewaehltePeriodeBezeichnung</h2>
+                        <p class="app-report-filter__text">
+                            Wechseln Sie den Zeitraum oder exportieren Sie die aktuelle Auswertung direkt als PDF für Buchhaltung und Dokumentation.
+                        </p>
+                    </div>
+
+                    <form asp-area="Intensivtransport"
+                          asp-controller="DienstplanAuswertung"
+                          asp-action="Monatsauswertung"
+                          method="get"
+                          class="app-report-filter__form">
+                        <div class="app-report-filter__form-block">
+                            <label class="app-report-filter__label">Zeitraum wählen</label>
+                            <select name="periodeId"
+                                    asp-items="Model.PeriodenOptionen"
+                                    class="form-select app-report-select">
+                            </select>
+                        </div>
+
+                        <button type="submit" class="btn btn-accent">
+                            <i class="bi bi-arrow-repeat me-2"></i>Daten aktualisieren
+                        </button>
+                    </form>
+
+                    @if (Model.AusgewaehltePeriodeId.HasValue)
+                    {
+                        <div class="app-report-filter__pdf">
+                            <a asp-area="Intensivtransport"
+                               asp-controller="DienstplanAuswertung"
+                               asp-action="BuchhaltungPdf"
+                               asp-route-periodeId="@Model.AusgewaehltePeriodeId"
+                               class="btn btn-danger"
+                               data-app-loading-link
+                               data-app-loading-download="true"
+                               data-app-loading-text="PDF wird erstellt...">
+                                <i class="bi bi-file-earmark-pdf me-2"></i>PDF exportieren
+                            </a>
+                        </div>
+                    }
+                </div>
+            </div>
+        </section>
+
+        <div class="row g-3 mb-1">
+            <div class="col-6 col-xl-3">
+                <div class="app-report-kpi-card">
+                    <div class="app-report-kpi-card__body">
+                        <div class="app-report-kpi-card__top">
+                            <div class="app-report-kpi-card__label">Geplant</div>
+                            <div class="app-report-icon bg-primary-subtle text-primary">
+                                <i class="bi bi-calendar-check"></i>
+                            </div>
+                        </div>
+                        <h2 class="app-report-kpi-card__value">@Model.SummeGeplanteDienste</h2>
+                        <p class="app-report-kpi-card__text">Geplante Dienste im Monat</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-6 col-xl-3">
+                <div class="app-report-kpi-card">
+                    <div class="app-report-kpi-card__body">
+                        <div class="app-report-kpi-card__top">
+                            <div class="app-report-kpi-card__label">Gefahren</div>
+                            <div class="app-report-icon bg-info-subtle text-info">
+                                <i class="bi bi-truck"></i>
+                            </div>
+                        </div>
+                        <h2 class="app-report-kpi-card__value">@Model.SummeGefahreneDienste</h2>
+                        <p class="app-report-kpi-card__text">Tatsächlich gefahrene Dienste</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-6 col-xl-3">
+                <div class="app-report-kpi-card">
+                    <div class="app-report-kpi-card__body">
+                        <div class="app-report-kpi-card__top">
+                            <div class="app-report-kpi-card__label">Vertretungen</div>
+                            <div class="app-report-icon bg-warning-subtle text-warning">
+                                <i class="bi bi-people"></i>
+                            </div>
+                        </div>
+                        <h2 class="app-report-kpi-card__value">@Model.SummeVertretungen</h2>
+                        <p class="app-report-kpi-card__text">Zusätzliche Vertretungsdienste</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-6 col-xl-3">
+                <div class="app-report-kpi-card">
+                    <div class="app-report-kpi-card__body">
+                        <div class="app-report-kpi-card__top">
+                            <div class="app-report-kpi-card__label">Gesamt</div>
+                            <div class="app-report-icon bg-success-subtle text-success">
+                                <i class="bi bi-plus-circle"></i>
+                            </div>
+                        </div>
+                        <h2 class="app-report-kpi-card__value">@Model.SummeGesamt</h2>
+                        <p class="app-report-kpi-card__text">Gefahrene Dienste + Vertretungen</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <section class="app-report-meta">
+            <div class="app-report-meta__body">
+                <div class="app-report-meta__badges">
+                    <span class="app-report-meta__badge">
+                        <i class="bi bi-heart-pulse text-danger"></i>
+                        Krankheitstage im Monat: <strong class="ms-1">@Model.SummeKrankheitstage</strong>
+                    </span>
+
+                    <span class="app-report-meta__badge">
+                        <i class="bi bi-sun text-success"></i>
+                        Urlaubstage im Monat: <strong class="ms-1">@Model.SummeUrlaubstage</strong>
+                    </span>
+                </div>
+            </div>
+        </section>
+
+        <section class="app-report-panel">
+            <div class="app-report-panel__header">
+                <div class="app-report-panel__eyebrow">Detailauswertung</div>
+                <h2 class="app-report-panel__title">@Model.AusgewaehltePeriodeBezeichnung</h2>
+            </div>
+
+            <div class="card-body p-0">
+                @if (Model.Mitarbeiter.Count == 0)
+                {
+                    <div class="app-report-empty">
+                        <div class="app-report-empty__body">
+                            <div class="app-report-empty__icon">
+                                <i class="bi bi-clipboard-x"></i>
+                            </div>
+                            <h3 class="app-report-empty__title">Keine Monatsdaten verfügbar</h3>
+                            <p class="app-report-empty__text">
+                                Für diesen Zeitraum liegen aktuell keine auswertbaren Monatsdaten vor.
+                            </p>
+                        </div>
+                    </div>
+                }
+                else
+                {
+                    <div class="table-responsive">
+                        <table class="table table-hover align-middle mb-0 app-report-table">
+                            <thead>
+                                <tr>
+                                    <th class="ps-4 py-3">Mitarbeiter &amp; Qualifikation</th>
+                                    <th class="py-3 text-center">Geplant</th>
+                                    <th class="py-3 text-center">Gefahren</th>
+                                    <th class="py-3 text-center">Vertretung</th>
+                                    <th class="py-3 text-center">Gesamt</th>
+                                    <th class="py-3 text-center">Krank</th>
+                                    <th class="py-3 text-center">Urlaub Monat</th>
+                                    <th class="py-3 text-center">Anspruch</th>
+                                    <th class="py-3 text-center">Genommen</th>
+                                    <th class="py-3 text-center">Resturlaub</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var eintrag in Model.Mitarbeiter)
+                                {
+                                    <tr>
+                                        <td class="ps-4 py-3">
+                                            <div class="fw-bold text-dark">@eintrag.AnzeigeName</div>
+                                            <div class="text-muted app-text-xs">@eintrag.Hauptqualifikation</div>
+                                        </td>
+                                        <td class="text-center fw-bold text-primary">@eintrag.GeplanteDienste</td>
+                                        <td class="text-center fw-bold @(eintrag.GefahreneDienste > 0 ? "text-info-emphasis" : "text-muted opacity-50")">@eintrag.GefahreneDienste</td>
+                                        <td class="text-center fw-bold @(eintrag.Vertretungen > 0 ? "text-warning-emphasis" : "text-muted opacity-50")">@eintrag.Vertretungen</td>
+                                        <td class="text-center fw-bold @(eintrag.Gesamt > 0 ? "text-success-emphasis" : "text-muted opacity-50")">@eintrag.Gesamt</td>
+                                        <td class="text-center fw-bold @(eintrag.Krankheitstage > 0 ? "text-danger" : "text-muted opacity-50")">@eintrag.Krankheitstage</td>
+                                        <td class="text-center fw-bold text-success">@eintrag.Urlaubstage</td>
+                                        <td class="text-center fw-bold text-secondary">@eintrag.Jahresurlaubsanspruch</td>
+                                        <td class="text-center fw-bold text-success-emphasis">@eintrag.GenommeneUrlaubstageImJahr</td>
+                                        <td class="text-center fw-bold text-warning-emphasis">@eintrag.Resturlaubstage</td>
+                                    </tr>
+                                }
+                            </tbody>
+                            <tfoot>
+                                <tr class="fw-bold text-dark">
+                                    <td class="ps-4 py-3 text-uppercase small">Gesamtsumme</td>
+                                    <td class="text-center py-3 fs-5">@Model.SummeGeplanteDienste</td>
+                                    <td class="text-center py-3 fs-5">@Model.SummeGefahreneDienste</td>
+                                    <td class="text-center py-3 fs-5">@Model.SummeVertretungen</td>
+                                    <td class="text-center py-3 fs-5">@Model.SummeGesamt</td>
+                                    <td class="text-center py-3 fs-5 text-danger">@Model.SummeKrankheitstage</td>
+                                    <td class="text-center py-3 fs-5">@Model.SummeUrlaubstage</td>
+                                    <td class="text-center py-3 fs-5 text-muted">-</td>
+                                    <td class="text-center py-3 fs-5 text-muted">-</td>
+                                    <td class="text-center py-3 fs-5 text-muted">-</td>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                }
+            </div>
+        </section>
+    }
+    else
+    {
+        <section class="app-report-empty">
+            <div class="app-report-empty__body">
+                <div class="app-report-empty__icon">
+                    <i class="bi bi-calendar3-range"></i>
+                </div>
+                <h2 class="app-report-empty__title">Bereit zur Analyse</h2>
+                <p class="app-report-empty__text">
+                    Wählen Sie oben eine Periode aus, um die Monatsauswertung zu starten.
+                </p>
+            </div>
+        </section>
+    }
+</div>

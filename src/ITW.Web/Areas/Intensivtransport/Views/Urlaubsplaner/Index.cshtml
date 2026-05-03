@@ -1,0 +1,366 @@
+﻿@model ITW.Web.Areas.Intensivtransport.ViewModels.Urlaubsplaner.UrlaubsplanerIndexViewModel
+
+@{
+    Layout = ViewData["AreaLayoutPath"]?.ToString();
+    ViewData["Title"] = "Urlaubsplaner";
+
+    var successMessage = TempData["SuccessMessage"]?.ToString();
+
+    var finalError = TempData["ErrorMessage"]?.ToString();
+    if (string.IsNullOrWhiteSpace(finalError) && !Model.IsSuccess)
+    {
+        finalError = Model.ErrorMessage ?? "Die Daten des Urlaubsplaners konnten nicht geladen werden.";
+    }
+}
+
+@section Styles {
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/themes/light.css">
+}
+
+
+<div class="app-vacation-page">
+    <header class="app-vacation-hero">
+        <div class="app-vacation-hero__content">
+            <div class="app-vacation-hero__label">
+                <i class="bi bi-sun"></i>
+                Urlaubsplaner
+            </div>
+
+            <h1 class="app-vacation-hero__title">@Model.Titel</h1>
+            <p class="app-vacation-hero__text">
+                Individuelle Urlaubsverwaltung, Jahresübersicht und Pflege von Zeiträumen für ausgewählte Mitarbeiter.
+            </p>
+        </div>
+
+        <div class="app-vacation-hero__actions">
+            <a asp-area="Intensivtransport"
+               asp-controller="DienstplanWachleiter"
+               asp-action="Index"
+               class="app-btn app-btn-neutral"
+               data-app-loading-link
+               data-app-loading-text="Dienstplan wird geöffnet...">
+                <i class="bi bi-arrow-left"></i>
+                Zurück
+            </a>
+        </div>
+    </header>
+
+    @if (!string.IsNullOrWhiteSpace(successMessage) || !string.IsNullOrWhiteSpace(finalError))
+    {
+        <div class="app-status-stack">
+            @if (!string.IsNullOrWhiteSpace(successMessage))
+            {
+                @await Html.PartialAsync(
+                "~/Views/Shared/Komponenten/_AppStatusMessage.cshtml",
+                successMessage,
+                new ViewDataDictionary(ViewData)
+                {
+                    ["Variant"] = "success",
+                    ["Title"] = "Erfolgreich gespeichert",
+                    ["AutoHide"] = true,
+                    ["AutoHideMilliseconds"] = 3000
+                })
+                }
+
+            @if (!string.IsNullOrWhiteSpace(finalError))
+            {
+                @await Html.PartialAsync(
+                "~/Views/Shared/Komponenten/_AppStatusMessage.cshtml",
+                finalError,
+                new ViewDataDictionary(ViewData)
+                {
+                    ["Variant"] = "danger",
+                    ["Title"] = "System-Hinweis",
+                    ["AutoHide"] = false
+                })
+                }
+        </div>
+    }
+
+    <section class="app-vacation-filter">
+        <div class="app-vacation-filter__body">
+            <form asp-action="Index"
+                  method="get"
+                  class="app-vacation-filter__form"
+                  data-app-loading-form
+                  data-app-loading-text="Urlaubsplaner wird geladen...">
+                <div class="app-vacation-field">
+                    <label class="app-vacation-field__label">Mitarbeiter</label>
+                    <div class="app-vacation-input">
+                        <span class="app-vacation-input__icon">
+                            <i class="bi bi-person"></i>
+                        </span>
+                        <select name="userId"
+                                asp-items="Model.MitarbeiterOptionen"
+                                class="form-select app-vacation-input__control">
+                        </select>
+                    </div>
+                </div>
+
+                <div class="app-vacation-field app-vacation-field--year">
+                    <label class="app-vacation-field__label">Jahr</label>
+                    <div class="app-vacation-input">
+                        <span class="app-vacation-input__icon">
+                            <i class="bi bi-calendar3"></i>
+                        </span>
+                        <select name="jahr"
+                                asp-items="Model.JahrOptionen"
+                                class="form-select app-vacation-input__control">
+                        </select>
+                    </div>
+                </div>
+
+                <div class="app-vacation-filter__actions">
+                    <button type="submit" class="app-btn app-btn-accent">
+                        <i class="bi bi-arrow-repeat"></i>
+                        Anzeigen
+                    </button>
+                </div>
+            </form>
+        </div>
+    </section>
+
+    @if (Model.HatMitarbeiterAuswahl)
+    {
+        <section class="app-vacation-kpis">
+            <article class="app-vacation-kpi">
+                <div class="app-vacation-kpi__label">Anspruch</div>
+                <div class="app-vacation-kpi__value">@Model.Anspruchstage <span>Tage</span></div>
+                <div class="app-vacation-kpi__text">Jahresanspruch laut Stammdaten</div>
+            </article>
+
+            <article class="app-vacation-kpi">
+                <div class="app-vacation-kpi__label">Übertrag</div>
+                <div class="app-vacation-kpi__value app-vacation-kpi__value--primary">@Model.Uebertragstage</div>
+                <div class="app-vacation-kpi__text">Übernommene Tage aus Vorjahr</div>
+            </article>
+
+            <article class="app-vacation-kpi">
+                <div class="app-vacation-kpi__label">Genommen</div>
+                <div class="app-vacation-kpi__value app-vacation-kpi__value--neutral">@Model.GenommeneUrlaubstage</div>
+                <div class="app-vacation-kpi__text">Bereits verbuchte Urlaubstage</div>
+            </article>
+
+            <article class="app-vacation-kpi app-vacation-kpi--highlight">
+                <div class="app-vacation-kpi__label">Resturlaub</div>
+                <div class="app-vacation-kpi__value @(Model.Resturlaubstage < 0 ? "app-vacation-kpi__value--danger" : "app-vacation-kpi__value--success")">
+                    @Model.Resturlaubstage
+                </div>
+                <div class="app-vacation-kpi__text">Verfügbare verbleibende Urlaubstage</div>
+            </article>
+        </section>
+
+        <div class="app-vacation-grid">
+            <div class="app-vacation-grid__left">
+                @if (Model.KannUrlaubszeitraeumePflegen)
+                {
+                    <section class="app-vacation-card app-vacation-card--soft">
+                        <header class="app-vacation-card__header">
+                            <div>
+                                <div class="app-vacation-card__eyebrow">Zeitraum erfassen</div>
+                                <h2 class="app-vacation-card__title">Neuer Zeitraum</h2>
+                                <p class="app-vacation-card__text">
+                                    Wählen Sie einen zusammenhängenden Zeitraum im Kalender aus und speichern Sie ihn mit optionaler interner Notiz.
+                                </p>
+                            </div>
+                        </header>
+
+                        <div class="app-vacation-card__body">
+                            <div id="urlaubFormStatusHost" class="app-vacation-form-status"></div>
+
+                            <form asp-action="ZeitraumSpeichern"
+                                  method="post"
+                                  id="vacationForm"
+                                  data-vacation-form
+                                  data-app-loading-form
+                                  data-app-loading-text="Zeitraum wird gespeichert...">
+                                @Html.AntiForgeryToken()
+                                <input type="hidden" name="userId" value="@Model.AusgewaehlterUserId" />
+                                <input type="hidden" name="jahr" value="@Model.AusgewaehltesJahr" />
+                                <input type="hidden" name="von" id="hiddenVon" />
+                                <input type="hidden" name="bis" id="hiddenBis" />
+
+                                <div class="app-vacation-fieldset">
+                                    <label class="app-vacation-field__label">Zeitraum</label>
+                                    <input type="text"
+                                           id="singleDateRange"
+                                           class="form-control app-vacation-range-input"
+                                           placeholder="Zeitraum wählen..."
+                                           readonly
+                                           data-vacation-range-input
+                                           data-year="@Model.AusgewaehltesJahr">
+                                </div>
+
+                                <div class="app-vacation-fieldset">
+                                    <label class="app-vacation-field__label">Interne Notiz</label>
+                                    <input type="text"
+                                           name="notiz"
+                                           class="form-control app-vacation-text-input"
+                                           placeholder="Optionaler Hinweis oder Grund...">
+                                </div>
+
+                                <div class="app-vacation-note">
+                                    <i class="bi bi-info-circle"></i>
+                                    Wochenenden und gesetzliche Feiertage in Mecklenburg-Vorpommern werden nicht als Urlaubstage abgezogen.
+                                </div>
+
+                                <button type="submit" class="app-btn app-btn-accent app-vacation-submit">
+                                    <i class="bi bi-save"></i>
+                                    Zeitraum hinterlegen
+                                </button>
+                            </form>
+                        </div>
+                    </section>
+                }
+
+                <section class="app-vacation-card">
+                    <header class="app-vacation-card__header">
+                        <div>
+                            <div class="app-vacation-card__eyebrow">Stammdaten</div>
+                            <h2 class="app-vacation-card__title">Korrekturwerte</h2>
+                            <p class="app-vacation-card__text">
+                                Jahresanspruch und Übertrag können hier für das ausgewählte Jahr direkt angepasst werden.
+                            </p>
+                        </div>
+                    </header>
+
+                    <div class="app-vacation-card__body">
+                        <form asp-action="AnspruchSpeichern"
+                              method="post"
+                              class="app-vacation-masterdata-form"
+                              data-app-loading-form
+                              data-app-loading-text="Stammdaten werden gespeichert...">
+                            @Html.AntiForgeryToken()
+                            <input type="hidden" name="userId" value="@Model.AusgewaehlterUserId" />
+                            <input type="hidden" name="jahr" value="@Model.AusgewaehltesJahr" />
+
+                            <div class="app-vacation-masterdata-grid">
+                                <div class="app-vacation-fieldset">
+                                    <label class="app-vacation-field__label">Anspruch</label>
+                                    <input type="number"
+                                           name="anspruchstage"
+                                           value="@Model.Anspruchstage"
+                                           class="form-control app-vacation-text-input"
+                                           min="0"
+                                           max="366" />
+                                </div>
+
+                                <div class="app-vacation-fieldset">
+                                    <label class="app-vacation-field__label">Übertrag</label>
+                                    <input type="number"
+                                           name="uebertragstage"
+                                           value="@Model.Uebertragstage"
+                                           class="form-control app-vacation-text-input"
+                                           min="0"
+                                           max="366" />
+                                </div>
+                            </div>
+
+                            <button type="submit" class="app-btn app-btn-neutral app-vacation-secondary-submit">
+                                <i class="bi bi-save2"></i>
+                                Stammdaten aktualisieren
+                            </button>
+                        </form>
+                    </div>
+                </section>
+            </div>
+
+            <div class="app-vacation-grid__right">
+                <section class="app-vacation-card app-vacation-card--fullheight">
+                    <header class="app-vacation-card__header app-vacation-card__header--row">
+                        <div>
+                            <div class="app-vacation-card__eyebrow">Jahresliste</div>
+                            <h2 class="app-vacation-card__title">Hinterlegte Zeiträume</h2>
+                        </div>
+
+                        <div class="app-vacation-card__badge">
+                            @Model.AusgewaehltesJahr
+                        </div>
+                    </header>
+
+                    <div class="app-vacation-card__body app-vacation-card__body--table">
+                        @if (Model.Zeitraeume.Count == 0)
+                        {
+                            <div class="app-vacation-empty">
+                                <div class="app-vacation-empty__icon">
+                                    <i class="bi bi-journal-x"></i>
+                                </div>
+                                <h3 class="app-vacation-empty__title">Keine Einträge vorhanden</h3>
+                                <p class="app-vacation-empty__text">
+                                    Für das Jahr @Model.AusgewaehltesJahr sind aktuell keine Urlaubszeiträume hinterlegt.
+                                </p>
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="table-responsive">
+                                <table class="table app-vacation-table align-middle mb-0">
+                                    <thead>
+                                        <tr>
+                                            <th class="ps-4">Zeitraum</th>
+                                            <th class="text-center">Tage</th>
+                                            <th>Notiz</th>
+                                            <th class="text-end pe-4">Aktion</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach (var eintrag in Model.Zeitraeume)
+                                        {
+                                            <tr>
+                                                <td class="ps-4">
+                                                    <div class="app-vacation-table__title">@eintrag.VonAnzeige</div>
+                                                    <div class="app-vacation-table__subtext">bis @eintrag.BisAnzeige</div>
+                                                </td>
+                                                <td class="text-center">
+                                                    <span class="app-vacation-days-badge">@eintrag.Urlaubstage</span>
+                                                </td>
+                                                <td class="app-vacation-table__note">
+                                                    @(string.IsNullOrWhiteSpace(eintrag.Notiz) ? "—" : eintrag.Notiz)
+                                                </td>
+                                                <td class="text-end pe-4">
+                                                    <form asp-action="ZeitraumLoeschen"
+                                                          method="post"
+                                                          data-app-loading-form
+                                                          data-app-loading-text="Zeitraum wird entfernt...">
+                                                        @Html.AntiForgeryToken()
+                                                        <input type="hidden" name="id" value="@eintrag.Id" />
+                                                        <input type="hidden" name="userId" value="@Model.AusgewaehlterUserId" />
+                                                        <input type="hidden" name="jahr" value="@Model.AusgewaehltesJahr" />
+                                                        <button type="submit"
+                                                                class="app-vacation-delete-button"
+                                                                title="Entfernen">
+                                                            <i class="bi bi-trash3"></i>
+                                                        </button>
+                                                    </form>
+                                                </td>
+                                            </tr>
+                                        }
+                                    </tbody>
+                                </table>
+                            </div>
+                        }
+                    </div>
+                </section>
+            </div>
+        </div>
+    }
+    else
+    {
+        <section class="app-vacation-empty app-vacation-empty--standalone">
+            <div class="app-vacation-empty__icon">
+                <i class="bi bi-person-lines-fill"></i>
+            </div>
+            <h2 class="app-vacation-empty__title">Bitte zuerst einen Mitarbeiter auswählen</h2>
+            <p class="app-vacation-empty__text">
+                Wählen Sie oben einen Mitarbeiter und ein Jahr aus, um Anspruch, Übertrag und hinterlegte Urlaubszeiträume anzuzeigen.
+            </p>
+        </section>
+    }
+</div>
+
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/de.js"></script>
+    <script src="~/js/app-urlaubsplaner.js" asp-append-version="true"></script>
+}

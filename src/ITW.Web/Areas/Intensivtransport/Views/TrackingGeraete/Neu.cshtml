@@ -1,0 +1,62 @@
+﻿@model ITW.Web.Areas.Intensivtransport.ViewModels.Fahrzeugmanagement.TrackingGeraetQrSetupViewModel
+
+@{
+    Layout = ViewData["AreaLayoutPath"]?.ToString();
+    ViewData["Title"] = Model.Titel;
+}
+
+<div class="app-page">
+    <header class="app-page-header">
+        <div class="app-page-heading">
+            <div class="app-page-heading__eyebrow">
+                <i class="bi bi-qr-code"></i>
+                Fahrzeugmanagement
+            </div>
+
+            <h1 class="app-page-heading__title">Tablet hinzufügen</h1>
+            <p class="app-page-heading__text">
+                QR-Code mit dem Einsatz-Tablet scannen. Die Einrichtung startet automatisch.
+            </p>
+        </div>
+
+        <div class="app-page-actions">
+            <a asp-action="Index"
+               class="app-btn app-btn-outline-accent"
+               data-app-loading-link
+               data-app-loading-text="Tabletübersicht wird geöffnet...">
+                <i class="bi bi-arrow-left"></i>
+                Zurück
+            </a>
+        </div>
+    </header>
+
+    <section class="app-surface">
+        <header class="app-surface__header">
+            <div class="app-surface__heading">
+                <p class="app-surface__eyebrow">Einrichtung</p>
+                <h2 class="app-surface__title">QR-Code scannen</h2>
+                <p class="app-surface__text">
+                    Öffne am Einsatz-Tablet die Kamera und scanne diesen QR-Code.
+                    Danach richtet sich das Tablet automatisch ein.
+                </p>
+            </div>
+        </header>
+
+        <div class="app-surface__body">
+            <div class="app-qr-layout">
+                <div class="app-qr-box">
+                    @Html.Raw(Model.QrCodeSvg)
+                </div>
+
+                <div class="app-form-note app-qr-note">
+                    <div class="app-overline">Hinweis</div>
+                    <strong>Gültig bis @Model.GueltigBisText Uhr</strong>
+                    <p class="mb-0 mt-2">
+                        Wenn die Einrichtung nicht klappt, einfach zurückgehen und erneut
+                        „Tablet hinzufügen“ wählen.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>

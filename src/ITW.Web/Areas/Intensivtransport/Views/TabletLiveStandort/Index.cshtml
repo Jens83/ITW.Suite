@@ -1,0 +1,134 @@
+﻿@using System.Globalization
+@using System.Text.Json
+@model ITW.Web.Areas.Intensivtransport.ViewModels.Fahrzeugmanagement.TabletLiveStandortIndexViewModel
+
+@{
+    Layout = ViewData["AreaLayoutPath"]?.ToString();
+    ViewData["Title"] = Model.Titel;
+
+    var fahrzeug = Model.FokusTablet;
+
+    var routeData = fahrzeug?.RouteHistorie
+        .Select(x => new
+        {
+            latitude = x.Latitude,
+            longitude = x.Longitude,
+            speedKmh = x.SpeedKmh,
+            erfasstAmText = x.ErfasstAmText
+        })
+        .ToList() ?? [];
+
+    var routeJson = JsonSerializer.Serialize(routeData);
+
+    var latitude = fahrzeug?.Latitude?.ToString(CultureInfo.InvariantCulture) ?? string.Empty;
+    var longitude = fahrzeug?.Longitude?.ToString(CultureInfo.InvariantCulture) ?? string.Empty;
+
+    var datenUrl = Url.Action(
+        "Daten",
+        "TabletLiveStandort",
+        new { area = "Intensivtransport" }) ?? string.Empty;
+}
+
+<section class="itw-page itw-tablet-live-page"
+         data-itw-tablet-live-page
+         data-live-url="@datenUrl"
+         data-poll-ms="10000">
+
+    <div class="itw-page-header">
+        <div>
+            <p class="itw-kicker">Fahrzeugmanagement</p>
+            <h1>Fahrzeugstandort</h1>
+            <p>Aktueller Standort des Einsatzfahrzeugs.</p>
+        </div>
+    </div>
+
+    @if (fahrzeug is null)
+    {
+        <div class="itw-card">
+            <div class="alert alert-warning mb-0">
+                Es ist aktuell kein Standortsender eingerichtet.
+            </div>
+        </div>
+    }
+    else if (!fahrzeug.HatStandort || !fahrzeug.Latitude.HasValue || !fahrzeug.Longitude.HasValue)
+    {
+        <div class="itw-card">
+            <div class="itw-card-header">
+                <div>
+                    <p class="itw-kicker">Fahrzeugstandort</p>
+                    <h2>Kein Standort empfangen</h2>
+                    <p>
+                        Sobald das Einsatzgerät einen Standort sendet, erscheint hier die Karte.
+                    </p>
+                </div>
+            </div>
+
+            <div class="alert alert-warning mb-0">
+                Bitte das Tracking auf dem Einsatzgerät starten und Standortzugriff erlauben.
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="itw-card itw-tracking-map-card">
+            <div class="itw-card-header">
+                @* <div>
+                    <p class="itw-kicker">Fahrzeugstandort</p>
+                    <h2>Aktuelle Position</h2>
+                    <p>
+                        Die Karte aktualisiert sich automatisch, ohne die Seite neu zu laden.
+                    </p>
+                </div> *@
+
+                <div class="d-flex flex-wrap gap-2 justify-content-end">
+                    <span class="badge @(fahrzeug.IstOnline ? "bg-success" : "bg-warning text-dark")"
+                          data-itw-live-online>
+                        @(fahrzeug.IstOnline ? "Online" : "Offline")
+                    </span>
+
+                    <span class="badge @(fahrzeug.IstInBewegung ? "bg-primary" : "bg-secondary")"
+                          data-itw-live-motion>
+                        @fahrzeug.BewegungsstatusText
+                    </span>
+                </div>
+            </div>
+
+            <div class="itw-tracking-status-grid">
+                <div class="itw-tracking-status-card">
+                    <span>Status</span>
+                    <strong data-itw-live-status>@fahrzeug.BewegungsstatusText</strong>
+                </div>
+
+                <div class="itw-tracking-status-card">
+                    <span>Geschwindigkeit</span>
+                    <strong data-itw-live-speed>@fahrzeug.SpeedText</strong>
+                </div>
+
+                <div class="itw-tracking-status-card">
+                    <span>Strecke</span>
+                    <strong data-itw-live-distance>@fahrzeug.GefahreneStreckeText</strong>
+                </div>
+
+                <div class="itw-tracking-status-card">
+                    <span>Letzter Kontakt</span>
+                    <strong data-itw-live-contact>@fahrzeug.LetzterKontaktText</strong>
+                </div>
+            </div>
+
+            <div class="itw-tracking-map-shell ratio ratio-16x9">
+                <div class="itw-tracking-map"
+                     data-itw-tablet-live-map
+                     data-latitude="@latitude"
+                     data-longitude="@longitude"
+                     data-device="Fahrzeugstandort"
+                     data-speed="@fahrzeug.SpeedText"
+                     data-status="@fahrzeug.BewegungsstatusText"
+                     data-erfasst-am="@fahrzeug.ErfasstAmText"
+                     data-route='@routeJson'>
+                </div>
+            </div>
+
+           
+        </div>
+    }
+</section>

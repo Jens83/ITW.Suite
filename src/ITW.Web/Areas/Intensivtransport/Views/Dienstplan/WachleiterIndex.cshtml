@@ -1,0 +1,286 @@
+﻿@model ITW.Web.Areas.Intensivtransport.ViewModels.Dienstplan.DienstplanIndexViewModel
+
+@{
+    Layout = ViewData["AreaLayoutPath"]?.ToString();
+    ViewData["Title"] = Model.Titel;
+
+    var sortiertePerioden = Model.Perioden
+        .OrderByDescending(x => x.WunschphaseIstOffen)
+        .ThenByDescending(x => x.Jahr)
+        .ThenByDescending(x => x.Monat)
+        .ToArray();
+
+    var offenePeriode = sortiertePerioden.FirstOrDefault(x => x.WunschphaseIstOffen);
+    var auswertungsPeriodeId = offenePeriode?.Id ?? sortiertePerioden.FirstOrDefault()?.Id;
+
+    var successMessage = TempData["SuccessMessage"]?.ToString();
+
+    var finalError = TempData["ErrorMessage"]?.ToString();
+    if (string.IsNullOrWhiteSpace(finalError) && !Model.IsSuccess)
+    {
+        finalError = Model.ErrorMessage ?? "Ein Systemfehler ist aufgetreten.";
+    }
+}
+
+<div class="app-period-page">
+    <header class="app-period-hero">
+        <div class="app-period-hero__content">
+            <div class="app-period-hero__label">
+                <i class="bi bi-calendar-range"></i>
+                Wachleiter
+            </div>
+
+            <h1 class="app-period-hero__title">@Model.Titel</h1>
+
+            @if (!string.IsNullOrWhiteSpace(Model.Beschreibung))
+            {
+                <p class="app-period-hero__text">@Model.Beschreibung</p>
+            }
+        </div>
+
+        <div class="app-period-toolbar">
+            @if (auswertungsPeriodeId.HasValue)
+            {
+                <a asp-area="Intensivtransport"
+                   asp-controller="DienstplanAuswertung"
+                   asp-action="Monatsauswertung"
+                   asp-route-periodeId="@auswertungsPeriodeId"
+                   class="app-btn app-btn-neutral"
+                   data-app-loading-link
+                   data-app-loading-text="Auswertung wird geöffnet...">
+                    <i class="bi bi-bar-chart-line"></i>
+                    Auswertung
+                </a>
+            }
+
+            @if (Model.DarfPeriodeAnlegen)
+            {
+                <button type="button"
+                        class="app-btn app-btn-accent"
+                        data-bs-toggle="modal"
+                        data-bs-target="#periodeAnlegenModal">
+                    <i class="bi bi-plus-lg"></i>
+                    Neue Periode
+                </button>
+            }
+        </div>
+    </header>
+
+    @if (!string.IsNullOrWhiteSpace(successMessage) || !string.IsNullOrWhiteSpace(finalError))
+    {
+        <div class="app-status-stack">
+            @if (!string.IsNullOrWhiteSpace(successMessage))
+            {
+                @await Html.PartialAsync(
+                "~/Views/Shared/Komponenten/_AppStatusMessage.cshtml",
+                successMessage,
+                new ViewDataDictionary(ViewData)
+                {
+                    ["Variant"] = "success",
+                    ["Title"] = "Erfolgreich gespeichert",
+                    ["AutoHide"] = true,
+                    ["AutoHideMilliseconds"] = 3000
+                })
+                }
+
+            @if (!string.IsNullOrWhiteSpace(finalError))
+            {
+                @await Html.PartialAsync(
+                "~/Views/Shared/Komponenten/_AppStatusMessage.cshtml",
+                finalError,
+                new ViewDataDictionary(ViewData)
+                {
+                    ["Variant"] = "danger",
+                    ["Title"] = "System-Hinweis",
+                    ["AutoHide"] = false
+                })
+                }
+        </div>
+    }
+
+    @if (sortiertePerioden.Length > 0)
+    {
+        <div class="app-period-grid">
+            @foreach (var periode in sortiertePerioden)
+            {
+                var statusText = periode.PlanIstFreigegeben
+                ? "Plan ist final und für alle sichtbar."
+                : periode.WunschphaseIstOffen
+                ? "Mitarbeiter geben aktuell ihre Wünsche ab."
+                : "Die Wunschphase ist beendet. Prüfung läuft.";
+
+                <article class="app-period-card @(periode.WunschphaseIstOffen ? "app-period-card--active" : "")">
+                    <div class="app-period-card__body">
+                        <div class="app-period-card__layout">
+                            <div class="app-period-card__identity">
+                                <div class="app-period-date @(periode.WunschphaseIstOffen ? "app-period-date--active" : "")">
+                                    <span class="app-period-date__month">
+                                        @System.Globalization.CultureInfo.CurrentCulture.DateTimeFormat.GetAbbreviatedMonthName(periode.Monat)
+                                    </span>
+                                    <span class="app-period-date__year">@periode.Jahr</span>
+                                </div>
+
+                                <div>
+                                    <h2 class="app-period-card__title">@periode.Bezeichnung</h2>
+                                    <p class="app-period-card__subtext">
+                                        Erstellt am @periode.ErstelltAm.ToString("dd.MM.yyyy")
+                                    </p>
+                                </div>
+                            </div>
+
+                            <div class="app-period-card__status">
+                                <div class="app-period-badges">
+                                    @if (periode.WunschphaseIstOffen)
+                                    {
+                                        <span class="app-period-badge app-period-badge--active">
+                                            <i class="bi bi-record-circle-fill"></i>
+                                            Wunschphase aktiv
+                                        </span>
+                                    }
+                                    else
+                                    {
+                                        <span class="app-period-badge app-period-badge--closed">
+                                            Phase geschlossen
+                                        </span>
+                                    }
+
+                                    @if (periode.PlanIstFreigegeben)
+                                    {
+                                        <span class="app-period-badge app-period-badge--released">
+                                            <i class="bi bi-eye-fill"></i>
+                                            Veröffentlicht
+                                        </span>
+                                    }
+                                    else
+                                    {
+                                        <span class="app-period-badge app-period-badge--draft">
+                                            In Bearbeitung
+                                        </span>
+                                    }
+                                </div>
+
+                                <p class="app-period-card__note">
+                                    <i class="bi bi-info-circle me-1"></i>
+                                    @statusText
+                                </p>
+                            </div>
+
+                            <div class="app-period-card__actions">
+                                <a asp-area="Intensivtransport"
+                                   asp-controller="DienstplanWachleiter"
+                                   asp-action="Wachleiterkalender"
+                                   asp-route-periodeId="@periode.Id"
+                                   class="app-btn app-btn-primary"
+                                   data-app-loading-link
+                                   data-app-loading-text="Kalender wird geöffnet...">
+                                    Details öffnen
+                                    <i class="bi bi-arrow-right"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </article>
+            }
+        </div>
+    }
+    else
+    {
+        <section class="app-period-empty">
+            <div class="app-period-empty__body">
+                <div class="app-period-empty__icon">
+                    <i class="bi bi-calendar2-x"></i>
+                </div>
+
+                <h2 class="app-period-empty__title">Keine Zeiträume vorhanden</h2>
+                <p class="app-period-empty__text">
+                    Legen Sie über den Button oben eine neue Planungsperiode an, damit Wunschphase, Prüfung und Freigabe gestartet werden können.
+                </p>
+            </div>
+        </section>
+    }
+</div>
+
+@if (Model.DarfPeriodeAnlegen)
+{
+    <div class="modal fade app-period-modal" id="periodeAnlegenModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="app-period-modal__header">
+                    <div class="app-period-modal__label">
+                        <i class="bi bi-plus-circle"></i>
+                        Planungszeitraum
+                    </div>
+                    <h2 class="app-period-modal__title">Neue Periode anlegen</h2>
+                </div>
+
+                <form asp-area="Intensivtransport"
+                      asp-controller="DienstplanWachleiter"
+                      asp-action="PeriodeAnlegen"
+                      method="post"
+                      class="app-form-stack"
+                      data-app-loading-form
+                      data-app-loading-text="Periode wird angelegt...">
+                    @Html.AntiForgeryToken()
+
+                    <div class="app-period-modal__body">
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <div class="app-period-field">
+                                    <label asp-for="Monat" class="app-period-field__label">Monat</label>
+                                    <select asp-for="Monat"
+                                            asp-items="Model.MonatOptionen"
+                                            class="form-select app-period-field__control">
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <div class="app-period-field">
+                                    <label asp-for="Jahr" class="app-period-field__label">Jahr</label>
+                                    <select asp-for="Jahr"
+                                            asp-items="Model.JahrOptionen"
+                                            class="form-select app-period-field__control">
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="col-12 mt-3">
+                                <div class="app-period-switch-card">
+                                    <div class="app-period-switch-card__icon">
+                                        <i class="bi bi-lightning-charge"></i>
+                                    </div>
+
+                                    <div class="flex-grow-1">
+                                        <div class="form-check form-switch m-0">
+                                            <input asp-for="WunschphaseDirektOeffnen" class="form-check-input" type="checkbox" />
+                                            <label asp-for="WunschphaseDirektOeffnen" class="form-check-label fw-bold small ms-2">
+                                                Wunschphase sofort starten
+                                            </label>
+                                        </div>
+                                        <div class="app-period-switch-card__text mt-2">
+                                            Aktivieren Sie diese Option, wenn Mitarbeiter ihre Wünsche direkt nach dem Erstellen der Periode abgeben sollen.
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="app-period-modal__footer d-flex justify-content-end gap-2">
+                        <button type="button" class="app-btn app-btn-neutral" data-bs-dismiss="modal">
+                            Abbrechen
+                        </button>
+                        <button type="submit" class="app-btn app-btn-accent">
+                            <i class="bi bi-plus-lg"></i>
+                            Erstellen
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+}
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

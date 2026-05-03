@@ -1,0 +1,189 @@
+﻿@using ITW.Fahrzeugmanagement.Domain.Enums
+@model ITW.Web.Areas.Intensivtransport.ViewModels.Fahrzeugmanagement.FahrzeugeIndexViewModel
+
+@{
+    Layout = ViewData["AreaLayoutPath"]?.ToString();
+    ViewData["Title"] = Model.Titel;
+
+    var fahrzeugeGesamt = Model.Fahrzeuge.Count;
+
+    var aktiveFahrzeuge = Model.Fahrzeuge.Count(x =>
+        x.Status == FahrzeugStatus.Aktiv);
+
+    var fahrzeugeInBeobachtung = Model.Fahrzeuge.Count(x =>
+        x.Status == FahrzeugStatus.InWartung ||
+        x.Status == FahrzeugStatus.Reserviert);
+
+    var fahrzeugeNichtVerfuegbar = Model.Fahrzeuge.Count(x =>
+        x.Status == FahrzeugStatus.AusserBetrieb ||
+        x.Status == FahrzeugStatus.Archiviert);
+}
+
+<div class="app-page itw-vehicle-page">
+    <header class="app-page-header">
+        <div class="app-page-heading">
+            <div class="app-page-heading__eyebrow">
+                <i class="bi bi-truck-front"></i>
+                Fahrzeugmanagement
+            </div>
+
+            <h1 class="app-page-heading__title">@Model.Titel</h1>
+            <p class="app-page-heading__text">
+                Operative Fahrzeugübersicht für den Intensivtransport: Akte, Fahrtenbuch, Tankbelege und Prüfstatus.
+            </p>
+        </div>
+
+        <div class="app-page-actions">
+            <a asp-action="Anlegen"
+               class="app-btn app-btn-accent"
+               data-app-loading-link
+               data-app-loading-text="Fahrzeugformular wird geöffnet...">
+                <i class="bi bi-plus-circle"></i>
+                Fahrzeug anlegen
+            </a>
+        </div>
+    </header>
+
+    <section class="itw-vehicle-summary">
+        <article class="itw-vehicle-summary-card">
+            <span class="itw-vehicle-summary-card__label">Fahrzeuge</span>
+            <strong class="itw-vehicle-summary-card__value">@fahrzeugeGesamt</strong>
+            <span class="itw-vehicle-summary-card__hint">gesamt erfasst</span>
+        </article>
+
+        <article class="itw-vehicle-summary-card">
+            <span class="itw-vehicle-summary-card__label">Einsatzbereit</span>
+            <strong class="itw-vehicle-summary-card__value">@aktiveFahrzeuge</strong>
+            <span class="itw-vehicle-summary-card__hint">Status aktiv</span>
+        </article>
+
+        <article class="itw-vehicle-summary-card">
+            <span class="itw-vehicle-summary-card__label">Beobachten</span>
+            <strong class="itw-vehicle-summary-card__value">@fahrzeugeInBeobachtung</strong>
+            <span class="itw-vehicle-summary-card__hint">Wartung oder reserviert</span>
+        </article>
+
+        <article class="itw-vehicle-summary-card">
+            <span class="itw-vehicle-summary-card__label">Nicht verfügbar</span>
+            <strong class="itw-vehicle-summary-card__value">@fahrzeugeNichtVerfuegbar</strong>
+            <span class="itw-vehicle-summary-card__hint">außer Betrieb oder archiviert</span>
+        </article>
+    </section>
+
+    @if (Model.Fahrzeuge.Count == 0)
+    {
+        <section class="app-surface">
+            <div class="app-surface__body">
+                <div class="app-empty-state">
+                    <div class="app-empty-state__icon">
+                        <i class="bi bi-truck-front"></i>
+                    </div>
+
+                    <div class="app-empty-state__body">
+                        <h2 class="app-empty-state__title">Noch keine Fahrzeuge angelegt</h2>
+                        <p class="app-empty-state__text">
+                            Lege das erste Fahrzeug an, damit Fahrtenbuch, Tankbelege und Prüfstatus genutzt werden können.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    }
+    else
+    {
+        <section class="itw-vehicle-grid">
+            @foreach (var fahrzeug in Model.Fahrzeuge)
+            {
+                <article class="itw-vehicle-card">
+                    <header class="itw-vehicle-card__header">
+                        <div class="itw-vehicle-identity">
+                            <div class="itw-vehicle-identity__icon">
+                                <i class="bi bi-truck-front"></i>
+                            </div>
+
+                            <div class="itw-vehicle-identity__body">
+                                <div class="itw-vehicle-identity__number">
+                                    @fahrzeug.InterneNummer
+                                </div>
+
+                                <h2 class="itw-vehicle-identity__title">
+                                    @fahrzeug.Kennzeichen
+                                </h2>
+
+                                <p class="itw-vehicle-identity__text">
+                                    @fahrzeug.FahrzeugnameText
+                                </p>
+                            </div>
+                        </div>
+
+                        <span class="badge @fahrzeug.StatusBadgeCssClass">
+                            @fahrzeug.StatusText
+                        </span>
+                    </header>
+
+                    <div class="itw-vehicle-card__body">
+                        <div class="itw-vehicle-meta-grid">
+                            <div>
+                                <span>Kilometerstand</span>
+                                <strong>@fahrzeug.KilometerstandText</strong>
+                            </div>
+
+                            <div>
+                                <span>Erstzulassung</span>
+                                <strong>@fahrzeug.ErstzulassungText</strong>
+                            </div>
+
+                            <div>
+                                <span>Kraftstoff</span>
+                                <strong>@fahrzeug.KraftstoffText</strong>
+                            </div>
+
+                            <div>
+                                <span>Leistung</span>
+                                <strong>@fahrzeug.LeistungText</strong>
+                            </div>
+                        </div>
+
+                        <div class="itw-vehicle-action-grid">
+                            <a asp-action="Details"
+                               asp-route-id="@fahrzeug.FahrzeugId"
+                               class="app-btn app-btn-accent app-btn-sm"
+                               data-app-loading-link
+                               data-app-loading-text="Fahrzeugakte wird geöffnet...">
+                                <i class="bi bi-folder2-open"></i>
+                                Akte
+                            </a>
+
+                            <a asp-action="Fahrtenbuch"
+                               asp-route-id="@fahrzeug.FahrzeugId"
+                               class="app-btn app-btn-outline-accent app-btn-sm"
+                               data-app-loading-link
+                               data-app-loading-text="Fahrtenbuch wird geöffnet...">
+                                <i class="bi bi-signpost-split"></i>
+                                Fahrtenbuch
+                            </a>
+
+                            <a asp-action="Tankbelege"
+                               asp-route-id="@fahrzeug.FahrzeugId"
+                               class="app-btn app-btn-outline-accent app-btn-sm"
+                               data-app-loading-link
+                               data-app-loading-text="Tankbelege werden geöffnet...">
+                                <i class="bi bi-fuel-pump"></i>
+                                Tankbelege
+                            </a>
+
+                            <a asp-action="Pruefstatus"
+                               asp-route-id="@fahrzeug.FahrzeugId"
+                               class="app-btn app-btn-outline-accent app-btn-sm"
+                               data-app-loading-link
+                               data-app-loading-text="Prüfstatus wird geöffnet...">
+                                <i class="bi bi-shield-check"></i>
+                                Prüfstatus
+                            </a>
+                        </div>
+                    </div>
+                </article>
+            }
+        </section>
+    }
+</div>

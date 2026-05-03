@@ -1,0 +1,56 @@
+﻿@using ITW.Application.Organisation.Contracts
+@inject ITW.Web.Security.CurrentUser.ICurrentUserContextAccessor CurrentUserContextAccessor
+
+@{
+    var currentUserLookup = await CurrentUserContextAccessor.GetCurrentAsync();
+    var navigation = ITW.Web.Navigation.AreaNavigation.BereichsNavigationBuilder.Build(
+        OrganisationsbereichCode.Intensivtransport,
+        currentUserLookup.CurrentUser,
+        ViewContext.RouteData.Values["Controller"]?.ToString(),
+        ViewContext.RouteData.Values["Action"]?.ToString());
+
+    var benutzerMenuModel = new ITW.Web.ViewModels.Layout.BereichsBenutzerMenuViewModel
+    {
+        Bereichsanzeige = "Intensivtransport",
+        AvatarBackgroundColor = "0d6efd"
+    };
+
+    var appShellModel = new ITW.Web.ViewModels.Layout.AppShellViewModel
+    {
+        ThemeCssClass = "theme-itw",
+        PageTitle = ViewData["Title"]?.ToString() ?? "Intensivtransport",
+        ShowMenu = true,
+        AreaDisplayName = "Intensivtransport",
+        MenuBrandPrimaryText = "Intensivtransport",
+        MenuBrandAccentText = "Neubrandenburg",
+        MenuBrandSubtitle = "Arbeitsbereich",
+        MenuBrandIconCssClass = "bi bi-car-front-fill",
+        Navigation = navigation,
+        UserMenu = benutzerMenuModel
+    };
+}
+
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - ITW NB</title>
+
+    <partial name="~/Views/Shared/Komponenten/_AppHeadResources.cshtml" />
+</head>
+<body class="@appShellModel.ThemeCssClass app-loading-boot">
+    <partial name="~/Views/Shared/Komponenten/_AppLoadingOverlay.cshtml" />
+
+    <div id="app">
+        <partial name="~/Views/Shared/Komponenten/_AppShell.cshtml" model="appShellModel" />
+
+        <main class="container-fluid p-4">
+            @RenderBody()
+        </main>
+    </div>
+
+    <partial name="~/Views/Shared/Komponenten/_AppScriptResources.cshtml" />
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

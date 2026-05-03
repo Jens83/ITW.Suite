@@ -1,0 +1,62 @@
+﻿using ITW.Application.Organisation.Contracts;
+using ITW.Application.Organisation.VisibilityScopes;
+using ITW.Application.Users.ActivateUser;
+using ITW.Application.Users.AssignArea;
+using ITW.Application.Users.ChangeAreaRole;
+using ITW.Application.Users.CreateUser;
+using ITW.Application.Users.LockUser;
+using ITW.Application.Users.ReadNichtZugeordneteBenutzerkonten;
+using ITW.Application.Users.ReadUsersByScope;
+using ITW.Web.Authorization.Modules;
+using ITW.Web.Controllers.Base;
+using ITW.Web.Security.CurrentUser;
+using Microsoft.AspNetCore.Mvc;
+
+namespace ITW.Web.Areas.Verwaltung.Controllers;
+
+[Area("Verwaltung")]
+[RequireModule(ModulCode.Personal)]
+public sealed class BenutzerController : BereichsBenutzerControllerBase
+{
+    public BenutzerController(
+        ReadUsersByScopeService readUsersByScopeService,
+        AssignUserToPrimaryAreaService assignUserToPrimaryAreaService,
+        ChangeUserAreaRoleService changeUserAreaRoleService,
+        ReadNichtZugeordneteBenutzerkontenService readNichtZugeordneteBenutzerkontenService,
+        CreateBenutzerkontoService createBenutzerkontoService,
+        LockUserService lockUserService,
+        ActivateUserService activateUserService,
+        ICurrentUserContextAccessor currentUserContextAccessor,
+        BenutzerSichtbarkeitsScopeErmittler benutzerSichtbarkeitsScopeErmittler)
+        : base(
+            readUsersByScopeService,
+            assignUserToPrimaryAreaService,
+            changeUserAreaRoleService,
+            readNichtZugeordneteBenutzerkontenService,
+            createBenutzerkontoService,
+            lockUserService,
+            activateUserService,
+            currentUserContextAccessor,
+            benutzerSichtbarkeitsScopeErmittler)
+    {
+    }
+
+    protected override OrganisationsbereichCode Bereich => OrganisationsbereichCode.Verwaltung;
+
+    protected override string BereichName => "Verwaltung";
+
+    protected override string ListenTitel => "Mitarbeiterverwaltung Verwaltung";
+
+    protected override string ListenBeschreibung =>
+        "Bereichsbezogene Mitarbeiterliste für den Bereich Verwaltung.";
+
+    protected override string AreaLayoutPath =>
+        "~/Areas/Verwaltung/Views/Shared/_LayoutVerwaltung.cshtml";
+
+    protected override IReadOnlyList<BereichsrolleCode> ErlaubteRollen =>
+        new[]
+        {
+            BereichsrolleCode.Verwaltungsmitarbeiter,
+            BereichsrolleCode.Vorstandsverwaltung
+        };
+}

@@ -1,0 +1,224 @@
+﻿@model ITW.Web.ViewModels.Personal.ItwMitarbeiterprofilListeViewModel
+
+@{
+    Layout = ViewData["AreaLayoutPath"]?.ToString();
+    ViewData["Title"] = "Personalstamm";
+
+    var personalIndexReturnUrl = Url.Action("Index", "Personal", new { area = "Intensivtransport" }) ?? string.Empty;
+
+    var successMessage = TempData["SuccessMessage"]?.ToString();
+
+    var finalError = TempData["ErrorMessage"]?.ToString();
+    if (string.IsNullOrWhiteSpace(finalError) && !Model.IsSuccess)
+    {
+        finalError = Model.ErrorMessage ?? "Die Personaldaten konnten nicht geladen werden.";
+    }
+}
+
+<div class="app-personal-page">
+    <header class="app-personal-hero">
+        <div class="app-personal-hero__content">
+            <div class="app-personal-hero__label">
+                <i class="bi bi-person-badge"></i>
+                Personalstamm
+            </div>
+
+            <h1 class="app-personal-hero__title">@Model.Titel</h1>
+            <p class="app-personal-hero__text">@Model.Beschreibung</p>
+        </div>
+
+        <div class="app-personal-hero__actions">
+            <a asp-area="Intensivtransport"
+               asp-controller="Benutzer"
+               asp-action="Anlegen"
+               asp-route-returnUrl="@personalIndexReturnUrl"
+               class="app-btn app-btn-outline-accent"
+               data-app-loading-link
+               data-app-loading-text="Zuordnung wird geöffnet...">
+                <i class="bi bi-person-check"></i>
+                Bestehendes Konto zuordnen
+            </a>
+
+            <a asp-area="Intensivtransport"
+               asp-controller="Benutzer"
+               asp-action="BenutzerkontoAnlegen"
+               asp-route-returnUrl="@personalIndexReturnUrl"
+               class="app-btn app-btn-accent"
+               data-app-loading-link
+               data-app-loading-text="Benutzerkonto wird geöffnet...">
+                <i class="bi bi-person-plus"></i>
+                Neues Benutzerkonto
+            </a>
+        </div>
+    </header>
+
+    @if (!string.IsNullOrWhiteSpace(successMessage) || !string.IsNullOrWhiteSpace(finalError))
+    {
+        <div class="app-status-stack">
+            @if (!string.IsNullOrWhiteSpace(successMessage))
+            {
+                @await Html.PartialAsync(
+                "~/Views/Shared/Komponenten/_AppStatusMessage.cshtml",
+                successMessage,
+                new ViewDataDictionary(ViewData)
+                {
+                    ["Variant"] = "success",
+                    ["Title"] = "Erfolgreich gespeichert",
+                    ["AutoHide"] = true,
+                    ["AutoHideMilliseconds"] = 3000
+                })
+                }
+
+            @if (!string.IsNullOrWhiteSpace(finalError))
+            {
+                @await Html.PartialAsync(
+                "~/Views/Shared/Komponenten/_AppStatusMessage.cshtml",
+                finalError,
+                new ViewDataDictionary(ViewData)
+                {
+                    ["Variant"] = "danger",
+                    ["Title"] = "System-Hinweis",
+                    ["AutoHide"] = false
+                })
+                }
+        </div>
+    }
+
+    @if (Model.IsSuccess && Model.Profile.Count == 0)
+    {
+        <section class="app-personal-empty">
+            <div class="app-personal-empty__icon">
+                <i class="bi bi-person-x"></i>
+            </div>
+
+            <h2 class="app-personal-empty__title">Noch keine Mitarbeiter vorhanden</h2>
+            <p class="app-personal-empty__text">
+                Sobald Benutzer dem Bereich Intensivtransport zugeordnet sind, können hier die allgemeinen Stammdaten
+                und fachlichen ITW-Profile gepflegt werden.
+            </p>
+        </section>
+    }
+    else if (Model.IsSuccess)
+    {
+        <section class="app-personal-card">
+            <header class="app-personal-card__header">
+                <div>
+                    <div class="app-personal-card__eyebrow">Mitarbeiterübersicht</div>
+                    <h2 class="app-personal-card__title">Profile im Bereich Intensivtransport</h2>
+                    <p class="app-personal-card__text">
+                        Übersicht über Stammdatenstatus, ITW-Profile, Hauptqualifikationen und letzte Profilpflege.
+                    </p>
+                </div>
+
+                <div class="app-personal-card__badge">
+                    @Model.Profile.Count Einträge
+                </div>
+            </header>
+
+            <div class="app-personal-card__body app-personal-card__body--table">
+                <div class="table-responsive">
+                    <table class="table app-personal-table align-middle mb-0">
+                        <thead>
+                            <tr>
+                                <th class="ps-4">Mitarbeiter</th>
+                                <th>Stammdaten</th>
+                                <th>Profil</th>
+                                <th>Hauptqualifikation</th>
+                                <th>Zusatzqualifikationen</th>
+                                <th class="text-end">Profil aktualisiert</th>
+                                <th class="pe-4 text-end">Aktion</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var profil in Model.Profile)
+                            {
+                                <tr>
+                                    <td class="ps-4 py-3">
+                                        <div class="app-personal-table__name">@profil.AnzeigeName</div>
+                                        <div class="app-personal-table__subtext">
+                                            @(string.IsNullOrWhiteSpace(profil.Email) ? "Keine E-Mail hinterlegt" : profil.Email)
+                                        </div>
+
+                                        <div class="app-personal-table__meta">
+                                            <span class="app-personal-chip @(
+                                                  profil.BeschaeftigungsartText == "Freelancer"
+                                                      ? "app-personal-chip--info"
+                                                      : profil.BeschaeftigungsartText == "Festangestellt"
+                                                          ? "app-personal-chip--primary"
+                                                          : "app-personal-chip--neutral")">
+                                        @profil.BeschaeftigungsartText
+                                    </span>
+
+                                    @if (profil.IstGesperrt)
+                                            {
+                                                <span class="app-personal-chip app-personal-chip--danger">
+                                                    Konto gesperrt
+                                                </span>
+                                            }
+                                    </div>
+                                </td>
+
+                                <td class="py-3">
+                                    <span class="app-personal-badge @(profil.HatStammdatenprofil ? "app-personal-badge--success" : "app-personal-badge--warning")">
+                                        @(profil.HatStammdatenprofil ? "Stammdaten gepflegt" : "Stammdaten offen")
+                                    </span>
+
+                                    <div class="app-personal-table__subtext app-personal-table__subtext--spaced">
+                                        @(profil.StammdatenAktualisiertAm.HasValue
+                                                                            ? $"Aktualisiert: {profil.StammdatenAktualisiertAm.Value.ToLocalTime():dd.MM.yyyy HH:mm}"
+                                                                            : "Noch keine Stammdaten")
+                                </div>
+                            </td>
+
+                                    <td class="py-3">
+                                        <span class="app-personal-badge @(profil.HatProfil ? "app-personal-badge--success" : "app-personal-badge--warning")">
+                                            @(profil.HatProfil ? "ITW-Profil gepflegt" : "ITW-Profil offen")
+                                        </span>
+                                    </td>
+
+                                    <td class="py-3">
+                                        <div class="app-personal-table__qualification">@profil.Hauptqualifikation</div>
+                                    </td>
+
+                                    <td class="py-3">
+                                @if (profil.Zusatzqualifikationen.Count == 0)
+                                        {
+                                            <span class="app-personal-table__subtext">Keine Zusatzqualifikationen</span>
+                                        }
+                                        else
+                                        {
+                                            <div class="app-personal-tags">
+                                                @foreach (var zusatz in profil.Zusatzqualifikationen)
+                                                {
+                                                    <span class="app-personal-chip app-personal-chip--neutral">@zusatz</span>
+                                                }
+                                            </div>
+                                        }
+                                </td>
+
+                                <td class="text-end py-3">
+                                    <span class="app-personal-table__subtext">
+                                        @(profil.ProfilAktualisiertAm.HasValue
+                                                                            ? profil.ProfilAktualisiertAm.Value.ToLocalTime().ToString("dd.MM.yyyy HH:mm")
+                                                                            : "Noch nie")
+                                </span>
+                            </td>
+
+                                    <td class="pe-4 text-end py-3">
+                                        <a asp-action="Details"
+                                           asp-route-userId="@profil.UserId"
+                                           class="app-btn app-btn-sm app-btn-outline-accent"
+                                           data-app-loading-link
+                                           data-app-loading-text="Mitarbeiterdetails werden geöffnet...">
+                                            Mitarbeiterdetails
+                                        </a>
+                                    </td>
+                                </tr>
+                                                }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+    }
+</div>

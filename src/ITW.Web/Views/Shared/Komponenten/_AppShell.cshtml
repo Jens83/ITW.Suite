@@ -1,0 +1,120 @@
+﻿@model ITW.Web.ViewModels.Layout.AppShellViewModel
+
+@if (Model.ShowMenu)
+{
+    <div class="offcanvas offcanvas-start itw-menu shadow" tabindex="-1" id="mainMenu" aria-labelledby="mainMenuLabel">
+        <div class="offcanvas-header">
+            <div class="app-menu-brand">
+                <div class="app-menu-brand__mark">
+                    <i class="@Model.MenuBrandIconCssClass"></i>
+                </div>
+
+                <div class="app-menu-brand__content">
+                    <div class="app-menu-brand__title">
+                        <span class="app-brand-name">
+                            <span class="app-brand-name__primary">@Model.MenuBrandPrimaryText</span>
+                            <span class="app-brand-name__accent">@Model.MenuBrandAccentText</span>
+                        </span>
+                    </div>
+                    <div class="app-menu-brand__subtitle">@Model.MenuBrandSubtitle</div>
+                </div>
+            </div>
+
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+        </div>
+
+        <div class="offcanvas-body">
+            <div class="menu-scroll-content">
+                @if (Model.Navigation is not null)
+                {
+                    @await Html.PartialAsync("~/Views/Shared/Navigation/_BereichsNavigation.cshtml", Model.Navigation)
+                }
+            </div>
+
+            <div class="menu-footer">
+                <a class="menu-footer-link"
+                   asp-area=""
+                   asp-controller="Home"
+                   asp-action="Index"
+                   data-app-loading-link
+                   data-app-loading-text="Startseite wird geöffnet...">
+                    <span class="menu-link__main">
+                        <span class="menu-link__icon">
+                            <i class="bi bi-house-door"></i>
+                        </span>
+                        <span class="menu-link__text">Startseite</span>
+                    </span>
+                </a>
+            </div>
+        </div>
+    </div>
+}
+
+<header class="ops-navbar sticky-top d-flex align-items-center px-4 shadow-sm">
+    @if (Model.ShowMenu)
+    {
+        <button class="btn btn-menu-toggle me-3" type="button" data-bs-toggle="offcanvas" data-bs-target="#mainMenu">
+            <i class="bi bi-list fs-4"></i>
+        </button>
+    }
+
+    @if (Model.ShowMenu)
+    {
+        <div class="d-none d-md-block me-auto">
+            <div class="app-area-title">
+                <span class="app-area-title__bereich">@Model.AreaDisplayName</span>
+                <span class="app-area-title__separator"></span>
+                <span class="app-area-title__seite">@Model.PageTitle</span>
+            </div>
+        </div>
+    }
+    else
+    {
+        <a asp-area=""
+           asp-controller="Home"
+           asp-action="Index"
+           class="text-decoration-none me-auto"
+           data-app-loading-link
+           data-app-loading-text="Startseite wird geöffnet...">
+            <div class="app-area-title">
+                <span class="app-area-title__bereich">ITW.Suite</span>
+                <span class="app-area-title__separator"></span>
+                <span class="app-area-title__seite">@Model.PageTitle</span>
+            </div>
+        </a>
+    }
+
+    <div class="ms-auto d-flex align-items-center gap-2 flex-wrap">
+        @if (Model.UserMenu is not null && User.Identity?.IsAuthenticated == true)
+        {
+            <partial name="~/Views/Shared/Komponenten/_BereichsBenutzerMenu.cshtml" model="Model.UserMenu" />
+        }
+        else if (User.Identity?.IsAuthenticated == true)
+        {
+            <span class="app-page-meta">
+                <i class="bi bi-person-circle"></i>
+                <span>@User.Identity.Name</span>
+            </span>
+
+            <form asp-area="" asp-controller="Account" asp-action="Logout" method="post" class="m-0">
+                @Html.AntiForgeryToken()
+                <button type="submit" class="app-btn app-btn-sm app-btn-danger">
+                    <i class="bi bi-box-arrow-right"></i>
+                    <span>Abmelden</span>
+                </button>
+            </form>
+        }
+        else
+        {
+            <a asp-area=""
+               asp-controller="Account"
+               asp-action="Login"
+               class="app-btn app-btn-sm app-btn-outline-accent"
+               data-app-loading-link
+               data-app-loading-text="Anmeldung wird geöffnet...">
+                <i class="bi bi-box-arrow-in-right"></i>
+                <span>Anmelden</span>
+            </a>
+        }
+    </div>
+</header>

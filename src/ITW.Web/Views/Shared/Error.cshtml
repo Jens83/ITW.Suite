@@ -1,0 +1,116 @@
+﻿@using ITW.Web.ViewModels.UI
+@model ErrorViewModel
+
+@{
+    ViewData["Title"] = "Fehler";
+    var fehlerpfad = ViewData["Fehlerpfad"]?.ToString();
+
+    var headerModel = new AppPageHeaderViewModel
+    {
+        Eyebrow = "System",
+        EyebrowIconCssClass = "bi bi-exclamation-triangle",
+        Title = "Es ist ein unerwarteter Fehler aufgetreten",
+        Description = "Die Anfrage konnte nicht vollständig verarbeitet werden. Bitte versuchen Sie es erneut oder kehren Sie zur Startseite zurück."
+    };
+
+    var emptyStateModel = new AppEmptyStateViewModel
+    {
+        IconCssClass = "bi bi-exclamation-octagon",
+        Title = "Anfrage konnte nicht abgeschlossen werden",
+        Description = "Der Fehler wurde serverseitig abgefangen. Falls das Problem erneut auftritt, helfen Request-ID und Pfadangabe bei der technischen Prüfung."
+    };
+}
+
+<div class="row justify-content-center">
+    <div class="col-12 col-xl-9">
+        <div class="app-page">
+            <div class="app-page-header">
+                <partial name="~/Views/Shared/Komponenten/_AppPageHeader.cshtml" model="headerModel" />
+            </div>
+
+            <section class="app-surface">
+                <div class="app-surface__body">
+                    <partial name="~/Views/Shared/Komponenten/_AppEmptyState.cshtml" model="emptyStateModel" />
+
+                    <div class="app-form-actions justify-content-center">
+                        <a asp-area=""
+                           asp-controller="Home"
+                           asp-action="Index"
+                           class="app-btn app-btn-accent"
+                           data-app-loading-link
+                           data-app-loading-text="Startseite wird geöffnet...">
+                            <i class="bi bi-house-door"></i>
+                            <span>Zur Startseite</span>
+                        </a>
+
+                        @if (User.Identity?.IsAuthenticated == true)
+                        {
+                            <form asp-area="" asp-controller="Account" asp-action="Logout" method="post" class="m-0">
+                                @Html.AntiForgeryToken()
+                                <button type="submit" class="app-btn app-btn-danger">
+                                    <i class="bi bi-box-arrow-right"></i>
+                                    <span>Abmelden</span>
+                                </button>
+                            </form>
+                        }
+                        else
+                        {
+                            <a asp-area=""
+                               asp-controller="Account"
+                               asp-action="Login"
+                               class="app-btn app-btn-outline-accent"
+                               data-app-loading-link
+                               data-app-loading-text="Anmeldung wird geöffnet...">
+                                <i class="bi bi-box-arrow-in-right"></i>
+                                <span>Zum Login</span>
+                            </a>
+                        }
+                    </div>
+                </div>
+            </section>
+
+            @if (!string.IsNullOrWhiteSpace(fehlerpfad) || Model.ShowRequestId)
+            {
+                <section class="app-surface">
+                    <div class="app-surface__header app-surface__header--compact">
+                        <div class="app-surface__heading">
+                            <p class="app-surface__eyebrow">Technische Angaben</p>
+                            <h2 class="app-surface__title">Fehlerkontext</h2>
+                            <p class="app-surface__text">
+                                Diese Angaben helfen bei der technischen Nachverfolgung und Prüfung des Fehlers.
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="app-surface__body pt-0">
+                        <div class="row g-4">
+                            @if (!string.IsNullOrWhiteSpace(fehlerpfad))
+                            {
+                                <div class="col-12">
+                                    <div class="app-static-field">
+                                        <label class="app-static-field__label">Fehlerhafter Pfad</label>
+                                        <div class="app-static-field__value app-static-field__value--muted">
+                                            <code>@fehlerpfad</code>
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+
+                            @if (Model.ShowRequestId)
+                            {
+                                <div class="col-12 col-lg-6">
+                                    <div class="app-static-field">
+                                        <label class="app-static-field__label">Request-ID</label>
+                                        <div class="app-static-field__value app-static-field__value--muted">
+                                            <code>@Model.RequestId</code>
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                </section>
+            }
+        </div>
+    </div>
+</div>

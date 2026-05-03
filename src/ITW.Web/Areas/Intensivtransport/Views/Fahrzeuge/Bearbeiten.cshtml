@@ -1,0 +1,237 @@
+﻿@using ITW.Fahrzeugmanagement.Domain.Enums
+@model ITW.Web.Areas.Intensivtransport.ViewModels.Fahrzeugmanagement.FahrzeugFormViewModel
+
+@{
+    Layout = ViewData["AreaLayoutPath"]?.ToString();
+    ViewData["Title"] = Model.Titel;
+}
+
+<div class="app-page">
+    <header class="app-page-header">
+        <div class="app-page-heading">
+            <div class="app-page-heading__eyebrow">
+                <i class="bi bi-truck-front"></i>
+                Fahrzeugmanagement
+            </div>
+
+            <h1 class="app-page-heading__title">@Model.Kennzeichen</h1>
+            <p class="app-page-heading__text">
+                @Model.InterneNummer · @Model.Hersteller @Model.Modell
+            </p>
+        </div>
+
+        <div class="app-page-actions">
+            <a asp-action="Index"
+               class="app-btn app-btn-outline-accent"
+               data-app-loading-link
+               data-app-loading-text="Fahrzeugübersicht wird geöffnet...">
+                <i class="bi bi-arrow-left"></i>
+                Zurück
+            </a>
+        </div>
+    </header>
+
+    @if (!string.IsNullOrWhiteSpace(Model.Fehlermeldung))
+    {
+        <div class="app-status-stack">
+            @await Html.PartialAsync(
+            "~/Views/Shared/Komponenten/_AppStatusMessage.cshtml",
+                Model.Fehlermeldung,
+                new ViewDataDictionary(ViewData)
+                {
+                    ["Variant"] = "danger",
+                    ["Title"] = "System-Hinweis",
+                    ["AutoHide"] = false
+                })
+    </div>
+        }
+
+
+    <div class="app-employee-detail-grid">
+        <aside class="app-employee-detail-sidebar">
+            <partial name="~/Areas/Intensivtransport/Views/Shared/_FahrzeugDetailNavigation.cshtml" model="Model.Navigation" />
+        </aside>
+
+        <div class="app-employee-detail-content">
+            <section class="app-employee-card">
+                <header class="app-employee-card__header app-employee-card__header--row">
+                    <div>
+                        <h2 class="app-employee-card__title">
+                            <i class="bi bi-truck-front-fill"></i>
+                            Stammdaten
+                        </h2>
+                        <p class="app-employee-card__text">
+                            Stammdaten und Status des Fahrzeugs bearbeiten.
+                        </p>
+                    </div>
+                </header>
+
+
+                <div class="app-employee-card__body">
+                    <form asp-action="Bearbeiten" method="post" data-app-loading-form data-app-loading-text="Fahrzeug wird gespeichert...">
+                        @Html.AntiForgeryToken()
+                        <input asp-for="FahrzeugId" type="hidden" />
+
+                        <div class="app-employee-form-grid">
+                            <div>
+                                <label asp-for="InterneNummer" class="form-label small fw-bold text-muted">
+                                    Interne Nummer / Funkrufname
+                                </label>
+                                <input asp-for="InterneNummer"
+                                       class="form-control shadow-sm"
+                                       placeholder="z. B. 01-83-03"
+                                       autocomplete="off" />
+                            </div>
+
+                            <div>
+                                <label asp-for="Kennzeichen" class="form-label small fw-bold text-muted">
+                                    Kennzeichen
+                                </label>
+                                <input asp-for="Kennzeichen"
+                                       class="form-control shadow-sm text-uppercase"
+                                       placeholder="z. B. NB-ITW 1"
+                                       autocomplete="off" />
+                            </div>
+
+                            <div class="app-employee-form-grid__full">
+                                <label asp-for="Vin" class="form-label small fw-bold text-muted">
+                                    Fahrzeug-Identifikationsnummer
+                                </label>
+                                <input asp-for="Vin"
+                                       class="form-control shadow-sm text-uppercase"
+                                       autocomplete="off" />
+                            </div>
+
+                            <div>
+                                <label asp-for="Hersteller" class="form-label small fw-bold text-muted">
+                                    Hersteller
+                                </label>
+                                <input asp-for="Hersteller"
+                                       class="form-control shadow-sm"
+                                       placeholder="z. B. Mercedes-Benz"
+                                       autocomplete="off" />
+                            </div>
+
+                            <div>
+                                <label asp-for="Modell" class="form-label small fw-bold text-muted">
+                                    Modell
+                                </label>
+                                <input asp-for="Modell"
+                                       class="form-control shadow-sm"
+                                       placeholder="z. B. Sprinter"
+                                       autocomplete="off" />
+                            </div>
+
+                            <div>
+                                <label asp-for="Fahrzeugtyp" class="form-label small fw-bold text-muted">
+                                    Fahrzeugtyp
+                                </label>
+                                <input asp-for="Fahrzeugtyp"
+                                       class="form-control shadow-sm"
+                                       autocomplete="off" />
+                            </div>
+
+                            <div>
+                                <label asp-for="Baujahr" class="form-label small fw-bold text-muted">
+                                    Baujahr
+                                </label>
+                                <input asp-for="Baujahr"
+                                       type="number"
+                                       min="1900"
+                                       max="2100"
+                                       class="form-control shadow-sm" />
+                            </div>
+
+                            <div>
+                                <label asp-for="Erstzulassung" class="form-label small fw-bold text-muted">
+                                    Erstzulassung
+                                </label>
+                                <input asp-for="Erstzulassung"
+                                       type="date"
+                                       class="form-control shadow-sm" />
+                            </div>
+
+                            <div>
+                                <label asp-for="Kraftstoffart" class="form-label small fw-bold text-muted">
+                                    Kraftstoff
+                                </label>
+                                <select asp-for="Kraftstoffart" class="form-select shadow-sm">
+                                    <option value="@Kraftstoffart.Diesel">Diesel</option>
+                                    <option value="@Kraftstoffart.Benzin">Benzin</option>
+                                    <option value="@Kraftstoffart.Elektro">Elektro</option>
+                                    <option value="@Kraftstoffart.Hybrid">Hybrid</option>
+                                    <option value="@Kraftstoffart.Gas">Gas</option>
+                                    <option value="@Kraftstoffart.Wasserstoff">Wasserstoff</option>
+                                </select>
+                            </div>
+
+                            <div>
+                                <label asp-for="LeistungKw" class="form-label small fw-bold text-muted">
+                                    Leistung in kW
+                                </label>
+                                <input asp-for="LeistungKw"
+                                       type="number"
+                                       min="0"
+                                       class="form-control shadow-sm" />
+                            </div>
+
+                            <div>
+                                <label asp-for="KilometerstandAktuell" class="form-label small fw-bold text-muted">
+                                    Kilometerstand
+                                </label>
+                                <input asp-for="KilometerstandAktuell"
+                                       type="number"
+                                       min="0"
+                                       class="form-control shadow-sm" />
+                            </div>
+
+                            <div>
+                                <label asp-for="Status" class="form-label small fw-bold text-muted">
+                                    Status
+                                </label>
+                                <select asp-for="Status" class="form-select shadow-sm">
+                                    <option value="@FahrzeugStatus.Aktiv">Aktiv</option>
+                                    <option value="@FahrzeugStatus.InWartung">In Wartung</option>
+                                    <option value="@FahrzeugStatus.AusserBetrieb">Außer Betrieb</option>
+                                    <option value="@FahrzeugStatus.Reserviert">Reserviert</option>
+                                    <option value="@FahrzeugStatus.Archiviert">Archiviert</option>
+                                </select>
+                            </div>
+
+                            <div class="app-employee-form-grid__full">
+                                <label asp-for="StandardStandort" class="form-label small fw-bold text-muted">
+                                    Standort
+                                </label>
+                                <input asp-for="StandardStandort"
+                                       class="form-control shadow-sm"
+                                       placeholder="z. B. Wache Neubrandenburg"
+                                       autocomplete="off" />
+                            </div>
+                        </div>
+
+                        <div class="app-form-actions">
+                            <button type="submit" class="app-btn app-btn-accent">
+                                <i class="bi bi-save"></i>
+                                <span>Speichern</span>
+                            </button>
+
+                            <a asp-action="Details"
+                               asp-route-id="@Model.FahrzeugId"
+                               class="app-btn app-btn-neutral"
+                               data-app-loading-link
+                               data-app-loading-text="Fahrzeugdetails werden geöffnet...">
+                                <span>Abbrechen</span>
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </section>
+
+            
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

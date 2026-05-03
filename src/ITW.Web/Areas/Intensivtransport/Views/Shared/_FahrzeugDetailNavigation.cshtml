@@ -1,0 +1,82 @@
+﻿@model ITW.Web.Areas.Intensivtransport.ViewModels.Fahrzeugmanagement.FahrzeugDetailNavigationViewModel
+
+<div class="app-employee-nav">
+    <div class="app-employee-nav__identity">
+        <div class="app-employee-nav__avatar">
+            <i class="bi bi-truck-front"></i>
+        </div>
+
+        <div class="app-employee-nav__meta">
+            <div class="app-employee-nav__label">Fahrzeug</div>
+
+            <div class="app-employee-nav__name">@Model.Kennzeichen</div>
+
+            @if (!string.IsNullOrWhiteSpace(Model.InterneNummer))
+            {
+                <div class="app-employee-nav__qualification">@Model.InterneNummer</div>
+            }
+
+            @if (!string.IsNullOrWhiteSpace(Model.StatusText))
+            {
+                <div class="app-employee-nav__qualification">@Model.StatusText</div>
+            }
+        </div>
+    </div>
+
+    <div class="app-employee-nav__links">
+        <a asp-area="Intensivtransport"
+           asp-controller="Fahrzeuge"
+           asp-action="Details"
+           asp-route-id="@Model.FahrzeugId"
+           class="app-employee-nav__link @(string.Equals(Model.AktiveSeite, "Details", StringComparison.OrdinalIgnoreCase) ? "app-employee-nav__link--active" : string.Empty)"
+           data-app-loading-link
+           data-app-loading-text="Fahrzeugübersicht wird geöffnet...">
+            <i class="bi bi-grid-fill"></i>
+            <span>Übersicht</span>
+        </a>
+
+        <a asp-area="Intensivtransport"
+           asp-controller="Fahrzeuge"
+           asp-action="Bearbeiten"
+           asp-route-id="@Model.FahrzeugId"
+           class="app-employee-nav__link @(string.Equals(Model.AktiveSeite, "Stammdaten", StringComparison.OrdinalIgnoreCase) ? "app-employee-nav__link--active" : string.Empty)"
+           data-app-loading-link
+           data-app-loading-text="Stammdaten werden geöffnet...">
+            <i class="bi bi-truck-front-fill"></i>
+            <span>Stammdaten</span>
+        </a>
+        
+        <a asp-area="Intensivtransport"
+           asp-controller="Fahrzeuge"
+           asp-action="Fahrtenbuch"
+           asp-route-id="@Model.FahrzeugId"
+           class="app-employee-nav__link @(string.Equals(Model.AktiveSeite, "Fahrtenbuch", StringComparison.OrdinalIgnoreCase) ? "app-employee-nav__link--active" : string.Empty)"
+           data-app-loading-link
+           data-app-loading-text="Fahrtenbuch wird geöffnet...">
+            <i class="bi bi-signpost-split"></i>
+            <span>Fahrtenbuch</span>
+        </a>
+
+        <a asp-area="Intensivtransport"
+           asp-controller="Fahrzeuge"
+           asp-action="Tankbelege"
+           asp-route-id="@Model.FahrzeugId"
+           class="app-employee-nav__link @(string.Equals(Model.AktiveSeite, "Tankbelege", StringComparison.OrdinalIgnoreCase) ? "app-employee-nav__link--active" : string.Empty)"
+           data-app-loading-link
+           data-app-loading-text="Tankbelege werden geöffnet...">
+            <i class="bi bi-fuel-pump-fill"></i>
+            <span>Tankbelege</span>
+        </a>
+
+        <a asp-area="Intensivtransport"
+           asp-controller="Fahrzeuge"
+           asp-action="Pruefstatus"
+           asp-route-id="@Model.FahrzeugId"
+           class="app-employee-nav__link @(string.Equals(Model.AktiveSeite, "Pruefstatus", StringComparison.OrdinalIgnoreCase) ? "app-employee-nav__link--active" : string.Empty)"
+           data-app-loading-link
+           data-app-loading-text="Prüfstatus wird geöffnet...">
+            <i class="bi bi-tools"></i>
+            <span>Prüfstatus</span>
+        </a>
+    </div>
+</div>

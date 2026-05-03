@@ -1,0 +1,45 @@
+﻿@model ITW.Web.ViewModels.UI.AppEmptyStateViewModel
+
+<section class="app-empty-state">
+    <div class="app-empty-state__icon">
+        <i class="@Model.IconCssClass"></i>
+    </div>
+
+    <div class="app-empty-state__body">
+        <h2 class="app-empty-state__title">@Model.Title</h2>
+
+        @if (!string.IsNullOrWhiteSpace(Model.Description))
+        {
+            <p class="app-empty-state__text">@Model.Description</p>
+        }
+    </div>
+
+    @if (!string.IsNullOrWhiteSpace(Model.PrimaryActionText) || !string.IsNullOrWhiteSpace(Model.SecondaryActionText))
+    {
+        <div class="app-empty-state__actions">
+            @if (!string.IsNullOrWhiteSpace(Model.PrimaryActionText) && !string.IsNullOrWhiteSpace(Model.PrimaryActionUrl))
+            {
+                <a href="@Model.PrimaryActionUrl" class="app-btn app-btn-accent">
+                    @if (!string.IsNullOrWhiteSpace(Model.PrimaryActionIconCssClass))
+                    {
+                        <i class="@Model.PrimaryActionIconCssClass"></i>
+                    }
+
+                    <span>@Model.PrimaryActionText</span>
+                </a>
+            }
+
+            @if (!string.IsNullOrWhiteSpace(Model.SecondaryActionText) && !string.IsNullOrWhiteSpace(Model.SecondaryActionUrl))
+            {
+                <a href="@Model.SecondaryActionUrl" class="app-btn app-btn-outline-accent">
+                    @if (!string.IsNullOrWhiteSpace(Model.SecondaryActionIconCssClass))
+                    {
+                        <i class="@Model.SecondaryActionIconCssClass"></i>
+                    }
+
+                    <span>@Model.SecondaryActionText</span>
+                </a>
+            }
+        </div>
+    }
+</section>

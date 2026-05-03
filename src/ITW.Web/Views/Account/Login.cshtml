@@ -1,0 +1,153 @@
+﻿@model ITW.Web.ViewModels.Account.LoginViewModel
+
+@{
+    Layout = null;
+    ViewData["Title"] = "Anmeldung";
+
+    var returnUrl = Model?.ReturnUrl ?? string.Empty;
+    var loginThemeClass = "theme-itw";
+    var zielbereichName = "Intensivtransport";
+
+    if (!string.IsNullOrWhiteSpace(returnUrl))
+    {
+        if (returnUrl.Contains("/Verwaltung", StringComparison.OrdinalIgnoreCase))
+        {
+            loginThemeClass = "theme-admin";
+            zielbereichName = "Verwaltung";
+        }
+        else if (returnUrl.Contains("/Geschaeftsfuehrung", StringComparison.OrdinalIgnoreCase))
+        {
+            loginThemeClass = "theme-gf";
+            zielbereichName = "Geschäftsführung";
+        }
+        else if (returnUrl.Contains("/Intensivtransport", StringComparison.OrdinalIgnoreCase))
+        {
+            loginThemeClass = "theme-itw";
+            zielbereichName = "Intensivtransport";
+        }
+    }
+}
+
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Intensivtransport Neubrandenburg</title>
+
+    <partial name="~/Views/Shared/Komponenten/_AppHeadResources.cshtml" />
+</head>
+<body class="@loginThemeClass app-auth-body app-loading-boot">
+    <partial name="~/Views/Shared/Komponenten/_AppLoadingOverlay.cshtml" />
+
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-12 col-md-8 col-lg-5 col-xl-4">
+                <div class="app-auth-shell">
+                    <div class="app-auth-card w-100">
+                        <div class="app-auth-card__body">
+                            <header class="app-auth-hero">
+                                <div class="app-auth-hero__label">
+                                    <i class="bi bi-box-arrow-in-right"></i>
+                                    Kontozugang
+                                </div>
+
+                                <div class="app-auth-hero__brand">
+                                    <span class="app-brand-name">
+                                        <span class="app-brand-name__primary">Intensivtransport</span>
+                                        <span class="app-brand-name__accent">Neubrandenburg</span>
+                                    </span>
+                                </div>
+
+                                <p class="app-auth-hero__text">
+                                    Melden Sie sich mit Ihrem zentralen Benutzerkonto an, um den Bereich @zielbereichName zu öffnen.
+                                </p>
+                            </header>
+
+                            <hr class="app-auth-divider" />
+
+                            @if (TempData["SuccessMessage"] is string successMessage)
+                            {
+                                <div class="app-auth-alert">
+                                    @successMessage
+                                </div>
+                            }
+
+                            <div class="app-auth-form-header">
+                                <h1 class="app-auth-form-title">Anmeldung</h1>
+                            </div>
+
+                            <form asp-action="Login"
+                                  method="post"
+                                  novalidate
+                                  data-app-loading-form
+                                  data-app-loading-text="Anmeldung wird vorbereitet...">
+
+                                @Html.AntiForgeryToken()
+                                <input asp-for="ReturnUrl" type="hidden" />
+
+                                <div asp-validation-summary="ModelOnly" class="app-auth-validation"></div>
+
+                                <div class="app-auth-field">
+                                    <label asp-for="Benutzername" class="form-label app-auth-label"></label>
+                                    <div class="itw-input-wrapper shadow-sm">
+                                        <i class="bi bi-person"></i>
+                                        <input asp-for="Benutzername"
+                                               class="form-control"
+                                               autocomplete="username"
+                                               placeholder="Benutzername" />
+                                    </div>
+                                    <span asp-validation-for="Benutzername" class="app-auth-error"></span>
+                                </div>
+
+                                <div class="app-auth-field">
+                                    <label asp-for="Passwort" class="form-label app-auth-label"></label>
+                                    <div class="itw-input-wrapper shadow-sm">
+                                        <i class="bi bi-key"></i>
+                                        <input asp-for="Passwort"
+                                               type="password"
+                                               class="form-control"
+                                               autocomplete="current-password"
+                                               placeholder="Passwort" />
+                                    </div>
+                                    <span asp-validation-for="Passwort" class="app-auth-error"></span>
+                                </div>
+
+                                <div class="app-auth-options">
+                                    <div class="form-check form-switch m-0">
+                                        <input asp-for="AngemeldetBleiben"
+                                               class="form-check-input app-auth-switch"
+                                               type="checkbox"
+                                               role="switch" />
+                                        <label asp-for="AngemeldetBleiben" class="form-check-label app-auth-check-label"></label>
+                                    </div>
+
+                                    <a asp-action="PasswortVergessen"
+                                       asp-route-returnUrl="@returnUrl"
+                                       class="app-auth-link"
+                                       data-app-loading-link
+                                       data-app-loading-text="Ansicht wird geöffnet...">
+                                        Passwort vergessen?
+                                    </a>
+                                </div>
+
+                                <button type="submit" class="app-btn app-btn-accent app-btn-lg app-btn-block app-auth-submit">
+                                    <i class="bi bi-box-arrow-in-right"></i>
+                                    Anmelden
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="app-auth-footer">
+                    &copy; 2026 Intensivtransport Neubrandenburg
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <partial name="~/Views/Shared/Komponenten/_AppScriptResources.cshtml" />
+    <partial name="~/Views/Shared/_ValidationScriptsPartial.cshtml" />
+</body>
+</html>

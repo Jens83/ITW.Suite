@@ -1,0 +1,71 @@
+﻿@using ITW.Web.ViewModels.UI
+
+@{
+    ViewData["Title"] = "Kein Zugriff";
+
+    var headerModel = new AppPageHeaderViewModel
+    {
+        Eyebrow = "Zugriff",
+        EyebrowIconCssClass = "bi bi-shield-lock",
+        Title = "Kein Zugriff",
+        Description = "Für diesen Bereich oder diese Funktion liegt aktuell keine gültige Freigabe vor."
+    };
+
+    var emptyStateModel = new AppEmptyStateViewModel
+    {
+        IconCssClass = "bi bi-shield-exclamation",
+        Title = "Aktion derzeit nicht möglich",
+        Description = "Bitte wechseln Sie in einen freigegebenen Bereich oder melden Sie sich mit einem berechtigten Konto an."
+    };
+}
+
+<div class="row justify-content-center">
+    <div class="col-12 col-xl-8">
+        <div class="app-page">
+            <div class="app-page-header">
+                <partial name="~/Views/Shared/Komponenten/_AppPageHeader.cshtml" model="headerModel" />
+            </div>
+
+            <section class="app-surface">
+                <div class="app-surface__body">
+                    <partial name="~/Views/Shared/Komponenten/_AppEmptyState.cshtml" model="emptyStateModel" />
+
+                    <div class="app-form-actions justify-content-center">
+                        <a asp-area=""
+                           asp-controller="Home"
+                           asp-action="Index"
+                           class="app-btn app-btn-accent"
+                           data-app-loading-link
+                           data-app-loading-text="Startseite wird geöffnet...">
+                            <i class="bi bi-house-door"></i>
+                            <span>Zur Startseite</span>
+                        </a>
+
+                        @if (User.Identity?.IsAuthenticated == true)
+                        {
+                            <form asp-area="" asp-controller="Account" asp-action="Logout" method="post" class="m-0">
+                                @Html.AntiForgeryToken()
+                                <button type="submit" class="app-btn app-btn-danger">
+                                    <i class="bi bi-box-arrow-right"></i>
+                                    <span>Abmelden</span>
+                                </button>
+                            </form>
+                        }
+                        else
+                        {
+                            <a asp-area=""
+                               asp-controller="Account"
+                               asp-action="Login"
+                               class="app-btn app-btn-outline-accent"
+                               data-app-loading-link
+                               data-app-loading-text="Anmeldung wird geöffnet...">
+                                <i class="bi bi-box-arrow-in-right"></i>
+                                <span>Zur Anmeldung</span>
+                            </a>
+                        }
+                    </div>
+                </div>
+            </section>
+        </div>
+    </div>
+</div>

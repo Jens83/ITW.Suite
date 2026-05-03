@@ -1,0 +1,130 @@
+﻿@using ITW.Application.Organisation.Contracts
+@using ITW.Application.Users.CountOffenePasswortResetAnfragen
+@using ITW.Dienstplan.Application.Contracts
+@using ITW.Web.Security.PasswordReset
+@model ITW.Web.ViewModels.Navigation.BereichsNavigationViewModel
+@inject ITW.Web.Security.CurrentUser.ICurrentUserContextAccessor CurrentUserContextAccessor
+@inject CountOffenePasswortResetAnfragenService CountOffenePasswortResetAnfragenService
+@inject IDienstplanPeriodeRepository DienstplanPeriodeRepository
+
+@{
+    var areaName = ViewContext.RouteData.Values["area"]?.ToString();
+    var aktuellerController = ViewContext.RouteData.Values["controller"]?.ToString();
+    var aktuelleAction = ViewContext.RouteData.Values["action"]?.ToString();
+
+    var aktuellerBereich = ErmittleBereichAusAreaName(areaName);
+    var currentUserLookup = await CurrentUserContextAccessor.GetCurrentAsync();
+
+    var zeigePasswortResetEintrag = false;
+    var offenePasswortResetAnfragen = 0;
+
+    if (aktuellerBereich != OrganisationsbereichCode.Unbekannt &&
+        currentUserLookup.IsSuccess &&
+        currentUserLookup.CurrentUser is not null &&
+        PasswortResetVerantwortungHelper.DarfAnfragenBearbeiten(
+            currentUserLookup.CurrentUser,
+            aktuellerBereich))
+    {
+        zeigePasswortResetEintrag = true;
+
+        var countResult = await CountOffenePasswortResetAnfragenService.ExecuteAsync(
+            new CountOffenePasswortResetAnfragenQuery(aktuellerBereich));
+
+        if (countResult.IsSuccess)
+        {
+            offenePasswortResetAnfragen = countResult.Anzahl;
+        }
+    }
+
+    var zeigeDienstplanBadge = false;
+    var offeneDienstplanPerioden = 0;
+
+    if (aktuellerBereich == OrganisationsbereichCode.Intensivtransport &&
+        currentUserLookup.IsSuccess &&
+        currentUserLookup.CurrentUser is not null &&
+        (currentUserLookup.CurrentUser.Rolle == BereichsrolleCode.Mitarbeiter ||
+         currentUserLookup.CurrentUser.Rolle == BereichsrolleCode.Wachleiter))
+    {
+        zeigeDienstplanBadge = true;
+        offeneDienstplanPerioden = await DienstplanPeriodeRepository.CountOffeneAsync();
+    }
+
+    var istPasswortResetAktiv =
+        string.Equals(aktuellerController, "PasswortReset", StringComparison.OrdinalIgnoreCase) &&
+        string.Equals(aktuelleAction, "Index", StringComparison.OrdinalIgnoreCase);
+}
+
+@foreach (var sektion in Model.Sektionen.Where(x => x.Eintraege.Any()))
+{
+    <div class="menu-section">@sektion.Titel</div>
+
+    <nav class="nav flex-column">
+        @foreach (var eintrag in sektion.Eintraege)
+        {
+            var istDienstplanEintrag =
+            zeigeDienstplanBadge &&
+            string.Equals(eintrag.Controller, "Dienstplan", StringComparison.OrdinalIgnoreCase) &&
+            string.Equals(eintrag.Action, "Index", StringComparison.OrdinalIgnoreCase);
+
+            <a class="menu-link @(eintrag.IstAktiv ? "active" : "")"
+               asp-area="@eintrag.Area"
+               asp-controller="@eintrag.Controller"
+               asp-action="@eintrag.Action">
+
+                <span class="menu-link__main">
+                    <span class="menu-link__icon">
+                        <i class="@eintrag.IconCssClass"></i>
+                    </span>
+                    <span class="menu-link__text">@eintrag.Text</span>
+                </span>
+
+                @if (istDienstplanEintrag && offeneDienstplanPerioden > 0)
+                {
+                    <span class="menu-link__badge menu-link__badge--success">
+                        @offeneDienstplanPerioden
+                    </span>
+                }
+            </a>
+        }
+    </nav>
+}
+
+@if (zeigePasswortResetEintrag && !string.IsNullOrWhiteSpace(areaName))
+{
+    <div class="menu-section">Kontosicherheit</div>
+
+    <nav class="nav flex-column">
+        <a class="menu-link @(istPasswortResetAktiv ? "active" : "")"
+           asp-area="@areaName"
+           asp-controller="PasswortReset"
+           asp-action="Index">
+
+            <span class="menu-link__main">
+                <span class="menu-link__icon">
+                    <i class="bi bi-key"></i>
+                </span>
+                <span class="menu-link__text">Passwort-Resets</span>
+            </span>
+
+            @if (offenePasswortResetAnfragen > 0)
+            {
+                <span class="menu-link__badge menu-link__badge--danger">
+                    @offenePasswortResetAnfragen
+                </span>
+            }
+        </a>
+    </nav>
+}
+
+@functions {
+    private static OrganisationsbereichCode ErmittleBereichAusAreaName(string? areaName)
+    {
+        return areaName switch
+        {
+            "Intensivtransport" => OrganisationsbereichCode.Intensivtransport,
+            "Verwaltung" => OrganisationsbereichCode.Verwaltung,
+            "Geschaeftsfuehrung" => OrganisationsbereichCode.Vorstand,
+            _ => OrganisationsbereichCode.Unbekannt
+        };
+    }
+}

@@ -1,0 +1,89 @@
+﻿@model string
+
+@{
+    var message = Model ?? ViewData["Message"]?.ToString();
+    var hatNachricht = !string.IsNullOrWhiteSpace(message);
+
+    var variant = (ViewData["Variant"]?.ToString() ?? "info").Trim().ToLowerInvariant();
+    if (variant != "success" &&
+        variant != "info" &&
+        variant != "warning" &&
+        variant != "danger")
+    {
+        variant = "info";
+    }
+
+    var title = ViewData["Title"]?.ToString();
+    if (string.IsNullOrWhiteSpace(title))
+    {
+        title = variant switch
+        {
+            "success" => "Erfolgreich",
+            "warning" => "Achtung",
+            "danger" => "Fehler",
+            _ => "Hinweis"
+        };
+    }
+
+    var iconClass = ViewData["IconClass"]?.ToString();
+    if (string.IsNullOrWhiteSpace(iconClass))
+    {
+        iconClass = variant switch
+        {
+            "success" => "bi bi-check-circle-fill",
+            "warning" => "bi bi-exclamation-triangle-fill",
+            "danger" => "bi bi-exclamation-octagon-fill",
+            _ => "bi bi-info-circle-fill"
+        };
+    }
+
+    var autoHide = ViewData["AutoHide"] is bool explicitAutoHide
+        ? explicitAutoHide
+        : (bool?)null;
+    if (!autoHide.HasValue)
+    {
+        autoHide = variant == "success" || variant == "info";
+    }
+
+    var autoHideMilliseconds = ViewData["AutoHideMilliseconds"] is int explicitAutoHideMilliseconds
+        ? explicitAutoHideMilliseconds
+        : 5000;
+    if (autoHideMilliseconds < 1000)
+    {
+        autoHideMilliseconds = 1000;
+    }
+
+    var role = variant == "danger" || variant == "warning" ? "alert" : "status";
+    var ariaLive = variant == "danger" || variant == "warning" ? "assertive" : "polite";
+}
+
+@if (hatNachricht)
+{
+    <div class="app-status app-status--@variant @(autoHide.Value ? "app-status--autohide" : string.Empty)"
+         role="@role"
+         aria-live="@ariaLive"
+         data-app-status
+         data-app-status-autohide="@(autoHide.Value ? "true" : "false")"
+         data-app-status-autohide-ms="@autoHideMilliseconds">
+        <div class="app-status__icon" aria-hidden="true">
+            <i class="@iconClass"></i>
+        </div>
+
+        <div class="app-status__content">
+            <p class="app-status__title">@title</p>
+            <p class="app-status__text">@message</p>
+        </div>
+
+        <button type="button"
+                class="app-status__close"
+                aria-label="Statusmeldung schließen"
+                data-app-status-close>
+            <i class="bi bi-x-lg"></i>
+        </button>
+
+        @if (autoHide.Value)
+        {
+            <div class="app-status__progress" aria-hidden="true"></div>
+        }
+    </div>
+}

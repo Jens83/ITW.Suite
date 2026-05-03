@@ -1,0 +1,250 @@
+﻿@using ITW.Web.ViewModels.UI
+@model ITW.Web.ViewModels.Benutzer.BereichsbenutzerlisteViewModel
+
+@{
+    Layout = ViewData["AreaLayoutPath"]?.ToString();
+    ViewData["Title"] = "Mitarbeiter";
+
+    var aktuellerBereich = ViewContext.RouteData.Values["area"]?.ToString() ?? string.Empty;
+    var istIntensivtransportBereich = string.Equals(aktuellerBereich, "Intensivtransport", StringComparison.OrdinalIgnoreCase);
+
+    var tempErrorMessage = TempData["ErrorMessage"] as string;
+    var modelErrorMessage = !string.IsNullOrWhiteSpace(Model.ErrorMessage)
+        ? Model.ErrorMessage
+        : "Die Mitarbeiterübersicht konnte nicht geladen werden.";
+
+    var zeigeModelFehler = !Model.IsSuccess && !string.Equals(tempErrorMessage, modelErrorMessage, StringComparison.Ordinal);
+
+    var headerModel = new AppPageHeaderViewModel
+    {
+        Eyebrow = "Benutzerverwaltung",
+        EyebrowIconCssClass = "bi bi-people",
+        Title = Model.Titel,
+        Description = Model.Beschreibung,
+        BadgeText = Model.IsSuccess ? $"{Model.Benutzer.Count} Zuordnungen" : null,
+        BadgeIconCssClass = Model.IsSuccess ? "bi bi-person-badge" : null
+    };
+
+    var errorStateModel = new AppEmptyStateViewModel
+    {
+        IconCssClass = "bi bi-exclamation-triangle",
+        Title = "Mitarbeiterübersicht konnte nicht geladen werden",
+        Description = modelErrorMessage
+    };
+
+    var emptyStateModel = new AppEmptyStateViewModel
+    {
+        IconCssClass = "bi bi-people",
+        Title = "Noch keine Mitarbeiter vorhanden",
+        Description = $"Für den Bereich {Model.BereichName} wurden noch keine aktiven primären Benutzerzuordnungen gefunden.",
+        PrimaryActionText = "Bestehendes Konto zuordnen",
+        PrimaryActionUrl = Url.Action("Anlegen") ?? "#",
+        PrimaryActionIconCssClass = "bi bi-person-check",
+        SecondaryActionText = "Neues Benutzerkonto",
+        SecondaryActionUrl = Url.Action("BenutzerkontoAnlegen") ?? "#",
+        SecondaryActionIconCssClass = "bi bi-person-plus"
+    };
+}
+
+<div class="app-page">
+    <div class="app-page-header">
+        <partial name="~/Views/Shared/Komponenten/_AppPageHeader.cshtml" model="headerModel" />
+
+        <div class="app-page-actions">
+            <a class="app-btn app-btn-outline-accent" asp-action="Anlegen">
+                <i class="bi bi-person-check"></i>
+                <span>Bestehendes Konto zuordnen</span>
+            </a>
+
+            <a class="app-btn app-btn-accent" asp-action="BenutzerkontoAnlegen">
+                <i class="bi bi-person-plus"></i>
+                <span>Neues Benutzerkonto</span>
+            </a>
+        </div>
+    </div>
+
+    @if (TempData["SuccessMessage"] is string successMessage ||
+        !string.IsNullOrWhiteSpace(tempErrorMessage) ||
+        zeigeModelFehler)
+    {
+        <div class="app-status-stack">
+            @if (TempData["SuccessMessage"] is string statusSuccessMessage)
+            {
+                @await Html.PartialAsync(
+                "~/Views/Shared/Komponenten/_AppStatusMessage.cshtml",
+                statusSuccessMessage,
+                new ViewDataDictionary(ViewData)
+                {
+                    ["Variant"] = "success",
+                    ["Title"] = "Erfolgreich gespeichert",
+                    ["AutoHide"] = true,
+                    ["AutoHideMilliseconds"] = 3000
+                })
+                }
+
+            @if (!string.IsNullOrWhiteSpace(tempErrorMessage))
+            {
+                @await Html.PartialAsync(
+                "~/Views/Shared/Komponenten/_AppStatusMessage.cshtml",
+                tempErrorMessage,
+                new ViewDataDictionary(ViewData)
+                {
+                    ["Variant"] = "danger",
+                    ["Title"] = "System-Hinweis",
+                    ["AutoHide"] = false
+                })
+                }
+
+            @if (zeigeModelFehler)
+            {
+                @await Html.PartialAsync(
+                "~/Views/Shared/Komponenten/_AppStatusMessage.cshtml",
+                modelErrorMessage,
+                new ViewDataDictionary(ViewData)
+                {
+                    ["Variant"] = "danger",
+                    ["Title"] = "Ladefehler",
+                    ["AutoHide"] = false
+                })
+                }
+        </div>
+    }
+
+    @if (!Model.IsSuccess)
+    {
+        <section class="app-surface">
+            <partial name="~/Views/Shared/Komponenten/_AppEmptyState.cshtml" model="errorStateModel" />
+        </section>
+    }
+    else if (!Model.Benutzer.Any())
+    {
+        <section class="app-surface">
+            <partial name="~/Views/Shared/Komponenten/_AppEmptyState.cshtml" model="emptyStateModel" />
+        </section>
+    }
+    else
+    {
+        <section class="app-surface">
+            <div class="app-surface__header app-surface__header--compact">
+                <div class="app-surface__heading">
+                    <p class="app-surface__eyebrow">Bereichszuordnungen</p>
+                    <h2 class="app-surface__title">Aktive Mitarbeiter im Bereich @Model.BereichName</h2>
+                    <p class="app-surface__text">
+                        Übersicht über Rollen, Führungsverantwortung, Kontostatus und Zuordnungsstand aller aktiven primären Benutzerkonten.
+                    </p>
+                </div>
+
+                <span class="app-pill app-pill--accent">@Model.Benutzer.Count Einträge</span>
+            </div>
+
+            <div class="app-surface__body app-surface__body--table">
+                <div class="table-responsive">
+                    <table class="table app-table align-middle">
+                        <thead>
+                            <tr>
+                                <th class="ps-4">Mitarbeiter</th>
+                                <th>Bereich</th>
+                                <th>Rolle</th>
+                                <th class="text-center">Führung</th>
+                                <th class="text-center">Primär</th>
+                                <th class="text-center">Zuordnung</th>
+                                <th class="text-center">Konto</th>
+                                <th class="text-end">Zuweisung</th>
+                                <th class="pe-4 text-end">Optionen</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var benutzer in Model.Benutzer)
+                            {
+                                <tr>
+                                    <td class="ps-4">
+                                        <div class="app-table__title">@benutzer.Benutzername</div>
+                                        <div class="app-table__subtext">
+                                            @(string.IsNullOrWhiteSpace(benutzer.Email) ? "Keine E-Mail hinterlegt" : benutzer.Email)
+                                        </div>
+                                    </td>
+
+                                    <td>
+                                        <span class="app-pill app-pill--muted">@benutzer.Bereich</span>
+                                    </td>
+
+                                    <td>
+                                        <span class="app-pill app-pill--neutral">@benutzer.Rolle</span>
+                                    </td>
+
+                                    <td class="text-center">
+                                        <span class="app-pill app-pill--warning">@benutzer.Fuehrungsverantwortung</span>
+                                    </td>
+
+                                    <td class="text-center">
+                                        <span class="app-pill @(benutzer.IsPrimary ? "app-pill--accent" : "app-pill--muted")">
+                                            @(benutzer.IsPrimary ? "Ja" : "Nein")
+                                        </span>
+                                    </td>
+
+                                    <td class="text-center">
+                                        <span class="app-pill @(benutzer.IsActive ? "app-pill--success" : "app-pill--muted")">
+                                            @(benutzer.IsActive ? "Aktiv" : "Inaktiv")
+                                        </span>
+                                    </td>
+
+                                    <td class="text-center">
+                                        <span class="app-pill @(benutzer.IstGesperrt ? "app-pill--danger" : "app-pill--success")">
+                                            @(benutzer.IstGesperrt ? "Gesperrt" : "Freigegeben")
+                                        </span>
+                                    </td>
+
+                                    <td class="text-end">
+                                        <div class="app-meta-text">@benutzer.ZugewiesenAm.ToLocalTime().ToString("dd.MM.yyyy HH:mm")</div>
+                                    </td>
+
+                                    <td class="pe-4 text-end">
+                                        <div class="app-table__actions">
+                                            @if (istIntensivtransportBereich)
+                                            {
+                                                <a class="app-btn app-btn-sm app-btn-neutral"
+                                                   asp-area="Intensivtransport"
+                                                   asp-controller="Personal"
+                                                   asp-action="Details"
+                                                   asp-route-userId="@benutzer.UserId">
+                                                    <span>Details</span>
+                                                </a>
+                                            }
+
+                                            <a class="app-btn app-btn-sm app-btn-outline-accent"
+                                               asp-action="RolleAendern"
+                                               asp-route-userId="@benutzer.UserId">
+                                                <span>Rolle ändern</span>
+                                            </a>
+
+                                            @if (benutzer.IstGesperrt)
+                                            {
+                                                <form asp-action="Aktivieren" method="post" class="m-0">
+                                                    @Html.AntiForgeryToken()
+                                                    <input type="hidden" name="userId" value="@benutzer.UserId" />
+                                                    <button type="submit" class="app-btn app-btn-sm app-btn-success">
+                                                        <span>Aktivieren</span>
+                                                    </button>
+                                                </form>
+                                            }
+                                            else
+                                            {
+                                                <form asp-action="Sperren" method="post" class="m-0">
+                                                    @Html.AntiForgeryToken()
+                                                    <input type="hidden" name="userId" value="@benutzer.UserId" />
+                                                    <button type="submit" class="app-btn app-btn-sm app-btn-danger">
+                                                        <span>Sperren</span>
+                                                    </button>
+                                                </form>
+                                            }
+                                        </div>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+    }
+</div>

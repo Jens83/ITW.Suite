@@ -1,0 +1,25 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net9.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\ITW.Domain\ITW.Domain.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Application\EinsatzAnlegen\" />
+    <Folder Include="Application\EinsatzBearbeiten\" />
+    <Folder Include="Application\Besetzung\" />
+    <Folder Include="Application\Uebersichten\" />
+    <Folder Include="Application\Statuswechsel\" />
+    <Folder Include="Domain\" />
+    <Folder Include="Infrastructure\" />
+    <Folder Include="Integration\" />
+    <Folder Include="Shared\" />
+  </ItemGroup>
+
+</Project>

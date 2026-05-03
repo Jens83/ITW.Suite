@@ -1,0 +1,34 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<TargetFramework>net9.0</TargetFramework>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<Nullable>enable</Nullable>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\ITW.Application\ITW.Application.csproj" />
+		<ProjectReference Include="..\ITW.Domain\ITW.Domain.csproj" />
+		<ProjectReference Include="..\ITW.Dienstplan\ITW.Dienstplan.csproj" />
+		<ProjectReference Include="..\ITW.Fahrzeugmanagement\ITW.Fahrzeugmanagement.csproj" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="9.0.14" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore" Version="9.0.14" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="9.0.14" />
+		<PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="9.0.14" />
+		<PackageReference Include="Microsoft.Extensions.Hosting.Abstractions" Version="9.0.14" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<Folder Include="Audit\" />
+		<Folder Include="Identity\Claims\" />
+		<Folder Include="Identity\SignIn\" />
+		<Folder Include="Identity\RoleManagement\" />
+		<Folder Include="Persistence\Migrations\" />
+		<Folder Include="Security\" />
+		<Folder Include="Notifications\" />
+	</ItemGroup>
+
+</Project>

@@ -1,0 +1,163 @@
+﻿@using ITW.Web.ViewModels.UI
+@model ITW.Web.ViewModels.Security.PasswortResetAnfrageListeViewModel
+
+@{
+    Layout = ViewData["AreaLayoutPath"]?.ToString();
+    ViewData["Title"] = Model.Titel;
+
+    var tempErrorMessage = TempData["ErrorMessage"] as string;
+    var modelErrorMessage = !string.IsNullOrWhiteSpace(Model.ErrorMessage)
+        ? Model.ErrorMessage
+        : "Die offenen Passwort-Reset-Anfragen konnten nicht geladen werden.";
+
+    var zeigeModelFehler = !Model.IsSuccess && !string.Equals(tempErrorMessage, modelErrorMessage, StringComparison.Ordinal);
+
+    var headerModel = new AppPageHeaderViewModel
+    {
+        Eyebrow = "Kontosicherheit",
+        EyebrowIconCssClass = "bi bi-key",
+        Title = Model.Titel,
+        Description = Model.Beschreibung,
+        BadgeText = Model.IsSuccess ? $"{Model.Anfragen.Count} offene Anfragen" : null,
+        BadgeIconCssClass = Model.IsSuccess ? "bi bi-shield-lock" : null
+    };
+
+    var errorStateModel = new AppEmptyStateViewModel
+    {
+        IconCssClass = "bi bi-exclamation-triangle",
+        Title = "Anfragen konnten nicht geladen werden",
+        Description = modelErrorMessage
+    };
+
+    var emptyStateModel = new AppEmptyStateViewModel
+    {
+        IconCssClass = "bi bi-shield-check",
+        Title = "Keine offenen Anfragen",
+        Description = $"Aktuell liegen für den Bereich {Model.BereichName} keine offenen Passwort-Reset-Anfragen vor."
+    };
+}
+
+<div class="app-page">
+    <div class="app-page-header">
+        <partial name="~/Views/Shared/Komponenten/_AppPageHeader.cshtml" model="headerModel" />
+    </div>
+
+    @if (TempData["SuccessMessage"] is string successMessage ||
+        !string.IsNullOrWhiteSpace(tempErrorMessage) ||
+        zeigeModelFehler)
+    {
+        <div class="app-status-stack">
+            @if (TempData["SuccessMessage"] is string statusSuccessMessage)
+            {
+                @await Html.PartialAsync(
+                "~/Views/Shared/Komponenten/_AppStatusMessage.cshtml",
+                statusSuccessMessage,
+                new ViewDataDictionary(ViewData)
+                {
+                    ["Variant"] = "success",
+                    ["Title"] = "Erfolgreich gespeichert",
+                    ["AutoHide"] = true,
+                    ["AutoHideMilliseconds"] = 3000
+                })
+                }
+
+            @if (!string.IsNullOrWhiteSpace(tempErrorMessage))
+            {
+                @await Html.PartialAsync(
+                "~/Views/Shared/Komponenten/_AppStatusMessage.cshtml",
+                tempErrorMessage,
+                new ViewDataDictionary(ViewData)
+                {
+                    ["Variant"] = "danger",
+                    ["Title"] = "System-Hinweis",
+                    ["AutoHide"] = false
+                })
+                }
+
+            @if (zeigeModelFehler)
+            {
+                @await Html.PartialAsync(
+                "~/Views/Shared/Komponenten/_AppStatusMessage.cshtml",
+                modelErrorMessage,
+                new ViewDataDictionary(ViewData)
+                {
+                    ["Variant"] = "danger",
+                    ["Title"] = "Ladefehler",
+                    ["AutoHide"] = false
+                })
+                }
+        </div>
+    }
+
+    @if (!Model.IsSuccess)
+    {
+        <section class="app-surface">
+            <partial name="~/Views/Shared/Komponenten/_AppEmptyState.cshtml" model="errorStateModel" />
+        </section>
+    }
+    else if (Model.Anfragen.Count == 0)
+    {
+        <section class="app-surface">
+            <partial name="~/Views/Shared/Komponenten/_AppEmptyState.cshtml" model="emptyStateModel" />
+        </section>
+    }
+    else
+    {
+        <section class="app-surface">
+            <div class="app-surface__header app-surface__header--compact">
+                <div class="app-surface__heading">
+                    <p class="app-surface__eyebrow">Offene Vorgänge</p>
+                    <h2 class="app-surface__title">Reset-Anfragen im Bereich @Model.BereichName</h2>
+                    <p class="app-surface__text">
+                        Anfragen werden zentral geprüft und mit einem temporären Passwort beantwortet.
+                    </p>
+                </div>
+
+                <span class="app-pill app-pill--accent">@Model.Anfragen.Count Einträge</span>
+            </div>
+
+            <div class="app-surface__body app-surface__body--table">
+                <div class="table-responsive">
+                    <table class="table app-table align-middle">
+                        <thead>
+                            <tr>
+                                <th class="ps-4">Benutzerkonto</th>
+                                <th>Angegebener Name</th>
+                                <th>Eingegangen</th>
+                                <th class="pe-4 text-end">Aktion</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var anfrage in Model.Anfragen)
+                            {
+                                <tr>
+                                    <td class="ps-4">
+                                        <div class="app-table__title">@anfrage.Benutzername</div>
+                                        <div class="app-table__subtext">UserId: @anfrage.UserId</div>
+                                    </td>
+
+                                    <td>
+                                        <div class="app-table__title">@anfrage.Vollname</div>
+                                    </td>
+
+                                    <td>
+                                        <div class="app-meta-text">@anfrage.AngefordertAm.ToLocalTime().ToString("dd.MM.yyyy HH:mm")</div>
+                                    </td>
+
+                                    <td class="pe-4 text-end">
+                                        <a asp-action="Vergabe"
+                                           asp-route-anfrageId="@anfrage.AnfrageId"
+                                           class="app-btn app-btn-sm app-btn-outline-accent">
+                                            <i class="bi bi-key-fill"></i>
+                                            <span>Temporäres Passwort vergeben</span>
+                                        </a>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+    }
+</div>

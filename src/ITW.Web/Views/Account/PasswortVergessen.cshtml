@@ -1,0 +1,172 @@
+﻿@model ITW.Web.ViewModels.Account.PasswortVergessenViewModel
+
+@{
+    Layout = null;
+    ViewData["Title"] = "Passwort vergessen";
+
+    var returnUrl = Context.Request.Query["returnUrl"].ToString();
+
+    if (string.IsNullOrWhiteSpace(returnUrl) && Context.Request.HasFormContentType)
+    {
+        returnUrl = Context.Request.Form["returnUrl"].ToString();
+    }
+
+    var authThemeClass = "theme-itw";
+    var zielbereichName = "Intensivtransport";
+
+    if (!string.IsNullOrWhiteSpace(returnUrl))
+    {
+        if (returnUrl.Contains("/Verwaltung", StringComparison.OrdinalIgnoreCase))
+        {
+            authThemeClass = "theme-admin";
+            zielbereichName = "Verwaltung";
+        }
+        else if (returnUrl.Contains("/Geschaeftsfuehrung", StringComparison.OrdinalIgnoreCase))
+        {
+            authThemeClass = "theme-gf";
+            zielbereichName = "Geschäftsführung";
+        }
+        else if (returnUrl.Contains("/Intensivtransport", StringComparison.OrdinalIgnoreCase))
+        {
+            authThemeClass = "theme-itw";
+            zielbereichName = "Intensivtransport";
+        }
+    }
+}
+
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Intensivtransport Neubrandenburg</title>
+
+    <partial name="~/Views/Shared/Komponenten/_AppHeadResources.cshtml" />
+</head>
+<body class="@authThemeClass app-auth-body app-loading-boot">
+    <partial name="~/Views/Shared/Komponenten/_AppLoadingOverlay.cshtml" />
+
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-12 col-md-8 col-lg-5 col-xl-4">
+                <div class="app-auth-shell">
+                    <div class="app-auth-card w-100">
+                        <div class="app-auth-card__body">
+                            <header class="app-auth-hero">
+                                <div class="app-auth-hero__label">
+                                    <i class="bi bi-key"></i>
+                                    Passwort zurücksetzen
+                                </div>
+
+                                <div class="app-auth-hero__brand">
+                                    <span class="app-brand-name">
+                                        <span class="app-brand-name__primary">Intensivtransport</span>
+                                        <span class="app-brand-name__accent">Neubrandenburg</span>
+                                    </span>
+                                </div>
+
+                                <p class="app-auth-hero__text">
+                                    Stellen Sie eine Anfrage, um den Zugang für den Bereich @zielbereichName zurücksetzen zu lassen.
+                                </p>
+                            </header>
+
+                            <hr class="app-auth-divider" />
+
+                            <div class="app-auth-note">
+                                <div class="app-auth-note__icon">
+                                    <i class="bi bi-info-circle"></i>
+                                </div>
+
+                                <div>
+                                    <p class="app-auth-note__title">Hinweis zur Bearbeitung</p>
+                                    <p class="app-auth-note__text">
+                                        Die Anfrage wird an den zuständigen Bereich weitergeleitet. Dort kann später ein verantwortlicher Leiter
+                                        ein temporäres Passwort vergeben.
+                                    </p>
+                                </div>
+                            </div>
+
+                            <div class="app-auth-form-header">
+                                <h1 class="app-auth-form-title">Passwort vergessen</h1>
+                                <p class="app-auth-form-text">Bitte geben Sie Benutzername, Vorname und Nachname an.</p>
+                            </div>
+
+                            <form asp-action="PasswortVergessen"
+                                  asp-route-returnUrl="@returnUrl"
+                                  method="post"
+                                  novalidate
+                                  data-app-loading-form
+                                  data-app-loading-text="Anfrage wird gesendet...">
+
+                                @Html.AntiForgeryToken()
+                                <input type="hidden" name="returnUrl" value="@returnUrl" />
+
+                                <div asp-validation-summary="ModelOnly" class="app-auth-validation"></div>
+
+                                <div class="app-auth-field">
+                                    <label asp-for="Benutzername" class="form-label app-auth-label"></label>
+                                    <div class="itw-input-wrapper shadow-sm">
+                                        <i class="bi bi-person"></i>
+                                        <input asp-for="Benutzername"
+                                               class="form-control"
+                                               autocomplete="username"
+                                               placeholder="Benutzername" />
+                                    </div>
+                                    <span asp-validation-for="Benutzername" class="app-auth-error"></span>
+                                </div>
+
+                                <div class="app-auth-field">
+                                    <label asp-for="Vorname" class="form-label app-auth-label"></label>
+                                    <div class="itw-input-wrapper shadow-sm">
+                                        <i class="bi bi-person-vcard"></i>
+                                        <input asp-for="Vorname"
+                                               class="form-control"
+                                               autocomplete="given-name"
+                                               placeholder="Vorname" />
+                                    </div>
+                                    <span asp-validation-for="Vorname" class="app-auth-error"></span>
+                                </div>
+
+                                <div class="app-auth-field">
+                                    <label asp-for="Nachname" class="form-label app-auth-label"></label>
+                                    <div class="itw-input-wrapper shadow-sm">
+                                        <i class="bi bi-person-vcard-fill"></i>
+                                        <input asp-for="Nachname"
+                                               class="form-control"
+                                               autocomplete="family-name"
+                                               placeholder="Nachname" />
+                                    </div>
+                                    <span asp-validation-for="Nachname" class="app-auth-error"></span>
+                                </div>
+
+                                <div class="app-auth-actions">
+                                    <button type="submit" class="app-btn app-btn-accent app-btn-lg app-btn-block">
+                                        <i class="bi bi-send-check"></i>
+                                        Anfrage senden
+                                    </button>
+
+                                    <a asp-action="Login"
+                                       asp-route-returnUrl="@returnUrl"
+                                       class="app-btn app-btn-neutral app-btn-lg app-btn-block"
+                                       data-app-loading-link
+                                       data-app-loading-text="Anmeldung wird geöffnet...">
+                                        <i class="bi bi-arrow-left"></i>
+                                        Zurück zur Anmeldung
+                                    </a>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="app-auth-footer">
+                    &copy; 2026 Intensivtransport Neubrandenburg
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <partial name="~/Views/Shared/Komponenten/_AppScriptResources.cshtml" />
+    <partial name="~/Views/Shared/_ValidationScriptsPartial.cshtml" />
+</body>
+</html>

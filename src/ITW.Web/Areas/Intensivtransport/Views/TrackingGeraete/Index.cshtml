@@ -1,0 +1,165 @@
+﻿@model ITW.Web.Areas.Intensivtransport.ViewModels.Fahrzeugmanagement.TrackingGeraeteIndexViewModel
+
+@{
+    Layout = ViewData["AreaLayoutPath"]?.ToString();
+    ViewData["Title"] = Model.Titel;
+}
+
+<div class="app-page">
+    <header class="app-page-header">
+        <div class="app-page-heading">
+            <div class="app-page-heading__eyebrow">
+                <i class="bi bi-tablet-landscape"></i>
+                Fahrzeugmanagement
+            </div>
+
+            <h1 class="app-page-heading__title">Tablets</h1>
+            <p class="app-page-heading__text">
+                Hier siehst du die Einsatz-Tablets und kannst ein neues Tablet per QR-Code hinzufügen.
+            </p>
+        </div>
+
+        <div class="app-page-actions">
+            <a asp-action="Neu"
+               class="app-btn app-btn-accent"
+               data-app-loading-link
+               data-app-loading-text="QR-Code wird erzeugt...">
+                <i class="bi bi-qr-code"></i>
+                Tablet hinzufügen
+            </a>
+        </div>
+    </header>
+
+    @if (!string.IsNullOrWhiteSpace(Model.Erfolgsmeldung) || !string.IsNullOrWhiteSpace(Model.Fehlermeldung))
+    {
+        <div class="app-status-stack">
+            @if (!string.IsNullOrWhiteSpace(Model.Erfolgsmeldung))
+            {
+                @await Html.PartialAsync(
+                "~/Views/Shared/Komponenten/_AppStatusMessage.cshtml",
+                Model.Erfolgsmeldung,
+                new ViewDataDictionary(ViewData)
+                {
+                    ["Variant"] = "success",
+                    ["Title"] = "Erfolgreich",
+                    ["AutoHide"] = true,
+                    ["AutoHideMilliseconds"] = 3000
+                })
+                }
+
+            @if (!string.IsNullOrWhiteSpace(Model.Fehlermeldung))
+            {
+                @await Html.PartialAsync(
+                "~/Views/Shared/Komponenten/_AppStatusMessage.cshtml",
+                Model.Fehlermeldung,
+                new ViewDataDictionary(ViewData)
+                {
+                    ["Variant"] = "danger",
+                    ["Title"] = "System-Hinweis",
+                    ["AutoHide"] = false
+                })
+                }
+        </div>
+    }
+
+    @if (Model.Geraete.Count == 0)
+    {
+        <section class="app-surface">
+            <header class="app-surface__header">
+                <div class="app-surface__heading">
+                    <p class="app-surface__eyebrow">Übersicht</p>
+                    <h2 class="app-surface__title">Keine Tablets eingerichtet</h2>
+                    <p class="app-surface__text">
+                        Über „Tablet hinzufügen“ erzeugst du einen QR-Code.
+                        Das Einsatz-Tablet scannt den QR-Code und richtet sich automatisch ein.
+                    </p>
+                </div>
+            </header>
+
+            <div class="app-surface__body">
+                <div class="app-form-note">
+                    Es ist noch kein Tablet eingerichtet.
+                </div>
+            </div>
+        </section>
+    }
+    else
+    {
+        <div class="row g-4">
+            @foreach (var geraet in Model.Geraete)
+            {
+                <div class="col-12 col-lg-6 col-xxl-4">
+                    <article class="app-feature-card">
+                        <div class="app-feature-card__body">
+                            <div class="app-feature-card__meta">
+                                Einsatz-Tablet
+                            </div>
+
+                            <div class="app-feature-card__top">
+                                <div class="app-feature-card__icon">
+                                    <i class="bi bi-tablet-landscape"></i>
+                                </div>
+
+                                <div>
+                                    <h2 class="app-feature-card__title">@geraet.DeviceIdentifier</h2>
+                                    <p class="app-feature-card__text">
+                                        Letzter Kontakt: @geraet.LetzterKontaktText
+                                    </p>
+                                </div>
+                            </div>
+
+                            <div class="row g-2 mt-1">
+                                <div class="col-12 col-sm-6">
+                                    <div class="app-form-note h-100">
+                                        <div class="app-overline">Verbindung</div>
+
+                                        @if (geraet.IstOnline)
+                                        {
+                                            <strong class="text-success">Online</strong>
+                                        }
+                                        else if (!geraet.IstAktiv)
+                                        {
+                                            <strong class="text-muted">Inaktiv</strong>
+                                        }
+                                        else
+                                        {
+                                            <strong class="text-warning">Offline</strong>
+                                        }
+                                    </div>
+                                </div>
+
+                                <div class="col-12 col-sm-6">
+                                    <div class="app-form-note h-100">
+                                        <div class="app-overline">Status</div>
+                                        <strong>@geraet.BewegungsstatusText</strong>
+                                    </div>
+                                </div>
+
+                                <div class="col-12 col-sm-6">
+                                    <div class="app-form-note h-100">
+                                        <div class="app-overline">Geschwindigkeit</div>
+                                        <strong>@geraet.GeschwindigkeitText</strong>
+                                    </div>
+                                </div>
+
+                                <div class="col-12 col-sm-6">
+                                    <div class="app-form-note h-100">
+                                        <div class="app-overline">Strecke</div>
+                                        <strong>@geraet.StreckeText</strong>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="app-feature-card__footer">
+                                <span class="app-btn app-btn-neutral app-btn-sm disabled">
+                                    <i class="bi bi-info-circle"></i>
+                                    Automatisch eingerichtet
+                                </span>
+                            </div>
+                        </div>
+                    </article>
+                </div>
+            }
+        </div>
+    }
+</div>

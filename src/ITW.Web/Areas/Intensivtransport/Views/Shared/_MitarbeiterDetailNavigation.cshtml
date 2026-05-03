@@ -1,0 +1,69 @@
+﻿@model ITW.Web.Areas.Intensivtransport.ViewModels.Mitarbeiter.MitarbeiterDetailNavigationViewModel
+
+<div class="app-employee-nav">
+    <div class="app-employee-nav__identity">
+        <div class="app-employee-nav__avatar">
+            <i class="bi bi-person-vcard"></i>
+        </div>
+
+        <div class="app-employee-nav__meta">
+            <div class="app-employee-nav__label">Mitarbeiter</div>
+
+            @if (!string.IsNullOrWhiteSpace(Model.AnzeigeName))
+            {
+                <div class="app-employee-nav__name">@Model.AnzeigeName</div>
+            }
+
+            @if (!string.IsNullOrWhiteSpace(Model.Hauptqualifikation))
+            {
+                <div class="app-employee-nav__qualification">@Model.Hauptqualifikation</div>
+            }
+        </div>
+    </div>
+
+    <div class="app-employee-nav__links">
+        <a asp-area="Intensivtransport"
+           asp-controller="Personal"
+           asp-action="Details"
+           asp-route-userId="@Model.UserId"
+           class="app-employee-nav__link @(string.Equals(Model.AktiveSeite, "Details", StringComparison.OrdinalIgnoreCase) ? "app-employee-nav__link--active" : string.Empty)"
+           data-app-loading-link
+           data-app-loading-text="Mitarbeiterdetails werden geöffnet...">
+            <i class="bi bi-grid-fill"></i>
+            <span>Übersicht</span>
+        </a>
+
+        <a asp-area="Intensivtransport"
+           asp-controller="Personal"
+           asp-action="Bearbeiten"
+           asp-route-userId="@Model.UserId"
+           class="app-employee-nav__link @(string.Equals(Model.AktiveSeite, "Qualifikationen", StringComparison.OrdinalIgnoreCase) ? "app-employee-nav__link--active" : string.Empty)"
+           data-app-loading-link
+           data-app-loading-text="Qualifikationen werden geöffnet...">
+            <i class="bi bi-award-fill"></i>
+            <span>Qualifikationen</span>
+        </a>
+
+        <a asp-area="Intensivtransport"
+           asp-controller="Personal"
+           asp-action="Stammdaten"
+           asp-route-userId="@Model.UserId"
+           class="app-employee-nav__link @(string.Equals(Model.AktiveSeite, "Stammdaten", StringComparison.OrdinalIgnoreCase) ? "app-employee-nav__link--active" : string.Empty)"
+           data-app-loading-link
+           data-app-loading-text="Stammdaten werden geöffnet...">
+            <i class="bi bi-person-vcard"></i>
+            <span>Stammdaten</span>
+        </a>
+
+        <a asp-area="Intensivtransport"
+           asp-controller="Personal"
+           asp-action="Dokumente"
+           asp-route-userId="@Model.UserId"
+           class="app-employee-nav__link @(string.Equals(Model.AktiveSeite, "Dokumente", StringComparison.OrdinalIgnoreCase) ? "app-employee-nav__link--active" : string.Empty)"
+           data-app-loading-link
+           data-app-loading-text="Dokumente werden geöffnet...">
+            <i class="bi bi-file-earmark-text"></i>
+            <span>Dokumente</span>
+        </a>
+    </div>
+</div>

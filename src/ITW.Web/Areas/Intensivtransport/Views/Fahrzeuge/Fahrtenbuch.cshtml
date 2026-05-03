@@ -1,0 +1,339 @@
+﻿@model ITW.Web.Areas.Intensivtransport.ViewModels.Fahrzeugmanagement.FahrtenbuchViewModel
+
+@{
+    Layout = ViewData["AreaLayoutPath"]?.ToString();
+    ViewData["Title"] = Model.Titel;
+
+    var successMessage = TempData["Fahrtenbuch.Erfolg"]?.ToString();
+    var errorMessage = TempData["Fahrtenbuch.Fehler"]?.ToString();
+}
+
+<div class="app-page">
+    <header class="app-page-header">
+        <div class="app-page-heading">
+            <div class="app-page-heading__eyebrow">
+                <i class="bi bi-signpost-split"></i>
+                Fahrzeugmanagement
+            </div>
+
+            <h1 class="app-page-heading__title">@Model.Navigation.Kennzeichen</h1>
+            <p class="app-page-heading__text">
+                @Model.Navigation.InterneNummer · Fahrtenbuch
+            </p>
+        </div>
+
+        <div class="app-page-actions">
+            <a asp-action="Details"
+               asp-route-id="@Model.FahrzeugId"
+               class="app-btn app-btn-outline-accent"
+               data-app-loading-link
+               data-app-loading-text="Fahrzeugakte wird geöffnet...">
+                <i class="bi bi-arrow-left"></i>
+                Zur Übersicht
+            </a>
+        </div>
+    </header>
+
+    @if (!string.IsNullOrWhiteSpace(successMessage) || !string.IsNullOrWhiteSpace(errorMessage))
+    {
+        <div class="app-status-stack">
+            @if (!string.IsNullOrWhiteSpace(successMessage))
+            {
+                @await Html.PartialAsync(
+                "~/Views/Shared/Komponenten/_AppStatusMessage.cshtml",
+                successMessage,
+                new ViewDataDictionary(ViewData)
+                {
+                    ["Variant"] = "success",
+                    ["Title"] = "Erfolgreich gespeichert",
+                    ["AutoHide"] = true,
+                    ["AutoHideMilliseconds"] = 3000
+                })
+                }
+
+            @if (!string.IsNullOrWhiteSpace(errorMessage))
+            {
+                @await Html.PartialAsync(
+                "~/Views/Shared/Komponenten/_AppStatusMessage.cshtml",
+                errorMessage,
+                new ViewDataDictionary(ViewData)
+                {
+                    ["Variant"] = "danger",
+                    ["Title"] = "System-Hinweis",
+                    ["AutoHide"] = false
+                })
+                }
+        </div>
+    }
+
+    <div class="app-employee-detail-grid">
+        <aside class="app-employee-detail-sidebar">
+            <partial name="~/Areas/Intensivtransport/Views/Shared/_FahrzeugDetailNavigation.cshtml"
+                     model="Model.Navigation" />
+        </aside>
+
+        <div class="app-employee-detail-content">
+            <section class="app-employee-card">
+                <header class="app-employee-card__header app-employee-card__header--row">
+                    <div>
+                        <h2 class="app-employee-card__title">
+                            <i class="bi bi-journal-check"></i>
+                            Fahrtenbucheintrag erfassen
+                        </h2>
+                        <p class="app-employee-card__text">
+                            Der Eintrag wird vollständig gespeichert. Einen separaten Abschluss-Schritt gibt es nicht mehr.
+                        </p>
+                    </div>
+                </header>
+
+                <div class="app-employee-card__body">
+                    <form asp-action="FahrtenbuchEintragAnlegen"
+                          method="post"
+                          data-app-loading-form
+                          data-app-loading-text="Fahrtenbucheintrag wird gespeichert...">
+                        @Html.AntiForgeryToken()
+
+                        <input asp-for="FahrzeugId" type="hidden" />
+
+                        <div class="app-employee-form-grid">
+                            <div>
+                                <label asp-for="FahrtKategorie" class="form-label small fw-bold text-muted">
+                                    Kategorie
+                                </label>
+                                <select asp-for="FahrtKategorie"
+                                        asp-items="Model.FahrtKategorieOptionen"
+                                        class="form-select shadow-sm">
+                                    <option value="">Bitte wählen...</option>
+                                </select>
+                                <span asp-validation-for="FahrtKategorie" class="text-danger small"></span>
+                            </div>
+
+                            <div>
+                                <label asp-for="Fahrtzweck" class="form-label small fw-bold text-muted">
+                                    Fahrtzweck
+                                </label>
+                                <input asp-for="Fahrtzweck"
+                                       class="form-control shadow-sm"
+                                       placeholder="z. B. Einsatzdienst, Werkstatt, Dienstfahrt"
+                                       autocomplete="off" />
+                                <span asp-validation-for="Fahrtzweck" class="text-danger small"></span>
+                            </div>
+
+                            <div>
+                                <label asp-for="Startzeit" class="form-label small fw-bold text-muted">
+                                    Startzeit
+                                </label>
+                                <input asp-for="Startzeit"
+                                       type="datetime-local"
+                                       class="form-control shadow-sm" />
+                                <span asp-validation-for="Startzeit" class="text-danger small"></span>
+                            </div>
+
+                            <div>
+                                <label asp-for="Endzeit" class="form-label small fw-bold text-muted">
+                                    Endzeit
+                                </label>
+                                <input asp-for="Endzeit"
+                                       type="datetime-local"
+                                       class="form-control shadow-sm" />
+                                <span asp-validation-for="Endzeit" class="text-danger small"></span>
+                            </div>
+
+                            <div>
+                                <label asp-for="FahrerName" class="form-label small fw-bold text-muted">
+                                    Fahrer
+                                </label>
+                                <input asp-for="FahrerName"
+                                       class="form-control shadow-sm"
+                                       placeholder="Name Fahrer"
+                                       autocomplete="off" />
+                                <span asp-validation-for="FahrerName" class="text-danger small"></span>
+                            </div>
+
+                            <div>
+                                <label asp-for="BeifahrerName" class="form-label small fw-bold text-muted">
+                                    Beifahrer
+                                </label>
+                                <input asp-for="BeifahrerName"
+                                       class="form-control shadow-sm"
+                                       placeholder="Name Beifahrer"
+                                       autocomplete="off" />
+                                <span asp-validation-for="BeifahrerName" class="text-danger small"></span>
+                            </div>
+
+                            <div>
+                                <label asp-for="Startort" class="form-label small fw-bold text-muted">
+                                    Von
+                                </label>
+                                <input asp-for="Startort"
+                                       class="form-control shadow-sm"
+                                       placeholder="z. B. Wache Neubrandenburg"
+                                       autocomplete="off" />
+                                <span asp-validation-for="Startort" class="text-danger small"></span>
+                            </div>
+
+                            <div>
+                                <label asp-for="Zielort" class="form-label small fw-bold text-muted">
+                                    Nach
+                                </label>
+                                <input asp-for="Zielort"
+                                       class="form-control shadow-sm"
+                                       placeholder="z. B. Wache Neubrandenburg"
+                                       autocomplete="off" />
+                                <span asp-validation-for="Zielort" class="text-danger small"></span>
+                            </div>
+
+                            <div>
+                                <label asp-for="StartKilometerstand" class="form-label small fw-bold text-muted">
+                                    Startkilometerstand
+                                </label>
+                                <input asp-for="StartKilometerstand"
+                                       type="number"
+                                       min="0"
+                                       class="form-control shadow-sm" />
+                                <span asp-validation-for="StartKilometerstand" class="text-danger small"></span>
+                            </div>
+
+                            <div>
+                                <label asp-for="EndKilometerstand" class="form-label small fw-bold text-muted">
+                                    Endkilometerstand
+                                </label>
+                                <input asp-for="EndKilometerstand"
+                                       type="number"
+                                       min="0"
+                                       class="form-control shadow-sm" />
+                                <span asp-validation-for="EndKilometerstand" class="text-danger small"></span>
+                            </div>
+
+                            <div class="app-employee-form-grid__full">
+                                <label asp-for="Bemerkung" class="form-label small fw-bold text-muted">
+                                    Bemerkung
+                                </label>
+                                <textarea asp-for="Bemerkung"
+                                          class="form-control shadow-sm"
+                                          rows="3"
+                                          placeholder="Optionaler Hinweis zum Fahrtenbucheintrag"></textarea>
+                                <span asp-validation-for="Bemerkung" class="text-danger small"></span>
+                            </div>
+                        </div>
+
+                        <div class="app-form-actions">
+                            <button type="submit" class="app-btn app-btn-accent">
+                                <i class="bi bi-save"></i>
+                                <span>Eintrag speichern</span>
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </section>
+
+            <section class="app-employee-card">
+                <header class="app-employee-card__header app-employee-card__header--row">
+                    <div>
+                        <h2 class="app-employee-card__title">
+                            <i class="bi bi-table"></i>
+                            Fahrtenbuch
+                        </h2>
+                        <p class="app-employee-card__text">
+                            Die neuesten Einträge stehen oben.
+                        </p>
+                    </div>
+
+                    <span class="app-pill app-pill--accent">
+                        @Model.Eintraege.Count Einträge
+                    </span>
+                </header>
+
+                <div class="app-employee-card__body">
+                    @if (Model.Eintraege.Count == 0)
+                    {
+                        <div class="app-empty-state">
+                            <div class="app-empty-state__icon">
+                                <i class="bi bi-signpost"></i>
+                            </div>
+                            <div class="app-empty-state__body">
+                                <h3 class="app-empty-state__title">Noch keine Einträge</h3>
+                                <p class="app-empty-state__text">
+                                    Sobald ein Fahrtenbucheintrag gespeichert wurde, erscheint er hier.
+                                </p>
+                            </div>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="table-responsive">
+                            <table class="table table-hover align-middle mb-0 app-table">
+                                <thead>
+                                    <tr>
+                                        <th>Datum</th>
+                                        <th>Fahrer</th>
+                                        <th>Strecke</th>
+                                        <th>Kilometer</th>
+                                        <th>Status</th>
+                                        <th class="text-end">Details</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var eintrag in Model.Eintraege)
+                                    {
+                                        <tr>
+                                            <td>
+                                                <strong>@eintrag.DatumText</strong>
+                                                <div class="text-muted small">
+                                                    @eintrag.ZeitraumText
+                                                </div>
+                                            </td>
+
+                                            <td>
+                                                <strong>@eintrag.FahrerName</strong>
+                                                <div class="text-muted small">
+                                                    Beifahrer: @eintrag.BeifahrerName
+                                                </div>
+                                            </td>
+
+                                            <td>
+                                                <strong>@eintrag.StreckeText</strong>
+                                                <div class="text-muted small">
+                                                    @eintrag.FahrtKategorieText
+                                                </div>
+                                            </td>
+
+                                            <td>
+                                                <strong>@eintrag.GefahreneKilometerText</strong>
+                                                <div class="text-muted small">
+                                                    @eintrag.StartKilometerstandText → @eintrag.EndKilometerstandText
+                                                </div>
+                                            </td>
+
+                                            <td>
+                                                <span class="badge @eintrag.StatusBadgeCssClass">
+                                                    @eintrag.StatusText
+                                                </span>
+                                            </td>
+
+                                            <td class="text-end">
+                                                <a asp-action="FahrtenbuchDetails"
+                                                   asp-route-id="@Model.FahrzeugId"
+                                                   asp-route-eintragId="@eintrag.EintragId"
+                                                   class="app-btn app-btn-sm app-btn-outline-accent"
+                                                   data-app-loading-link
+                                                   data-app-loading-text="Eintrag wird geöffnet...">
+                                                    <i class="bi bi-eye"></i>
+                                                    Anzeigen
+                                                </a>
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    }
+                </div>
+            </section>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

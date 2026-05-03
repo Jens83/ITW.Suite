@@ -1,0 +1,122 @@
+﻿@model ITW.Web.ViewModels.Home.HomeIndexViewModel
+
+@{
+    Layout = null;
+    ViewData["Title"] = "Startseite";
+}
+
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Intensivtransport Neubrandenburg</title>
+
+    <partial name="~/Views/Shared/Komponenten/_AppHeadResources.cshtml" />
+</head>
+<body class="theme-itw app-home-body app-loading-boot">
+    <partial name="~/Views/Shared/Komponenten/_AppLoadingOverlay.cshtml" />
+
+    <div class="container app-home-shell">
+        <div class="row justify-content-center">
+            <div class="col-12 col-xl-10">
+                <header class="app-home-hero">
+                    <div class="app-home-hero__label">
+                        <i class="bi bi-grid-1x2-fill"></i>
+                        Startseite
+                    </div>
+
+                    <h1 class="app-home-hero__title">
+                        <span class="app-home-hero__brand-primary">Intensivtransport</span>
+                        <span class="app-home-hero__brand-accent">Neubrandenburg</span>
+                    </h1>
+
+                    <p class="app-home-hero__text">
+                        Wählen Sie den Bereich aus, in dem Sie arbeiten möchten.
+                        Die Bereiche sind farblich klar getrennt und führen direkt in die jeweilige Arbeitsumgebung.
+                    </p>
+                </header>
+
+                <div class="row app-home-grid justify-content-center">
+                    @foreach (var bereich in Model.Bereiche)
+                    {
+                        var isInactive = Model.IstAngemeldet && !bereich.IstMeinBereich;
+
+                        var moduleCssClass = bereich.Titel switch
+                        {
+                            "Verwaltung" => "app-home-module--admin",
+                            "Geschäftsführung" => "app-home-module--gf",
+                            _ => "app-home-module--itw"
+                        };
+
+                        var cardStateClass = bereich.IstMeinBereich
+                        ? "app-home-module__card--current"
+                        : isInactive
+                        ? "app-home-module__card--inactive"
+                        : string.Empty;
+
+                        var actionStyleClass = bereich.IstMeinBereich
+                        ? "app-home-module__action--solid"
+                        : "app-home-module__action--outline";
+
+                        if (isInactive)
+                        {
+                            actionStyleClass = "app-home-module__action--muted";
+                        }
+
+                        <div class="col-12 col-md-6 col-xl-4">
+                            <article class="app-home-module @moduleCssClass">
+                                <div class="app-home-module__card @cardStateClass">
+                                    <div class="app-home-module__body">
+                                        <div class="app-home-module__status">
+                                            @if (bereich.IstMeinBereich)
+                                            {
+                                                <span class="app-home-status app-home-status--success">
+                                                    <i class="bi bi-check-circle-fill"></i>
+                                                    Mein Bereich
+                                                </span>
+                                            }
+                                            else if (isInactive)
+                                            {
+                                                <span class="app-home-status app-home-status--muted">
+                                                    <i class="bi bi-lock"></i>
+                                                    Inaktives Modul
+                                                </span>
+                                            }
+                                        </div>
+
+                                        <div class="app-home-module__icon">
+                                            <i class="@bereich.IconCssClass"></i>
+                                        </div>
+
+                                        <h2 class="app-home-module__title">@bereich.Titel</h2>
+                                        <p class="app-home-module__text">@bereich.Beschreibung</p>
+
+                                        <div class="app-home-module__footer">
+                                            <a class="app-btn @actionStyleClass app-home-module__action"
+                                               asp-area="@bereich.Area"
+                                               asp-controller="@bereich.Controller"
+                                               asp-action="@bereich.Action"
+                                               data-app-loading-link
+                                               data-app-loading-text="@($"{bereich.Titel} wird geöffnet...")">
+                                                @bereich.ButtonText
+                                                <i class="bi bi-arrow-right"></i>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </article>
+                        </div>
+                    }
+                </div>
+
+                <div class="app-home-footer">
+                    Zentrales Managementsystem &bull; Intensivtransport Neubrandenburg &bull; &copy; 2026
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <partial name="~/Views/Shared/Komponenten/_AppScriptResources.cshtml" />
+</body>
+</html>

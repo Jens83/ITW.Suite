@@ -1,0 +1,118 @@
+﻿@{
+    Layout = null;
+    ViewData["Title"] = "Tablet-Tracking";
+}
+
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - ITW NB</title>
+
+    <partial name="~/Views/Shared/Komponenten/_AppHeadResources.cshtml" />
+</head>
+<body class="theme-itw">
+    <main class="container py-4"
+          data-itw-tablet-tracking-page
+          data-endpoint="/api/intensivtransport/fahrzeugmanagement/location-update">
+
+        <section class="itw-page itw-tablet-tracking-client-page">
+            <div class="itw-page-header">
+                <div>
+                    <p class="itw-kicker">ITW-Suite · Einsatz-Tablet</p>
+                    <h1>Tracking</h1>
+                    <p>
+                        Diese Seite sendet den Standort des Einsatz-Tablets automatisch an die ITW-Suite.
+                    </p>
+                </div>
+
+                <div class="itw-page-actions">
+                    <span id="trackingStatusBadge" class="badge bg-secondary">
+                        Bereit
+                    </span>
+                </div>
+            </div>
+
+            <div id="trackingMessage" class="alert alert-info">
+                Tracking wird vorbereitet...
+            </div>
+
+            <div class="row g-4">
+                <div class="col-12 col-xl-5">
+                    <div class="itw-card">
+                        <div class="itw-card-header">
+                            <div>
+                                <p class="itw-kicker">Tracking</p>
+                                <h2>Standort senden</h2>
+                                <p>
+                                    Bitte Standortzugriff erlauben und diese Seite geöffnet lassen.
+                                </p>
+                            </div>
+                        </div>
+
+                        <div class="d-grid gap-2">
+                            <button id="startTrackingButton"
+                                    type="button"
+                                    class="btn btn-primary btn-lg">
+                                <i class="bi bi-play-fill"></i>
+                                Tracking starten
+                            </button>
+
+                            <button id="stopTrackingButton"
+                                    type="button"
+                                    class="btn btn-outline-danger"
+                                    disabled>
+                                <i class="bi bi-stop-fill"></i>
+                                Stoppen
+                            </button>
+                        </div>
+
+                        <div class="alert alert-warning mt-3 mb-0">
+                            Tracking läuft nur zuverlässig, solange diese Seite geöffnet bleibt.
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-12 col-xl-7">
+                    <div class="itw-card">
+                        <div class="itw-card-header">
+                            <div>
+                                <p class="itw-kicker">Status</p>
+                                <h2>Aktuelle Verbindung</h2>
+                                <p>
+                                    Hier siehst du, ob das Tablet Standortdaten sendet.
+                                </p>
+                            </div>
+                        </div>
+
+                        <div class="itw-tracking-status-grid">
+                            <div class="itw-tracking-status-card">
+                                <span>Geschwindigkeit</span>
+                                <strong id="speedKmh">-</strong>
+                            </div>
+
+                            <div class="itw-tracking-status-card">
+                                <span>Gesendet</span>
+                                <strong id="sendCount">0</strong>
+                            </div>
+
+                            <div class="itw-tracking-status-card">
+                                <span>Letzter Versand</span>
+                                <strong id="lastSend">-</strong>
+                            </div>
+
+                            <div class="itw-tracking-status-card">
+                                <span>Standort</span>
+                                <strong id="locationStatus">-</strong>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <partial name="~/Views/Shared/Komponenten/_AppScriptResources.cshtml" />
+</body>
+</html>

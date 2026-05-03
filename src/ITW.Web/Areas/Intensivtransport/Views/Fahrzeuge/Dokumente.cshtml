@@ -1,0 +1,226 @@
+﻿@using ITW.Fahrzeugmanagement.Domain.Enums
+@using Microsoft.AspNetCore.Mvc.ViewFeatures
+@model ITW.Web.Areas.Intensivtransport.ViewModels.Fahrzeugmanagement.FahrzeugDokumenteViewModel
+
+@{
+    Layout = ViewData["AreaLayoutPath"]?.ToString();
+    ViewData["Title"] = "Tankbelege";
+
+    var successMessage = TempData["FahrzeugDokumente.Erfolg"]?.ToString();
+    var errorMessage = TempData["FahrzeugDokumente.Fehler"]?.ToString();
+
+    var tankbelege = Model.Dokumente
+        .Where(x => x.Kategorie == FahrzeugDokumentKategorie.Tankbeleg)
+        .OrderByDescending(x => x.HochgeladenAm)
+        .ToList();
+}
+
+<div class="app-page">
+    <header class="app-page-header">
+        <div class="app-page-heading">
+            <div class="app-page-heading__eyebrow">
+                <i class="bi bi-fuel-pump-fill"></i>
+                Fahrzeugmanagement
+            </div>
+
+            <h1 class="app-page-heading__title">@Model.Navigation.Kennzeichen</h1>
+            <p class="app-page-heading__text">
+                @Model.Navigation.InterneNummer · Tankbelege
+            </p>
+        </div>
+
+        <div class="app-page-actions">
+            <a asp-action="Details"
+               asp-route-id="@Model.FahrzeugId"
+               class="app-btn app-btn-outline-accent"
+               data-app-loading-link
+               data-app-loading-text="Fahrzeugübersicht wird geöffnet...">
+                <i class="bi bi-arrow-left"></i>
+                Zur Übersicht
+            </a>
+        </div>
+    </header>
+
+    @if (!string.IsNullOrWhiteSpace(successMessage) || !string.IsNullOrWhiteSpace(errorMessage))
+    {
+        <div class="app-status-stack">
+            @if (!string.IsNullOrWhiteSpace(successMessage))
+            {
+                @await Html.PartialAsync(
+                "~/Views/Shared/Komponenten/_AppStatusMessage.cshtml",
+                successMessage,
+                new ViewDataDictionary(ViewData)
+                {
+                    ["Variant"] = "success",
+                    ["Title"] = "Erfolgreich gespeichert",
+                    ["AutoHide"] = true,
+                    ["AutoHideMilliseconds"] = 3000
+                })
+                }
+
+            @if (!string.IsNullOrWhiteSpace(errorMessage))
+            {
+                @await Html.PartialAsync(
+                "~/Views/Shared/Komponenten/_AppStatusMessage.cshtml",
+                errorMessage,
+                new ViewDataDictionary(ViewData)
+                {
+                    ["Variant"] = "danger",
+                    ["Title"] = "System-Hinweis",
+                    ["AutoHide"] = false
+                })
+                }
+        </div>
+    }
+
+    <div class="app-employee-detail-grid">
+        <aside class="app-employee-detail-sidebar">
+            <partial name="~/Areas/Intensivtransport/Views/Shared/_FahrzeugDetailNavigation.cshtml" model="Model.Navigation" />
+        </aside>
+
+        <div class="app-employee-detail-content">
+            <section class="app-employee-card">
+                <header class="app-employee-card__header app-employee-card__header--row">
+                    <div>
+                        <h2 class="app-employee-card__title">
+                            <i class="bi bi-fuel-pump-fill"></i>
+                            Tankbeleg hochladen
+                        </h2>
+                        <p class="app-employee-card__text">
+                            Lade hier ausschließlich Tankbelege für dieses Fahrzeug hoch.
+                        </p>
+                    </div>
+                </header>
+
+                <div class="app-employee-card__body">
+                    <form asp-action="DokumentHochladen"
+                          method="post"
+                          enctype="multipart/form-data"
+                          data-app-loading-form
+                          data-app-loading-text="Tankbeleg wird hochgeladen...">
+                        @Html.AntiForgeryToken()
+
+                        <input asp-for="FahrzeugId" type="hidden" />
+                        <input type="hidden" name="Kategorie" value="@FahrzeugDokumentKategorie.Tankbeleg" />
+                                              
+
+                        <div class="app-employee-form-grid">
+                            <div class="app-employee-form-grid__full">
+                                <label asp-for="Bezeichnung" class="form-label small fw-bold text-muted">
+                                    Bezeichnung
+                                </label>
+                                <input asp-for="Bezeichnung"
+                                       class="form-control shadow-sm"
+                                       placeholder="z. B. Tankbeleg 27.04.2026"
+                                       autocomplete="off" />
+                            </div>
+
+                            <div class="app-employee-form-grid__full">
+                                <label asp-for="Datei" class="form-label small fw-bold text-muted">
+                                    Belegdatei
+                                </label>
+                                <input asp-for="Datei"
+                                       type="file"
+                                       class="form-control shadow-sm" />
+                            </div>
+                        </div>
+
+                        <div class="app-form-actions">
+                            <button type="submit" class="app-btn app-btn-accent">
+                                <i class="bi bi-upload"></i>
+                                <span>Tankbeleg hochladen</span>
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </section>
+
+            <section class="app-employee-card">
+                <header class="app-employee-card__header app-employee-card__header--row">
+                    <div>
+                        <h2 class="app-employee-card__title">
+                            <i class="bi bi-folder2-open"></i>
+                            Vorhandene Tankbelege
+                        </h2>
+                        <p class="app-employee-card__text">
+                            Die neuesten Tankbelege stehen oben.
+                        </p>
+                    </div>
+
+                    <span class="app-pill app-pill--accent">
+                        @tankbelege.Count Einträge
+                    </span>
+                </header>
+
+                <div class="app-employee-card__body">
+                    @if (tankbelege.Count == 0)
+                    {
+                        <div class="app-employee-documents-empty">
+                            <i class="bi bi-fuel-pump"></i>
+                            <div>Noch keine Tankbelege hinterlegt.</div>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="app-employee-doc-grid">
+                            @foreach (var dokument in tankbelege)
+                            {
+                                <article class="app-employee-doc-card">
+                                    <div class="app-employee-doc-card__icon">
+                                        <i class="bi bi-fuel-pump-fill"></i>
+                                    </div>
+
+                                    <div class="app-employee-doc-card__title"
+                                         title="@dokument.AnzeigeTitel">
+                                        @dokument.AnzeigeTitel
+                                    </div>
+
+                                    <div class="app-employee-doc-card__meta">
+                                        Hochgeladen: @dokument.HochgeladenAmText<br />
+                                        Datei: @dokument.Dateiname
+                                    </div>
+
+                                    <div class="app-employee-doc-card__actions gap-3">
+                                        <a asp-action="DokumentHerunterladen"
+                                           asp-route-id="@Model.FahrzeugId"
+                                           asp-route-dokumentId="@dokument.DokumentId"
+                                           class="app-btn app-btn-sm app-btn-outline-accent justify-content-center"
+                                           data-app-loading-link
+                                           data-app-loading-text="Tankbeleg wird heruntergeladen..."
+                                           title="Herunterladen">
+                                            <i class="bi bi-download"></i>
+                                            <span>Herunterladen</span>
+                                        </a>
+
+                                        <form asp-action="DokumentLoeschen"
+                                              method="post"
+                                              class="d-grid"
+                                              data-app-confirm-form
+                                              data-app-confirm-title="Tankbeleg löschen?"
+                                              data-app-confirm-text="Der Tankbeleg wird aus der Fahrzeugakte entfernt. Die Datei wird auch vom Server gelöscht."
+                                              data-app-loading-text="Tankbeleg wird gelöscht...">
+                                            @Html.AntiForgeryToken()
+
+                                            <input type="hidden" name="id" value="@Model.FahrzeugId" />
+                                            <input type="hidden" name="dokumentId" value="@dokument.DokumentId" />
+
+                                            <button type="submit"
+                                                    class="app-btn app-btn-sm app-btn-danger justify-content-center">
+                                                <i class="bi bi-trash"></i>
+                                                <span>Löschen</span>
+                                            </button>
+                                        </form>
+                                    </div>
+                                </article>
+                            }
+                        </div>
+                    }
+                </div>
+            </section>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

@@ -1,0 +1,77 @@
+﻿@model ITW.Web.ViewModels.Layout.BereichsBenutzerMenuViewModel
+
+@{
+    var aktuellerBenutzername = User.Identity?.Name;
+    if (string.IsNullOrWhiteSpace(aktuellerBenutzername))
+    {
+        aktuellerBenutzername = "Benutzer";
+    }
+
+    var vorname = User.FindFirst("FirstName")?.Value?.Trim() ?? string.Empty;
+    var nachname = User.FindFirst("LastName")?.Value?.Trim() ?? string.Empty;
+
+    var anzeigeName = $"{vorname} {nachname}".Trim();
+    if (string.IsNullOrWhiteSpace(anzeigeName))
+    {
+        anzeigeName = aktuellerBenutzername;
+    }
+
+    string avatarSeed;
+    if (!string.IsNullOrWhiteSpace(vorname) && !string.IsNullOrWhiteSpace(nachname))
+    {
+        avatarSeed = $"{char.ToUpperInvariant(vorname[0])} {char.ToUpperInvariant(nachname[0])}";
+    }
+    else if (!string.IsNullOrWhiteSpace(vorname))
+    {
+        avatarSeed = char.ToUpperInvariant(vorname[0]).ToString();
+    }
+    else if (!string.IsNullOrWhiteSpace(nachname))
+    {
+        avatarSeed = char.ToUpperInvariant(nachname[0]).ToString();
+    }
+    else
+    {
+        avatarSeed = aktuellerBenutzername;
+    }
+
+    var avatarName = Uri.EscapeDataString(avatarSeed);
+}
+
+<div class="dropdown app-user-menu">
+    <a href="#"
+       class="app-user-menu__toggle"
+       data-bs-toggle="dropdown"
+       aria-expanded="false">
+        <img src="https://ui-avatars.com/api/?name=@avatarName&background=@Model.AvatarBackgroundColor&color=fff&bold=true"
+             width="38"
+             height="38"
+             class="app-user-menu__avatar"
+             alt="Benutzer" />
+
+        <span class="app-user-menu__meta d-none d-md-flex">
+            <span class="app-user-menu__name">@anzeigeName</span>
+            <span class="app-user-menu__area">@Model.Bereichsanzeige</span>
+        </span>
+
+        <i class="bi bi-chevron-down app-user-menu__chevron d-none d-md-inline-flex"></i>
+    </a>
+
+    <ul class="dropdown-menu dropdown-menu-end app-user-menu__dropdown">
+        <li class="app-user-menu__dropdown-header">
+            <div class="app-user-menu__dropdown-name">@anzeigeName</div>
+            <div class="app-user-menu__dropdown-area">Angemeldet im Bereich @Model.Bereichsanzeige</div>
+        </li>
+
+        <li><hr class="dropdown-divider app-user-menu__divider"></li>
+
+        <li>
+            <form asp-area="" asp-controller="Account" asp-action="Logout" method="post" class="m-0">
+                @Html.AntiForgeryToken()
+                <button type="submit" class="app-user-menu__action app-user-menu__action--danger">
+                    <i class="bi bi-box-arrow-right"></i>
+                    Abmelden
+                </button>
+            </form>
+        </li>
+    </ul>
+</div>

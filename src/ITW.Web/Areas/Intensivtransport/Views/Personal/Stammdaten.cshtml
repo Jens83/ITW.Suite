@@ -1,0 +1,161 @@
+﻿@using ITW.Web.ViewModels.UI
+@model ITW.Web.Areas.Intensivtransport.ViewModels.Mitarbeiter.MitarbeiterStammdatenBearbeitenViewModel
+
+@{
+    Layout = ViewData["AreaLayoutPath"]?.ToString();
+    ViewData["Title"] = Model.Titel;
+
+    var headerModel = new AppPageHeaderViewModel
+    {
+        Eyebrow = "Personal",
+        EyebrowIconCssClass = "bi bi-person-vcard",
+        Title = Model.Titel,
+        Description = Model.Beschreibung,
+        BadgeText = Model.Benutzername,
+        BadgeIconCssClass = "bi bi-person-badge"
+    };
+}
+
+<div class="app-page">
+    <div class="app-page-header">
+        <partial name="~/Views/Shared/Komponenten/_AppPageHeader.cshtml" model="headerModel" />
+
+        <div class="app-page-actions">
+            <a asp-action="Details"
+               asp-route-userId="@Model.UserId"
+               class="app-btn app-btn-neutral"
+               data-app-loading-link
+               data-app-loading-text="Mitarbeiterdetails werden geöffnet...">
+                <i class="bi bi-arrow-left"></i>
+                <span>Zur Übersicht</span>
+            </a>
+        </div>
+    </div>
+
+    <div class="app-employee-detail-grid">
+        <aside class="app-employee-detail-sidebar">
+            <partial name="~/Areas/Intensivtransport/Views/Shared/_MitarbeiterDetailNavigation.cshtml" model="Model.Navigation" />
+        </aside>
+
+        <div class="app-employee-detail-content">
+            <section class="app-employee-card">
+                <header class="app-employee-card__header app-employee-card__header--row">
+                    <div>
+                        <h2 class="app-employee-card__title">
+                            <i class="bi bi-person-vcard-fill"></i>
+                            Personalangaben
+                        </h2>
+                        <p class="app-employee-card__text">
+                            Stammdaten werden fachlich beim Mitarbeiterprofil gepflegt und bleiben vom zentralen Benutzerkonto getrennt.
+                        </p>
+                    </div>
+                </header>
+
+                <div class="app-employee-card__body">
+                    <form asp-action="Stammdaten" method="post" data-app-loading-form data-app-loading-text="Stammdaten werden gespeichert...">
+                        @Html.AntiForgeryToken()
+                        <div asp-validation-summary="ModelOnly" class="text-danger small mb-3"></div>
+
+                        <input asp-for="UserId" type="hidden" />
+                        <input asp-for="ProfilId" type="hidden" />
+
+                        <div class="app-employee-form-grid">
+                            <div>
+                                <div class="app-static-field">
+                                    <label class="app-static-field__label">Benutzername (Login)</label>
+                                    <div class="app-static-field__value app-static-field__value--muted">@Model.Benutzername</div>
+                                </div>
+                            </div>
+
+                            <div>
+                                <div class="app-static-field">
+                                    <label class="app-static-field__label">System E-Mail</label>
+                                    <div class="app-static-field__value app-static-field__value--muted">@(string.IsNullOrWhiteSpace(Model.Email) ? "Nicht hinterlegt" : Model.Email)</div>
+                                </div>
+                            </div>
+
+                            <div>
+                                <label asp-for="Vorname" class="form-label small fw-bold text-muted"></label>
+                                <input asp-for="Vorname" class="form-control shadow-sm" placeholder="Vorname eingeben" />
+                                <span asp-validation-for="Vorname" class="text-danger small"></span>
+                            </div>
+
+                            <div>
+                                <label asp-for="Nachname" class="form-label small fw-bold text-muted"></label>
+                                <input asp-for="Nachname" class="form-control shadow-sm" placeholder="Nachname eingeben" />
+                                <span asp-validation-for="Nachname" class="text-danger small"></span>
+                            </div>
+
+                            <div>
+                                <label asp-for="Beschaeftigungsart" class="form-label small fw-bold text-muted"></label>
+                                <select asp-for="Beschaeftigungsart"
+                                        asp-items="Html.GetEnumSelectList<ITW.Domain.Personnel.Enums.MitarbeiterBeschaeftigungsart>()"
+                                        class="form-select shadow-sm">
+                                </select>
+                                <span asp-validation-for="Beschaeftigungsart" class="text-danger small"></span>
+                            </div>
+
+                            <hr class="app-employee-divider" />
+
+                            <div>
+                                <label asp-for="Telefonnummer" class="form-label small fw-bold text-muted"></label>
+                                <div class="itw-input-wrapper shadow-sm">
+                                    <i class="bi bi-telephone"></i>
+                                    <input asp-for="Telefonnummer" class="form-control" />
+                                </div>
+                                <span asp-validation-for="Telefonnummer" class="text-danger small"></span>
+                            </div>
+
+                            <div class="app-employee-form-grid__full">
+                                <div class="app-employee-form-grid">
+                                    <div>
+                                        <label asp-for="Strasse" class="form-label small fw-bold text-muted">Straße</label>
+                                        <input asp-for="Strasse" class="form-control shadow-sm" />
+                                        <span asp-validation-for="Strasse" class="text-danger small"></span>
+                                    </div>
+
+                                    <div>
+                                        <label asp-for="Hausnummer" class="form-label small fw-bold text-muted">Nr.</label>
+                                        <input asp-for="Hausnummer" class="form-control shadow-sm" />
+                                        <span asp-validation-for="Hausnummer" class="text-danger small"></span>
+                                    </div>
+
+                                    <div>
+                                        <label asp-for="Postleitzahl" class="form-label small fw-bold text-muted">PLZ</label>
+                                        <input asp-for="Postleitzahl" class="form-control shadow-sm" />
+                                        <span asp-validation-for="Postleitzahl" class="text-danger small"></span>
+                                    </div>
+
+                                    <div>
+                                        <label asp-for="Ort" class="form-label small fw-bold text-muted">Wohnort</label>
+                                        <input asp-for="Ort" class="form-control shadow-sm" />
+                                        <span asp-validation-for="Ort" class="text-danger small"></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="app-form-actions">
+                            <button type="submit" class="app-btn app-btn-accent">
+                                <i class="bi bi-save"></i>
+                                <span>Speichern</span>
+                            </button>
+
+                            <a asp-action="Details"
+                               asp-route-userId="@Model.UserId"
+                               class="app-btn app-btn-neutral"
+                               data-app-loading-link
+                               data-app-loading-text="Mitarbeiterdetails werden geöffnet...">
+                                <span>Abbrechen</span>
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </section>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

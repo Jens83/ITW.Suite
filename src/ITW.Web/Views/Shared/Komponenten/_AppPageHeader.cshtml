@@ -1,0 +1,36 @@
+﻿@model ITW.Web.ViewModels.UI.AppPageHeaderViewModel
+
+<div class="app-page-heading">
+    @if (!string.IsNullOrWhiteSpace(Model.Eyebrow))
+    {
+        <div class="app-page-heading__eyebrow">
+            @if (!string.IsNullOrWhiteSpace(Model.EyebrowIconCssClass))
+            {
+                <i class="@Model.EyebrowIconCssClass"></i>
+            }
+
+            <span>@Model.Eyebrow</span>
+        </div>
+    }
+
+    <div>
+        <h1 class="app-page-heading__title">@Model.Title</h1>
+
+        @if (!string.IsNullOrWhiteSpace(Model.Description))
+        {
+            <p class="app-page-heading__text">@Model.Description</p>
+        }
+    </div>
+</div>
+
+@if (!string.IsNullOrWhiteSpace(Model.BadgeText))
+{
+    <div class="app-page-meta">
+        @if (!string.IsNullOrWhiteSpace(Model.BadgeIconCssClass))
+        {
+            <i class="@Model.BadgeIconCssClass"></i>
+        }
+
+        <span>@Model.BadgeText</span>
+    </div>
+}

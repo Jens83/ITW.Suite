@@ -1,0 +1,149 @@
+﻿@using ITW.Web.ViewModels.UI
+@model ITW.Web.ViewModels.Benutzer.BenutzerkontoNeuAnlegenViewModel
+
+@{
+    Layout = ViewData["AreaLayoutPath"]?.ToString();
+    ViewData["Title"] = "Mitarbeiter anlegen";
+
+    var zurueckUrl = !string.IsNullOrWhiteSpace(Model.ReturnUrl)
+        ? Model.ReturnUrl
+        : (Url.Action("Index") ?? "#");
+
+    var headerModel = new AppPageHeaderViewModel
+    {
+        Eyebrow = "Benutzerverwaltung",
+        EyebrowIconCssClass = "bi bi-person-plus",
+        Title = Model.Titel,
+        Description = Model.Beschreibung,
+        BadgeText = Model.BereichName,
+        BadgeIconCssClass = "bi bi-buildings"
+    };
+}
+
+<div class="app-page">
+    <div class="app-page-header">
+        <partial name="~/Views/Shared/Komponenten/_AppPageHeader.cshtml" model="headerModel" />
+
+        <div class="app-page-actions">
+            <a href="@zurueckUrl" class="app-btn app-btn-neutral" data-app-loading-link data-app-loading-text="Übersicht wird geöffnet...">
+                <i class="bi bi-arrow-left"></i>
+                <span>Zurück</span>
+            </a>
+        </div>
+    </div>
+
+    <div class="row g-4">
+        <div class="col-12 col-xl-8">
+            <section class="app-surface">
+                <div class="app-surface__header">
+                    <div class="app-surface__heading">
+                        <p class="app-surface__eyebrow">Identity</p>
+                        <h2 class="app-surface__title">Neues Benutzerkonto</h2>
+                        <p class="app-surface__text">
+                            Das Konto wird zentral angelegt und anschließend direkt dem Bereich @Model.BereichName mit Rolle und Führungsverantwortung zugeordnet.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="app-surface__body pt-0">
+                    <form asp-action="BenutzerkontoAnlegen" method="post" data-app-loading-form data-app-loading-text="Benutzerkonto wird angelegt...">
+                        @Html.AntiForgeryToken()
+                        <div asp-validation-summary="ModelOnly" class="text-danger small mb-3"></div>
+
+                        <input asp-for="ReturnUrl" type="hidden" />
+
+                        <div class="row g-4">
+                            <div class="col-12 col-md-6">
+                                <label asp-for="Benutzername" class="form-label"></label>
+                                <div class="itw-input-wrapper shadow-sm">
+                                    <i class="bi bi-person"></i>
+                                    <input asp-for="Benutzername" class="form-control" placeholder="Benutzername..." />
+                                </div>
+                                <span asp-validation-for="Benutzername" class="text-danger small"></span>
+                            </div>
+
+                            <div class="col-12 col-md-6">
+                                <label asp-for="Email" class="form-label"></label>
+                                <div class="itw-input-wrapper shadow-sm">
+                                    <i class="bi bi-envelope"></i>
+                                    <input asp-for="Email" class="form-control" placeholder="E-Mail-Adresse..." />
+                                </div>
+                                <span asp-validation-for="Email" class="text-danger small"></span>
+                            </div>
+
+                            <div class="col-12">
+                                <label asp-for="Passwort" class="form-label"></label>
+                                <div class="itw-input-wrapper shadow-sm">
+                                    <i class="bi bi-key"></i>
+                                    <input asp-for="Passwort" class="form-control" placeholder="Initiales Passwort..." />
+                                </div>
+                                <span asp-validation-for="Passwort" class="text-danger small"></span>
+                            </div>
+
+                            <div class="col-12 col-md-6">
+                                <label asp-for="Rolle" class="form-label"></label>
+                                <div class="itw-input-wrapper shadow-sm">
+                                    <i class="bi bi-shield-lock"></i>
+                                    <select asp-for="Rolle" asp-items="Model.RollenOptionen" class="form-select"></select>
+                                </div>
+                                <span asp-validation-for="Rolle" class="text-danger small"></span>
+                            </div>
+
+                            <div class="col-12 col-md-6">
+                                <label asp-for="Fuehrungsverantwortung" class="form-label"></label>
+                                <div class="itw-input-wrapper shadow-sm">
+                                    <i class="bi bi-briefcase"></i>
+                                    <select asp-for="Fuehrungsverantwortung" asp-items="Model.FuehrungsverantwortungsOptionen" class="form-select"></select>
+                                </div>
+                                <span asp-validation-for="Fuehrungsverantwortung" class="text-danger small"></span>
+                            </div>
+                        </div>
+
+                        <div class="app-form-actions">
+                            <button type="submit" class="app-btn app-btn-accent">
+                                <i class="bi bi-save"></i>
+                                <span>Benutzerkonto anlegen</span>
+                            </button>
+
+                            <a href="@zurueckUrl" class="app-btn app-btn-neutral">
+                                <span>Abbrechen</span>
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </section>
+        </div>
+
+        <div class="col-12 col-xl-4">
+            <section class="app-surface h-100">
+                <div class="app-surface__header app-surface__header--compact">
+                    <div class="app-surface__heading">
+                        <p class="app-surface__eyebrow">Information</p>
+                        <h2 class="app-surface__title">Direkte Bereichsanbindung</h2>
+                        <p class="app-surface__text">
+                            Das Konto wird nicht nur technisch angelegt, sondern unmittelbar fachlich dem Bereich zugeordnet. Module werden danach separat über Bereich und Rolle gesteuert.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="app-surface__body pt-0">
+                    <ul class="app-info-list">
+                        <li class="app-info-list__item">
+                            <span class="app-info-list__icon"><i class="bi bi-check2"></i></span>
+                            <span>Die Bereichsrolle wird sofort mitgespeichert. Zusätzliche technische Nachpflege entfällt.</span>
+                        </li>
+
+                        <li class="app-info-list__item">
+                            <span class="app-info-list__icon"><i class="bi bi-check2"></i></span>
+                            <span>Identity bleibt führend, Modulfreigaben laufen davon getrennt und einfacher über Bereich und Rolle.</span>
+                        </li>
+                    </ul>
+                </div>
+            </section>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

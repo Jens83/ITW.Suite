@@ -1,0 +1,153 @@
+﻿@using ITW.Web.ViewModels.UI
+@model ITW.Web.Areas.Geschaeftsfuehrung.ViewModels.Modules.ModuleIndexViewModel
+
+@{
+    ViewData["Title"] = "Module";
+
+    var tempSuccessMessage = TempData["SuccessMessage"] as string;
+    var tempErrorMessage = TempData["ErrorMessage"] as string;
+
+    var headerModel = new AppPageHeaderViewModel
+    {
+        Eyebrow = "Systemsteuerung",
+        EyebrowIconCssClass = "bi bi-diagram-3",
+        Title = "Module und Empfänger",
+        Description = "Der Geschäftsführer legt hier fest, welches Modul welcher Rolle in welchem Bereich zugewiesen wird.",
+        BadgeText = Model.IsSuccess ? $"{Model.Module.Count} Module" : null,
+        BadgeIconCssClass = Model.IsSuccess ? "bi bi-sliders" : null
+    };
+
+    var errorState = new AppEmptyStateViewModel
+    {
+        IconCssClass = "bi bi-exclamation-triangle",
+        Title = "Modulsteuerung konnte nicht geladen werden",
+        Description = Model.ErrorMessage ?? "Die Modulsteuerung konnte nicht geladen werden."
+    };
+}
+
+<div class="app-page">
+    <div class="app-page-header">
+        <partial name="~/Views/Shared/Komponenten/_AppPageHeader.cshtml" model="headerModel" />
+    </div>
+
+    @if (!string.IsNullOrWhiteSpace(tempSuccessMessage) || !string.IsNullOrWhiteSpace(tempErrorMessage))
+    {
+        <div class="app-status-stack">
+            @if (!string.IsNullOrWhiteSpace(tempSuccessMessage))
+            {
+                @await Html.PartialAsync(
+                "~/Views/Shared/Komponenten/_AppStatusMessage.cshtml",
+                tempSuccessMessage,
+                new ViewDataDictionary(ViewData)
+                {
+                    ["Variant"] = "success",
+                    ["Title"] = "Änderung gespeichert",
+                    ["AutoHide"] = true,
+                    ["AutoHideMilliseconds"] = 3000
+                })
+                }
+
+            @if (!string.IsNullOrWhiteSpace(tempErrorMessage))
+            {
+                @await Html.PartialAsync(
+                "~/Views/Shared/Komponenten/_AppStatusMessage.cshtml",
+                tempErrorMessage,
+                new ViewDataDictionary(ViewData)
+                {
+                    ["Variant"] = "danger",
+                    ["Title"] = "System-Hinweis",
+                    ["AutoHide"] = false
+                })
+                }
+        </div>
+    }
+
+    @if (!Model.IsSuccess)
+    {
+        <section class="app-surface">
+            <partial name="~/Views/Shared/Komponenten/_AppEmptyState.cshtml" model="errorState" />
+        </section>
+    }
+    else
+    {
+        <section class="app-surface">
+            <div class="app-surface__header app-surface__header--compact">
+                <div class="app-surface__heading">
+                    <p class="app-surface__eyebrow">Zuweisungsmatrix</p>
+                    <h2 class="app-surface__title">Wer bekommt welches Modul?</h2>
+                    <p class="app-surface__text">
+                        Links stehen die Hauptmodule. Rechts legen Sie pro Bereich und Rolle fest, ob das Modul verfügbar ist.
+                    </p>
+                </div>
+            </div>
+
+            <div class="app-surface__body app-surface__body--table">
+                <div class="table-responsive">
+                    <table class="table app-table align-middle">
+                        <thead>
+                            <tr>
+                                <th class="ps-4">Modul</th>
+                                @foreach (var empfaenger in Model.Empfaenger)
+                                {
+                                    <th class="text-center">
+                                        <div class="app-table__title">@empfaenger.Titel</div>
+                                        <div class="app-table__subtext">@empfaenger.Untertitel</div>
+                                    </th>
+                                }
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var modul in Model.Module)
+                            {
+                                <tr>
+                                    <td class="ps-4">
+                                        <div class="app-table__title">@modul.Anzeigename</div>
+                                        <div class="app-table__subtext">Hauptmodul</div>
+                                    </td>
+
+                                    @foreach (var zelle in modul.Zellen)
+                                    {
+                                        <td class="text-center">
+                                            <div class="d-flex flex-column align-items-center gap-2">
+                                                <span class="app-pill @(zelle.IstAktiv ? "app-pill--success" : "app-pill--muted")">
+                                                    @(zelle.IstAktiv ? "Aktiv" : "Inaktiv")
+                                                </span>
+
+                                                <form asp-action="ZuweisungSetzen"
+                                                      method="post"
+                                                      class="d-inline-flex"
+                                                      data-app-loading-form
+                                                      data-app-loading-text="Modulzuweisung wird gespeichert...">
+                                                    @Html.AntiForgeryToken()
+
+                                                    <input type="hidden" name="modul" value="@zelle.Modul" />
+                                                    <input type="hidden" name="bereich" value="@zelle.Bereich" />
+                                                    <input type="hidden" name="rolle" value="@zelle.Rolle" />
+                                                    <input type="hidden" name="istAktiv" value="@(zelle.IstAktiv ? "false" : "true")" />
+
+                                                    <button type="submit"
+                                                            class="app-btn app-btn-sm @(zelle.IstAktiv ? "app-btn-neutral" : "app-btn-accent")">
+                                                        @if (zelle.IstAktiv)
+                                                        {
+                                                            <i class="bi bi-toggle-off"></i>
+                                                            <span>Entziehen</span>
+                                                        }
+                                                        else
+                                                        {
+                                                            <i class="bi bi-toggle-on"></i>
+                                                            <span>Zuweisen</span>
+                                                        }
+                                                    </button>
+                                                </form>
+                                            </div>
+                                        </td>
+                                    }
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+    }
+</div>

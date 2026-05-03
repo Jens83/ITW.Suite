@@ -1,0 +1,270 @@
+﻿@model ITW.Web.Areas.Intensivtransport.ViewModels.Dienstplan.SichtbarerDienstplanViewModel
+
+@{
+    Layout = ViewData["AreaLayoutPath"]?.ToString();
+    ViewData["Title"] = Model.Titel;
+
+    var beschreibung = string.IsNullOrWhiteSpace(Model.Beschreibung)
+        ? "Hier sehen Sie den freigegebenen Dienstplan Ihrer Periode. Eigene Dienste und Vertretungen werden direkt im Kalender markiert."
+        : Model.Beschreibung;
+
+    var successMessage = TempData["SuccessMessage"]?.ToString();
+
+    var finalError = TempData["ErrorMessage"]?.ToString();
+    if (string.IsNullOrWhiteSpace(finalError) && !Model.IsSuccess)
+    {
+        finalError = Model.ErrorMessage ?? "Der veröffentlichte Dienstplan konnte nicht geladen werden.";
+    }
+}
+
+<div class="app-plan-page">
+    <header class="app-plan-hero">
+        <div class="app-plan-hero__label">
+            <i class="bi bi-eye"></i>
+            Veröffentlichter Plan
+        </div>
+
+        <h1 class="app-plan-hero__title">@Model.Titel</h1>
+        <p class="app-plan-hero__text">@beschreibung</p>
+    </header>
+
+    @if (!string.IsNullOrWhiteSpace(successMessage) || !string.IsNullOrWhiteSpace(finalError))
+    {
+        <div class="app-status-stack">
+            @if (!string.IsNullOrWhiteSpace(successMessage))
+            {
+                @await Html.PartialAsync(
+                    "~/Views/Shared/Komponenten/_AppStatusMessage.cshtml",
+                    successMessage,
+                    new ViewDataDictionary(ViewData)
+                    {
+                        ["Variant"] = "success",
+                        ["Title"] = "Erfolgreich gespeichert",
+                        ["AutoHide"] = true,
+                        ["AutoHideMilliseconds"] = 3000
+                    })
+            }
+
+            @if (!string.IsNullOrWhiteSpace(finalError))
+            {
+                @await Html.PartialAsync(
+                    "~/Views/Shared/Komponenten/_AppStatusMessage.cshtml",
+                    finalError,
+                    new ViewDataDictionary(ViewData)
+                    {
+                        ["Variant"] = "danger",
+                        ["Title"] = "System-Hinweis",
+                        ["AutoHide"] = false
+                    })
+            }
+        </div>
+    }
+
+    @if (!Model.HatFreigegebenePlaene)
+    {
+        <section class="app-plan-empty">
+            <div class="app-plan-empty__body">
+                <div class="app-plan-empty__icon">
+                    <i class="bi bi-clipboard2-x"></i>
+                </div>
+
+                <h2 class="app-plan-empty__title">Noch kein freigegebener Dienstplan</h2>
+                <p class="app-plan-empty__text">
+                    Der veröffentlichte Plan erscheint hier erst, wenn die Wunschphase abgeschlossen und der Dienstplan freigegeben wurde.
+                </p>
+
+                <div class="app-plan-empty__actions">
+                    <a asp-area="Intensivtransport"
+                       asp-controller="Dashboard"
+                       asp-action="Index"
+                       class="app-btn app-btn-neutral"
+                       data-app-loading-link
+                       data-app-loading-text="Startseite wird geöffnet...">
+                        <i class="bi bi-house-door"></i>
+                        Zur Startseite
+                    </a>
+                </div>
+            </div>
+        </section>
+    }
+    else
+    {
+        var heute = DateTime.Today;
+        var initialAbschnittIndex = 0;
+
+        for (var i = 0; i < Model.Abschnitte.Count; i++)
+        {
+            if (Model.Abschnitte[i].Jahr == heute.Year &&
+                Model.Abschnitte[i].Monat == heute.Month)
+            {
+                initialAbschnittIndex = i;
+                break;
+            }
+        }
+
+        <section class="app-plan-switcher-panel">
+            <div class="app-plan-switcher-panel__body">
+                <div class="app-plan-switcher" role="tablist" aria-label="Plan-Auswahl">
+                    @for (var i = 0; i < Model.Abschnitte.Count; i++)
+                    {
+                        var abschnitt = Model.Abschnitte[i];
+                        var istAktiv = i == initialAbschnittIndex;
+
+                        <button type="button"
+                                class="app-btn @(istAktiv ? "app-btn-accent" : "app-btn-outline-accent") app-plan-switcher__button"
+                                data-plan-target="plan-abschnitt-@i"
+                                aria-pressed="@(istAktiv ? "true" : "false")">
+                            @abschnitt.PeriodeBezeichnung
+                        </button>
+                    }
+                </div>
+            </div>
+        </section>
+
+        @for (var i = 0; i < Model.Abschnitte.Count; i++)
+        {
+            var abschnitt = Model.Abschnitte[i];
+            var istAktiv = i == initialAbschnittIndex;
+            var ersterTag = new DateOnly(abschnitt.Jahr, abschnitt.Monat, 1);
+            var ersterWochentagIndex = ((int)ersterTag.DayOfWeek + 6) % 7;
+            var tageLookup = abschnitt.Tage.ToDictionary(x => x.Datum.Day);
+
+            <section id="plan-abschnitt-@i"
+                     class="app-plan-section @(istAktiv ? string.Empty : "d-none")"
+                     data-plan-section>
+                <header class="app-plan-section__header">
+                    <div>
+                        <div class="app-plan-section__eyebrow">@abschnitt.Ueberschrift</div>
+                        <h2 class="app-plan-section__title">@abschnitt.PeriodeBezeichnung</h2>
+                    </div>
+
+                    <span class="app-plan-badge app-plan-badge--released">
+                        <i class="bi bi-eye-fill"></i>
+                        Freigegeben
+                    </span>
+                </header>
+
+                <div class="app-plan-section__body">
+                    @if (abschnitt.Tage.Count == 0)
+                    {
+                        <div class="app-plan-note">
+                            Für diese Periode sind aktuell noch keine sichtbaren Besetzungstage vorhanden.
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="app-plan-calendar">
+                            <div class="app-plan-calendar__weekdays">
+                                <div>Montag</div>
+                                <div>Dienstag</div>
+                                <div>Mittwoch</div>
+                                <div>Donnerstag</div>
+                                <div>Freitag</div>
+                                <div class="is-weekend">Samstag</div>
+                                <div class="is-weekend">Sonntag</div>
+                            </div>
+
+                            <div class="app-plan-calendar__days">
+                                @for (var leer = 0; leer < ersterWochentagIndex; leer++)
+                                {
+                                    <div class="app-plan-calendar__empty"></div>
+                                }
+
+                                @for (var tagNummer = 1; tagNummer <= abschnitt.Tage.Count; tagNummer++)
+                                {
+                                    var tag = tageLookup[tagNummer];
+                                    var tagKlassen = new List<string>();
+
+                                    if (tag.IstHeute)
+                                    {
+                                        tagKlassen.Add("app-plan-day--today");
+                                    }
+
+                                    if (tag.IstTagDesBenutzers)
+                                    {
+                                        tagKlassen.Add("app-plan-day--mine");
+                                    }
+
+                                    if (tag.IstFeiertag)
+                                    {
+                                        tagKlassen.Add("app-plan-day--holiday");
+                                    }
+                                    else if (tag.IstWochenende)
+                                    {
+                                        tagKlassen.Add("app-plan-day--weekend");
+                                    }
+
+                                    <article class="app-plan-day @string.Join(" ", tagKlassen)">
+                                        <div class="app-plan-day__body">
+                                            @if (tag.IstTagDesBenutzers)
+                                            {
+                                                <span class="app-plan-day__status @(tag.EigenerDienstIstVertretung ? "app-plan-day__status--vertretung" : "app-plan-day__status--dienst")">
+                                                    <i class="bi @(tag.EigenerDienstIstVertretung ? "bi-arrow-repeat" : "bi-person-check-fill")"></i>
+                                                    @tag.EigenerStatusText
+                                                </span>
+                                            }
+
+                                            <div class="app-plan-day__top">
+                                                <div>
+                                                    <div class="app-plan-day__eyebrow">@tag.WochentagKurz</div>
+                                                    <div class="app-plan-day__date">@tag.DatumAnzeige</div>
+                                                </div>
+                                            </div>
+
+                                            <div class="app-plan-day__meta">
+                                                @if (tag.IstHeute)
+                                                {
+                                                    <span class="app-plan-day__flag app-plan-day__flag--today">Heute</span>
+                                                }
+
+                                                @if (tag.IstFeiertag)
+                                                {
+                                                    <span class="app-plan-day__flag app-plan-day__flag--holiday">Feiertag</span>
+                                                }
+                                                else if (tag.IstWochenende)
+                                                {
+                                                    <span class="app-plan-day__flag app-plan-day__flag--weekend">Wochenende</span>
+                                                }
+                                            </div>
+
+                                            @if (tag.IstFeiertag && !string.IsNullOrWhiteSpace(tag.FeiertagsName))
+                                            {
+                                                <div class="app-plan-day__holiday-name">@tag.FeiertagsName</div>
+                                            }
+
+                                            @if (tag.HatSichtbareSlots)
+                                            {
+                                                <div class="app-plan-slot-list">
+                                                    @foreach (var slot in tag.Slots)
+                                                    {
+                                                        <div class="app-plan-slot @(slot.IstOffen ? "app-plan-slot--offen" : "") @(slot.SlotBezeichnung == "Arzt" ? "app-plan-slot--arzt" : "app-plan-slot--nfs")">
+                                                            <span class="app-plan-slot__name">@(slot.IstOffen ? "Offen" : slot.AnzeigeName)</span>
+                                                        </div>
+                                                    }
+                                                </div>
+                                            }
+                                            else
+                                            {
+                                                <div class="app-plan-day__empty">
+                                                    @(tag.IstFeiertag
+                                                        ? "Kein Dienst geplant."
+                                                        : tag.IstWochenende
+                                                            ? "Kein Dienst geplant."
+                                                            : "Kein veröffentlichter Dienst vorhanden.")
+                                                </div>
+                                            }
+                                        </div>
+                                    </article>
+                                }
+                            </div>
+                        </div>
+                    }
+                </div>
+            </section>
+        }
+    }
+</div>
+
+@section Scripts {
+    <script src="~/js/app-sichtbarer-plan.js" asp-append-version="true"></script>
+}

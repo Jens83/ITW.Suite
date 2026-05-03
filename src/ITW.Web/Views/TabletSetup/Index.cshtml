@@ -1,0 +1,52 @@
+﻿@{
+    Layout = null;
+    ViewData["Title"] = "Tablet einrichten";
+}
+
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - ITW NB</title>
+
+    <partial name="~/Views/Shared/Komponenten/_AppHeadResources.cshtml" />
+</head>
+<body class="theme-itw">
+    <main class="container py-4"
+          data-itw-tablet-setup-page
+          data-complete-endpoint="/api/tablet/setup/complete"
+          data-tracking-url="/tablet/tracking">
+
+        <section class="itw-page itw-tablet-setup-page">
+            <div class="row g-4 justify-content-center">
+                <div class="col-12 col-lg-7 col-xl-6">
+                    <div class="itw-card text-center">
+                        <div class="itw-card-header justify-content-center">
+                            <div>
+                                <p class="itw-kicker">Einsatz-Tablet</p>
+                                <h1>Tablet wird eingerichtet</h1>
+                                <p>
+                                    Bitte kurz warten. Die Einrichtung startet automatisch.
+                                </p>
+                            </div>
+                        </div>
+
+                        <div id="tabletSetupMessage" class="alert alert-info mb-0">
+                            Einrichtung wird vorbereitet...
+                        </div>
+
+                        <div class="mt-3">
+                            <span id="tabletSetupStatusBadge" class="badge bg-secondary">
+                                Wird eingerichtet
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <partial name="~/Views/Shared/Komponenten/_AppScriptResources.cshtml" />
+</body>
+</html>

@@ -1,0 +1,39 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+
+	<PropertyGroup>
+		<TargetFramework>net9.0</TargetFramework>
+		<Nullable>enable</Nullable>
+		<ImplicitUsings>enable</ImplicitUsings>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\ITW.Application\ITW.Application.csproj" />
+		<ProjectReference Include="..\ITW.Dienstplan\ITW.Dienstplan.csproj" />
+		<ProjectReference Include="..\ITW.Einsatz\ITW.Einsatz.csproj" />
+		<ProjectReference Include="..\ITW.Fahrzeugmanagement\ITW.Fahrzeugmanagement.csproj" />
+		<ProjectReference Include="..\ITW.Infrastructure\ITW.Infrastructure.csproj" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<PackageReference Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation" Version="9.0.14" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="9.0.14" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore" Version="9.0.14" />
+		<PackageReference Include="QRCoder" Version="1.8.0" />
+		<PackageReference Include="QuestPDF" Version="2026.2.3" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<Folder Include="Areas\Geschaeftsfuehrung\Navigation\" />
+		<Folder Include="Areas\Geschaeftsfuehrung\Views\Benutzer\" />
+		<Folder Include="Areas\Intensivtransport\Navigation\" />
+		<Folder Include="Areas\Intensivtransport\Views\Benutzer\" />
+		<Folder Include="Areas\Verwaltung\Navigation\" />
+		<Folder Include="Areas\Verwaltung\ViewModels\" />
+		<Folder Include="Areas\Verwaltung\Views\Benutzer\" />
+		<Folder Include="Extensions\" />
+		<Folder Include="Navigation\MainNavigation\" />
+		<Folder Include="Navigation\MenuVisibility\" />
+		<Folder Include="Notifications\" />
+	</ItemGroup>
+
+</Project>

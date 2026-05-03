@@ -1,0 +1,176 @@
+﻿@model ITW.Web.Areas.Intensivtransport.ViewModels.Fahrzeugmanagement.FahrtenbuchDetailsViewModel
+
+@{
+    Layout = ViewData["AreaLayoutPath"]?.ToString();
+    ViewData["Title"] = "Fahrtdetails";
+
+    var successMessage = TempData["Fahrtenbuch.Erfolg"]?.ToString();
+    var errorMessage = TempData["Fahrtenbuch.Fehler"]?.ToString();
+}
+
+<div class="app-page">
+    <header class="app-page-header">
+        <div class="app-page-heading">
+            <div class="app-page-heading__eyebrow">
+                <i class="bi bi-signpost-split"></i>
+                Fahrzeugmanagement
+            </div>
+
+            <h1 class="app-page-heading__title">Fahrtdetails</h1>
+            <p class="app-page-heading__text">
+                @Model.FahrzeugText · @Model.DatumText · @Model.Fahrtzweck
+            </p>
+        </div>
+
+        <div class="app-page-actions">
+            <a asp-action="Fahrtenbuch"
+               asp-route-id="@Model.FahrzeugId"
+               class="app-btn app-btn-outline-accent"
+               data-app-loading-link
+               data-app-loading-text="Fahrtenbuch wird geöffnet...">
+                <i class="bi bi-arrow-left"></i>
+                Zurück zum Fahrtenbuch
+            </a>
+        </div>
+    </header>
+
+    @if (!string.IsNullOrWhiteSpace(successMessage) || !string.IsNullOrWhiteSpace(errorMessage))
+    {
+        <div class="app-status-stack">
+            @if (!string.IsNullOrWhiteSpace(successMessage))
+            {
+                @await Html.PartialAsync(
+                "~/Views/Shared/Komponenten/_AppStatusMessage.cshtml",
+                successMessage,
+                new ViewDataDictionary(ViewData)
+                {
+                    ["Variant"] = "success",
+                    ["Title"] = "Erfolgreich gespeichert",
+                    ["AutoHide"] = true,
+                    ["AutoHideMilliseconds"] = 3000
+                })
+                }
+
+            @if (!string.IsNullOrWhiteSpace(errorMessage))
+            {
+                @await Html.PartialAsync(
+                "~/Views/Shared/Komponenten/_AppStatusMessage.cshtml",
+                errorMessage,
+                new ViewDataDictionary(ViewData)
+                {
+                    ["Variant"] = "danger",
+                    ["Title"] = "System-Hinweis",
+                    ["AutoHide"] = false
+                })
+                }
+        </div>
+    }
+
+    <div class="app-employee-detail-grid">
+        <aside class="app-employee-detail-sidebar">
+            <partial name="~/Areas/Intensivtransport/Views/Shared/_FahrzeugDetailNavigation.cshtml"
+                     model="Model.Navigation" />
+        </aside>
+
+        <div class="app-employee-detail-content">
+            <section class="app-employee-card">
+                <header class="app-employee-card__header app-employee-card__header--row">
+                    <div>
+                        <h2 class="app-employee-card__title">
+                            <i class="bi bi-info-circle"></i>
+                            Übersicht
+                        </h2>
+                        <p class="app-employee-card__text">
+                            Alle Details zu diesem Fahrtenbucheintrag.
+                        </p>
+                    </div>
+
+                    <span class="badge @Model.StatusBadgeCssClass">
+                        @Model.StatusText
+                    </span>
+                </header>
+
+                <div class="app-employee-card__body app-employee-card__body--soft">
+                    <div class="app-employee-detail-data-grid">
+                        <div class="app-employee-detail-field">
+                            <label class="app-employee-detail-field__label">Datum</label>
+                            <div class="app-employee-detail-field__value">@Model.DatumText</div>
+                        </div>
+
+                        <div class="app-employee-detail-field">
+                            <label class="app-employee-detail-field__label">Fahrzeug</label>
+                            <div class="app-employee-detail-field__value">@Model.FahrzeugText</div>
+                        </div>
+
+                        <div class="app-employee-detail-field">
+                            <label class="app-employee-detail-field__label">Fahrer</label>
+                            <div class="app-employee-detail-field__value">@Model.FahrerName</div>
+                        </div>
+
+                        <div class="app-employee-detail-field">
+                            <label class="app-employee-detail-field__label">Beifahrer</label>
+                            <div class="app-employee-detail-field__value">@Model.BeifahrerName</div>
+                        </div>
+
+                        <div class="app-employee-detail-field">
+                            <label class="app-employee-detail-field__label">Kategorie</label>
+                            <div class="app-employee-detail-field__value">@Model.FahrtKategorieText</div>
+                        </div>
+
+                        <div class="app-employee-detail-field">
+                            <label class="app-employee-detail-field__label">Fahrtzweck</label>
+                            <div class="app-employee-detail-field__value">@Model.Fahrtzweck</div>
+                        </div>
+
+                        <div class="app-employee-detail-field">
+                            <label class="app-employee-detail-field__label">Startzeit</label>
+                            <div class="app-employee-detail-field__value">@Model.StartDatumZeitText</div>
+                        </div>
+
+                        <div class="app-employee-detail-field">
+                            <label class="app-employee-detail-field__label">Endzeit</label>
+                            <div class="app-employee-detail-field__value">@Model.EndDatumZeitText</div>
+                        </div>
+
+                        <div class="app-employee-detail-field">
+                            <label class="app-employee-detail-field__label">Von</label>
+                            <div class="app-employee-detail-field__value">@Model.StartortText</div>
+                        </div>
+
+                        <div class="app-employee-detail-field">
+                            <label class="app-employee-detail-field__label">Nach</label>
+                            <div class="app-employee-detail-field__value">@Model.ZielortText</div>
+                        </div>
+
+                        <div class="app-employee-detail-field">
+                            <label class="app-employee-detail-field__label">Startkilometer</label>
+                            <div class="app-employee-detail-field__value">@Model.StartKilometerstandText</div>
+                        </div>
+
+                        <div class="app-employee-detail-field">
+                            <label class="app-employee-detail-field__label">Endkilometer</label>
+                            <div class="app-employee-detail-field__value">@Model.EndKilometerstandText</div>
+                        </div>
+
+                        <div class="app-employee-detail-field">
+                            <label class="app-employee-detail-field__label">Gefahrene Kilometer</label>
+                            <div class="app-employee-detail-field__value app-employee-detail-field__value--accent">
+                                @Model.GefahreneKilometerText
+                            </div>
+                        </div>
+
+                        <div class="app-employee-detail-field">
+                            <label class="app-employee-detail-field__label">Automatisch vorbelegt</label>
+                            <div class="app-employee-detail-field__value">@Model.AutomatischVorbelegtText</div>
+                        </div>
+
+                        <div class="app-employee-detail-field app-employee-detail-field--wide">
+                            <label class="app-employee-detail-field__label">Bemerkung</label>
+                            <div class="app-employee-detail-field__value">@Model.BemerkungText</div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </div>
+</div>

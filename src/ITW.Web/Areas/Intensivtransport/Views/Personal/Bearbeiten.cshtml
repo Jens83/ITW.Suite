@@ -1,0 +1,119 @@
+﻿@using ITW.Web.ViewModels.UI
+@model ITW.Web.ViewModels.Personal.ItwMitarbeiterprofilBearbeitenViewModel
+
+@{
+    Layout = ViewData["AreaLayoutPath"]?.ToString();
+    ViewData["Title"] = "Qualifikationen bearbeiten";
+
+    var headerModel = new AppPageHeaderViewModel
+    {
+        Eyebrow = "Personal",
+        EyebrowIconCssClass = "bi bi-award",
+        Title = Model.Titel,
+        Description = Model.Beschreibung,
+        BadgeText = Model.Benutzername,
+        BadgeIconCssClass = "bi bi-person-badge"
+    };
+}
+
+<div class="app-page">
+    <div class="app-page-header">
+        <partial name="~/Views/Shared/Komponenten/_AppPageHeader.cshtml" model="headerModel" />
+
+        <div class="app-page-actions">
+            <a asp-action="Details"
+               asp-route-userId="@Model.UserId"
+               class="app-btn app-btn-neutral"
+               data-app-loading-link
+               data-app-loading-text="Mitarbeiterdetails werden geöffnet...">
+                <i class="bi bi-arrow-left"></i>
+                <span>Zur Übersicht</span>
+            </a>
+        </div>
+    </div>
+
+    <div class="app-employee-detail-grid">
+        <aside class="app-employee-detail-sidebar">
+            <partial name="~/Areas/Intensivtransport/Views/Shared/_MitarbeiterDetailNavigation.cshtml" model="Model.Navigation" />
+        </aside>
+
+        <div class="app-employee-detail-content">
+            <section class="app-employee-card">
+                <header class="app-employee-card__header app-employee-card__header--row">
+                    <div>
+                        <h2 class="app-employee-card__title">
+                            <i class="bi bi-person-badge-fill"></i>
+                            Qualifikationen
+                        </h2>
+                        <p class="app-employee-card__text">
+                            Haupt- und Zusatzqualifikationen steuern die fachliche Einsetzbarkeit im Intensivtransport.
+                        </p>
+                    </div>
+                </header>
+
+                <div class="app-employee-card__body">
+                    <form asp-action="Bearbeiten" method="post" data-app-loading-form data-app-loading-text="Qualifikationen werden gespeichert...">
+                        @Html.AntiForgeryToken()
+                        <div asp-validation-summary="ModelOnly" class="text-danger small mb-3"></div>
+
+                        <input asp-for="UserId" type="hidden" />
+                        <input asp-for="ProfilId" type="hidden" />
+
+                        <div class="app-employee-form-grid">
+                            <div>
+                                <div class="app-static-field">
+                                    <label class="app-static-field__label">Benutzername</label>
+                                    <div class="app-static-field__value app-static-field__value--muted">@Model.Benutzername</div>
+                                </div>
+                            </div>
+
+                            <div>
+                                <div class="app-static-field">
+                                    <label class="app-static-field__label">E-Mail</label>
+                                    <div class="app-static-field__value app-static-field__value--muted">@(string.IsNullOrWhiteSpace(Model.Email) ? "Keine E-Mail hinterlegt" : Model.Email)</div>
+                                </div>
+                            </div>
+
+                            <div>
+                                <label asp-for="HauptqualifikationId" class="form-label small fw-bold text-muted"></label>
+                                <div class="itw-input-wrapper shadow-sm">
+                                    <i class="bi bi-award"></i>
+                                    <select asp-for="HauptqualifikationId" asp-items="Model.HauptqualifikationsOptionen" class="form-select">
+                                        <option value="">Bitte Hauptqualifikation auswählen</option>
+                                    </select>
+                                </div>
+                                <div class="app-employee-form-note">Hier wird die grundlegende ITW-Qualifikation festgelegt, z. B. Arzt oder Notfallsanitäter.</div>
+                                <span asp-validation-for="HauptqualifikationId" class="text-danger small"></span>
+                            </div>
+
+                            <div>
+                                <label asp-for="ZusatzqualifikationIds" class="form-label small fw-bold text-muted"></label>
+                                <select asp-for="ZusatzqualifikationIds" asp-items="Model.ZusatzqualifikationsOptionen" class="form-select shadow-sm" size="6" multiple></select>
+                                <div class="app-employee-form-note">Beispiele: Facharzt für Anästhesie, DIVI-Qualifizierung, Praxisanleiter, Medizinprodukte-Beauftragter.</div>
+                            </div>
+                        </div>
+
+                        <div class="app-form-actions">
+                            <button type="submit" class="app-btn app-btn-accent">
+                                <i class="bi bi-save"></i>
+                                <span>Profil speichern</span>
+                            </button>
+
+                            <a asp-action="Details"
+                               asp-route-userId="@Model.UserId"
+                               class="app-btn app-btn-neutral"
+                               data-app-loading-link
+                               data-app-loading-text="Mitarbeiterdetails werden geöffnet...">
+                                <span>Abbrechen</span>
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </section>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

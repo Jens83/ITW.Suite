@@ -1,0 +1,76 @@
+﻿@model ITW.Web.ViewModels.Navigation.BereichsWeiterleitungViewModel
+
+@{
+    Layout = null;
+    ViewData["Title"] = Model.Titel;
+}
+
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Intensivtransport Neubrandenburg</title>
+
+    <partial name="~/Views/Shared/Komponenten/_AppHeadResources.cshtml" />
+</head>
+<body class="theme-itw redirect-body app-loading-boot">
+    <partial name="~/Views/Shared/Komponenten/_AppLoadingOverlay.cshtml" />
+
+    <div class="redirect-card">
+        <div class="app-page-heading">
+            <div class="app-page-heading__eyebrow">
+                <i class="bi bi-arrow-left-right"></i>
+                <span>Bereichswechsel</span>
+            </div>
+
+            <div>
+                <h1 class="app-page-heading__title">@Model.Titel</h1>
+
+                @if (!string.IsNullOrWhiteSpace(Model.FunktionsName) &&
+                                !string.IsNullOrWhiteSpace(Model.AufgerufenerBereichName))
+                {
+                    <p class="app-page-heading__text">
+                        Sie haben <strong>@Model.FunktionsName</strong> im Bereich
+                        <strong>@Model.AufgerufenerBereichName</strong> geöffnet und werden jetzt in den Bereich
+                        <strong>@Model.ZielbereichName</strong> weitergeleitet.
+                    </p>
+                }
+                else
+                {
+                    <p class="app-page-heading__text">
+                        Sie werden jetzt in den Bereich <strong>@Model.ZielbereichName</strong> weitergeleitet.
+                    </p>
+                }
+            </div>
+        </div>
+
+        <div class="d-flex justify-content-center mt-4">
+            <span class="loading-dots" aria-hidden="true">
+                <span></span>
+                <span></span>
+                <span></span>
+            </span>
+        </div>
+
+        <div class="app-form-note mt-4">
+            @Model.Hinweistext
+        </div>
+
+        <div class="redirect-link border-top pt-4 mt-4">
+            <a href="@Model.ZielUrl" class="app-btn app-btn-accent">
+                <i class="bi bi-box-arrow-right"></i>
+                <span>@Model.ButtonText</span>
+            </a>
+        </div>
+    </div>
+
+    <script>
+        window.setTimeout(function () {
+            window.location.href = "@Html.Raw(Model.ZielUrl)";
+        }, @Model.VerzogerungInMillisekunden);
+    </script>
+
+    <partial name="~/Views/Shared/Komponenten/_AppScriptResources.cshtml" />
+</body>
+</html>
