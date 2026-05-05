@@ -3,12 +3,23 @@ using ITW.Web.DependencyInjection;
 using ITW.Web.Middleware;
 using ITW.Web.Setup.Identity;
 using ITW.Web.Setup.Startup;
+using Microsoft.AspNetCore.StaticFiles;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllersWithViews();
 builder.Services.AddHttpContextAccessor();
+
+// PWA: .webmanifest ist im Standard-MIME-Mapping nicht enthalten.
+// Damit der Browser die Datei als Web App Manifest erkennt, mappen
+// wir die Endung explizit auf "application/manifest+json".
+builder.Services.Configure<StaticFileOptions>(options =>
+{
+    var provider = new FileExtensionContentTypeProvider();
+    provider.Mappings[".webmanifest"] = "application/manifest+json";
+    options.ContentTypeProvider = provider;
+});
 
 builder.Services.AddInfrastructure(options =>
 {
