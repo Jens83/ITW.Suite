@@ -1,18 +1,21 @@
 {
-  "extends": ["stylelint-config-standard"],
+  "extends": ["stylelint-config-recommended"],
   "rules": {
+    "selector-class-pattern": [
+      "^[a-z][a-z0-9]*(-[a-z0-9]+)*(__[a-z0-9]+(-[a-z0-9]+)*)?(--[a-z0-9]+(-[a-z0-9]+)*)?$",
+      {
+        "message": "Klassennamen müssen kebab-case mit BEM sein (block, block__element, block--modifier, block__element--modifier).",
+        "severity": "warning"
+      }
+    ],
     "selector-max-specificity": ["0,4,0", { "severity": "warning" }],
     "declaration-no-important": [true, { "severity": "warning" }],
-    "color-named": "never",
+    "no-duplicate-selectors": [true, { "severity": "warning" }],
     "color-no-invalid-hex": true,
     "no-descending-specificity": null,
     "declaration-property-value-disallowed-list": {
       "/^(color|background|background-color|border|border-color|border-top-color|border-right-color|border-bottom-color|border-left-color|outline|outline-color|fill|stroke|box-shadow|text-shadow|caret-color)$/": [
-        "/^#[0-9a-fA-F]{3,8}$/",
-        "/^rgb\\(/",
-        "/^rgba\\(/",
-        "/^hsl\\(/",
-        "/^hsla\\(/"
+        "/#[0-9a-fA-F]{3,8}/"
       ]
     }
   },

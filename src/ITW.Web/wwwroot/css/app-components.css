@@ -95,7 +95,7 @@
     height: 100%;
     border-radius: var(--radius-lg);
     border: 1px solid rgba(15, 23, 42, 0.06);
-    background: linear-gradient(180deg, rgba(255, 255, 255, 0.98) 0%, #ffffff 100%);
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.98) 0%, var(--surface-bg) 100%);
     box-shadow: var(--shadow-sm);
     overflow: hidden;
     transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease;
@@ -224,7 +224,7 @@
 .app-report-kpi-card,
 .card {
     border-radius: var(--radius-lg);
-    background: linear-gradient(180deg, rgba(255, 255, 255, 0.98) 0%, #ffffff 100%);
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.98) 0%, var(--surface-bg) 100%);
     border: 1px solid rgba(15, 23, 42, 0.06);
     box-shadow: var(--shadow-sm);
     overflow: hidden;
@@ -340,15 +340,15 @@
 
 .app-btn-accent,
 .btn-accent {
-    background: linear-gradient(180deg, color-mix(in srgb, var(--accent-color) 92%, #fff 8%) 0%, var(--accent-color) 100%);
-    color: #ffffff;
+    background: linear-gradient(180deg, color-mix(in srgb, var(--accent-color) 92%, var(--surface-bg) 8%) 0%, var(--accent-color) 100%);
+    color: var(--surface-bg);
     border-color: rgba(var(--accent-rgb), 0.26);
     box-shadow: 0 14px 28px rgba(var(--accent-rgb), 0.18);
 }
 
     .app-btn-accent:hover,
     .btn-accent:hover {
-        color: #ffffff;
+        color: var(--surface-bg);
         box-shadow: 0 18px 34px rgba(var(--accent-rgb), 0.22);
     }
 
@@ -369,7 +369,7 @@
 
 .app-btn-neutral,
 .btn-neutral {
-    background: #ffffff;
+    background: var(--surface-bg);
     color: var(--text-color-strong);
     border-color: rgba(148, 163, 184, 0.18);
     box-shadow: var(--shadow-xs);
@@ -378,7 +378,7 @@
     .app-btn-neutral:hover,
     .btn-neutral:hover {
         color: var(--text-color-strong);
-        background: #ffffff;
+        background: var(--surface-bg);
         box-shadow: var(--shadow-sm);
     }
 
@@ -657,7 +657,7 @@
     padding: 1rem 1rem 1rem 1.05rem;
     border-radius: var(--radius-md);
     border: 1px solid transparent;
-    background: #ffffff;
+    background: var(--surface-bg);
     box-shadow: var(--shadow-xs);
     overflow: hidden;
 }
@@ -715,7 +715,7 @@
 
 .app-status--success {
     border-color: rgba(var(--success-rgb), 0.16);
-    background: linear-gradient(180deg, rgba(var(--success-rgb), 0.06) 0%, #ffffff 100%);
+    background: linear-gradient(180deg, rgba(var(--success-rgb), 0.06) 0%, var(--surface-bg) 100%);
     color: var(--success-color);
 }
 
@@ -726,7 +726,7 @@
 
 .app-status--info {
     border-color: rgba(var(--info-rgb), 0.16);
-    background: linear-gradient(180deg, rgba(var(--info-rgb), 0.06) 0%, #ffffff 100%);
+    background: linear-gradient(180deg, rgba(var(--info-rgb), 0.06) 0%, var(--surface-bg) 100%);
     color: var(--info-color);
 }
 
@@ -737,7 +737,7 @@
 
 .app-status--warning {
     border-color: rgba(var(--warning-rgb), 0.18);
-    background: linear-gradient(180deg, rgba(var(--warning-rgb), 0.07) 0%, #ffffff 100%);
+    background: linear-gradient(180deg, rgba(var(--warning-rgb), 0.07) 0%, var(--surface-bg) 100%);
     color: var(--warning-color);
 }
 
@@ -748,7 +748,7 @@
 
 .app-status--danger {
     border-color: rgba(var(--danger-rgb), 0.18);
-    background: linear-gradient(180deg, rgba(var(--danger-rgb), 0.07) 0%, #ffffff 100%);
+    background: linear-gradient(180deg, rgba(var(--danger-rgb), 0.07) 0%, var(--surface-bg) 100%);
     color: var(--danger-color);
 }
 
@@ -891,23 +891,23 @@
 .app-autoplan-alert--success {
     background: linear-gradient(180deg, rgba(var(--success-rgb), 0.1) 0%, rgba(var(--success-rgb), 0.05) 100%);
     border-color: rgba(var(--success-rgb), 0.16);
-    color: #166534;
+    color: var(--success-color-strong);
 }
 
     .app-autoplan-alert--success .app-autoplan-alert__icon {
         background: rgba(var(--success-rgb), 0.12);
-        color: #166534;
+        color: var(--success-color-strong);
     }
 
 .app-autoplan-alert--danger {
     background: linear-gradient(180deg, rgba(var(--danger-rgb), 0.1) 0%, rgba(var(--danger-rgb), 0.05) 100%);
     border-color: rgba(var(--danger-rgb), 0.16);
-    color: #b42318;
+    color: var(--danger-color-strong);
 }
 
     .app-autoplan-alert--danger .app-autoplan-alert__icon {
         background: rgba(var(--danger-rgb), 0.12);
-        color: #b42318;
+        color: var(--danger-color-strong);
     }
 
 .app-autoplan-panel,
@@ -915,7 +915,7 @@
     position: relative;
     border: 1px solid rgba(15, 23, 42, 0.06);
     border-radius: 24px;
-    background: linear-gradient(180deg, rgba(255, 255, 255, 0.98) 0%, #ffffff 100%);
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.98) 0%, var(--surface-bg) 100%);
     box-shadow: 0 18px 40px rgba(15, 23, 42, 0.08);
     overflow: hidden;
 }
@@ -938,7 +938,7 @@
     align-items: center;
     justify-content: center;
     padding: clamp(1.25rem, 3vw, 2rem);
-    background: radial-gradient(circle at top left, rgba(var(--accent-rgb), 0.12) 0%, transparent 32%), radial-gradient(circle at bottom right, rgba(var(--accent-rgb), 0.08) 0%, transparent 28%), linear-gradient(180deg, #f8fafc 0%, #eef2f7 100%);
+    background: radial-gradient(circle at top left, rgba(var(--accent-rgb), 0.12) 0%, transparent 32%), radial-gradient(circle at bottom right, rgba(var(--accent-rgb), 0.08) 0%, transparent 28%), linear-gradient(180deg, var(--surface-bg-soft) 0%, var(--surface-bg-soft) 100%);
 }
 
 .redirect-card {
@@ -947,7 +947,7 @@
     padding: clamp(1.75rem, 4vw, 2.5rem);
     border-radius: clamp(1.4rem, 2vw, 1.75rem);
     border: 1px solid rgba(15, 23, 42, 0.08);
-    background: linear-gradient(180deg, rgba(255, 255, 255, 0.985) 0%, #ffffff 100%);
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.985) 0%, var(--surface-bg) 100%);
     box-shadow: 0 28px 60px rgba(15, 23, 42, 0.12);
     overflow: hidden;
 }
@@ -1049,7 +1049,7 @@
     padding: 0.95rem 1rem;
     border: 1px solid rgba(15, 23, 42, 0.08);
     border-radius: 16px;
-    background: linear-gradient(180deg, rgba(255,255,255,0.98) 0%, #ffffff 100%);
+    background: linear-gradient(180deg, rgba(255,255,255,0.98) 0%, var(--surface-bg) 100%);
 }
 
 .app-employee-document-row__icon {

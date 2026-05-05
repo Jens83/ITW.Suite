@@ -89,7 +89,7 @@
     gap: 0.8rem;
     padding: 3rem 1.5rem;
     border-radius: 24px;
-    background: #ffffff;
+    background: var(--surface-bg);
     border: 1px solid rgba(15, 23, 42, 0.08);
     box-shadow: 0 16px 36px rgba(15, 23, 42, 0.06);
 }
@@ -123,7 +123,7 @@
 
 .app-personal-card {
     border-radius: 24px;
-    background: #ffffff;
+    background: var(--surface-bg);
     border: 1px solid rgba(15, 23, 42, 0.08);
     box-shadow: 0 18px 44px rgba(15, 23, 42, 0.06);
     overflow: hidden;
@@ -179,7 +179,7 @@
 
 .app-personal-table thead th {
     border-bottom: 1px solid rgba(148, 163, 184, 0.22);
-    background: #f8fafc;
+    background: var(--surface-bg-soft);
     font-size: 0.72rem;
     font-weight: 800;
     letter-spacing: 0.08em;
@@ -244,7 +244,7 @@
 }
 
 .app-personal-chip--neutral {
-    background: #f8fafc;
+    background: var(--surface-bg-soft);
     color: var(--text-color);
     border-color: rgba(148, 163, 184, 0.22);
 }
@@ -263,7 +263,7 @@
 
 .app-personal-chip--danger {
     background: rgba(180, 35, 24, 0.08);
-    color: #b42318;
+    color: var(--danger-color-strong);
     border-color: rgba(180, 35, 24, 0.16);
 }
 
@@ -288,7 +288,7 @@
 
 .app-personal-badge--warning {
     background: rgba(180, 83, 9, 0.08);
-    color: #b45309;
+    color: var(--warning-color-strong);
     border-color: rgba(180, 83, 9, 0.16);
 }
 
@@ -458,7 +458,7 @@
 
 .app-employee-detail-status--danger {
     background: rgba(180, 35, 24, 0.08);
-    color: #b42318;
+    color: var(--danger-color-strong);
     border-color: rgba(180, 35, 24, 0.16);
 }
 
@@ -481,7 +481,7 @@
 
 .app-employee-card {
     border-radius: 24px;
-    background: #ffffff;
+    background: var(--surface-bg);
     border: 1px solid rgba(15, 23, 42, 0.08);
     box-shadow: 0 18px 44px rgba(15, 23, 42, 0.06);
     overflow: hidden;
@@ -607,7 +607,7 @@
 }
 
 .app-employee-chip--neutral {
-    background: #f8fafc;
+    background: var(--surface-bg-soft);
     color: var(--text-color);
     border-color: rgba(148, 163, 184, 0.22);
 }
@@ -626,7 +626,7 @@
 
 .app-employee-chip--danger {
     background: rgba(180, 35, 24, 0.08);
-    color: #b42318;
+    color: var(--danger-color-strong);
     border-color: rgba(180, 35, 24, 0.16);
 }
 
@@ -650,7 +650,7 @@
 
 .app-employee-badge--warning {
     background: rgba(180, 83, 9, 0.08);
-    color: #b45309;
+    color: var(--warning-color-strong);
     border-color: rgba(180, 83, 9, 0.16);
 }
 
@@ -668,7 +668,7 @@
 
 .app-employee-nav {
     border-radius: 24px;
-    background: #ffffff;
+    background: var(--surface-bg);
     border: 1px solid rgba(15, 23, 42, 0.08);
     box-shadow: 0 18px 44px rgba(15, 23, 42, 0.06);
     overflow: hidden;
@@ -691,7 +691,7 @@
     justify-content: center;
     flex-shrink: 0;
     border-radius: 18px;
-    background: #ffffff;
+    background: var(--surface-bg);
     color: var(--accent-color);
     box-shadow: 0 14px 30px rgba(15, 23, 42, 0.08);
     font-size: 1.35rem;
@@ -818,7 +818,7 @@
     text-align: center;
     border-radius: 20px;
     border: 1px solid rgba(148, 163, 184, 0.16);
-    background: #ffffff;
+    background: var(--surface-bg);
     box-shadow: 0 12px 28px rgba(15, 23, 42, 0.04);
     transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease;
 }
@@ -1008,7 +1008,7 @@
 
 .app-vacation-filter {
     border-radius: 24px;
-    background: #ffffff;
+    background: var(--surface-bg);
     border: 1px solid rgba(15, 23, 42, 0.08);
     box-shadow: 0 16px 36px rgba(15, 23, 42, 0.06);
 }
@@ -1047,7 +1047,7 @@
     align-items: center;
     border-radius: 18px;
     border: 1px solid rgba(148, 163, 184, 0.28);
-    background: #f8fafc;
+    background: var(--surface-bg-soft);
     overflow: hidden;
 }
 
@@ -1084,7 +1084,7 @@
 .app-vacation-kpi {
     padding: 1.15rem 1.15rem 1.05rem;
     border-radius: 22px;
-    background: #ffffff;
+    background: var(--surface-bg);
     border: 1px solid rgba(15, 23, 42, 0.08);
     box-shadow: 0 16px 36px rgba(15, 23, 42, 0.06);
 }
@@ -1129,7 +1129,7 @@
 }
 
 .app-vacation-kpi__value--danger {
-    color: #b42318;
+    color: var(--danger-color-strong);
 }
 
 .app-vacation-kpi__text {
@@ -1154,14 +1154,14 @@
 
 .app-vacation-card {
     border-radius: 24px;
-    background: #ffffff;
+    background: var(--surface-bg);
     border: 1px solid rgba(15, 23, 42, 0.08);
     box-shadow: 0 18px 44px rgba(15, 23, 42, 0.06);
     overflow: hidden;
 }
 
 .app-vacation-card--soft {
-    background: linear-gradient(180deg, rgba(var(--accent-rgb), 0.04) 0%, #ffffff 100%);
+    background: linear-gradient(180deg, rgba(var(--accent-rgb), 0.04) 0%, var(--surface-bg) 100%);
 }
 
 .app-vacation-card--fullheight {
@@ -1243,7 +1243,7 @@
     min-height: 3rem;
     border-radius: 16px;
     border: 1px solid rgba(148, 163, 184, 0.28);
-    background: #f8fafc;
+    background: var(--surface-bg-soft);
     box-shadow: none !important;
     color: var(--text-color-strong);
     font-weight: 600;
@@ -1254,7 +1254,7 @@
     }
 
     .app-vacation-range-input.is-invalid {
-        border-color: #b42318;
+        border-color: var(--danger-color-strong);
         box-shadow: 0 0 0 0.2rem rgba(180, 35, 24, 0.12) !important;
     }
 
@@ -1303,7 +1303,7 @@
 
 .app-vacation-empty--standalone {
     border-radius: 24px;
-    background: #ffffff;
+    background: var(--surface-bg);
     border: 1px solid rgba(15, 23, 42, 0.08);
     box-shadow: 0 16px 36px rgba(15, 23, 42, 0.06);
 }
@@ -1336,7 +1336,7 @@
 
 .app-vacation-table thead th {
     border-bottom: 1px solid rgba(148, 163, 184, 0.22);
-    background: #f8fafc;
+    background: var(--surface-bg-soft);
     font-size: 0.74rem;
     font-weight: 800;
     letter-spacing: 0.08em;
@@ -1374,7 +1374,7 @@
     min-width: 2.7rem;
     padding: 0.35rem 0.75rem;
     border-radius: 999px;
-    background: #f8fafc;
+    background: var(--surface-bg-soft);
     border: 1px solid rgba(148, 163, 184, 0.28);
     color: var(--text-color-strong);
     font-weight: 800;
@@ -1388,8 +1388,8 @@
     justify-content: center;
     border: 1px solid rgba(148, 163, 184, 0.28);
     border-radius: 14px;
-    background: #ffffff;
-    color: #b42318;
+    background: var(--surface-bg);
+    color: var(--danger-color-strong);
     transition: transform 0.18s ease, background-color 0.18s ease, border-color 0.18s ease;
 }
 

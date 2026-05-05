@@ -26,6 +26,13 @@
     --info-color:           var(--accent-color); /* Alias, bewusst */
     --info-rgb:             var(--accent-rgb);
 
+    /* Status-Strong: dunklere Schattierungen für Text-auf-hellem-Hintergrund.
+       Werden separat zu *-color geführt, weil Status-Hintergrundfarben hell
+       sind und Text-Kontraste stärker sein müssen. */
+    --success-color-strong: #166534;
+    --danger-color-strong:  #B42318;
+    --warning-color-strong: #9A6700;
+
     /* === Flächen ================================================== */
     --page-bg:              #F4F7FB;
     --surface-bg:           #FFFFFF;
