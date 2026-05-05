@@ -18,7 +18,7 @@ namespace ITW.Web.Areas.Intensivtransport.Controllers;
 [RequireModule(ModulCode.Dienstplan)]
 public sealed class AutoplanController : BereichsControllerBase
 {
-    private const string AreaLayoutPath = "~/Areas/Intensivtransport/Views/Shared/_LayoutIntensivtransport.cshtml";
+    private const string AreaLayoutPath = "~/Views/Shared/_AppLayout.cshtml";
     private static readonly CultureInfo DeutscheKultur = CultureInfo.GetCultureInfo("de-DE");
 
     private readonly ReadDienstplanperiodenService _readDienstplanperiodenService;

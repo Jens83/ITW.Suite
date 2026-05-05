@@ -1,4 +1,4 @@
-﻿using ITW.Application.Organisation.Contracts;
+using ITW.Application.Organisation.Contracts;
 using ITW.Application.Organisation.VisibilityScopes;
 using ITW.Application.Users.ActivateUser;
 using ITW.Application.Users.AssignArea;
@@ -51,7 +51,7 @@ public sealed class BenutzerController : BereichsBenutzerControllerBase
         "Bereichsbezogene Mitarbeiterliste für den Bereich Intensivtransport.";
 
     protected override string AreaLayoutPath =>
-        "~/Areas/Intensivtransport/Views/Shared/_LayoutIntensivtransport.cshtml";
+        "~/Views/Shared/_AppLayout.cshtml";
 
     protected override IReadOnlyList<BereichsrolleCode> ErlaubteRollen =>
         new[]

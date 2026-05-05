@@ -1,4 +1,4 @@
-﻿using ITW.Application.Organisation.Contracts;
+using ITW.Application.Organisation.Contracts;
 using ITW.Web.Controllers.Base;
 using ITW.Web.Navigation.AreaNavigation;
 using ITW.Web.Security.CurrentUser;
@@ -8,7 +8,7 @@ namespace ITW.Web.Areas.Intensivtransport.Controllers.Dienstplan;
 
 public abstract class IntensivtransportDienstplanControllerBase : BereichsControllerBase
 {
-    private const string AreaLayoutPath = "~/Areas/Intensivtransport/Views/Shared/_LayoutIntensivtransport.cshtml";
+    private const string AreaLayoutPath = "~/Views/Shared/_AppLayout.cshtml";
 
     protected IntensivtransportDienstplanControllerBase(
         ICurrentUserContextAccessor currentUserContextAccessor)

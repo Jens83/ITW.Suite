@@ -1,4 +1,4 @@
-﻿// Datei: src/ITW.Web/Areas/Geschaeftsfuehrung/Controllers/PasswortResetController.cs
+// Datei: src/ITW.Web/Areas/Geschaeftsfuehrung/Controllers/PasswortResetController.cs
 using ITW.Application.Organisation.Contracts;
 using ITW.Application.Users.ReadOffenePasswortResetAnfrageDetail;
 using ITW.Application.Users.ReadOffenePasswortResetAnfragen;
@@ -35,5 +35,5 @@ public sealed class PasswortResetController : BereichsPasswortResetControllerBas
         "Hier sieht die zuständige Leitung alle offenen Passwort-Reset-Anfragen aus dem Bereich Geschäftsführung.";
 
     protected override string AreaLayoutPath =>
-        "~/Areas/Geschaeftsfuehrung/Views/Shared/_LayoutGeschaeftsfuehrung.cshtml";
+        "~/Views/Shared/_AppLayout.cshtml";
 }

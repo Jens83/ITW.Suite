@@ -1,0 +1,102 @@
+@using ITW.Application.Organisation.Contracts
+@using ITW.Web.Layout
+@using ITW.Web.UI.Feedback
+@inject ITW.Web.Security.CurrentUser.ICurrentUserContextAccessor CurrentUserContextAccessor
+@inject IAppLayoutMetadataProvider LayoutMetadataProvider
+
+@{
+    var areaName = ViewContext.RouteData.Values["area"]?.ToString() ?? string.Empty;
+    var meta = LayoutMetadataProvider.GetForArea(areaName);
+
+    var currentUserLookup = await CurrentUserContextAccessor.GetCurrentAsync();
+    var navigation = ITW.Web.Navigation.AreaNavigation.BereichsNavigationBuilder.Build(
+        meta.Bereich,
+        currentUserLookup.CurrentUser,
+        ViewContext.RouteData.Values["Controller"]?.ToString(),
+        ViewContext.RouteData.Values["Action"]?.ToString());
+
+    var benutzerMenuModel = new ITW.Web.ViewModels.Layout.BereichsBenutzerMenuViewModel
+    {
+        Bereichsanzeige = meta.Bereichsanzeige,
+        AvatarBackgroundColor = meta.AvatarBackgroundColor
+    };
+
+    var appShellModel = new ITW.Web.ViewModels.Layout.AppShellViewModel
+    {
+        ThemeCssClass = meta.ThemeCssClass,
+        PageTitle = ViewData["Title"]?.ToString() ?? meta.Bereichsanzeige,
+        ShowMenu = true,
+        AreaDisplayName = meta.Bereichsanzeige,
+        MenuBrandPrimaryText = "Intensivtransport",
+        MenuBrandAccentText = meta.MenuBrandAccentText,
+        MenuBrandSubtitle = "Arbeitsbereich",
+        MenuBrandIconCssClass = meta.MenuBrandIconCssClass,
+        Navigation = navigation,
+        UserMenu = benutzerMenuModel
+    };
+
+    var flashSuccess = TempData[FlashKeys.Success] as string;
+    var flashError   = TempData[FlashKeys.Error]   as string;
+    var flashInfo    = TempData[FlashKeys.Info]     as string;
+}
+
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@(string.IsNullOrWhiteSpace(ViewData["Title"]?.ToString()) ? meta.TitelSuffix : $"{ViewData["Title"]} – {meta.TitelSuffix}")</title>
+
+    <partial name="~/Views/Shared/Komponenten/_AppHeadResources.cshtml" />
+</head>
+<body class="@appShellModel.ThemeCssClass app-loading-boot">
+    <partial name="~/Views/Shared/Komponenten/_AppLoadingOverlay.cshtml" />
+
+    <div id="app">
+        <partial name="~/Views/Shared/Komponenten/_AppShell.cshtml" model="appShellModel" />
+
+        <main class="container-fluid p-4">
+            @if (!string.IsNullOrWhiteSpace(flashSuccess))
+            {
+                @await Html.PartialAsync(
+                    "~/Views/Shared/Komponenten/_AppStatusMessage.cshtml",
+                    flashSuccess,
+                    new ViewDataDictionary(ViewData)
+                    {
+                        ["Variant"] = "success",
+                        ["AutoHide"] = true,
+                        ["AutoHideMilliseconds"] = 3000
+                    })
+            }
+            @if (!string.IsNullOrWhiteSpace(flashError))
+            {
+                @await Html.PartialAsync(
+                    "~/Views/Shared/Komponenten/_AppStatusMessage.cshtml",
+                    flashError,
+                    new ViewDataDictionary(ViewData)
+                    {
+                        ["Variant"] = "danger",
+                        ["AutoHide"] = false
+                    })
+            }
+            @if (!string.IsNullOrWhiteSpace(flashInfo))
+            {
+                @await Html.PartialAsync(
+                    "~/Views/Shared/Komponenten/_AppStatusMessage.cshtml",
+                    flashInfo,
+                    new ViewDataDictionary(ViewData)
+                    {
+                        ["Variant"] = "info",
+                        ["AutoHide"] = true,
+                        ["AutoHideMilliseconds"] = 5000
+                    })
+            }
+
+            @RenderBody()
+        </main>
+    </div>
+
+    <partial name="~/Views/Shared/Komponenten/_AppScriptResources.cshtml" />
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

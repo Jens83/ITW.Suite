@@ -17,7 +17,7 @@ namespace ITW.Web.Areas.Intensivtransport.Controllers;
 [RequireModule(ModulCode.Personal)]
 public sealed class PersonalController : BereichsControllerBase
 {
-    private const string AreaLayoutPath = "~/Areas/Intensivtransport/Views/Shared/_LayoutIntensivtransport.cshtml";
+    private const string AreaLayoutPath = "~/Views/Shared/_AppLayout.cshtml";
 
     private readonly ReadItwMitarbeiterprofileService _readItwMitarbeiterprofileService;
     private readonly ReadItwMitarbeiterprofilDetailService _readItwMitarbeiterprofilDetailService;

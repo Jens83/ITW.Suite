@@ -1,4 +1,4 @@
-﻿// Datei: src/ITW.Web/Areas/Intensivtransport/Controllers/PasswortResetController.cs
+// Datei: src/ITW.Web/Areas/Intensivtransport/Controllers/PasswortResetController.cs
 using ITW.Application.Organisation.Contracts;
 using ITW.Application.Users.ReadOffenePasswortResetAnfrageDetail;
 using ITW.Application.Users.ReadOffenePasswortResetAnfragen;
@@ -35,5 +35,5 @@ public sealed class PasswortResetController : BereichsPasswortResetControllerBas
         "Hier sehen zuständige Leitungen alle offenen Passwort-Reset-Anfragen aus dem Bereich Intensivtransport.";
 
     protected override string AreaLayoutPath =>
-        "~/Areas/Intensivtransport/Views/Shared/_LayoutIntensivtransport.cshtml";
+        "~/Views/Shared/_AppLayout.cshtml";
 }
