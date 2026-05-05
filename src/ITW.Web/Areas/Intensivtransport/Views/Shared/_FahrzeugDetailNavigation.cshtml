@@ -47,7 +47,7 @@
         </a>
         
         <a asp-area="Intensivtransport"
-           asp-controller="Fahrzeuge"
+           asp-controller="Fahrtenbuch"
            asp-action="Fahrtenbuch"
            asp-route-id="@Model.FahrzeugId"
            class="app-employee-nav__link @(string.Equals(Model.AktiveSeite, "Fahrtenbuch", StringComparison.OrdinalIgnoreCase) ? "app-employee-nav__link--active" : string.Empty)"
@@ -58,7 +58,7 @@
         </a>
 
         <a asp-area="Intensivtransport"
-           asp-controller="Fahrzeuge"
+           asp-controller="FahrzeugDokumente"
            asp-action="Tankbelege"
            asp-route-id="@Model.FahrzeugId"
            class="app-employee-nav__link @(string.Equals(Model.AktiveSeite, "Tankbelege", StringComparison.OrdinalIgnoreCase) ? "app-employee-nav__link--active" : string.Empty)"
@@ -69,7 +69,7 @@
         </a>
 
         <a asp-area="Intensivtransport"
-           asp-controller="Fahrzeuge"
+           asp-controller="FahrzeugPruefungen"
            asp-action="Pruefstatus"
            asp-route-id="@Model.FahrzeugId"
            class="app-employee-nav__link @(string.Equals(Model.AktiveSeite, "Pruefstatus", StringComparison.OrdinalIgnoreCase) ? "app-employee-nav__link--active" : string.Empty)"
