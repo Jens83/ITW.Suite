@@ -48,6 +48,11 @@ secrets.json
 *.mdf
 *.ldf
 *.bak
+*.bak_*
+
+# --- Frontend-Tooling ----------------------------------------------
+# package-lock.json bewusst NICHT ignorieren -> deterministisches `npm ci` in CI
+.stylelintcache
 
 # --- Sonstiges -----------------------------------------------------
 TestResults/
