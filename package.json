@@ -1,0 +1,13 @@
+{
+  "name": "itw-suite-frontend",
+  "private": true,
+  "description": "Frontend-Lint-Tooling der ITW-Suite (Stylelint). Kein eigenes Bundling.",
+  "scripts": {
+    "lint:css": "stylelint \"src/ITW.Web/wwwroot/css/**/*.css\"",
+    "lint:css:fix": "stylelint \"src/ITW.Web/wwwroot/css/**/*.css\" --fix"
+  },
+  "devDependencies": {
+    "stylelint": "^16.10.0",
+    "stylelint-config-standard": "^36.0.1"
+  }
+}

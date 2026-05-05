@@ -1,74 +1,128 @@
-﻿@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+
+/* =================================================================
+ * app-theme.css — Single Source of Truth für Design-Tokens
+ *
+ * Regel: Außerhalb dieser Datei werden KEINE Hex-/RGB-Farbwerte
+ * verwendet, sondern ausschließlich var(--token).
+ * Stylelint (Phase 7) erzwingt diese Regel automatisch.
+ *
+ * Token-Vorlage entspricht Frontend-Audit Anhang A (Soll-Stand).
+ * ================================================================= */
 
 :root {
-    --font-family-base: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-    --accent-color: #0f6cbd;
-    --accent-rgb: 15, 108, 189;
-    --success-color: #15803d;
-    --success-rgb: 21, 128, 61;
-    --warning-color: #b7791f;
-    --warning-rgb: 183, 121, 31;
-    --danger-color: #c2414b;
-    --danger-rgb: 194, 65, 75;
-    --info-color: #0f6cbd;
-    --info-rgb: 15, 108, 189;
-    --page-bg: #f4f7fb;
-    --surface-bg: #ffffff;
-    --surface-bg-soft: #f8fbfd;
-    --surface-bg-muted: #f1f5f9;
-    --border-color: #dbe4ee;
-    --border-color-strong: #c5d2df;
-    --text-color: #334155;
-    --text-color-strong: #0f172a;
-    --text-color-muted: #64748b;
-    --shadow-xs: 0 1px 2px rgba(15, 23, 42, 0.04);
-    --shadow-sm: 0 8px 22px rgba(15, 23, 42, 0.05);
-    --shadow-md: 0 16px 38px rgba(15, 23, 42, 0.08);
-    --shadow-lg: 0 28px 54px rgba(15, 23, 42, 0.12);
-    --radius-xs: 10px;
-    --radius-sm: 14px;
-    --radius-md: 18px;
-    --radius-lg: 24px;
-    --radius-xl: 30px;
-    --radius-pill: 999px;
-    --navbar-height: 68px;
-    --menu-width: 320px;
-    --btn-height: 44px;
-    --btn-height-sm: 36px;
-    --btn-height-lg: 50px;
-    --btn-radius: 14px;
-    --btn-font-size: 0.94rem;
-    --btn-font-size-sm: 0.84rem;
-    --btn-font-size-lg: 0.98rem;
-    --btn-font-weight: 700;
-    --input-height: 48px;
-    --input-radius: 16px;
-    --page-title-size: clamp(1.7rem, 2.15vw, 2.4rem);
-    --surface-title-size: 1.16rem;
-    --accent-color-hover: color-mix(in srgb, var(--accent-color), #000 14%);
+    /* === Brand & Akzent ============================================ */
+    --accent-color:         #0F6CBD;
+    --accent-rgb:           15, 108, 189;
+    --accent-color-hover:   color-mix(in srgb, var(--accent-color), #000 14%);
+
+    /* === Status =================================================== */
+    --success-color:        #15803D;
+    --success-rgb:          21, 128, 61;
+    --warning-color:        #B7791F;
+    --warning-rgb:          183, 121, 31;
+    --danger-color:         #C2414B;
+    --danger-rgb:           194, 65, 75;
+    --info-color:           var(--accent-color); /* Alias, bewusst */
+    --info-rgb:             var(--accent-rgb);
+
+    /* === Flächen ================================================== */
+    --page-bg:              #F4F7FB;
+    --surface-bg:           #FFFFFF;
+    --surface-bg-soft:      #F8FBFD;
+    --surface-bg-muted:     #F1F5F9;
+
+    /* === Text ===================================================== */
+    --text-color:           #334155;
+    --text-color-strong:    #0F172A;
+    --text-color-muted:     #64748B;
+    --text-color-subtle:    #94A3B8; /* NEU – ersetzt verstreute #94A3B8 */
+
+    /* === Linien =================================================== */
+    --border-color:         #DBE4EE;
+    --border-color-strong:  #C5D2DF;
+
+    /* === Schatten ================================================= */
+    --shadow-xs:            0 1px 2px rgba(15, 23, 42, 0.04);
+    --shadow-sm:            0 8px 22px rgba(15, 23, 42, 0.05);
+    --shadow-md:            0 16px 38px rgba(15, 23, 42, 0.08);
+    --shadow-lg:            0 28px 54px rgba(15, 23, 42, 0.12);
+
+    /* === Radien =================================================== */
+    --radius-xs:            10px;
+    --radius-sm:            14px;
+    --radius-md:            18px;
+    --radius-lg:            24px;
+    --radius-xl:            30px;
+    --radius-pill:          999px;
+
+    /* === Spacing  (NEU) =========================================== */
+    --space-1:              4px;
+    --space-2:              8px;
+    --space-3:              12px;
+    --space-4:              16px;
+    --space-5:              20px;
+    --space-6:              24px;
+    --space-7:              32px;
+    --space-8:              48px;
+
+    /* === Typografie =============================================== */
+    --font-family-base:     'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    --font-size-100:        0.75rem;
+    --font-size-200:        0.84rem;
+    --font-size-300:        0.94rem;
+    --font-size-400:        1.05rem;
+    --page-title-size:      clamp(1.7rem, 2.15vw, 2.4rem);
+    --surface-title-size:   1.16rem;
+
+    /* === Form-Elemente ============================================ */
+    --btn-height:           44px;
+    --btn-height-sm:        36px;
+    --btn-height-lg:        50px;
+    --btn-radius:           14px;
+    --btn-font-size:        var(--font-size-300);
+    --btn-font-size-sm:     var(--font-size-200);
+    --btn-font-size-lg:     var(--font-size-400);
+    --btn-font-weight:      700;
+    --input-height:         48px;
+    --input-radius:         16px;
+
+    /* === Layout =================================================== */
+    --navbar-height:        68px;
+    --menu-width:           320px;
+    --content-max-width:    1240px; /* NEU */
 }
 
+/* =================================================================
+ * Themes – tauschen ausschließlich den Akzent aus.
+ * ================================================================= */
+
 .theme-itw {
-    --accent-color: #0f6cbd;
-    --accent-rgb: 15, 108, 189;
+    --accent-color: #0F6CBD;
+    --accent-rgb:   15, 108, 189;
 }
 
 .theme-admin {
-    --accent-color: #475467;
-    --accent-rgb: 71, 84, 103;
+    --accent-color: #475569;
+    --accent-rgb:   71, 85, 105;
 }
 
 .theme-gf {
-    --accent-color: #8b2332;
-    --accent-rgb: 139, 35, 50;
+    --accent-color: #8B2332;
+    --accent-rgb:   139, 35, 50;
 }
+
+/* =================================================================
+ * Globale Basis-Styles (Layout-übergreifend)
+ * ================================================================= */
 
 html {
     scroll-behavior: smooth;
 }
 
 body {
-    background: radial-gradient(circle at top right, rgba(var(--accent-rgb), 0.07), transparent 28%), linear-gradient(180deg, #f8fbfe 0%, var(--page-bg) 100%);
+    background: radial-gradient(circle at top right, rgba(var(--accent-rgb), 0.07), transparent 28%),
+                linear-gradient(180deg, #F8FBFE 0%, var(--page-bg) 100%);
     color: var(--text-color);
     font-family: var(--font-family-base);
     overflow-x: hidden;
@@ -80,9 +134,9 @@ a {
     color: var(--accent-color);
 }
 
-    a:hover {        
-        color: var(--accent-color-hover);
-    }
+a:hover {
+    color: var(--accent-color-hover);
+}
 
 #app {
     min-height: 100vh;

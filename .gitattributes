@@ -1,0 +1,43 @@
+# Auto-detect text files and normalize line endings on commit.
+# Working-tree wird je nach Filetyp explizit auf CRLF/LF erzwungen,
+# damit der Mix aus Windows-Editoren, dotnet format und Linux-CI
+# nicht erneut 500-Files-Drift erzeugt.
+
+* text=auto eol=crlf
+
+# Quelltexte / Konfig (Windows-Solution, .NET-typisch CRLF)
+*.cs        text eol=crlf
+*.csproj    text eol=crlf
+*.sln       text eol=crlf
+*.props     text eol=crlf
+*.targets   text eol=crlf
+*.json      text eol=crlf
+*.xml       text eol=crlf
+*.cshtml    text eol=crlf
+*.razor     text eol=crlf
+*.css       text eol=crlf
+*.js        text eol=crlf
+*.html      text eol=crlf
+*.md        text eol=crlf
+*.txt       text eol=crlf
+.editorconfig text eol=crlf
+
+# Shell-Scripts brauchen LF
+*.sh        text eol=lf
+
+# Binäre Assets nicht anfassen
+*.png       binary
+*.jpg       binary
+*.jpeg      binary
+*.gif       binary
+*.ico       binary
+*.pdf       binary
+*.docx      binary
+*.xlsx      binary
+*.pptx      binary
+*.woff      binary
+*.woff2     binary
+*.ttf       binary
+*.eot       binary
+*.dll       binary
+*.exe       binary

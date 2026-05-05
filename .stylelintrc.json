@@ -1,0 +1,33 @@
+{
+  "extends": ["stylelint-config-standard"],
+  "rules": {
+    "selector-max-specificity": ["0,4,0", { "severity": "warning" }],
+    "declaration-no-important": [true, { "severity": "warning" }],
+    "color-named": "never",
+    "color-no-invalid-hex": true,
+    "no-descending-specificity": null,
+    "declaration-property-value-disallowed-list": {
+      "/^(color|background|background-color|border|border-color|border-top-color|border-right-color|border-bottom-color|border-left-color|outline|outline-color|fill|stroke|box-shadow|text-shadow|caret-color)$/": [
+        "/^#[0-9a-fA-F]{3,8}$/",
+        "/^rgb\\(/",
+        "/^rgba\\(/",
+        "/^hsl\\(/",
+        "/^hsla\\(/"
+      ]
+    }
+  },
+  "overrides": [
+    {
+      "files": ["**/app-theme.css"],
+      "rules": {
+        "declaration-property-value-disallowed-list": null
+      }
+    }
+  ],
+  "ignoreFiles": [
+    "src/ITW.Web/wwwroot/lib/**",
+    "src/ITW.Web/wwwroot/css/*.bak*",
+    "src/ITW.Web/wwwroot/css/*.bak_*",
+    "**/node_modules/**"
+  ]
+}
