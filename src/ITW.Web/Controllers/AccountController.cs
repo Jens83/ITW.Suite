@@ -7,6 +7,7 @@ using ITW.Web.ViewModels.Account;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using ITW.Web.UI.Feedback;
 
 namespace ITW.Web.Controllers;
 
@@ -173,7 +174,7 @@ public sealed class AccountController : Controller
             return View(viewModel);
         }
 
-        TempData["SuccessMessage"] = result.Bestaetigungsnachricht;
+        TempData[FlashKeys.Success] = result.Bestaetigungsnachricht;
         return RedirectToAction(nameof(Login));
     }
 
@@ -234,7 +235,7 @@ public sealed class AccountController : Controller
 
         await _signInManager.RefreshSignInAsync(user);
 
-        TempData["SuccessMessage"] = "Das Passwort wurde erfolgreich geändert.";
+        TempData[FlashKeys.Success] = "Das Passwort wurde erfolgreich geändert.";
 
         if (!string.IsNullOrWhiteSpace(viewModel.ReturnUrl) &&
             Url.IsLocalUrl(viewModel.ReturnUrl))

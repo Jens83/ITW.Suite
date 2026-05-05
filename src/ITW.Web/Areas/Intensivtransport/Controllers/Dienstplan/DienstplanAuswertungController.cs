@@ -6,6 +6,7 @@ using ITW.Web.Areas.Intensivtransport.Services.Dienstplan.Read;
 using ITW.Web.Authorization.Modules;
 using ITW.Web.Security.CurrentUser;
 using Microsoft.AspNetCore.Mvc;
+using ITW.Web.UI.Feedback;
 
 namespace ITW.Web.Areas.Intensivtransport.Controllers.Dienstplan;
 
@@ -71,7 +72,7 @@ public sealed class DienstplanAuswertungController : IntensivtransportDienstplan
 
         if (!viewModel.IsSuccess || !viewModel.AusgewaehltePeriodeId.HasValue)
         {
-            TempData["ErrorMessage"] = viewModel.ErrorMessage ?? "Die Buchhaltungs-PDF konnte nicht erstellt werden.";
+            TempData[FlashKeys.Error] = viewModel.ErrorMessage ?? "Die Buchhaltungs-PDF konnte nicht erstellt werden.";
             return RedirectToAction(nameof(Monatsauswertung), new { periodeId });
         }
 

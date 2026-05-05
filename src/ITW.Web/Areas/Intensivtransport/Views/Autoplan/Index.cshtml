@@ -1,4 +1,4 @@
-﻿@using ITW.Dienstplan.Application.Planung
+@using ITW.Dienstplan.Application.Planung
 @using ITW.Web.ViewModels.UI
 @model ITW.Web.Areas.Intensivtransport.ViewModels.Dienstplan.AutoplanIndexViewModel
 
@@ -53,7 +53,7 @@
         </div>
     </header>
 
-    @if (TempData["SuccessMessage"] is string successMessage)
+    @if (TempData[FlashKeys.Success] is string successMessage)
     {
         <div class="app-autoplan-alert app-autoplan-alert--success">
             <div class="app-autoplan-alert__icon">
@@ -66,9 +66,9 @@
         </div>
     }
 
-    @if (TempData["ErrorMessage"] != null || !Model.IsSuccess)
+    @if (TempData[FlashKeys.Error] != null || !Model.IsSuccess)
     {
-        var finalError = TempData["ErrorMessage"]?.ToString() ?? Model.ErrorMessage ?? "Ein Systemfehler ist aufgetreten.";
+        var finalError = TempData[FlashKeys.Error]?.ToString() ?? Model.ErrorMessage ?? "Ein Systemfehler ist aufgetreten.";
 
         <div class="app-autoplan-alert app-autoplan-alert--danger">
             <div class="app-autoplan-alert__icon">

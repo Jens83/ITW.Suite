@@ -1,11 +1,11 @@
-﻿@using ITW.Web.ViewModels.UI
+@using ITW.Web.ViewModels.UI
 @model ITW.Web.ViewModels.Security.PasswortResetAnfrageListeViewModel
 
 @{
     Layout = ViewData["AreaLayoutPath"]?.ToString();
     ViewData["Title"] = Model.Titel;
 
-    var tempErrorMessage = TempData["ErrorMessage"] as string;
+    var tempErrorMessage = TempData[FlashKeys.Error] as string;
     var modelErrorMessage = !string.IsNullOrWhiteSpace(Model.ErrorMessage)
         ? Model.ErrorMessage
         : "Die offenen Passwort-Reset-Anfragen konnten nicht geladen werden.";
@@ -42,12 +42,12 @@
         <partial name="~/Views/Shared/Komponenten/_AppPageHeader.cshtml" model="headerModel" />
     </div>
 
-    @if (TempData["SuccessMessage"] is string successMessage ||
+    @if (TempData[FlashKeys.Success] is string successMessage ||
         !string.IsNullOrWhiteSpace(tempErrorMessage) ||
         zeigeModelFehler)
     {
         <div class="app-status-stack">
-            @if (TempData["SuccessMessage"] is string statusSuccessMessage)
+            @if (TempData[FlashKeys.Success] is string statusSuccessMessage)
             {
                 @await Html.PartialAsync(
                 "~/Views/Shared/Komponenten/_AppStatusMessage.cshtml",

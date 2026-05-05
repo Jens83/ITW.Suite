@@ -10,6 +10,7 @@ using ITW.Web.Security.CurrentUser;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System.Globalization;
+using ITW.Web.UI.Feedback;
 
 namespace ITW.Web.Areas.Intensivtransport.Controllers;
 
@@ -104,7 +105,7 @@ public sealed class AutoplanController : BereichsControllerBase
 
         if (periodeId == Guid.Empty)
         {
-            TempData["ErrorMessage"] = "Die ausgewählte Dienstplanperiode ist ungültig.";
+            TempData[FlashKeys.Error] = "Die ausgewählte Dienstplanperiode ist ungültig.";
             return RedirectToAction(nameof(Index), new { modus });
         }
 
@@ -127,7 +128,7 @@ public sealed class AutoplanController : BereichsControllerBase
 
         if (!result.IsSuccess)
         {
-            TempData["ErrorMessage"] = result.ErrorMessage ?? "Der Autoplan konnte nicht gespeichert werden.";
+            TempData[FlashKeys.Error] = result.ErrorMessage ?? "Der Autoplan konnte nicht gespeichert werden.";
             return RedirectToAction(nameof(Index), new { periodeId, modus });
         }
 
@@ -135,7 +136,7 @@ public sealed class AutoplanController : BereichsControllerBase
             ? "nur offene Slots gefüllt"
             : "Periode komplett neu berechnet";
 
-        TempData["SuccessMessage"] =
+        TempData[FlashKeys.Success] =
             $"Autoplan gespeichert ({modusText}): {result.AnzahlGespeicherteTage} Tage gesetzt, {result.AnzahlTageMitOffenenSlots} Tage weiterhin offen, {result.AnzahlKonflikttage} Konflikttage.";
 
         return RedirectToAction(nameof(Index), new { periodeId, modus });

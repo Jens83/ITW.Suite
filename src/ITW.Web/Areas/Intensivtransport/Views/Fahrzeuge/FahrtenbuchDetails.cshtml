@@ -1,11 +1,11 @@
-﻿@model ITW.Web.Areas.Intensivtransport.ViewModels.Fahrzeugmanagement.FahrtenbuchDetailsViewModel
+@model ITW.Web.Areas.Intensivtransport.ViewModels.Fahrzeugmanagement.FahrtenbuchDetailsViewModel
 
 @{
     Layout = ViewData["AreaLayoutPath"]?.ToString();
     ViewData["Title"] = "Fahrtdetails";
 
-    var successMessage = TempData["Fahrtenbuch.Erfolg"]?.ToString();
-    var errorMessage = TempData["Fahrtenbuch.Fehler"]?.ToString();
+    var successMessage = TempData[FlashKeys.FahrtenbuchErfolg]?.ToString();
+    var errorMessage = TempData[FlashKeys.FahrtenbuchFehler]?.ToString();
 }
 
 <div class="app-page">

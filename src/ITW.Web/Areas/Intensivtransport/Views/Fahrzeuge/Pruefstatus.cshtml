@@ -1,12 +1,12 @@
-﻿@using Microsoft.AspNetCore.Mvc.ViewFeatures
+@using Microsoft.AspNetCore.Mvc.ViewFeatures
 @model ITW.Web.Areas.Intensivtransport.ViewModels.Fahrzeugmanagement.FahrzeugPruefstatusViewModel
 
 @{
     Layout = ViewData["AreaLayoutPath"]?.ToString();
     ViewData["Title"] = "Prüfstatus";
 
-    var successMessage = TempData["FahrzeugPruefstatus.Erfolg"]?.ToString();
-    var errorMessage = TempData["FahrzeugPruefstatus.Fehler"]?.ToString();
+    var successMessage = TempData[FlashKeys.FahrzeugPruefstatusErfolg]?.ToString();
+    var errorMessage = TempData[FlashKeys.FahrzeugPruefstatusFehler]?.ToString();
 }
 
 <div class="app-page">

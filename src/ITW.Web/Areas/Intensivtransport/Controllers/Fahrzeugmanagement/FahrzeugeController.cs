@@ -10,6 +10,7 @@ using ITW.Web.Authorization.Modules;
 using ITW.Web.Security.CurrentUser;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using ITW.Web.UI.Feedback;
 
 namespace ITW.Web.Areas.Intensivtransport.Controllers.Fahrzeugmanagement;
 
@@ -441,13 +442,13 @@ public sealed class FahrzeugeController : IntensivtransportFahrzeugmanagementCon
 
         if (input.FahrzeugId == Guid.Empty)
         {
-            TempData["FahrzeugDokumente.Fehler"] = "Das Fahrzeug konnte nicht ermittelt werden.";
+            TempData[FlashKeys.FahrzeugDokumenteFehler] = "Das Fahrzeug konnte nicht ermittelt werden.";
             return RedirectToAction(nameof(Index));
         }
 
         if (input.Datei is null || input.Datei.Length == 0)
         {
-            TempData["FahrzeugDokumente.Fehler"] = "Bitte eine Datei auswählen.";
+            TempData[FlashKeys.FahrzeugDokumenteFehler] = "Bitte eine Datei auswählen.";
             return RedirectToAction(nameof(Tankbelege), new { id = input.FahrzeugId });
         }
 
@@ -472,13 +473,13 @@ public sealed class FahrzeugeController : IntensivtransportFahrzeugmanagementCon
 
         if (!result.IsSuccess)
         {
-            TempData["FahrzeugDokumente.Fehler"] =
+            TempData[FlashKeys.FahrzeugDokumenteFehler] =
                 result.ErrorMessage ?? "Der Tankbeleg konnte nicht hochgeladen werden.";
 
             return RedirectToAction(nameof(Tankbelege), new { id = input.FahrzeugId });
         }
 
-        TempData["FahrzeugDokumente.Erfolg"] = "Der Tankbeleg wurde erfolgreich hochgeladen.";
+        TempData[FlashKeys.FahrzeugDokumenteErfolg] = "Der Tankbeleg wurde erfolgreich hochgeladen.";
 
         return RedirectToAction(nameof(Tankbelege), new { id = input.FahrzeugId });
     }
@@ -506,7 +507,7 @@ public sealed class FahrzeugeController : IntensivtransportFahrzeugmanagementCon
             string.IsNullOrWhiteSpace(result.Dateiname) ||
             string.IsNullOrWhiteSpace(result.ContentType))
         {
-            TempData["FahrzeugDokumente.Fehler"] =
+            TempData[FlashKeys.FahrzeugDokumenteFehler] =
                 result.ErrorMessage ?? "Der Tankbeleg konnte nicht heruntergeladen werden.";
 
             return RedirectToAction(nameof(Tankbelege), new { id });
@@ -539,13 +540,13 @@ public sealed class FahrzeugeController : IntensivtransportFahrzeugmanagementCon
 
         if (!result.IsSuccess)
         {
-            TempData["FahrzeugDokumente.Fehler"] =
+            TempData[FlashKeys.FahrzeugDokumenteFehler] =
                 result.ErrorMessage ?? "Der Tankbeleg konnte nicht gelöscht werden.";
 
             return RedirectToAction(nameof(Tankbelege), new { id });
         }
 
-        TempData["FahrzeugDokumente.Erfolg"] = "Der Tankbeleg wurde gelöscht.";
+        TempData[FlashKeys.FahrzeugDokumenteErfolg] = "Der Tankbeleg wurde gelöscht.";
 
         return RedirectToAction(nameof(Tankbelege), new { id });
     }
@@ -602,7 +603,7 @@ public sealed class FahrzeugeController : IntensivtransportFahrzeugmanagementCon
 
         if (input.FahrzeugId == Guid.Empty)
         {
-            TempData["FahrzeugPruefstatus.Fehler"] = "Das Fahrzeug konnte nicht ermittelt werden.";
+            TempData[FlashKeys.FahrzeugPruefstatusFehler] = "Das Fahrzeug konnte nicht ermittelt werden.";
             return RedirectToAction(nameof(Index));
         }
 
@@ -618,13 +619,13 @@ public sealed class FahrzeugeController : IntensivtransportFahrzeugmanagementCon
 
         if (!result.IsSuccess)
         {
-            TempData["FahrzeugPruefstatus.Fehler"] =
+            TempData[FlashKeys.FahrzeugPruefstatusFehler] =
                 result.ErrorMessage ?? "Der Prüfstatus konnte nicht gespeichert werden.";
 
             return RedirectToAction(nameof(Pruefstatus), new { id = input.FahrzeugId });
         }
 
-        TempData["FahrzeugPruefstatus.Erfolg"] = "Der Prüfstatus wurde gespeichert.";
+        TempData[FlashKeys.FahrzeugPruefstatusErfolg] = "Der Prüfstatus wurde gespeichert.";
 
         return RedirectToAction(nameof(Pruefstatus), new { id = input.FahrzeugId });
     }
@@ -681,37 +682,37 @@ public sealed class FahrzeugeController : IntensivtransportFahrzeugmanagementCon
 
         if (input.FahrzeugId == Guid.Empty)
         {
-            TempData["Fahrtenbuch.Fehler"] = "Das Fahrzeug konnte nicht ermittelt werden.";
+            TempData[FlashKeys.FahrtenbuchFehler] = "Das Fahrzeug konnte nicht ermittelt werden.";
             return RedirectToAction(nameof(Index));
         }
 
         if (!input.Startzeit.HasValue)
         {
-            TempData["Fahrtenbuch.Fehler"] = "Bitte eine Startzeit eingeben.";
+            TempData[FlashKeys.FahrtenbuchFehler] = "Bitte eine Startzeit eingeben.";
             return RedirectToAction(nameof(Fahrtenbuch), new { id = input.FahrzeugId });
         }
 
         if (!input.Endzeit.HasValue)
         {
-            TempData["Fahrtenbuch.Fehler"] = "Bitte eine Endzeit eingeben.";
+            TempData[FlashKeys.FahrtenbuchFehler] = "Bitte eine Endzeit eingeben.";
             return RedirectToAction(nameof(Fahrtenbuch), new { id = input.FahrzeugId });
         }
 
         if (input.Endzeit.Value < input.Startzeit.Value)
         {
-            TempData["Fahrtenbuch.Fehler"] = "Die Endzeit darf nicht vor der Startzeit liegen.";
+            TempData[FlashKeys.FahrtenbuchFehler] = "Die Endzeit darf nicht vor der Startzeit liegen.";
             return RedirectToAction(nameof(Fahrtenbuch), new { id = input.FahrzeugId });
         }
 
         if (input.EndKilometerstand is null)
         {
-            TempData["Fahrtenbuch.Fehler"] = "Bitte einen Endkilometerstand eingeben.";
+            TempData[FlashKeys.FahrtenbuchFehler] = "Bitte einen Endkilometerstand eingeben.";
             return RedirectToAction(nameof(Fahrtenbuch), new { id = input.FahrzeugId });
         }
 
         if (input.EndKilometerstand.Value < input.StartKilometerstand)
         {
-            TempData["Fahrtenbuch.Fehler"] = "Der Endkilometerstand darf nicht kleiner als der Startkilometerstand sein.";
+            TempData[FlashKeys.FahrtenbuchFehler] = "Der Endkilometerstand darf nicht kleiner als der Startkilometerstand sein.";
             return RedirectToAction(nameof(Fahrtenbuch), new { id = input.FahrzeugId });
         }
 
@@ -738,13 +739,13 @@ public sealed class FahrzeugeController : IntensivtransportFahrzeugmanagementCon
 
         if (!result.IsSuccess)
         {
-            TempData["Fahrtenbuch.Fehler"] =
+            TempData[FlashKeys.FahrtenbuchFehler] =
                 result.ErrorMessage ?? "Der Fahrtenbucheintrag konnte nicht gespeichert werden.";
 
             return RedirectToAction(nameof(Fahrtenbuch), new { id = input.FahrzeugId });
         }
 
-        TempData["Fahrtenbuch.Erfolg"] = "Der Fahrtenbucheintrag wurde gespeichert.";
+        TempData[FlashKeys.FahrtenbuchErfolg] = "Der Fahrtenbucheintrag wurde gespeichert.";
 
         return RedirectToAction(nameof(Fahrtenbuch), new { id = input.FahrzeugId });
     }
@@ -779,7 +780,7 @@ public sealed class FahrzeugeController : IntensivtransportFahrzeugmanagementCon
 
         if (eintrag is null)
         {
-            TempData["Fahrtenbuch.Fehler"] = "Der Fahrtenbucheintrag wurde nicht gefunden.";
+            TempData[FlashKeys.FahrtenbuchFehler] = "Der Fahrtenbucheintrag wurde nicht gefunden.";
             return RedirectToAction(nameof(Fahrtenbuch), new { id });
         }
 
@@ -817,7 +818,7 @@ public sealed class FahrzeugeController : IntensivtransportFahrzeugmanagementCon
     [HttpGet]
     public IActionResult Vertraege(Guid id)
     {
-        TempData["Fahrzeuge.Hinweis"] =
+        TempData[FlashKeys.FahrzeugeHinweis] =
             "Verträge gehören künftig in die Verwaltungs-Fahrzeugverwaltung und sind im Wachleiterbereich nicht mehr vorgesehen.";
 
         return id == Guid.Empty
@@ -831,7 +832,7 @@ public sealed class FahrzeugeController : IntensivtransportFahrzeugmanagementCon
         Guid fahrzeugId,
         Guid id)
     {
-        TempData["Fahrzeuge.Hinweis"] =
+        TempData[FlashKeys.FahrzeugeHinweis] =
             "Verträge gehören künftig in die Verwaltungs-Fahrzeugverwaltung und sind im Wachleiterbereich nicht mehr vorgesehen.";
 
         var zielFahrzeugId = fahrzeugId != Guid.Empty
@@ -849,7 +850,7 @@ public sealed class FahrzeugeController : IntensivtransportFahrzeugmanagementCon
         Guid id,
         Guid fahrzeugId)
     {
-        TempData["Fahrzeuge.Hinweis"] =
+        TempData[FlashKeys.FahrzeugeHinweis] =
             "Verträge gehören künftig in die Verwaltungs-Fahrzeugverwaltung und sind im Wachleiterbereich nicht mehr vorgesehen.";
 
         var zielFahrzeugId = fahrzeugId != Guid.Empty
@@ -867,7 +868,7 @@ public sealed class FahrzeugeController : IntensivtransportFahrzeugmanagementCon
         Guid id,
         Guid eintragId)
     {
-        TempData["Fahrtenbuch.Fehler"] =
+        TempData[FlashKeys.FahrtenbuchFehler] =
             "Der separate Abschluss eines Fahrtenbucheintrags wird nicht mehr verwendet. Einträge werden direkt vollständig gespeichert.";
 
         if (id == Guid.Empty)

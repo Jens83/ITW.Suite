@@ -5,6 +5,7 @@ using ITW.Web.Authorization.Modules;
 using ITW.Web.Security.CurrentUser;
 using Microsoft.AspNetCore.Mvc;
 using QRCoder;
+using ITW.Web.UI.Feedback;
 
 namespace ITW.Web.Areas.Intensivtransport.Controllers.Fahrzeugmanagement;
 
@@ -45,8 +46,8 @@ public sealed class TrackingGeraeteController : IntensivtransportFahrzeugmanagem
         SetzeBereichslayout();
 
         var viewModel = await BaueViewModelAsync(
-            erfolgsmeldung: TempData["TrackingGeraete.Erfolg"]?.ToString(),
-            fehlermeldung: TempData["TrackingGeraete.Fehler"]?.ToString(),
+            erfolgsmeldung: TempData[FlashKeys.TrackingGeraeteErfolg]?.ToString(),
+            fehlermeldung: TempData[FlashKeys.TrackingGeraeteFehler]?.ToString(),
             cancellationToken: cancellationToken);
 
         return View(viewModel);
@@ -73,7 +74,7 @@ public sealed class TrackingGeraeteController : IntensivtransportFahrzeugmanagem
         if (!result.IsSuccess ||
             string.IsNullOrWhiteSpace(result.EinrichtungscodeAnzeige))
         {
-            TempData["TrackingGeraete.Fehler"] =
+            TempData[FlashKeys.TrackingGeraeteFehler] =
                 result.ErrorMessage ?? "Der QR-Code konnte nicht erzeugt werden.";
 
             return RedirectToAction(nameof(Index));

@@ -1,11 +1,11 @@
-﻿@using ITW.Web.ViewModels.UI
+@using ITW.Web.ViewModels.UI
 @model ITW.Web.Areas.Geschaeftsfuehrung.ViewModels.Modules.ModuleIndexViewModel
 
 @{
     ViewData["Title"] = "Module";
 
-    var tempSuccessMessage = TempData["SuccessMessage"] as string;
-    var tempErrorMessage = TempData["ErrorMessage"] as string;
+    var tempSuccessMessage = TempData[FlashKeys.Success] as string;
+    var tempErrorMessage = TempData[FlashKeys.Error] as string;
 
     var headerModel = new AppPageHeaderViewModel
     {

@@ -14,6 +14,7 @@ using ITW.Web.Security.CurrentUser;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System;
+using ITW.Web.UI.Feedback;
 
 namespace ITW.Web.Areas.Intensivtransport.Controllers.Dienstplan;
 
@@ -229,7 +230,7 @@ public sealed class DienstplanWachleiterController : IntensivtransportDienstplan
             return BereichsView("WachleiterIndex", invalidModel);
         }
 
-        TempData["SuccessMessage"] = "Die Dienstplanperiode wurde erfolgreich angelegt.";
+        TempData[FlashKeys.Success] = "Die Dienstplanperiode wurde erfolgreich angelegt.";
         return RedirectToAction(nameof(Index));
     }
 
@@ -256,11 +257,11 @@ public sealed class DienstplanWachleiterController : IntensivtransportDienstplan
 
         if (!result.IsSuccess)
         {
-            TempData["ErrorMessage"] = result.ErrorMessage ?? "Der Status der Wunschphase konnte nicht geändert werden.";
+            TempData[FlashKeys.Error] = result.ErrorMessage ?? "Der Status der Wunschphase konnte nicht geändert werden.";
             return RedirectToLocalOrIndex(returnUrl);
         }
 
-        TempData["SuccessMessage"] = oeffnen
+        TempData[FlashKeys.Success] = oeffnen
             ? "Die Wunschphase wurde geöffnet. Andere offene Perioden wurden dabei automatisch geschlossen."
             : "Die Wunschphase wurde geschlossen.";
 
@@ -293,11 +294,11 @@ public sealed class DienstplanWachleiterController : IntensivtransportDienstplan
 
         if (!result.IsSuccess)
         {
-            TempData["ErrorMessage"] = result.ErrorMessage ?? "Die Planfreigabe konnte nicht geändert werden.";
+            TempData[FlashKeys.Error] = result.ErrorMessage ?? "Die Planfreigabe konnte nicht geändert werden.";
             return RedirectToLocalOrIndex(returnUrl);
         }
 
-        TempData["SuccessMessage"] = freigeben
+        TempData[FlashKeys.Success] = freigeben
             ? "Der Plan wurde freigegeben und ist jetzt für Mitarbeiter sichtbar."
             : "Die Planfreigabe wurde zurückgenommen.";
 
@@ -329,13 +330,13 @@ public sealed class DienstplanWachleiterController : IntensivtransportDienstplan
 
         if (periodeId == Guid.Empty)
         {
-            TempData["ErrorMessage"] = "Die ausgewählte Dienstplanperiode ist ungültig.";
+            TempData[FlashKeys.Error] = "Die ausgewählte Dienstplanperiode ist ungültig.";
             return RedirectToAction(nameof(Wachleiterkalender));
         }
 
         if (!TryBaueDatum(jahr, monat, tag, out var datum))
         {
-            TempData["ErrorMessage"] = "Der ausgewählte Planungstag ist ungültig.";
+            TempData[FlashKeys.Error] = "Der ausgewählte Planungstag ist ungültig.";
             return RedirectToAction(nameof(Wachleiterkalender), new { periodeId });
         }
 
@@ -352,11 +353,11 @@ public sealed class DienstplanWachleiterController : IntensivtransportDienstplan
 
         if (!result.IsSuccess)
         {
-            TempData["ErrorMessage"] = result.ErrorMessage ?? "Die Tagesplanung konnte nicht gespeichert werden.";
+            TempData[FlashKeys.Error] = result.ErrorMessage ?? "Die Tagesplanung konnte nicht gespeichert werden.";
             return RedirectToPlanungsModal(periodeId, datum, returnUrl);
         }
 
-        TempData["SuccessMessage"] = "Die Tagesplanung wurde gespeichert.";
+        TempData[FlashKeys.Success] = "Die Tagesplanung wurde gespeichert.";
         return RedirectToReturnUrlOderPlanungsModal(returnUrl, periodeId, datum);
     }
 
@@ -384,13 +385,13 @@ public sealed class DienstplanWachleiterController : IntensivtransportDienstplan
 
         if (periodeId == Guid.Empty)
         {
-            TempData["ErrorMessage"] = "Die ausgewählte Dienstplanperiode ist ungültig.";
+            TempData[FlashKeys.Error] = "Die ausgewählte Dienstplanperiode ist ungültig.";
             return RedirectToAction(nameof(Wachleiterkalender));
         }
 
         if (!TryBaueDatum(jahr, monat, tag, out var datum))
         {
-            TempData["ErrorMessage"] = "Der ausgewählte Planungstag ist ungültig.";
+            TempData[FlashKeys.Error] = "Der ausgewählte Planungstag ist ungültig.";
             return RedirectToAction(nameof(Wachleiterkalender), new { periodeId });
         }
 
@@ -406,11 +407,11 @@ public sealed class DienstplanWachleiterController : IntensivtransportDienstplan
 
         if (!result.IsSuccess)
         {
-            TempData["ErrorMessage"] = result.ErrorMessage ?? "Der Ausfall konnte nicht gespeichert werden.";
+            TempData[FlashKeys.Error] = result.ErrorMessage ?? "Der Ausfall konnte nicht gespeichert werden.";
             return RedirectToPlanungsModal(periodeId, datum, returnUrl);
         }
 
-        TempData["SuccessMessage"] = "Ausfall und Vertretung wurden gespeichert.";
+        TempData[FlashKeys.Success] = "Ausfall und Vertretung wurden gespeichert.";
         return RedirectToReturnUrlOderPlanungsModal(returnUrl, periodeId, datum);
     }
 

@@ -1,11 +1,11 @@
-﻿@using ITW.Fahrzeugmanagement.Domain.Enums
+@using ITW.Fahrzeugmanagement.Domain.Enums
 @model ITW.Web.Areas.Intensivtransport.ViewModels.Fahrzeugmanagement.FahrzeugDetailViewModel
 
 @{
     Layout = ViewData["AreaLayoutPath"]?.ToString();
     ViewData["Title"] = Model.Titel;
 
-    var hinweisMessage = TempData["Fahrzeuge.Hinweis"]?.ToString();
+    var hinweisMessage = TempData[FlashKeys.FahrzeugeHinweis]?.ToString();
 
     var tankbelege = Model.Dokumente
         .Where(x => x.Kategorie == FahrzeugDokumentKategorie.Tankbeleg)

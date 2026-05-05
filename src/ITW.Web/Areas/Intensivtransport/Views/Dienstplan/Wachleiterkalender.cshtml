@@ -1,4 +1,4 @@
-﻿@using ITW.Dienstplan.Domain.Enums
+@using ITW.Dienstplan.Domain.Enums
 @model ITW.Web.Areas.Intensivtransport.ViewModels.Dienstplan.WachleiterWunschkalenderViewModel
 
 @{
@@ -13,8 +13,8 @@
 
     var modalReturnUrl = Model.PlanungsModal?.ReturnUrl ?? returnUrl;
 
-    var successMessage = TempData["SuccessMessage"] as string;
-    var errorMessage = TempData["ErrorMessage"] as string;
+    var successMessage = TempData[FlashKeys.Success] as string;
+    var errorMessage = TempData[FlashKeys.Error] as string;
 
     var zeigeSeitenErfolg = !Model.PlanungsModalAutomatischOeffnen && !string.IsNullOrWhiteSpace(successMessage);
     var zeigeSeitenFehler = !Model.PlanungsModalAutomatischOeffnen && !string.IsNullOrWhiteSpace(errorMessage);

@@ -12,6 +12,7 @@ using ITW.Web.ViewModels.Benutzer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using ITW.Web.UI.Feedback;
 
 namespace ITW.Web.Controllers.Base;
 
@@ -194,7 +195,7 @@ public abstract class BereichsBenutzerControllerBase : BereichsControllerBase
             return BereichsView("Anlegen", viewModel);
         }
 
-        TempData["SuccessMessage"] = "Das Benutzerkonto wurde dem Bereich erfolgreich zugeordnet.";
+        TempData[FlashKeys.Success] = "Das Benutzerkonto wurde dem Bereich erfolgreich zugeordnet.";
         return RedirectToLocalOrIndex(viewModel.ReturnUrl);
     }
 
@@ -259,7 +260,7 @@ public abstract class BereichsBenutzerControllerBase : BereichsControllerBase
             return BereichsView("BenutzerkontoAnlegen", viewModel);
         }
 
-        TempData["SuccessMessage"] =
+        TempData[FlashKeys.Success] =
             "Das Benutzerkonto wurde angelegt und dem Bereich erfolgreich zugeordnet. Der Mitarbeiter muss das initiale Passwort beim ersten Login sofort ändern.";
 
         return RedirectToLocalOrIndex(viewModel.ReturnUrl);
@@ -388,7 +389,7 @@ public abstract class BereichsBenutzerControllerBase : BereichsControllerBase
             return BereichsView("RolleAendern", viewModel);
         }
 
-        TempData["SuccessMessage"] = "Die Rechte wurden erfolgreich geändert.";
+        TempData[FlashKeys.Success] = "Die Rechte wurden erfolgreich geändert.";
         return RedirectToLocalOrIndex(viewModel.ReturnUrl);
     }
 
@@ -409,7 +410,7 @@ public abstract class BereichsBenutzerControllerBase : BereichsControllerBase
 
         if (string.Equals(aktuellerBenutzer.UserId, userId, StringComparison.OrdinalIgnoreCase))
         {
-            TempData["ErrorMessage"] = "Das eigene Benutzerkonto kann nicht gesperrt werden.";
+            TempData[FlashKeys.Error] = "Das eigene Benutzerkonto kann nicht gesperrt werden.";
             return RedirectToLocalOrIndex(returnUrl);
         }
 
@@ -427,7 +428,7 @@ public abstract class BereichsBenutzerControllerBase : BereichsControllerBase
             new LockUserCommand(userId),
             cancellationToken);
 
-        TempData[result.IsSuccess ? "SuccessMessage" : "ErrorMessage"] = result.IsSuccess
+        TempData[result.IsSuccess ? FlashKeys.Success : FlashKeys.Error] = result.IsSuccess
             ? $"Das Benutzerkonto von '{benutzer.Benutzername}' wurde gesperrt."
             : result.ErrorMessage ?? "Das Benutzerkonto konnte nicht gesperrt werden.";
 
@@ -463,7 +464,7 @@ public abstract class BereichsBenutzerControllerBase : BereichsControllerBase
             new ActivateUserCommand(userId),
             cancellationToken);
 
-        TempData[result.IsSuccess ? "SuccessMessage" : "ErrorMessage"] = result.IsSuccess
+        TempData[result.IsSuccess ? FlashKeys.Success : FlashKeys.Error] = result.IsSuccess
             ? $"Das Benutzerkonto von '{benutzer.Benutzername}' wurde aktiviert."
             : result.ErrorMessage ?? "Das Benutzerkonto konnte nicht aktiviert werden.";
 

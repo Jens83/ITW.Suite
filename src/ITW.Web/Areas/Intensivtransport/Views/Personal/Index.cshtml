@@ -1,4 +1,4 @@
-﻿@model ITW.Web.ViewModels.Personal.ItwMitarbeiterprofilListeViewModel
+@model ITW.Web.ViewModels.Personal.ItwMitarbeiterprofilListeViewModel
 
 @{
     Layout = ViewData["AreaLayoutPath"]?.ToString();
@@ -6,9 +6,9 @@
 
     var personalIndexReturnUrl = Url.Action("Index", "Personal", new { area = "Intensivtransport" }) ?? string.Empty;
 
-    var successMessage = TempData["SuccessMessage"]?.ToString();
+    var successMessage = TempData[FlashKeys.Success]?.ToString();
 
-    var finalError = TempData["ErrorMessage"]?.ToString();
+    var finalError = TempData[FlashKeys.Error]?.ToString();
     if (string.IsNullOrWhiteSpace(finalError) && !Model.IsSuccess)
     {
         finalError = Model.ErrorMessage ?? "Die Personaldaten konnten nicht geladen werden.";

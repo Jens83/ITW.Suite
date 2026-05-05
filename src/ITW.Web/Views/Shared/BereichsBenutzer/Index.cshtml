@@ -1,4 +1,4 @@
-﻿@using ITW.Web.ViewModels.UI
+@using ITW.Web.ViewModels.UI
 @model ITW.Web.ViewModels.Benutzer.BereichsbenutzerlisteViewModel
 
 @{
@@ -8,7 +8,7 @@
     var aktuellerBereich = ViewContext.RouteData.Values["area"]?.ToString() ?? string.Empty;
     var istIntensivtransportBereich = string.Equals(aktuellerBereich, "Intensivtransport", StringComparison.OrdinalIgnoreCase);
 
-    var tempErrorMessage = TempData["ErrorMessage"] as string;
+    var tempErrorMessage = TempData[FlashKeys.Error] as string;
     var modelErrorMessage = !string.IsNullOrWhiteSpace(Model.ErrorMessage)
         ? Model.ErrorMessage
         : "Die Mitarbeiterübersicht konnte nicht geladen werden.";
@@ -63,12 +63,12 @@
         </div>
     </div>
 
-    @if (TempData["SuccessMessage"] is string successMessage ||
+    @if (TempData[FlashKeys.Success] is string successMessage ||
         !string.IsNullOrWhiteSpace(tempErrorMessage) ||
         zeigeModelFehler)
     {
         <div class="app-status-stack">
-            @if (TempData["SuccessMessage"] is string statusSuccessMessage)
+            @if (TempData[FlashKeys.Success] is string statusSuccessMessage)
             {
                 @await Html.PartialAsync(
                 "~/Views/Shared/Komponenten/_AppStatusMessage.cshtml",

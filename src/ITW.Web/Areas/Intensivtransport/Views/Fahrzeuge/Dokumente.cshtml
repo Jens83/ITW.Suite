@@ -1,4 +1,4 @@
-﻿@using ITW.Fahrzeugmanagement.Domain.Enums
+@using ITW.Fahrzeugmanagement.Domain.Enums
 @using Microsoft.AspNetCore.Mvc.ViewFeatures
 @model ITW.Web.Areas.Intensivtransport.ViewModels.Fahrzeugmanagement.FahrzeugDokumenteViewModel
 
@@ -6,8 +6,8 @@
     Layout = ViewData["AreaLayoutPath"]?.ToString();
     ViewData["Title"] = "Tankbelege";
 
-    var successMessage = TempData["FahrzeugDokumente.Erfolg"]?.ToString();
-    var errorMessage = TempData["FahrzeugDokumente.Fehler"]?.ToString();
+    var successMessage = TempData[FlashKeys.FahrzeugDokumenteErfolg]?.ToString();
+    var errorMessage = TempData[FlashKeys.FahrzeugDokumenteFehler]?.ToString();
 
     var tankbelege = Model.Dokumente
         .Where(x => x.Kategorie == FahrzeugDokumentKategorie.Tankbeleg)

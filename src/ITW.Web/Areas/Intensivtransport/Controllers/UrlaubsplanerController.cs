@@ -12,6 +12,7 @@ using ITW.Web.Security.CurrentUser;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System.Globalization;
+using ITW.Web.UI.Feedback;
 
 namespace ITW.Web.Areas.Intensivtransport.Controllers;
 
@@ -116,7 +117,7 @@ public sealed class UrlaubsplanerController : BereichsControllerBase
 
         if (mitarbeiter is null)
         {
-            TempData["ErrorMessage"] = "Der ausgewählte Mitarbeiter ist für den Urlaubsplaner ungültig.";
+            TempData[FlashKeys.Error] = "Der ausgewählte Mitarbeiter ist für den Urlaubsplaner ungültig.";
             return RedirectToAction(nameof(Index), new { userId, jahr });
         }
 
@@ -133,11 +134,11 @@ public sealed class UrlaubsplanerController : BereichsControllerBase
 
         if (!result.IsSuccess)
         {
-            TempData["ErrorMessage"] = result.ErrorMessage ?? "Der Urlaubsanspruch konnte nicht gespeichert werden.";
+            TempData[FlashKeys.Error] = result.ErrorMessage ?? "Der Urlaubsanspruch konnte nicht gespeichert werden.";
             return RedirectToAction(nameof(Index), new { userId, jahr });
         }
 
-        TempData["SuccessMessage"] = "Der Jahresurlaubsanspruch wurde gespeichert.";
+        TempData[FlashKeys.Success] = "Der Jahresurlaubsanspruch wurde gespeichert.";
         return RedirectToAction(nameof(Index), new { userId, jahr });
     }
 
@@ -162,13 +163,13 @@ public sealed class UrlaubsplanerController : BereichsControllerBase
 
         if (mitarbeiter is null)
         {
-            TempData["ErrorMessage"] = "Urlaubszeiträume können nur für festangestellte Mitarbeiter hinterlegt werden.";
+            TempData[FlashKeys.Error] = "Urlaubszeiträume können nur für festangestellte Mitarbeiter hinterlegt werden.";
             return RedirectToAction(nameof(Index), new { userId, jahr });
         }
 
         if (!von.HasValue || !bis.HasValue)
         {
-            TempData["ErrorMessage"] = "Bitte wählen Sie einen gültigen Zeitraum mit Start- und Enddatum aus.";
+            TempData[FlashKeys.Error] = "Bitte wählen Sie einen gültigen Zeitraum mit Start- und Enddatum aus.";
             return RedirectToAction(nameof(Index), new { userId, jahr });
         }
 
@@ -184,7 +185,7 @@ public sealed class UrlaubsplanerController : BereichsControllerBase
 
         if (!result.IsSuccess)
         {
-            TempData["ErrorMessage"] = result.ErrorMessage ?? "Der Urlaubszeitraum konnte nicht gespeichert werden.";
+            TempData[FlashKeys.Error] = result.ErrorMessage ?? "Der Urlaubszeitraum konnte nicht gespeichert werden.";
             return RedirectToAction(nameof(Index), new { userId, jahr });
         }
 
@@ -194,7 +195,7 @@ public sealed class UrlaubsplanerController : BereichsControllerBase
          bis.Value,
          cancellationToken);
 
-        TempData["SuccessMessage"] = entfernteWuensche > 0
+        TempData[FlashKeys.Success] = entfernteWuensche > 0
             ? $"Der Urlaubszeitraum wurde hinterlegt. {entfernteWuensche} gespeicherte Dienstwünsche im Urlaubszeitraum wurden automatisch entfernt."
             : "Der Urlaubszeitraum wurde hinterlegt.";
 
@@ -220,7 +221,7 @@ public sealed class UrlaubsplanerController : BereichsControllerBase
 
         if (mitarbeiter is null)
         {
-            TempData["ErrorMessage"] = "Urlaubszeiträume können nur für festangestellte Mitarbeiter gelöscht werden.";
+            TempData[FlashKeys.Error] = "Urlaubszeiträume können nur für festangestellte Mitarbeiter gelöscht werden.";
             return RedirectToAction(nameof(Index), new { userId, jahr });
         }
 
@@ -233,11 +234,11 @@ public sealed class UrlaubsplanerController : BereichsControllerBase
 
         if (!result.IsSuccess)
         {
-            TempData["ErrorMessage"] = result.ErrorMessage ?? "Der Urlaubszeitraum konnte nicht gelöscht werden.";
+            TempData[FlashKeys.Error] = result.ErrorMessage ?? "Der Urlaubszeitraum konnte nicht gelöscht werden.";
             return RedirectToAction(nameof(Index), new { userId, jahr });
         }
 
-        TempData["SuccessMessage"] = "Der Urlaubszeitraum wurde gelöscht.";
+        TempData[FlashKeys.Success] = "Der Urlaubszeitraum wurde gelöscht.";
         return RedirectToAction(nameof(Index), new { userId, jahr });
     }
 

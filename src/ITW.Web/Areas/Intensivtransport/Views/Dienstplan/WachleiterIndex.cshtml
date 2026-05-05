@@ -1,4 +1,4 @@
-﻿@model ITW.Web.Areas.Intensivtransport.ViewModels.Dienstplan.DienstplanIndexViewModel
+@model ITW.Web.Areas.Intensivtransport.ViewModels.Dienstplan.DienstplanIndexViewModel
 
 @{
     Layout = ViewData["AreaLayoutPath"]?.ToString();
@@ -13,9 +13,9 @@
     var offenePeriode = sortiertePerioden.FirstOrDefault(x => x.WunschphaseIstOffen);
     var auswertungsPeriodeId = offenePeriode?.Id ?? sortiertePerioden.FirstOrDefault()?.Id;
 
-    var successMessage = TempData["SuccessMessage"]?.ToString();
+    var successMessage = TempData[FlashKeys.Success]?.ToString();
 
-    var finalError = TempData["ErrorMessage"]?.ToString();
+    var finalError = TempData[FlashKeys.Error]?.ToString();
     if (string.IsNullOrWhiteSpace(finalError) && !Model.IsSuccess)
     {
         finalError = Model.ErrorMessage ?? "Ein Systemfehler ist aufgetreten.";

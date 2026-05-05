@@ -1,4 +1,5 @@
-﻿using ITW.Application.Abstractions.DateTime;
+using ITW.Application.Abstractions.DateTime;
+using ITW.Web.UI.Feedback;
 using ITW.Application.Abstractions.Identity;
 using ITW.Application.Abstractions.Persistence;
 using ITW.Application.Organisation.Contracts;
@@ -107,7 +108,7 @@ public sealed class UrlaubsplanerControllerTests
         Assert.Equal(userId, redirectResult.RouteValues?["userId"]);
         Assert.Equal(jahr, redirectResult.RouteValues?["jahr"]);
 
-        var successMessage = Assert.IsType<string>(controller.TempData["SuccessMessage"]);
+        var successMessage = Assert.IsType<string>(controller.TempData[FlashKeys.Success]);
         Assert.Contains("Urlaubszeitraum wurde hinterlegt", successMessage, StringComparison.OrdinalIgnoreCase);
         Assert.Contains("2 gespeicherte Dienstwünsche", successMessage, StringComparison.OrdinalIgnoreCase);
 
@@ -206,7 +207,7 @@ public sealed class UrlaubsplanerControllerTests
         Assert.Equal(userId, redirectResult.RouteValues?["userId"]);
         Assert.Equal(jahr, redirectResult.RouteValues?["jahr"]);
 
-        var successMessage = Assert.IsType<string>(controller.TempData["SuccessMessage"]);
+        var successMessage = Assert.IsType<string>(controller.TempData[FlashKeys.Success]);
         Assert.Equal("Der Urlaubszeitraum wurde hinterlegt.", successMessage);
 
         Assert.Single(urlaubszeitraumRepository.GespeicherteZeitraeume);
@@ -297,7 +298,7 @@ public sealed class UrlaubsplanerControllerTests
         Assert.Equal(userId, redirectResult.RouteValues?["userId"]);
         Assert.Equal(jahr, redirectResult.RouteValues?["jahr"]);
 
-        var successMessage = Assert.IsType<string>(controller.TempData["SuccessMessage"]);
+        var successMessage = Assert.IsType<string>(controller.TempData[FlashKeys.Success]);
         Assert.Contains("4 gespeicherte Dienstwünsche", successMessage, StringComparison.OrdinalIgnoreCase);
 
         Assert.Single(urlaubszeitraumRepository.GespeicherteZeitraeume);
@@ -402,7 +403,7 @@ public sealed class UrlaubsplanerControllerTests
         var redirectResult = Assert.IsType<RedirectToActionResult>(result);
         Assert.Equal("Index", redirectResult.ActionName);
 
-        var successMessage = Assert.IsType<string>(controller.TempData["SuccessMessage"]);
+        var successMessage = Assert.IsType<string>(controller.TempData[FlashKeys.Success]);
         Assert.Contains("1 gespeicherte Dienstwünsche", successMessage, StringComparison.OrdinalIgnoreCase);
 
         Assert.Single(urlaubszeitraumRepository.GespeicherteZeitraeume);
@@ -504,7 +505,7 @@ public sealed class UrlaubsplanerControllerTests
         var redirectResult = Assert.IsType<RedirectToActionResult>(result);
         Assert.Equal("Index", redirectResult.ActionName);
 
-        var successMessage = Assert.IsType<string>(controller.TempData["SuccessMessage"]);
+        var successMessage = Assert.IsType<string>(controller.TempData[FlashKeys.Success]);
         Assert.Contains("1 gespeicherte Dienstwünsche", successMessage, StringComparison.OrdinalIgnoreCase);
 
         Assert.Single(urlaubszeitraumRepository.GespeicherteZeitraeume);
@@ -599,7 +600,7 @@ public sealed class UrlaubsplanerControllerTests
         Assert.Equal(userId, redirectResult.RouteValues?["userId"]);
         Assert.Equal(jahr, redirectResult.RouteValues?["jahr"]);
 
-        var successMessage = Assert.IsType<string>(controller.TempData["SuccessMessage"]);
+        var successMessage = Assert.IsType<string>(controller.TempData[FlashKeys.Success]);
         Assert.Equal("Der Urlaubszeitraum wurde hinterlegt.", successMessage);
 
         Assert.Single(urlaubszeitraumRepository.GespeicherteZeitraeume);

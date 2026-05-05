@@ -1,12 +1,12 @@
-﻿@using ITW.Web.ViewModels.UI
+@using ITW.Web.ViewModels.UI
 @model ITW.Web.Areas.Intensivtransport.ViewModels.Mitarbeiter.MitarbeiterDokumenteViewModel
 
 @{
     Layout = ViewData["AreaLayoutPath"]?.ToString();
     ViewData["Title"] = "Mitarbeiterdokumente";
 
-    var successMessage = TempData["SuccessMessage"]?.ToString();
-    var errorMessage = TempData["ErrorMessage"]?.ToString();
+    var successMessage = TempData[FlashKeys.Success]?.ToString();
+    var errorMessage = TempData[FlashKeys.Error]?.ToString();
 
     var headerModel = new AppPageHeaderViewModel
     {

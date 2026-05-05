@@ -1,4 +1,4 @@
-﻿@model ITW.Web.Areas.Intensivtransport.ViewModels.Dienstplan.SichtbarerDienstplanViewModel
+@model ITW.Web.Areas.Intensivtransport.ViewModels.Dienstplan.SichtbarerDienstplanViewModel
 
 @{
     Layout = ViewData["AreaLayoutPath"]?.ToString();
@@ -8,9 +8,9 @@
         ? "Hier sehen Sie den freigegebenen Dienstplan Ihrer Periode. Eigene Dienste und Vertretungen werden direkt im Kalender markiert."
         : Model.Beschreibung;
 
-    var successMessage = TempData["SuccessMessage"]?.ToString();
+    var successMessage = TempData[FlashKeys.Success]?.ToString();
 
-    var finalError = TempData["ErrorMessage"]?.ToString();
+    var finalError = TempData[FlashKeys.Error]?.ToString();
     if (string.IsNullOrWhiteSpace(finalError) && !Model.IsSuccess)
     {
         finalError = Model.ErrorMessage ?? "Der veröffentlichte Dienstplan konnte nicht geladen werden.";

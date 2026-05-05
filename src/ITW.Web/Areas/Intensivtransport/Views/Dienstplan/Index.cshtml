@@ -1,16 +1,16 @@
-﻿@model ITW.Web.Areas.Intensivtransport.ViewModels.Dienstplan.DienstplanIndexViewModel
+@model ITW.Web.Areas.Intensivtransport.ViewModels.Dienstplan.DienstplanIndexViewModel
 
 @{
     Layout = ViewData["AreaLayoutPath"]?.ToString();
     ViewData["Title"] = "Dienstplan";
 
-    var finalError = TempData["ErrorMessage"] as string;
+    var finalError = TempData[FlashKeys.Error] as string;
     if (string.IsNullOrEmpty(finalError) && Model != null && !Model.IsSuccess)
     {
         finalError = Model.ErrorMessage ?? "Die Dienstplandaten konnten nicht geladen werden.";
     }
 
-    var successMessage = TempData["SuccessMessage"] as string;
+    var successMessage = TempData[FlashKeys.Success] as string;
     var hatModel = Model != null;
     var hatAktivePeriode = hatModel && Model!.AktivePeriodeId.HasValue && Model.HatOffeneWunschphase;
 

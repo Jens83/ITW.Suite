@@ -9,6 +9,7 @@ using ITW.Web.Security.CurrentUser;
 using ITW.Web.ViewModels.Personal;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using ITW.Web.UI.Feedback;
 
 namespace ITW.Web.Areas.Intensivtransport.Controllers;
 
@@ -105,7 +106,7 @@ public sealed class PersonalController : BereichsControllerBase
         var result = await _readItwMitarbeiterDetailUebersichtService.ExecuteAsync(userId, cancellationToken);
         if (!result.IsSuccess || result.Mitarbeiter is null)
         {
-            TempData["ErrorMessage"] = result.ErrorMessage ?? "Die Mitarbeiterdetails konnten nicht geladen werden.";
+            TempData[FlashKeys.Error] = result.ErrorMessage ?? "Die Mitarbeiterdetails konnten nicht geladen werden.";
             return RedirectToAction(nameof(Index));
         }
 
@@ -154,7 +155,7 @@ public sealed class PersonalController : BereichsControllerBase
 
         if (!dokumenteResult.IsSuccess && !string.IsNullOrWhiteSpace(dokumenteResult.ErrorMessage))
         {
-            TempData["ErrorMessage"] = dokumenteResult.ErrorMessage;
+            TempData[FlashKeys.Error] = dokumenteResult.ErrorMessage;
         }
 
         return BereichsView("Details", viewModel);
@@ -172,7 +173,7 @@ public sealed class PersonalController : BereichsControllerBase
         var result = await _readItwMitarbeiterprofilDetailService.ExecuteAsync(userId, cancellationToken);
         if (!result.IsSuccess || result.Profil is null)
         {
-            TempData["ErrorMessage"] = result.ErrorMessage ?? "Das Profil konnte nicht geladen werden.";
+            TempData[FlashKeys.Error] = result.ErrorMessage ?? "Das Profil konnte nicht geladen werden.";
             return RedirectToAction(nameof(Index));
         }
 
@@ -223,7 +224,7 @@ public sealed class PersonalController : BereichsControllerBase
             return BereichsView("Bearbeiten", viewModel);
         }
 
-        TempData["SuccessMessage"] = "Das Mitarbeiterprofil wurde erfolgreich gespeichert.";
+        TempData[FlashKeys.Success] = "Das Mitarbeiterprofil wurde erfolgreich gespeichert.";
         return RedirectToAction(nameof(Details), new { userId = viewModel.UserId });
     }
 
@@ -239,7 +240,7 @@ public sealed class PersonalController : BereichsControllerBase
         var result = await _readAllgemeinesMitarbeiterprofilDetailService.ExecuteAsync(userId, cancellationToken);
         if (!result.IsSuccess || result.Profil is null)
         {
-            TempData["ErrorMessage"] = result.ErrorMessage ?? "Die Stammdaten konnten nicht geladen werden.";
+            TempData[FlashKeys.Error] = result.ErrorMessage ?? "Die Stammdaten konnten nicht geladen werden.";
             return RedirectToAction(nameof(Index));
         }
 
@@ -310,7 +311,7 @@ public sealed class PersonalController : BereichsControllerBase
             return BereichsView("Stammdaten", viewModel);
         }
 
-        TempData["SuccessMessage"] = "Die allgemeinen Mitarbeiter-Stammdaten wurden erfolgreich gespeichert.";
+        TempData[FlashKeys.Success] = "Die allgemeinen Mitarbeiter-Stammdaten wurden erfolgreich gespeichert.";
         return RedirectToAction(nameof(Details), new { userId = viewModel.UserId });
     }
 
@@ -401,7 +402,7 @@ public sealed class PersonalController : BereichsControllerBase
             return BereichsView("Dokumente", invalidModel);
         }
 
-        TempData["SuccessMessage"] = "Das Dokument wurde erfolgreich hochgeladen.";
+        TempData[FlashKeys.Success] = "Das Dokument wurde erfolgreich hochgeladen.";
         return RedirectToAction(nameof(Dokumente), new { userId = viewModel.UserId });
     }
 
@@ -426,7 +427,7 @@ public sealed class PersonalController : BereichsControllerBase
 
         if (!result.IsSuccess || result.Dateiinhalt is null)
         {
-            TempData["ErrorMessage"] = result.ErrorMessage ?? "Das Dokument konnte nicht geladen werden.";
+            TempData[FlashKeys.Error] = result.ErrorMessage ?? "Das Dokument konnte nicht geladen werden.";
             return RedirectToAction(nameof(Dokumente), new { userId });
         }
 

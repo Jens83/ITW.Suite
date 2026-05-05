@@ -8,6 +8,7 @@ using ITW.Web.Security.CurrentUser;
 using ITW.Web.Security.PasswordReset;
 using ITW.Web.ViewModels.Security;
 using Microsoft.AspNetCore.Mvc;
+using ITW.Web.UI.Feedback;
 
 namespace ITW.Web.Controllers.Base;
 
@@ -91,7 +92,7 @@ public abstract class BereichsPasswortResetControllerBase : BereichsControllerBa
 
         if (!detailResult.IsSuccess || detailResult.Anfrage is null)
         {
-            TempData["ErrorMessage"] = detailResult.ErrorMessage ?? "Die Passwort-Reset-Anfrage konnte nicht geladen werden.";
+            TempData[FlashKeys.Error] = detailResult.ErrorMessage ?? "Die Passwort-Reset-Anfrage konnte nicht geladen werden.";
             return RedirectToAction(nameof(Index));
         }
 
@@ -123,7 +124,7 @@ public abstract class BereichsPasswortResetControllerBase : BereichsControllerBa
 
         if (!detailResult.IsSuccess || detailResult.Anfrage is null)
         {
-            TempData["ErrorMessage"] = detailResult.ErrorMessage ?? "Die Passwort-Reset-Anfrage konnte nicht geladen werden.";
+            TempData[FlashKeys.Error] = detailResult.ErrorMessage ?? "Die Passwort-Reset-Anfrage konnte nicht geladen werden.";
             return RedirectToAction(nameof(Index));
         }
 
@@ -157,7 +158,7 @@ public abstract class BereichsPasswortResetControllerBase : BereichsControllerBa
             return BereichsView("Vergabe", viewModel);
         }
 
-        TempData["SuccessMessage"] = "Das temporäre Passwort wurde gesetzt. Der Benutzer muss es beim nächsten Login sofort ändern.";
+        TempData[FlashKeys.Success] = "Das temporäre Passwort wurde gesetzt. Der Benutzer muss es beim nächsten Login sofort ändern.";
         return RedirectToAction(nameof(Index));
     }
 

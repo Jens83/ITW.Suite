@@ -1,4 +1,4 @@
-﻿@model ITW.Web.Areas.Intensivtransport.ViewModels.Mitarbeiter.MitarbeiterDetailViewModel
+@model ITW.Web.Areas.Intensivtransport.ViewModels.Mitarbeiter.MitarbeiterDetailViewModel
 
 @{
     Layout = ViewData["AreaLayoutPath"]?.ToString();
@@ -6,8 +6,8 @@
 
     var kontoRuecksprungUrl = Url.Action("Details", "Personal", new { area = "Intensivtransport", userId = Model.UserId }) ?? string.Empty;
 
-    var successMessage = TempData["SuccessMessage"]?.ToString();
-    var finalError = TempData["ErrorMessage"]?.ToString();
+    var successMessage = TempData[FlashKeys.Success]?.ToString();
+    var finalError = TempData[FlashKeys.Error]?.ToString();
 }
 
 <div class="app-employee-detail-page">

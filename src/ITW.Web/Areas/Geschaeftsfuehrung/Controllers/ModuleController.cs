@@ -6,6 +6,7 @@ using ITW.Web.Controllers.Base;
 using ITW.Web.Security.CurrentUser;
 using ITW.Web.UI;
 using Microsoft.AspNetCore.Mvc;
+using ITW.Web.UI.Feedback;
 
 namespace ITW.Web.Areas.Geschaeftsfuehrung.Controllers;
 
@@ -106,11 +107,11 @@ public sealed class ModuleController : BereichsDashboardControllerBase
 
         if (!result.IsSuccess)
         {
-            TempData["ErrorMessage"] = result.ErrorMessage ?? "Die Modulzuweisung konnte nicht gespeichert werden.";
+            TempData[FlashKeys.Error] = result.ErrorMessage ?? "Die Modulzuweisung konnte nicht gespeichert werden.";
             return RedirectToAction(nameof(Index));
         }
 
-        TempData["SuccessMessage"] = istAktiv
+        TempData[FlashKeys.Success] = istAktiv
             ? $"Das Modul „{modul.GetAnzeigeName()}“ wurde zugewiesen."
             : $"Das Modul „{modul.GetAnzeigeName()}“ wurde entzogen.";
 

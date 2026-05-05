@@ -1,4 +1,4 @@
-﻿@model ITW.Web.ViewModels.Account.LoginViewModel
+@model ITW.Web.ViewModels.Account.LoginViewModel
 
 @{
     Layout = null;
@@ -66,7 +66,7 @@
 
                             <hr class="app-auth-divider" />
 
-                            @if (TempData["SuccessMessage"] is string successMessage)
+                            @if (TempData[FlashKeys.Success] is string successMessage)
                             {
                                 <div class="app-auth-alert">
                                     @successMessage

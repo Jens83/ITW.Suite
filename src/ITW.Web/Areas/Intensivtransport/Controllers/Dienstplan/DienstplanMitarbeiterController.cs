@@ -8,6 +8,7 @@ using ITW.Web.Areas.Intensivtransport.Services.Dienstplan.Write;
 using ITW.Web.Authorization.Modules;
 using ITW.Web.Security.CurrentUser;
 using Microsoft.AspNetCore.Mvc;
+using ITW.Web.UI.Feedback;
 
 namespace ITW.Web.Areas.Intensivtransport.Controllers.Dienstplan;
 
@@ -126,7 +127,7 @@ public sealed class DienstplanMitarbeiterController : IntensivtransportDienstpla
                 return BadRequest(new { message });
             }
 
-            TempData["ErrorMessage"] = message;
+            TempData[FlashKeys.Error] = message;
             return RedirectToDienstplanEinstieg();
         }
 
@@ -191,11 +192,11 @@ public sealed class DienstplanMitarbeiterController : IntensivtransportDienstpla
 
         if (!result.IsSuccess)
         {
-            TempData["ErrorMessage"] = result.ErrorMessage ?? "Die gewünschte Monatsanzahl konnte nicht gespeichert werden.";
+            TempData[FlashKeys.Error] = result.ErrorMessage ?? "Die gewünschte Monatsanzahl konnte nicht gespeichert werden.";
             return RedirectToDienstplanEinstieg();
         }
 
-        TempData["SuccessMessage"] =
+        TempData[FlashKeys.Success] =
             $"Die gewünschte Monatsanzahl wurde auf {gewuenschteDienste} {(gewuenschteDienste == 1 ? "Dienst" : "Dienste")} gespeichert.";
 
         return RedirectToDienstplanEinstieg();
