@@ -1,4 +1,4 @@
-﻿using ITW.Fahrzeugmanagement.Application.Tracking;
+using ITW.Fahrzeugmanagement.Application.Tracking;
 using ITW.Web.Areas.Intensivtransport.ViewModels.Fahrzeugmanagement;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -19,8 +19,8 @@ public sealed class LocationUpdateController : ControllerBase
 
     public LocationUpdateController(SaveLocationUpdateService saveLocationUpdateService)
     {
-        _saveLocationUpdateService = saveLocationUpdateService
-            ?? throw new ArgumentNullException(nameof(saveLocationUpdateService));
+        ArgumentNullException.ThrowIfNull(saveLocationUpdateService);
+        _saveLocationUpdateService = saveLocationUpdateService;
     }
 
     [HttpPost]

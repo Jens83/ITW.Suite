@@ -1,4 +1,4 @@
-﻿using ITW.Dienstplan.Application.Contracts;
+using ITW.Dienstplan.Application.Contracts;
 using ITW.Dienstplan.Domain.Entities;
 
 namespace ITW.Dienstplan.Application.Wunschphase;
@@ -38,11 +38,11 @@ public sealed class SaveFreelancerMonatswunschService
         IDienstplanPeriodeRepository dienstplanPeriodeRepository,
         IFreelancerMonatswunschRepository freelancerMonatswunschRepository)
     {
-        _dienstplanPeriodeRepository = dienstplanPeriodeRepository
-            ?? throw new ArgumentNullException(nameof(dienstplanPeriodeRepository));
+        ArgumentNullException.ThrowIfNull(dienstplanPeriodeRepository);
+        _dienstplanPeriodeRepository = dienstplanPeriodeRepository;
 
-        _freelancerMonatswunschRepository = freelancerMonatswunschRepository
-            ?? throw new ArgumentNullException(nameof(freelancerMonatswunschRepository));
+        ArgumentNullException.ThrowIfNull(freelancerMonatswunschRepository);
+        _freelancerMonatswunschRepository = freelancerMonatswunschRepository;
     }
 
     public async Task<SaveFreelancerMonatswunschResult> ExecuteAsync(

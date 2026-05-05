@@ -1,4 +1,4 @@
-﻿using ITW.Application.Organisation.Contracts;
+using ITW.Application.Organisation.Contracts;
 using ITW.Application.Organisation.ReadModulZuweisungenUebersicht;
 using ITW.Application.Organisation.SetModulZuweisungStatus;
 using ITW.Web.Areas.Geschaeftsfuehrung.ViewModels.Modules;
@@ -21,10 +21,10 @@ public sealed class ModuleController : BereichsDashboardControllerBase
         ICurrentUserContextAccessor currentUserContextAccessor)
         : base(currentUserContextAccessor)
     {
-        _readModulZuweisungenUebersichtService = readModulZuweisungenUebersichtService
-            ?? throw new ArgumentNullException(nameof(readModulZuweisungenUebersichtService));
-        _setModulZuweisungStatusService = setModulZuweisungStatusService
-            ?? throw new ArgumentNullException(nameof(setModulZuweisungStatusService));
+        ArgumentNullException.ThrowIfNull(readModulZuweisungenUebersichtService);
+        _readModulZuweisungenUebersichtService = readModulZuweisungenUebersichtService;
+        ArgumentNullException.ThrowIfNull(setModulZuweisungStatusService);
+        _setModulZuweisungStatusService = setModulZuweisungStatusService;
     }
 
     protected override OrganisationsbereichCode Bereich => OrganisationsbereichCode.Vorstand;

@@ -1,4 +1,4 @@
-﻿using ITW.Application.Abstractions.Persistence;
+using ITW.Application.Abstractions.Persistence;
 using ITW.Domain.Personnel.Entities;
 using ITW.Domain.Personnel.Enums;
 using ITW.Infrastructure.Persistence.DbContexts;
@@ -12,7 +12,8 @@ public sealed class AllgemeinesMitarbeiterprofilRepository : IAllgemeinesMitarbe
 
     public AllgemeinesMitarbeiterprofilRepository(PlatformDbContext dbContext)
     {
-        _dbContext = dbContext ?? throw new ArgumentNullException(nameof(dbContext));
+        ArgumentNullException.ThrowIfNull(dbContext);
+        _dbContext = dbContext;
     }
 
     public Task<AllgemeinesMitarbeiterprofil?> GetByUserIdAsync(

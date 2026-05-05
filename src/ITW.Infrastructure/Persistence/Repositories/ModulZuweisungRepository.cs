@@ -1,4 +1,4 @@
-﻿using ITW.Application.Organisation.Contracts;
+using ITW.Application.Organisation.Contracts;
 using ITW.Domain.Organisation.Entities;
 using ITW.Domain.Organisation.Enums;
 using ITW.Infrastructure.Persistence.DbContexts;
@@ -12,7 +12,8 @@ public sealed class ModulZuweisungRepository : IModulZuweisungRepository
 
     public ModulZuweisungRepository(PlatformDbContext dbContext)
     {
-        _dbContext = dbContext ?? throw new ArgumentNullException(nameof(dbContext));
+        ArgumentNullException.ThrowIfNull(dbContext);
+        _dbContext = dbContext;
     }
 
     public async Task<ModulZuweisung?> GetByModulBereichRolleAsync(

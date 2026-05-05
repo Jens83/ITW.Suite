@@ -1,4 +1,4 @@
-﻿using ITW.Application.Organisation.Contracts;
+using ITW.Application.Organisation.Contracts;
 using ITW.Application.Personnel.ProfileQueries;
 using ITW.Application.Personnel.Urlaub;
 using ITW.Application.Personnel.Urlaub.Contracts;
@@ -44,24 +44,24 @@ public sealed class UrlaubsplanerController : BereichsControllerBase
         ICurrentUserContextAccessor currentUserContextAccessor)
         : base(currentUserContextAccessor)
     {
-        _readItwMitarbeiterprofileService = readItwMitarbeiterprofileService
-            ?? throw new ArgumentNullException(nameof(readItwMitarbeiterprofileService));
-        _urlaubsanspruchRepository = urlaubsanspruchRepository
-            ?? throw new ArgumentNullException(nameof(urlaubsanspruchRepository));
-        _urlaubszeitraumRepository = urlaubszeitraumRepository
-            ?? throw new ArgumentNullException(nameof(urlaubszeitraumRepository));
-        _dienstplanPeriodeRepository = dienstplanPeriodeRepository
-            ?? throw new ArgumentNullException(nameof(dienstplanPeriodeRepository));
-        _dienstwunschRepository = dienstwunschRepository
-            ?? throw new ArgumentNullException(nameof(dienstwunschRepository));
-        _saveAnspruchService = saveAnspruchService
-            ?? throw new ArgumentNullException(nameof(saveAnspruchService));
-        _saveZeitraumService = saveZeitraumService
-            ?? throw new ArgumentNullException(nameof(saveZeitraumService));
-        _deleteZeitraumService = deleteZeitraumService
-            ?? throw new ArgumentNullException(nameof(deleteZeitraumService));
-        _readUrlaubsplanerService = readUrlaubsplanerService
-            ?? throw new ArgumentNullException(nameof(readUrlaubsplanerService));
+        ArgumentNullException.ThrowIfNull(readItwMitarbeiterprofileService);
+        _readItwMitarbeiterprofileService = readItwMitarbeiterprofileService;
+        ArgumentNullException.ThrowIfNull(urlaubsanspruchRepository);
+        _urlaubsanspruchRepository = urlaubsanspruchRepository;
+        ArgumentNullException.ThrowIfNull(urlaubszeitraumRepository);
+        _urlaubszeitraumRepository = urlaubszeitraumRepository;
+        ArgumentNullException.ThrowIfNull(dienstplanPeriodeRepository);
+        _dienstplanPeriodeRepository = dienstplanPeriodeRepository;
+        ArgumentNullException.ThrowIfNull(dienstwunschRepository);
+        _dienstwunschRepository = dienstwunschRepository;
+        ArgumentNullException.ThrowIfNull(saveAnspruchService);
+        _saveAnspruchService = saveAnspruchService;
+        ArgumentNullException.ThrowIfNull(saveZeitraumService);
+        _saveZeitraumService = saveZeitraumService;
+        ArgumentNullException.ThrowIfNull(deleteZeitraumService);
+        _deleteZeitraumService = deleteZeitraumService;
+        ArgumentNullException.ThrowIfNull(readUrlaubsplanerService);
+        _readUrlaubsplanerService = readUrlaubsplanerService;
     }
 
     protected override OrganisationsbereichCode Bereich => OrganisationsbereichCode.Intensivtransport;

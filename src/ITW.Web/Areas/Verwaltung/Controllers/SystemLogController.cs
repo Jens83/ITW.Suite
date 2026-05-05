@@ -16,8 +16,8 @@ public sealed class SystemLogController : BereichsDashboardControllerBase
         ILogEintragService logEintragService)
         : base(currentUserContextAccessor)
     {
-        _logEintragService = logEintragService
-            ?? throw new ArgumentNullException(nameof(logEintragService));
+        ArgumentNullException.ThrowIfNull(logEintragService);
+        _logEintragService = logEintragService;
     }
 
     protected override OrganisationsbereichCode Bereich => OrganisationsbereichCode.Verwaltung;

@@ -1,4 +1,4 @@
-﻿using ITW.Dienstplan.Application.Contracts;
+using ITW.Dienstplan.Application.Contracts;
 
 namespace ITW.Dienstplan.Application.Perioden;
 
@@ -54,8 +54,8 @@ public sealed class ReadDienstplanperiodenService
     public ReadDienstplanperiodenService(
         IDienstplanPeriodeRepository dienstplanPeriodeRepository)
     {
-        _dienstplanPeriodeRepository = dienstplanPeriodeRepository
-            ?? throw new ArgumentNullException(nameof(dienstplanPeriodeRepository));
+        ArgumentNullException.ThrowIfNull(dienstplanPeriodeRepository);
+        _dienstplanPeriodeRepository = dienstplanPeriodeRepository;
     }
 
     public async Task<ReadDienstplanperiodenResult> ExecuteAsync(

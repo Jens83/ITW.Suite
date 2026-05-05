@@ -1,4 +1,4 @@
-﻿using ITW.Dienstplan.Application.Contracts;
+using ITW.Dienstplan.Application.Contracts;
 using ITW.Domain.Organisation.Enums;
 using ITW.Domain.Personnel.Entities;
 using ITW.Domain.Personnel.Enums;
@@ -13,7 +13,8 @@ public sealed class DienstplanMitarbeiterPlanungsRepository : IDienstplanMitarbe
 
     public DienstplanMitarbeiterPlanungsRepository(PlatformDbContext dbContext)
     {
-        _dbContext = dbContext ?? throw new ArgumentNullException(nameof(dbContext));
+        ArgumentNullException.ThrowIfNull(dbContext);
+        _dbContext = dbContext;
     }
 
     public async Task<IReadOnlyList<DienstplanMitarbeiterPlanungsstammdaten>> GetAktivePlanungsmitarbeiterAsync(

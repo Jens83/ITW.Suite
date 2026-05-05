@@ -1,4 +1,4 @@
-﻿using ITW.Application.Abstractions.DateTime;
+using ITW.Application.Abstractions.DateTime;
 using ITW.Application.Abstractions.Identity;
 using ITW.Application.Abstractions.Persistence;
 using ITW.Domain.Organisation.Enums;
@@ -22,15 +22,16 @@ public sealed class SaveAllgemeinesMitarbeiterprofilService
         IDateTimeProvider dateTimeProvider,
         ILogger<SaveAllgemeinesMitarbeiterprofilService> logger)
     {
-        _benutzerBereichszuordnungRepository = benutzerBereichszuordnungRepository
-            ?? throw new ArgumentNullException(nameof(benutzerBereichszuordnungRepository));
-        _allgemeinesMitarbeiterprofilRepository = allgemeinesMitarbeiterprofilRepository
-            ?? throw new ArgumentNullException(nameof(allgemeinesMitarbeiterprofilRepository));
-        _benutzerkontoRepository = benutzerkontoRepository
-            ?? throw new ArgumentNullException(nameof(benutzerkontoRepository));
-        _dateTimeProvider = dateTimeProvider
-            ?? throw new ArgumentNullException(nameof(dateTimeProvider));
-        _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+        ArgumentNullException.ThrowIfNull(benutzerBereichszuordnungRepository);
+        _benutzerBereichszuordnungRepository = benutzerBereichszuordnungRepository;
+        ArgumentNullException.ThrowIfNull(allgemeinesMitarbeiterprofilRepository);
+        _allgemeinesMitarbeiterprofilRepository = allgemeinesMitarbeiterprofilRepository;
+        ArgumentNullException.ThrowIfNull(benutzerkontoRepository);
+        _benutzerkontoRepository = benutzerkontoRepository;
+        ArgumentNullException.ThrowIfNull(dateTimeProvider);
+        _dateTimeProvider = dateTimeProvider;
+        ArgumentNullException.ThrowIfNull(logger);
+        _logger = logger;
     }
 
     public async Task<SaveAllgemeinesMitarbeiterprofilResult> ExecuteAsync(

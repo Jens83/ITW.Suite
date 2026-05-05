@@ -1,4 +1,4 @@
-﻿using ITW.Application.Abstractions.Persistence;
+using ITW.Application.Abstractions.Persistence;
 using ITW.Application.Organisation.Contracts;
 using Microsoft.Extensions.Logging;
 
@@ -13,8 +13,10 @@ public sealed class ReadUserOrganisationskontextService
         IBenutzerBereichszuordnungRepository repository,
         ILogger<ReadUserOrganisationskontextService> logger)
     {
-        _repository = repository ?? throw new ArgumentNullException(nameof(repository));
-        _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+        ArgumentNullException.ThrowIfNull(repository);
+        _repository = repository;
+        ArgumentNullException.ThrowIfNull(logger);
+        _logger = logger;
     }
 
     public async Task<ReadUserOrganisationskontextResult> ExecuteAsync(

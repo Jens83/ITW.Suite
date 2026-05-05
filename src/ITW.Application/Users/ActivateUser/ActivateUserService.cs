@@ -1,4 +1,4 @@
-﻿using ITW.Application.Abstractions.Identity;
+using ITW.Application.Abstractions.Identity;
 using Microsoft.Extensions.Logging;
 
 namespace ITW.Application.Users.ActivateUser;
@@ -10,8 +10,10 @@ public sealed class ActivateUserService
 
     public ActivateUserService(IBenutzerkontoRepository repository, ILogger<ActivateUserService> logger)
     {
-        _repository = repository ?? throw new ArgumentNullException(nameof(repository));
-        _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+        ArgumentNullException.ThrowIfNull(repository);
+        _repository = repository;
+        ArgumentNullException.ThrowIfNull(logger);
+        _logger = logger;
     }
 
     public async Task<ActivateUserResult> ExecuteAsync(

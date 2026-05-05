@@ -1,4 +1,4 @@
-﻿using ITW.Dienstplan.Application.Contracts;
+using ITW.Dienstplan.Application.Contracts;
 using ITW.Dienstplan.Application.Perioden;
 using ITW.Dienstplan.Application.Planung;
 using ITW.Dienstplan.Domain.Entities;
@@ -77,17 +77,17 @@ public sealed class ReadWachleiterKalenderService
         IGeplanterDienstTagRepository geplanterDienstTagRepository,
         ReadAutomatischePlanungsvorschauService readAutomatischePlanungsvorschauService)
     {
-        _readDienstplanperiodenService = readDienstplanperiodenService
-            ?? throw new ArgumentNullException(nameof(readDienstplanperiodenService));
+        ArgumentNullException.ThrowIfNull(readDienstplanperiodenService);
+        _readDienstplanperiodenService = readDienstplanperiodenService;
 
-        _dienstwunschAuswertungRepository = dienstwunschAuswertungRepository
-            ?? throw new ArgumentNullException(nameof(dienstwunschAuswertungRepository));
+        ArgumentNullException.ThrowIfNull(dienstwunschAuswertungRepository);
+        _dienstwunschAuswertungRepository = dienstwunschAuswertungRepository;
 
-        _geplanterDienstTagRepository = geplanterDienstTagRepository
-            ?? throw new ArgumentNullException(nameof(geplanterDienstTagRepository));
+        ArgumentNullException.ThrowIfNull(geplanterDienstTagRepository);
+        _geplanterDienstTagRepository = geplanterDienstTagRepository;
 
-        _readAutomatischePlanungsvorschauService = readAutomatischePlanungsvorschauService
-            ?? throw new ArgumentNullException(nameof(readAutomatischePlanungsvorschauService));
+        ArgumentNullException.ThrowIfNull(readAutomatischePlanungsvorschauService);
+        _readAutomatischePlanungsvorschauService = readAutomatischePlanungsvorschauService;
     }
 
     public async Task<ReadWachleiterKalenderResult> ExecuteAsync(

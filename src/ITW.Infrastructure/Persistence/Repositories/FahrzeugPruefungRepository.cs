@@ -1,4 +1,4 @@
-﻿using ITW.Fahrzeugmanagement.Application.Contracts;
+using ITW.Fahrzeugmanagement.Application.Contracts;
 using ITW.Fahrzeugmanagement.Domain.Entities;
 using ITW.Fahrzeugmanagement.Domain.Enums;
 using ITW.Infrastructure.Persistence.DbContexts;
@@ -12,7 +12,8 @@ public sealed class FahrzeugPruefungRepository : IFahrzeugPruefungRepository
 
     public FahrzeugPruefungRepository(PlatformDbContext dbContext)
     {
-        _dbContext = dbContext ?? throw new ArgumentNullException(nameof(dbContext));
+        ArgumentNullException.ThrowIfNull(dbContext);
+        _dbContext = dbContext;
     }
 
     public async Task<IReadOnlyList<FahrzeugPruefung>> GetByFahrzeugIdAsync(

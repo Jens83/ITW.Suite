@@ -1,4 +1,4 @@
-﻿// Datei: src/ITW.Application/Personnel/Documents/DownloadMitarbeiterDokumentService.cs
+// Datei: src/ITW.Application/Personnel/Documents/DownloadMitarbeiterDokumentService.cs
 using ITW.Application.Abstractions.Persistence;
 using Microsoft.Extensions.Logging;
 
@@ -15,11 +15,12 @@ public sealed class DownloadMitarbeiterDokumentService
         IMitarbeiterDokumentDateiSpeicher mitarbeiterDokumentDateiSpeicher,
         ILogger<DownloadMitarbeiterDokumentService> logger)
     {
-        _mitarbeiterDokumentRepository = mitarbeiterDokumentRepository
-            ?? throw new ArgumentNullException(nameof(mitarbeiterDokumentRepository));
-        _mitarbeiterDokumentDateiSpeicher = mitarbeiterDokumentDateiSpeicher
-            ?? throw new ArgumentNullException(nameof(mitarbeiterDokumentDateiSpeicher));
-        _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+        ArgumentNullException.ThrowIfNull(mitarbeiterDokumentRepository);
+        _mitarbeiterDokumentRepository = mitarbeiterDokumentRepository;
+        ArgumentNullException.ThrowIfNull(mitarbeiterDokumentDateiSpeicher);
+        _mitarbeiterDokumentDateiSpeicher = mitarbeiterDokumentDateiSpeicher;
+        ArgumentNullException.ThrowIfNull(logger);
+        _logger = logger;
     }
 
     public async Task<DownloadMitarbeiterDokumentResult> ExecuteAsync(

@@ -1,4 +1,4 @@
-﻿using System.Security.Cryptography;
+using System.Security.Cryptography;
 using System.Text;
 using ITW.Fahrzeugmanagement.Application.Contracts;
 using ITW.Fahrzeugmanagement.Domain.Entities;
@@ -93,8 +93,8 @@ public sealed class SaveLocationUpdateService
 
     public SaveLocationUpdateService(IFahrzeugTrackingRepository fahrzeugTrackingRepository)
     {
-        _fahrzeugTrackingRepository = fahrzeugTrackingRepository
-            ?? throw new ArgumentNullException(nameof(fahrzeugTrackingRepository));
+        ArgumentNullException.ThrowIfNull(fahrzeugTrackingRepository);
+        _fahrzeugTrackingRepository = fahrzeugTrackingRepository;
     }
 
     public async Task<SaveLocationUpdateResult> ExecuteAsync(

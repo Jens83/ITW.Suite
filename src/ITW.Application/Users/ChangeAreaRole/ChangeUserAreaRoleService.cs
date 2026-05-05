@@ -1,4 +1,4 @@
-﻿using ITW.Application.Abstractions.Persistence;
+using ITW.Application.Abstractions.Persistence;
 using ITW.Application.Organisation.Contracts;
 using Microsoft.Extensions.Logging;
 
@@ -11,8 +11,10 @@ public sealed class ChangeUserAreaRoleService
 
     public ChangeUserAreaRoleService(IBenutzerBereichszuordnungRepository repository, ILogger<ChangeUserAreaRoleService> logger)
     {
-        _repository = repository ?? throw new ArgumentNullException(nameof(repository));
-        _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+        ArgumentNullException.ThrowIfNull(repository);
+        _repository = repository;
+        ArgumentNullException.ThrowIfNull(logger);
+        _logger = logger;
     }
 
     public async Task<ChangeUserAreaRoleResult> ExecuteAsync(

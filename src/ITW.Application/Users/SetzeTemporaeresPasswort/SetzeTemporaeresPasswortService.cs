@@ -1,4 +1,4 @@
-﻿// Datei: src/ITW.Application/Users/SetzeTemporaeresPasswort/SetzeTemporaeresPasswortService.cs
+// Datei: src/ITW.Application/Users/SetzeTemporaeresPasswort/SetzeTemporaeresPasswortService.cs
 using ITW.Application.Abstractions.DateTime;
 using ITW.Application.Abstractions.Identity;
 using ITW.Application.Abstractions.Persistence;
@@ -19,13 +19,14 @@ public sealed class SetzeTemporaeresPasswortService
         IDateTimeProvider dateTimeProvider,
         ILogger<SetzeTemporaeresPasswortService> logger)
     {
-        _passwortResetAnfrageRepository = passwortResetAnfrageRepository
-            ?? throw new ArgumentNullException(nameof(passwortResetAnfrageRepository));
-        _benutzerkontoRepository = benutzerkontoRepository
-            ?? throw new ArgumentNullException(nameof(benutzerkontoRepository));
-        _dateTimeProvider = dateTimeProvider
-            ?? throw new ArgumentNullException(nameof(dateTimeProvider));
-        _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+        ArgumentNullException.ThrowIfNull(passwortResetAnfrageRepository);
+        _passwortResetAnfrageRepository = passwortResetAnfrageRepository;
+        ArgumentNullException.ThrowIfNull(benutzerkontoRepository);
+        _benutzerkontoRepository = benutzerkontoRepository;
+        ArgumentNullException.ThrowIfNull(dateTimeProvider);
+        _dateTimeProvider = dateTimeProvider;
+        ArgumentNullException.ThrowIfNull(logger);
+        _logger = logger;
     }
 
     public async Task<SetzeTemporaeresPasswortResult> ExecuteAsync(

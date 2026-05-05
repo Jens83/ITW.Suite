@@ -1,4 +1,4 @@
-﻿// Datei: src/ITW.Infrastructure/Persistence/Repositories/PasswortResetAnfrageRepository.cs
+// Datei: src/ITW.Infrastructure/Persistence/Repositories/PasswortResetAnfrageRepository.cs
 using ITW.Application.Abstractions.Persistence;
 using ITW.Domain.Organisation.Enums;
 using ITW.Domain.Security.Entities;
@@ -14,7 +14,8 @@ public sealed class PasswortResetAnfrageRepository : IPasswortResetAnfrageReposi
 
     public PasswortResetAnfrageRepository(PlatformDbContext dbContext)
     {
-        _dbContext = dbContext ?? throw new ArgumentNullException(nameof(dbContext));
+        ArgumentNullException.ThrowIfNull(dbContext);
+        _dbContext = dbContext;
     }
 
     public async Task<PasswortResetAnfrage?> GetOffeneAnfrageFuerUserAsync(

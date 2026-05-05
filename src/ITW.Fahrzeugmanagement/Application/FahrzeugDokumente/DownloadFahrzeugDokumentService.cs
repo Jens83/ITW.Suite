@@ -1,4 +1,4 @@
-﻿using ITW.Fahrzeugmanagement.Application.Contracts;
+using ITW.Fahrzeugmanagement.Application.Contracts;
 
 namespace ITW.Fahrzeugmanagement.Application.FahrzeugDokumente;
 
@@ -51,8 +51,10 @@ public sealed class DownloadFahrzeugDokumentService
         IFahrzeugDokumentRepository repository,
         IFahrzeugDokumentDateiSpeicher dateiSpeicher)
     {
-        _repository = repository ?? throw new ArgumentNullException(nameof(repository));
-        _dateiSpeicher = dateiSpeicher ?? throw new ArgumentNullException(nameof(dateiSpeicher));
+        ArgumentNullException.ThrowIfNull(repository);
+        _repository = repository;
+        ArgumentNullException.ThrowIfNull(dateiSpeicher);
+        _dateiSpeicher = dateiSpeicher;
     }
 
     public async Task<DownloadFahrzeugDokumentResult> ExecuteAsync(

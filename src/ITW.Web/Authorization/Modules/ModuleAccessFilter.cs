@@ -1,4 +1,4 @@
-﻿using ITW.Application.Organisation.Contracts;
+using ITW.Application.Organisation.Contracts;
 using ITW.Web.Navigation.AreaNavigation;
 using ITW.Web.Security.CurrentUser;
 using Microsoft.AspNetCore.Mvc;
@@ -15,8 +15,8 @@ public sealed class ModuleAccessFilter : IAsyncAuthorizationFilter
         ICurrentUserContextAccessor currentUserContextAccessor,
         ModulCode modul)
     {
-        _currentUserContextAccessor = currentUserContextAccessor
-            ?? throw new ArgumentNullException(nameof(currentUserContextAccessor));
+        ArgumentNullException.ThrowIfNull(currentUserContextAccessor);
+        _currentUserContextAccessor = currentUserContextAccessor;
         _modul = modul;
     }
 

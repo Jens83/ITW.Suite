@@ -1,4 +1,4 @@
-﻿using ITW.Application.Personnel.ProfileQueries;
+using ITW.Application.Personnel.ProfileQueries;
 using ITW.Dienstplan.Application.Contracts;
 using ITW.Dienstplan.Application.Kalender;
 using ITW.Dienstplan.Application.Perioden;
@@ -27,17 +27,17 @@ public sealed class ReadSichtbarerDienstplanViewModelService
         IGeplanterDienstTagRepository geplanterDienstTagRepository,
         IDienstbesetzungsAusfallRepository dienstbesetzungsAusfallRepository)
     {
-        _readDienstplanperiodenService = readDienstplanperiodenService
-            ?? throw new ArgumentNullException(nameof(readDienstplanperiodenService));
+        ArgumentNullException.ThrowIfNull(readDienstplanperiodenService);
+        _readDienstplanperiodenService = readDienstplanperiodenService;
 
-        _readItwMitarbeiterprofileService = readItwMitarbeiterprofileService
-            ?? throw new ArgumentNullException(nameof(readItwMitarbeiterprofileService));
+        ArgumentNullException.ThrowIfNull(readItwMitarbeiterprofileService);
+        _readItwMitarbeiterprofileService = readItwMitarbeiterprofileService;
 
-        _geplanterDienstTagRepository = geplanterDienstTagRepository
-            ?? throw new ArgumentNullException(nameof(geplanterDienstTagRepository));
+        ArgumentNullException.ThrowIfNull(geplanterDienstTagRepository);
+        _geplanterDienstTagRepository = geplanterDienstTagRepository;
 
-        _dienstbesetzungsAusfallRepository = dienstbesetzungsAusfallRepository
-            ?? throw new ArgumentNullException(nameof(dienstbesetzungsAusfallRepository));
+        ArgumentNullException.ThrowIfNull(dienstbesetzungsAusfallRepository);
+        _dienstbesetzungsAusfallRepository = dienstbesetzungsAusfallRepository;
     }
 
     public async Task<SichtbarerDienstplanViewModel> ExecuteAsync(

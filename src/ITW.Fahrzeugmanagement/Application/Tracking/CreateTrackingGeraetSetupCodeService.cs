@@ -1,4 +1,4 @@
-﻿using System.Security.Cryptography;
+using System.Security.Cryptography;
 using System.Text;
 using ITW.Fahrzeugmanagement.Application.Contracts;
 using ITW.Fahrzeugmanagement.Domain.Entities;
@@ -70,7 +70,8 @@ public sealed class CreateTrackingGeraetSetupCodeService
 
     public CreateTrackingGeraetSetupCodeService(IFahrzeugTrackingRepository repository)
     {
-        _repository = repository ?? throw new ArgumentNullException(nameof(repository));
+        ArgumentNullException.ThrowIfNull(repository);
+        _repository = repository;
     }
 
     public async Task<CreateTrackingGeraetSetupCodeResult> ExecuteAsync(

@@ -1,4 +1,4 @@
-﻿// Datei: src/ITW.Web/Controllers/AccountController.cs
+// Datei: src/ITW.Web/Controllers/AccountController.cs
 using ITW.Application.Abstractions.Identity;
 using ITW.Application.Abstractions.Persistence;
 using ITW.Application.Users.RequestPasswordReset;
@@ -25,14 +25,16 @@ public sealed class AccountController : Controller
         IBenutzerkontoRepository benutzerkontoRepository,
         SubmitPasswortResetAnfrageService submitPasswortResetAnfrageService)
     {
-        _signInManager = signInManager ?? throw new ArgumentNullException(nameof(signInManager));
-        _userManager = userManager ?? throw new ArgumentNullException(nameof(userManager));
-        _allgemeinesMitarbeiterprofilRepository = allgemeinesMitarbeiterprofilRepository
-            ?? throw new ArgumentNullException(nameof(allgemeinesMitarbeiterprofilRepository));
-        _benutzerkontoRepository = benutzerkontoRepository
-            ?? throw new ArgumentNullException(nameof(benutzerkontoRepository));
-        _submitPasswortResetAnfrageService = submitPasswortResetAnfrageService
-            ?? throw new ArgumentNullException(nameof(submitPasswortResetAnfrageService));
+        ArgumentNullException.ThrowIfNull(signInManager);
+        _signInManager = signInManager;
+        ArgumentNullException.ThrowIfNull(userManager);
+        _userManager = userManager;
+        ArgumentNullException.ThrowIfNull(allgemeinesMitarbeiterprofilRepository);
+        _allgemeinesMitarbeiterprofilRepository = allgemeinesMitarbeiterprofilRepository;
+        ArgumentNullException.ThrowIfNull(benutzerkontoRepository);
+        _benutzerkontoRepository = benutzerkontoRepository;
+        ArgumentNullException.ThrowIfNull(submitPasswortResetAnfrageService);
+        _submitPasswortResetAnfrageService = submitPasswortResetAnfrageService;
     }
 
     [AllowAnonymous]

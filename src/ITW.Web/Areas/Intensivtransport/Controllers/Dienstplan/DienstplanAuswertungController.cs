@@ -1,4 +1,4 @@
-﻿using ITW.Application.Organisation.Contracts;
+using ITW.Application.Organisation.Contracts;
 using ITW.Web.Areas.Intensivtransport.Controllers.Dienstplan;
 using ITW.Web.Areas.Intensivtransport.Services.Dienstplan;
 using ITW.Web.Areas.Intensivtransport.Services.Dienstplan.Read;
@@ -20,8 +20,8 @@ public sealed class DienstplanAuswertungController : IntensivtransportDienstplan
         ICurrentUserContextAccessor currentUserContextAccessor)
         : base(currentUserContextAccessor)
     {
-        _readMonatsauswertungViewModelService = readMonatsauswertungViewModelService
-            ?? throw new ArgumentNullException(nameof(readMonatsauswertungViewModelService));
+        ArgumentNullException.ThrowIfNull(readMonatsauswertungViewModelService);
+        _readMonatsauswertungViewModelService = readMonatsauswertungViewModelService;
     }
 
     [HttpGet("Monatsauswertung")]

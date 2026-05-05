@@ -1,4 +1,4 @@
-﻿using ITW.Fahrzeugmanagement.Application.Contracts;
+using ITW.Fahrzeugmanagement.Application.Contracts;
 using ITW.Fahrzeugmanagement.Domain.Enums;
 
 namespace ITW.Fahrzeugmanagement.Application.Fahrzeuge;
@@ -43,7 +43,8 @@ public sealed class ReadFahrzeugUebersichtService
 
     public ReadFahrzeugUebersichtService(IFahrzeugRepository repository)
     {
-        _repository = repository ?? throw new ArgumentNullException(nameof(repository));
+        ArgumentNullException.ThrowIfNull(repository);
+        _repository = repository;
     }
 
     public async Task<ReadFahrzeugUebersicht> ExecuteAsync(

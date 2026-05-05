@@ -1,4 +1,4 @@
-﻿using ITW.Fahrzeugmanagement.Application.Contracts;
+using ITW.Fahrzeugmanagement.Application.Contracts;
 using ITW.Fahrzeugmanagement.Domain.Enums;
 
 namespace ITW.Fahrzeugmanagement.Application.Fahrtenbuch;
@@ -38,7 +38,8 @@ public sealed class AbschliessenFahrtenbuchEintragService
 
     public AbschliessenFahrtenbuchEintragService(IFahrtenbuchRepository repository)
     {
-        _repository = repository ?? throw new ArgumentNullException(nameof(repository));
+        ArgumentNullException.ThrowIfNull(repository);
+        _repository = repository;
     }
 
     public async Task<AbschliessenFahrtenbuchEintragResult> ExecuteAsync(

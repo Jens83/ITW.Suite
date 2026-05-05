@@ -1,4 +1,4 @@
-﻿using ITW.Application.Personnel.ProfileQueries;
+using ITW.Application.Personnel.ProfileQueries;
 using ITW.Application.Personnel.Urlaub.Contracts;
 using ITW.Dienstplan.Application.Contracts;
 using ITW.Dienstplan.Application.Wunschphase;
@@ -49,17 +49,17 @@ public sealed class ToggleMitarbeiterWunschService
         IFreelancerMonatswunschRepository freelancerMonatswunschRepository,
         ToggleDienstwunschService toggleDienstwunschService)
     {
-        _mitarbeiterUrlaubszeitraumRepository = mitarbeiterUrlaubszeitraumRepository
-            ?? throw new ArgumentNullException(nameof(mitarbeiterUrlaubszeitraumRepository));
+        ArgumentNullException.ThrowIfNull(mitarbeiterUrlaubszeitraumRepository);
+        _mitarbeiterUrlaubszeitraumRepository = mitarbeiterUrlaubszeitraumRepository;
 
-        _readItwMitarbeiterprofileService = readItwMitarbeiterprofileService
-            ?? throw new ArgumentNullException(nameof(readItwMitarbeiterprofileService));
+        ArgumentNullException.ThrowIfNull(readItwMitarbeiterprofileService);
+        _readItwMitarbeiterprofileService = readItwMitarbeiterprofileService;
 
-        _freelancerMonatswunschRepository = freelancerMonatswunschRepository
-            ?? throw new ArgumentNullException(nameof(freelancerMonatswunschRepository));
+        ArgumentNullException.ThrowIfNull(freelancerMonatswunschRepository);
+        _freelancerMonatswunschRepository = freelancerMonatswunschRepository;
 
-        _toggleDienstwunschService = toggleDienstwunschService
-            ?? throw new ArgumentNullException(nameof(toggleDienstwunschService));
+        ArgumentNullException.ThrowIfNull(toggleDienstwunschService);
+        _toggleDienstwunschService = toggleDienstwunschService;
     }
 
     public async Task<ToggleMitarbeiterWunschResult> ExecuteAsync(

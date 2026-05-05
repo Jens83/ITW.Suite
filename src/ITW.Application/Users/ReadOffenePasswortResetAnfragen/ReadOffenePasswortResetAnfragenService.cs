@@ -1,4 +1,4 @@
-﻿// Datei: src/ITW.Application/Users/ReadOffenePasswortResetAnfragen/ReadOffenePasswortResetAnfragenService.cs
+// Datei: src/ITW.Application/Users/ReadOffenePasswortResetAnfragen/ReadOffenePasswortResetAnfragenService.cs
 using ITW.Application.Abstractions.Persistence;
 using ITW.Application.Organisation.Contracts;
 using Microsoft.Extensions.Logging;
@@ -14,9 +14,10 @@ public sealed class ReadOffenePasswortResetAnfragenService
         IPasswortResetAnfrageRepository passwortResetAnfrageRepository,
         ILogger<ReadOffenePasswortResetAnfragenService> logger)
     {
-        _passwortResetAnfrageRepository = passwortResetAnfrageRepository
-            ?? throw new ArgumentNullException(nameof(passwortResetAnfrageRepository));
-        _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+        ArgumentNullException.ThrowIfNull(passwortResetAnfrageRepository);
+        _passwortResetAnfrageRepository = passwortResetAnfrageRepository;
+        ArgumentNullException.ThrowIfNull(logger);
+        _logger = logger;
     }
 
     public async Task<ReadOffenePasswortResetAnfragenResult> ExecuteAsync(

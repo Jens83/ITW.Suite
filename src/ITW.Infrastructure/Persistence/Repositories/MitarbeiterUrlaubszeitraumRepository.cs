@@ -1,4 +1,4 @@
-﻿using ITW.Application.Personnel.Urlaub.Contracts;
+using ITW.Application.Personnel.Urlaub.Contracts;
 using ITW.Domain.Personnel.Entities;
 using ITW.Infrastructure.Persistence.DbContexts;
 using Microsoft.EntityFrameworkCore;
@@ -13,7 +13,8 @@ public sealed class MitarbeiterUrlaubszeitraumRepository : IMitarbeiterUrlaubsze
 
     public MitarbeiterUrlaubszeitraumRepository(PlatformDbContext dbContext)
     {
-        _dbContext = dbContext ?? throw new ArgumentNullException(nameof(dbContext));
+        ArgumentNullException.ThrowIfNull(dbContext);
+        _dbContext = dbContext;
     }
 
     public async Task<MitarbeiterUrlaubszeitraum?> GetByIdAsync(

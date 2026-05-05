@@ -1,4 +1,4 @@
-﻿using System.Globalization;
+using System.Globalization;
 using ITW.Dienstplan.Application.Contracts;
 using ITW.Dienstplan.Domain.Entities;
 
@@ -44,8 +44,8 @@ public sealed class CreateDienstplanPeriodeService
     public CreateDienstplanPeriodeService(
         IDienstplanPeriodeRepository dienstplanPeriodeRepository)
     {
-        _dienstplanPeriodeRepository = dienstplanPeriodeRepository
-            ?? throw new ArgumentNullException(nameof(dienstplanPeriodeRepository));
+        ArgumentNullException.ThrowIfNull(dienstplanPeriodeRepository);
+        _dienstplanPeriodeRepository = dienstplanPeriodeRepository;
     }
 
     public async Task<CreateDienstplanPeriodeResult> ExecuteAsync(

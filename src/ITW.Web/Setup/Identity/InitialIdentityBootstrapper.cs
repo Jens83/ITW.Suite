@@ -1,4 +1,4 @@
-﻿using ITW.Application.Organisation.Contracts;
+using ITW.Application.Organisation.Contracts;
 using ITW.Application.Users.AssignArea;
 using ITW.Infrastructure.Identity;
 using ITW.Web.Configuration.Bootstrap;
@@ -20,11 +20,14 @@ public sealed class InitialIdentityBootstrapper
         AssignUserToPrimaryAreaService assignUserToPrimaryAreaService,
         ILogger<InitialIdentityBootstrapper> logger)
     {
-        _options = options ?? throw new ArgumentNullException(nameof(options));
-        _userManager = userManager ?? throw new ArgumentNullException(nameof(userManager));
-        _assignUserToPrimaryAreaService = assignUserToPrimaryAreaService
-            ?? throw new ArgumentNullException(nameof(assignUserToPrimaryAreaService));
-        _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+        ArgumentNullException.ThrowIfNull(options);
+        _options = options;
+        ArgumentNullException.ThrowIfNull(userManager);
+        _userManager = userManager;
+        ArgumentNullException.ThrowIfNull(assignUserToPrimaryAreaService);
+        _assignUserToPrimaryAreaService = assignUserToPrimaryAreaService;
+        ArgumentNullException.ThrowIfNull(logger);
+        _logger = logger;
     }
 
     public async Task ExecuteAsync(CancellationToken cancellationToken = default)

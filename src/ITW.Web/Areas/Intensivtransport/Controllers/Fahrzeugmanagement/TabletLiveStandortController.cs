@@ -1,4 +1,4 @@
-﻿using ITW.Application.Organisation.Contracts;
+using ITW.Application.Organisation.Contracts;
 using ITW.Fahrzeugmanagement.Application.Tracking;
 using ITW.Web.Areas.Intensivtransport.ViewModels.Fahrzeugmanagement;
 using ITW.Web.Authorization.Modules;
@@ -18,8 +18,8 @@ public sealed class TabletLiveStandortController : IntensivtransportFahrzeugmana
         ICurrentUserContextAccessor currentUserContextAccessor)
         : base(currentUserContextAccessor)
     {
-        _readOverviewService = readOverviewService
-            ?? throw new ArgumentNullException(nameof(readOverviewService));
+        ArgumentNullException.ThrowIfNull(readOverviewService);
+        _readOverviewService = readOverviewService;
     }
 
     [HttpGet]

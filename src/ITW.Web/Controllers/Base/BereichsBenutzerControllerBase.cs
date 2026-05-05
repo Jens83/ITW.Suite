@@ -1,4 +1,4 @@
-﻿using ITW.Application.Organisation.Contracts;
+using ITW.Application.Organisation.Contracts;
 using ITW.Application.Organisation.VisibilityScopes;
 using ITW.Application.Users.ActivateUser;
 using ITW.Application.Users.AssignArea;
@@ -40,22 +40,22 @@ public abstract class BereichsBenutzerControllerBase : BereichsControllerBase
     BenutzerSichtbarkeitsScopeErmittler benutzerSichtbarkeitsScopeErmittler)
     : base(currentUserContextAccessor)
     {
-        _readUsersByScopeService = readUsersByScopeService
-            ?? throw new ArgumentNullException(nameof(readUsersByScopeService));
-        _assignUserToPrimaryAreaService = assignUserToPrimaryAreaService
-            ?? throw new ArgumentNullException(nameof(assignUserToPrimaryAreaService));
-        _changeUserAreaRoleService = changeUserAreaRoleService
-            ?? throw new ArgumentNullException(nameof(changeUserAreaRoleService));
-        _readNichtZugeordneteBenutzerkontenService = readNichtZugeordneteBenutzerkontenService
-            ?? throw new ArgumentNullException(nameof(readNichtZugeordneteBenutzerkontenService));
-        _createBenutzerkontoService = createBenutzerkontoService
-            ?? throw new ArgumentNullException(nameof(createBenutzerkontoService));
-        _lockUserService = lockUserService
-            ?? throw new ArgumentNullException(nameof(lockUserService));
-        _activateUserService = activateUserService
-            ?? throw new ArgumentNullException(nameof(activateUserService));
-        _benutzerSichtbarkeitsScopeErmittler = benutzerSichtbarkeitsScopeErmittler
-            ?? throw new ArgumentNullException(nameof(benutzerSichtbarkeitsScopeErmittler));
+        ArgumentNullException.ThrowIfNull(readUsersByScopeService);
+        _readUsersByScopeService = readUsersByScopeService;
+        ArgumentNullException.ThrowIfNull(assignUserToPrimaryAreaService);
+        _assignUserToPrimaryAreaService = assignUserToPrimaryAreaService;
+        ArgumentNullException.ThrowIfNull(changeUserAreaRoleService);
+        _changeUserAreaRoleService = changeUserAreaRoleService;
+        ArgumentNullException.ThrowIfNull(readNichtZugeordneteBenutzerkontenService);
+        _readNichtZugeordneteBenutzerkontenService = readNichtZugeordneteBenutzerkontenService;
+        ArgumentNullException.ThrowIfNull(createBenutzerkontoService);
+        _createBenutzerkontoService = createBenutzerkontoService;
+        ArgumentNullException.ThrowIfNull(lockUserService);
+        _lockUserService = lockUserService;
+        ArgumentNullException.ThrowIfNull(activateUserService);
+        _activateUserService = activateUserService;
+        ArgumentNullException.ThrowIfNull(benutzerSichtbarkeitsScopeErmittler);
+        _benutzerSichtbarkeitsScopeErmittler = benutzerSichtbarkeitsScopeErmittler;
     }
 
     protected override abstract OrganisationsbereichCode Bereich { get; }

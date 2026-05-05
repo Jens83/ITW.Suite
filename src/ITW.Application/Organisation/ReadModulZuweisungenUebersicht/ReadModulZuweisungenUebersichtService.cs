@@ -1,4 +1,4 @@
-﻿using ITW.Application.Organisation.Contracts;
+using ITW.Application.Organisation.Contracts;
 using Microsoft.Extensions.Logging;
 
 namespace ITW.Application.Organisation.ReadModulZuweisungenUebersicht;
@@ -19,8 +19,10 @@ public sealed class ReadModulZuweisungenUebersichtService
 
     public ReadModulZuweisungenUebersichtService(IModulZuweisungRepository repository, ILogger<ReadModulZuweisungenUebersichtService> logger)
     {
-        _repository = repository ?? throw new ArgumentNullException(nameof(repository));
-        _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+        ArgumentNullException.ThrowIfNull(repository);
+        _repository = repository;
+        ArgumentNullException.ThrowIfNull(logger);
+        _logger = logger;
     }
 
     public async Task<ReadModulZuweisungenUebersichtResult> ExecuteAsync(

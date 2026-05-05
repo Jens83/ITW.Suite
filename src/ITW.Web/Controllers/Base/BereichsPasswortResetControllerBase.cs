@@ -1,4 +1,4 @@
-﻿// Datei: src/ITW.Web/Controllers/Base/BereichsPasswortResetControllerBase.cs
+// Datei: src/ITW.Web/Controllers/Base/BereichsPasswortResetControllerBase.cs
 using ITW.Application.Organisation.Contracts;
 using ITW.Application.Users.ReadOffenePasswortResetAnfrageDetail;
 using ITW.Application.Users.ReadOffenePasswortResetAnfragen;
@@ -24,12 +24,12 @@ public abstract class BereichsPasswortResetControllerBase : BereichsControllerBa
         ICurrentUserContextAccessor currentUserContextAccessor)
         : base(currentUserContextAccessor)
     {
-        _readOffenePasswortResetAnfragenService = readOffenePasswortResetAnfragenService
-            ?? throw new ArgumentNullException(nameof(readOffenePasswortResetAnfragenService));
-        _readOffenePasswortResetAnfrageDetailService = readOffenePasswortResetAnfrageDetailService
-            ?? throw new ArgumentNullException(nameof(readOffenePasswortResetAnfrageDetailService));
-        _setzeTemporaeresPasswortService = setzeTemporaeresPasswortService
-            ?? throw new ArgumentNullException(nameof(setzeTemporaeresPasswortService));
+        ArgumentNullException.ThrowIfNull(readOffenePasswortResetAnfragenService);
+        _readOffenePasswortResetAnfragenService = readOffenePasswortResetAnfragenService;
+        ArgumentNullException.ThrowIfNull(readOffenePasswortResetAnfrageDetailService);
+        _readOffenePasswortResetAnfrageDetailService = readOffenePasswortResetAnfrageDetailService;
+        ArgumentNullException.ThrowIfNull(setzeTemporaeresPasswortService);
+        _setzeTemporaeresPasswortService = setzeTemporaeresPasswortService;
     }
 
     protected abstract string BereichName { get; }

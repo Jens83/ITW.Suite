@@ -1,4 +1,4 @@
-﻿using ITW.Application.Personnel.ProfileQueries;
+using ITW.Application.Personnel.ProfileQueries;
 using ITW.Application.Personnel.Urlaub;
 using ITW.Dienstplan.Application.Auswertung;
 using ITW.Dienstplan.Application.Perioden;
@@ -22,17 +22,17 @@ public sealed class ReadMonatsauswertungViewModelService
         ReadItwMitarbeiterprofileService readItwMitarbeiterprofileService,
         ReadMitarbeiterUrlaubsplanerService readMitarbeiterUrlaubsplanerService)
     {
-        _readDienstplanperiodenService = readDienstplanperiodenService
-            ?? throw new ArgumentNullException(nameof(readDienstplanperiodenService));
+        ArgumentNullException.ThrowIfNull(readDienstplanperiodenService);
+        _readDienstplanperiodenService = readDienstplanperiodenService;
 
-        _readDienstplanMonatsauswertungService = readDienstplanMonatsauswertungService
-            ?? throw new ArgumentNullException(nameof(readDienstplanMonatsauswertungService));
+        ArgumentNullException.ThrowIfNull(readDienstplanMonatsauswertungService);
+        _readDienstplanMonatsauswertungService = readDienstplanMonatsauswertungService;
 
-        _readItwMitarbeiterprofileService = readItwMitarbeiterprofileService
-            ?? throw new ArgumentNullException(nameof(readItwMitarbeiterprofileService));
+        ArgumentNullException.ThrowIfNull(readItwMitarbeiterprofileService);
+        _readItwMitarbeiterprofileService = readItwMitarbeiterprofileService;
 
-        _readMitarbeiterUrlaubsplanerService = readMitarbeiterUrlaubsplanerService
-            ?? throw new ArgumentNullException(nameof(readMitarbeiterUrlaubsplanerService));
+        ArgumentNullException.ThrowIfNull(readMitarbeiterUrlaubsplanerService);
+        _readMitarbeiterUrlaubsplanerService = readMitarbeiterUrlaubsplanerService;
     }
 
     public async Task<MonatsauswertungViewModel> ExecuteAsync(

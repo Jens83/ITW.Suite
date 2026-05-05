@@ -1,4 +1,4 @@
-﻿
+
 using System.Security.Claims;
 using ITW.Application.Abstractions.Identity;
 using ITW.Infrastructure.Persistence.DbContexts;
@@ -16,8 +16,10 @@ public sealed class BenutzerkontoRepository : IBenutzerkontoRepository
         PlatformDbContext dbContext,
         UserManager<ApplicationUser> userManager)
     {
-        _dbContext = dbContext ?? throw new ArgumentNullException(nameof(dbContext));
-        _userManager = userManager ?? throw new ArgumentNullException(nameof(userManager));
+        ArgumentNullException.ThrowIfNull(dbContext);
+        _dbContext = dbContext;
+        ArgumentNullException.ThrowIfNull(userManager);
+        _userManager = userManager;
     }
 
     public async Task<IReadOnlyList<BenutzerkontoDto>> GetByIdsAsync(

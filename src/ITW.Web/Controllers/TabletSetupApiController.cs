@@ -1,4 +1,4 @@
-﻿using ITW.Fahrzeugmanagement.Application.Tracking;
+using ITW.Fahrzeugmanagement.Application.Tracking;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -14,8 +14,8 @@ public sealed class TabletSetupApiController : ControllerBase
 
     public TabletSetupApiController(CompleteTrackingGeraetSetupService completeSetupService)
     {
-        _completeSetupService = completeSetupService
-            ?? throw new ArgumentNullException(nameof(completeSetupService));
+        ArgumentNullException.ThrowIfNull(completeSetupService);
+        _completeSetupService = completeSetupService;
     }
 
     [HttpPost("complete")]

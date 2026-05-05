@@ -1,4 +1,4 @@
-﻿// Datei: src/ITW.Infrastructure/Identity/UserManagement/PasswortResetBenutzerLookupRepository.cs
+// Datei: src/ITW.Infrastructure/Identity/UserManagement/PasswortResetBenutzerLookupRepository.cs
 using ITW.Application.Abstractions.Identity;
 using Microsoft.AspNetCore.Identity;
 
@@ -10,7 +10,8 @@ public sealed class PasswortResetBenutzerLookupRepository : IPasswortResetBenutz
 
     public PasswortResetBenutzerLookupRepository(UserManager<ApplicationUser> userManager)
     {
-        _userManager = userManager ?? throw new ArgumentNullException(nameof(userManager));
+        ArgumentNullException.ThrowIfNull(userManager);
+        _userManager = userManager;
     }
 
     public async Task<BenutzerkontoDto?> GetByBenutzernameAsync(

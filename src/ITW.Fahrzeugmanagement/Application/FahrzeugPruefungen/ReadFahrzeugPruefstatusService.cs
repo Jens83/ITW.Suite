@@ -1,4 +1,4 @@
-﻿using ITW.Fahrzeugmanagement.Application.Contracts;
+using ITW.Fahrzeugmanagement.Application.Contracts;
 using ITW.Fahrzeugmanagement.Domain.Enums;
 
 namespace ITW.Fahrzeugmanagement.Application.FahrzeugPruefungen;
@@ -29,7 +29,8 @@ public sealed class ReadFahrzeugPruefstatusService
 
     public ReadFahrzeugPruefstatusService(IFahrzeugPruefungRepository repository)
     {
-        _repository = repository ?? throw new ArgumentNullException(nameof(repository));
+        ArgumentNullException.ThrowIfNull(repository);
+        _repository = repository;
     }
 
     public async Task<ReadFahrzeugPruefstatusResult> ExecuteAsync(

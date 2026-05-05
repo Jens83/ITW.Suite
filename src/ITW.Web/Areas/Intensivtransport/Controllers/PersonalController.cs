@@ -1,4 +1,4 @@
-﻿using ITW.Application.Organisation.Contracts;
+using ITW.Application.Organisation.Contracts;
 using ITW.Application.Personnel.ProfileQueries;
 using ITW.Application.Personnel.Profiles;
 using ITW.Web.Areas.Intensivtransport.ViewModels.Mitarbeiter;
@@ -35,18 +35,18 @@ public sealed class PersonalController : BereichsControllerBase
         ICurrentUserContextAccessor currentUserContextAccessor)
         : base(currentUserContextAccessor)
     {
-        _readItwMitarbeiterprofileService = readItwMitarbeiterprofileService
-            ?? throw new ArgumentNullException(nameof(readItwMitarbeiterprofileService));
-        _readItwMitarbeiterprofilDetailService = readItwMitarbeiterprofilDetailService
-            ?? throw new ArgumentNullException(nameof(readItwMitarbeiterprofilDetailService));
-        _readItwMitarbeiterDetailUebersichtService = readItwMitarbeiterDetailUebersichtService
-            ?? throw new ArgumentNullException(nameof(readItwMitarbeiterDetailUebersichtService));
-        _readAllgemeinesMitarbeiterprofilDetailService = readAllgemeinesMitarbeiterprofilDetailService
-            ?? throw new ArgumentNullException(nameof(readAllgemeinesMitarbeiterprofilDetailService));
-        _saveItwMitarbeiterprofilService = saveItwMitarbeiterprofilService
-            ?? throw new ArgumentNullException(nameof(saveItwMitarbeiterprofilService));
-        _saveAllgemeinesMitarbeiterprofilService = saveAllgemeinesMitarbeiterprofilService
-            ?? throw new ArgumentNullException(nameof(saveAllgemeinesMitarbeiterprofilService));
+        ArgumentNullException.ThrowIfNull(readItwMitarbeiterprofileService);
+        _readItwMitarbeiterprofileService = readItwMitarbeiterprofileService;
+        ArgumentNullException.ThrowIfNull(readItwMitarbeiterprofilDetailService);
+        _readItwMitarbeiterprofilDetailService = readItwMitarbeiterprofilDetailService;
+        ArgumentNullException.ThrowIfNull(readItwMitarbeiterDetailUebersichtService);
+        _readItwMitarbeiterDetailUebersichtService = readItwMitarbeiterDetailUebersichtService;
+        ArgumentNullException.ThrowIfNull(readAllgemeinesMitarbeiterprofilDetailService);
+        _readAllgemeinesMitarbeiterprofilDetailService = readAllgemeinesMitarbeiterprofilDetailService;
+        ArgumentNullException.ThrowIfNull(saveItwMitarbeiterprofilService);
+        _saveItwMitarbeiterprofilService = saveItwMitarbeiterprofilService;
+        ArgumentNullException.ThrowIfNull(saveAllgemeinesMitarbeiterprofilService);
+        _saveAllgemeinesMitarbeiterprofilService = saveAllgemeinesMitarbeiterprofilService;
     }
 
     protected override OrganisationsbereichCode Bereich => OrganisationsbereichCode.Intensivtransport;

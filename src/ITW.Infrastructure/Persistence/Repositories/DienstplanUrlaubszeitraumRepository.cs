@@ -1,4 +1,4 @@
-﻿using ITW.Application.Personnel.Urlaub.Contracts;
+using ITW.Application.Personnel.Urlaub.Contracts;
 using ITW.Dienstplan.Application.Contracts;
 
 namespace ITW.Infrastructure.Persistence.Repositories;
@@ -10,8 +10,8 @@ public sealed class DienstplanUrlaubszeitraumRepository : IDienstplanUrlaubszeit
     public DienstplanUrlaubszeitraumRepository(
         IMitarbeiterUrlaubszeitraumRepository mitarbeiterUrlaubszeitraumRepository)
     {
-        _mitarbeiterUrlaubszeitraumRepository = mitarbeiterUrlaubszeitraumRepository
-            ?? throw new ArgumentNullException(nameof(mitarbeiterUrlaubszeitraumRepository));
+        ArgumentNullException.ThrowIfNull(mitarbeiterUrlaubszeitraumRepository);
+        _mitarbeiterUrlaubszeitraumRepository = mitarbeiterUrlaubszeitraumRepository;
     }
 
     public Task<IReadOnlyList<string>> GetAktiveUserIdsFuerDatumAsync(

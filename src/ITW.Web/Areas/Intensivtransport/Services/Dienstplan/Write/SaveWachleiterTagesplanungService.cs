@@ -1,4 +1,4 @@
-﻿using ITW.Application.Personnel.ProfileQueries;
+using ITW.Application.Personnel.ProfileQueries;
 using ITW.Application.Personnel.Urlaub.Contracts;
 using ITW.Dienstplan.Application.Planung;
 
@@ -43,14 +43,14 @@ public sealed class SaveWachleiterTagesplanungService
         IMitarbeiterUrlaubszeitraumRepository mitarbeiterUrlaubszeitraumRepository,
         SaveGeplanterDienstTagService saveGeplanterDienstTagService)
     {
-        _readItwMitarbeiterprofileService = readItwMitarbeiterprofileService
-            ?? throw new ArgumentNullException(nameof(readItwMitarbeiterprofileService));
+        ArgumentNullException.ThrowIfNull(readItwMitarbeiterprofileService);
+        _readItwMitarbeiterprofileService = readItwMitarbeiterprofileService;
 
-        _mitarbeiterUrlaubszeitraumRepository = mitarbeiterUrlaubszeitraumRepository
-            ?? throw new ArgumentNullException(nameof(mitarbeiterUrlaubszeitraumRepository));
+        ArgumentNullException.ThrowIfNull(mitarbeiterUrlaubszeitraumRepository);
+        _mitarbeiterUrlaubszeitraumRepository = mitarbeiterUrlaubszeitraumRepository;
 
-        _saveGeplanterDienstTagService = saveGeplanterDienstTagService
-            ?? throw new ArgumentNullException(nameof(saveGeplanterDienstTagService));
+        ArgumentNullException.ThrowIfNull(saveGeplanterDienstTagService);
+        _saveGeplanterDienstTagService = saveGeplanterDienstTagService;
     }
 
     public async Task<SaveWachleiterTagesplanungResult> ExecuteAsync(

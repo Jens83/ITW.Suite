@@ -1,4 +1,4 @@
-﻿// Datei: src/ITW.Web/Middleware/PasswortwechselPflichtMiddleware.cs
+// Datei: src/ITW.Web/Middleware/PasswortwechselPflichtMiddleware.cs
 using ITW.Application.Abstractions.Identity;
 
 namespace ITW.Web.Middleware;
@@ -9,7 +9,8 @@ public sealed class PasswortwechselPflichtMiddleware
 
     public PasswortwechselPflichtMiddleware(RequestDelegate next)
     {
-        _next = next ?? throw new ArgumentNullException(nameof(next));
+        ArgumentNullException.ThrowIfNull(next);
+        _next = next;
     }
 
     public async Task InvokeAsync(HttpContext context)

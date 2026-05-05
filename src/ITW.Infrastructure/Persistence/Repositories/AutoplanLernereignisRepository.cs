@@ -1,4 +1,4 @@
-﻿using ITW.Dienstplan.Application.Contracts;
+using ITW.Dienstplan.Application.Contracts;
 using ITW.Dienstplan.Domain.Entities;
 using ITW.Dienstplan.Domain.Enums;
 using ITW.Infrastructure.Persistence.DbContexts;
@@ -12,7 +12,8 @@ public sealed class AutoplanLernereignisRepository : IAutoplanLernereignisReposi
 
     public AutoplanLernereignisRepository(PlatformDbContext dbContext)
     {
-        _dbContext = dbContext ?? throw new ArgumentNullException(nameof(dbContext));
+        ArgumentNullException.ThrowIfNull(dbContext);
+        _dbContext = dbContext;
     }
 
     public async Task AddAsync(

@@ -1,4 +1,4 @@
-﻿// Datei: src/ITW.Infrastructure/Persistence/Repositories/MitarbeiterDokumentRepository.cs
+// Datei: src/ITW.Infrastructure/Persistence/Repositories/MitarbeiterDokumentRepository.cs
 using ITW.Application.Abstractions.Persistence;
 using ITW.Domain.Personnel.Entities;
 using ITW.Infrastructure.Persistence.DbContexts;
@@ -12,7 +12,8 @@ public sealed class MitarbeiterDokumentRepository : IMitarbeiterDokumentReposito
 
     public MitarbeiterDokumentRepository(PlatformDbContext dbContext)
     {
-        _dbContext = dbContext ?? throw new ArgumentNullException(nameof(dbContext));
+        ArgumentNullException.ThrowIfNull(dbContext);
+        _dbContext = dbContext;
     }
 
     public async Task<IReadOnlyList<MitarbeiterDokument>> GetByUserIdAsync(

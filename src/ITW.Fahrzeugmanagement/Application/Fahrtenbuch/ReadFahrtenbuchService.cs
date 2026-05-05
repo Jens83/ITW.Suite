@@ -1,4 +1,4 @@
-﻿using ITW.Fahrzeugmanagement.Application.Contracts;
+using ITW.Fahrzeugmanagement.Application.Contracts;
 
 namespace ITW.Fahrzeugmanagement.Application.Fahrtenbuch;
 
@@ -13,7 +13,8 @@ public sealed class ReadFahrtenbuchService
 
     public ReadFahrtenbuchService(IFahrtenbuchRepository repository)
     {
-        _repository = repository ?? throw new ArgumentNullException(nameof(repository));
+        ArgumentNullException.ThrowIfNull(repository);
+        _repository = repository;
     }
 
     public async Task<ReadFahrtenbuchResult> ExecuteAsync(

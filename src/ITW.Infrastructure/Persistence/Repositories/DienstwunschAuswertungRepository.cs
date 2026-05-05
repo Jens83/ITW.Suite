@@ -1,4 +1,4 @@
-﻿using ITW.Dienstplan.Application.Contracts;
+using ITW.Dienstplan.Application.Contracts;
 using ITW.Dienstplan.Domain.Enums;
 using ITW.Domain.Personnel.Entities;
 using ITW.Domain.Personnel.Qualifications;
@@ -13,7 +13,8 @@ public sealed class DienstwunschAuswertungRepository : IDienstwunschAuswertungRe
 
     public DienstwunschAuswertungRepository(PlatformDbContext dbContext)
     {
-        _dbContext = dbContext ?? throw new ArgumentNullException(nameof(dbContext));
+        ArgumentNullException.ThrowIfNull(dbContext);
+        _dbContext = dbContext;
     }
 
     public async Task<IReadOnlyList<DienstwunschTagesstatistik>> GetTagesstatistikAsync(

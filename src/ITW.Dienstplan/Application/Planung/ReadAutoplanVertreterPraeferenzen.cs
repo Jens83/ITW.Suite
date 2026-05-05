@@ -1,4 +1,4 @@
-﻿using ITW.Dienstplan.Application.Contracts;
+using ITW.Dienstplan.Application.Contracts;
 using ITW.Dienstplan.Domain.Enums;
 
 namespace ITW.Dienstplan.Application.Planung;
@@ -64,8 +64,8 @@ public sealed class ReadAutoplanVertreterPraeferenzenService
     public ReadAutoplanVertreterPraeferenzenService(
         IAutoplanLernereignisRepository autoplanLernereignisRepository)
     {
-        _autoplanLernereignisRepository = autoplanLernereignisRepository
-            ?? throw new ArgumentNullException(nameof(autoplanLernereignisRepository));
+        ArgumentNullException.ThrowIfNull(autoplanLernereignisRepository);
+        _autoplanLernereignisRepository = autoplanLernereignisRepository;
     }
 
     public async Task<ReadAutoplanVertreterPraeferenzenResult> ExecuteAsync(

@@ -1,4 +1,4 @@
-﻿using ITW.Application.Personnel.Urlaub.Contracts;
+using ITW.Application.Personnel.Urlaub.Contracts;
 using ITW.Domain.Personnel.Entities;
 using Microsoft.Extensions.Logging;
 
@@ -45,8 +45,10 @@ public sealed class SaveMitarbeiterUrlaubszeitraumService
         IMitarbeiterUrlaubszeitraumRepository repository,
         ILogger<SaveMitarbeiterUrlaubszeitraumService> logger)
     {
-        _repository = repository ?? throw new ArgumentNullException(nameof(repository));
-        _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+        ArgumentNullException.ThrowIfNull(repository);
+        _repository = repository;
+        ArgumentNullException.ThrowIfNull(logger);
+        _logger = logger;
     }
 
     public async Task<SaveMitarbeiterUrlaubszeitraumResult> ExecuteAsync(

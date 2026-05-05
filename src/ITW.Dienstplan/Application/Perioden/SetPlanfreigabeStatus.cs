@@ -1,4 +1,4 @@
-﻿using System.Text;
+using System.Text;
 using ITW.Dienstplan.Application.Contracts;
 using ITW.Domain.Kalender;
 
@@ -39,11 +39,11 @@ public sealed class SetPlanfreigabeStatusService
         IDienstplanPeriodeRepository dienstplanPeriodeRepository,
         IGeplanterDienstTagRepository geplanterDienstTagRepository)
     {
-        _dienstplanPeriodeRepository = dienstplanPeriodeRepository
-            ?? throw new ArgumentNullException(nameof(dienstplanPeriodeRepository));
+        ArgumentNullException.ThrowIfNull(dienstplanPeriodeRepository);
+        _dienstplanPeriodeRepository = dienstplanPeriodeRepository;
 
-        _geplanterDienstTagRepository = geplanterDienstTagRepository
-            ?? throw new ArgumentNullException(nameof(geplanterDienstTagRepository));
+        ArgumentNullException.ThrowIfNull(geplanterDienstTagRepository);
+        _geplanterDienstTagRepository = geplanterDienstTagRepository;
     }
 
     public async Task<SetPlanfreigabeStatusResult> ExecuteAsync(

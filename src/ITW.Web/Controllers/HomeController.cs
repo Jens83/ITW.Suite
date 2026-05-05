@@ -17,8 +17,8 @@ public sealed class HomeController : Controller
 
     public HomeController(ICurrentUserContextAccessor currentUserContextAccessor)
     {
-        _currentUserContextAccessor = currentUserContextAccessor
-            ?? throw new ArgumentNullException(nameof(currentUserContextAccessor));
+        ArgumentNullException.ThrowIfNull(currentUserContextAccessor);
+        _currentUserContextAccessor = currentUserContextAccessor;
     }
 
     public async Task<IActionResult> Index(CancellationToken cancellationToken)
@@ -99,8 +99,8 @@ public sealed class HomeController : Controller
             },
             new HomeBereichKachelViewModel
             {
-                Titel = "Geschäftsführung",
-                Beschreibung = "Unternehmensführung, Kennzahlen und strategische Auswertungen.",
+                Titel = "Geschï¿½ftsfï¿½hrung",
+                Beschreibung = "Unternehmensfï¿½hrung, Kennzahlen und strategische Auswertungen.",
                 Area = "Geschaeftsfuehrung",
                 Controller = "Dashboard",
                 Action = "Index",
@@ -110,7 +110,7 @@ public sealed class HomeController : Controller
                 IstMeinBereich = aktuellerBereich == OrganisationsbereichCode.Vorstand,
                 ButtonText = aktuellerBereich == OrganisationsbereichCode.Vorstand
                     ? "Zu meinem Bereich"
-                    : "Geschäftsführung"
+                    : "Geschï¿½ftsfï¿½hrung"
             }
         };
     }

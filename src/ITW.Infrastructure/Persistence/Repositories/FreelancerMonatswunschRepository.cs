@@ -1,4 +1,4 @@
-﻿using ITW.Dienstplan.Application.Contracts;
+using ITW.Dienstplan.Application.Contracts;
 using ITW.Dienstplan.Domain.Entities;
 using ITW.Infrastructure.Persistence.DbContexts;
 using Microsoft.EntityFrameworkCore;
@@ -11,7 +11,8 @@ public sealed class FreelancerMonatswunschRepository : IFreelancerMonatswunschRe
 
     public FreelancerMonatswunschRepository(PlatformDbContext dbContext)
     {
-        _dbContext = dbContext ?? throw new ArgumentNullException(nameof(dbContext));
+        ArgumentNullException.ThrowIfNull(dbContext);
+        _dbContext = dbContext;
     }
 
     public Task<FreelancerMonatswunsch?> GetAsync(

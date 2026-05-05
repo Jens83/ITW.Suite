@@ -1,4 +1,4 @@
-﻿using ITW.Fahrzeugmanagement.Application.Contracts;
+using ITW.Fahrzeugmanagement.Application.Contracts;
 
 namespace ITW.Fahrzeugmanagement.Application.Tracking;
 
@@ -45,9 +45,10 @@ public sealed class CompleteTrackingGeraetSetupService
         IFahrzeugTrackingRepository repository,
         RegisterTrackingGeraetService registerTrackingGeraetService)
     {
-        _repository = repository ?? throw new ArgumentNullException(nameof(repository));
-        _registerTrackingGeraetService = registerTrackingGeraetService
-            ?? throw new ArgumentNullException(nameof(registerTrackingGeraetService));
+        ArgumentNullException.ThrowIfNull(repository);
+        _repository = repository;
+        ArgumentNullException.ThrowIfNull(registerTrackingGeraetService);
+        _registerTrackingGeraetService = registerTrackingGeraetService;
     }
 
     public async Task<CompleteTrackingGeraetSetupResult> ExecuteAsync(

@@ -1,4 +1,4 @@
-﻿using ITW.Fahrzeugmanagement.Application.Contracts;
+using ITW.Fahrzeugmanagement.Application.Contracts;
 
 namespace ITW.Fahrzeugmanagement.Application.FahrzeugDokumente;
 
@@ -13,7 +13,8 @@ public sealed class ReadFahrzeugDokumenteService
 
     public ReadFahrzeugDokumenteService(IFahrzeugDokumentRepository repository)
     {
-        _repository = repository ?? throw new ArgumentNullException(nameof(repository));
+        ArgumentNullException.ThrowIfNull(repository);
+        _repository = repository;
     }
 
     public async Task<ReadFahrzeugDokumenteResult> ExecuteAsync(

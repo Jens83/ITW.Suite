@@ -1,4 +1,4 @@
-﻿using ITW.Application.Personnel.Urlaub.Contracts;
+using ITW.Application.Personnel.Urlaub.Contracts;
 using ITW.Domain.Personnel.Enums;
 using Microsoft.Extensions.Logging;
 
@@ -117,13 +117,14 @@ public sealed class ReadMitarbeiterUrlaubsplanerService
         IMitarbeiterUrlaubszeitraumRepository urlaubszeitraumRepository,
         ILogger<ReadMitarbeiterUrlaubsplanerService> logger)
     {
-        _urlaubsanspruchRepository = urlaubsanspruchRepository
-            ?? throw new ArgumentNullException(nameof(urlaubsanspruchRepository));
+        ArgumentNullException.ThrowIfNull(urlaubsanspruchRepository);
+        _urlaubsanspruchRepository = urlaubsanspruchRepository;
 
-        _urlaubszeitraumRepository = urlaubszeitraumRepository
-            ?? throw new ArgumentNullException(nameof(urlaubszeitraumRepository));
+        ArgumentNullException.ThrowIfNull(urlaubszeitraumRepository);
+        _urlaubszeitraumRepository = urlaubszeitraumRepository;
 
-        _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+        ArgumentNullException.ThrowIfNull(logger);
+        _logger = logger;
     }
 
     public async Task<ReadMitarbeiterUrlaubsplanerResult> ExecuteAsync(

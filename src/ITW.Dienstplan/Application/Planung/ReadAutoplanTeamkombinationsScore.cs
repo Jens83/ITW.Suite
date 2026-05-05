@@ -1,4 +1,4 @@
-﻿using ITW.Dienstplan.Application.Contracts;
+using ITW.Dienstplan.Application.Contracts;
 using ITW.Dienstplan.Domain.Entities;
 using ITW.Dienstplan.Domain.Enums;
 
@@ -73,8 +73,8 @@ public sealed class ReadAutoplanTeamkombinationsScoreService
     public ReadAutoplanTeamkombinationsScoreService(
         IAutoplanLernereignisRepository autoplanLernereignisRepository)
     {
-        _autoplanLernereignisRepository = autoplanLernereignisRepository
-            ?? throw new ArgumentNullException(nameof(autoplanLernereignisRepository));
+        ArgumentNullException.ThrowIfNull(autoplanLernereignisRepository);
+        _autoplanLernereignisRepository = autoplanLernereignisRepository;
     }
 
     public async Task<ReadAutoplanTeamkombinationsScoreResult> ExecuteAsync(

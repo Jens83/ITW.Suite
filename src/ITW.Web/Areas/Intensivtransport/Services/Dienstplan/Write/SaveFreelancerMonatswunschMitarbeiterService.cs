@@ -1,4 +1,4 @@
-﻿using ITW.Application.Personnel.ProfileQueries;
+using ITW.Application.Personnel.ProfileQueries;
 using ITW.Dienstplan.Application.Wunschphase;
 
 namespace ITW.Web.Areas.Intensivtransport.Services.Dienstplan.Write;
@@ -36,11 +36,11 @@ public sealed class SaveFreelancerMonatswunschMitarbeiterService
         ReadItwMitarbeiterprofileService readItwMitarbeiterprofileService,
         SaveFreelancerMonatswunschService saveFreelancerMonatswunschService)
     {
-        _readItwMitarbeiterprofileService = readItwMitarbeiterprofileService
-            ?? throw new ArgumentNullException(nameof(readItwMitarbeiterprofileService));
+        ArgumentNullException.ThrowIfNull(readItwMitarbeiterprofileService);
+        _readItwMitarbeiterprofileService = readItwMitarbeiterprofileService;
 
-        _saveFreelancerMonatswunschService = saveFreelancerMonatswunschService
-            ?? throw new ArgumentNullException(nameof(saveFreelancerMonatswunschService));
+        ArgumentNullException.ThrowIfNull(saveFreelancerMonatswunschService);
+        _saveFreelancerMonatswunschService = saveFreelancerMonatswunschService;
     }
 
     public async Task<SaveFreelancerMonatswunschMitarbeiterResult> ExecuteAsync(

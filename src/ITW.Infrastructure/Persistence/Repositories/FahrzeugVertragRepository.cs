@@ -1,4 +1,4 @@
-﻿using ITW.Fahrzeugmanagement.Application.Contracts;
+using ITW.Fahrzeugmanagement.Application.Contracts;
 using ITW.Fahrzeugmanagement.Domain.Entities;
 using ITW.Infrastructure.Persistence.DbContexts;
 using Microsoft.EntityFrameworkCore;
@@ -11,7 +11,8 @@ public sealed class FahrzeugVertragRepository : IFahrzeugVertragRepository
 
     public FahrzeugVertragRepository(PlatformDbContext dbContext)
     {
-        _dbContext = dbContext ?? throw new ArgumentNullException(nameof(dbContext));
+        ArgumentNullException.ThrowIfNull(dbContext);
+        _dbContext = dbContext;
     }
 
     public async Task<IReadOnlyList<FahrzeugVertrag>> GetByFahrzeugIdAsync(

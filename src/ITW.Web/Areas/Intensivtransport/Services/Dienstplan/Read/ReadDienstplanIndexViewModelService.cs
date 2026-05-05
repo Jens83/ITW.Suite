@@ -1,4 +1,4 @@
-﻿using ITW.Application.Organisation.Contracts;
+using ITW.Application.Organisation.Contracts;
 using ITW.Application.Personnel.ProfileQueries;
 using ITW.Application.Personnel.Urlaub.Contracts;
 using ITW.Dienstplan.Application.Perioden;
@@ -33,17 +33,17 @@ public sealed class ReadDienstplanIndexViewModelService
         ReadItwMitarbeiterprofileService readItwMitarbeiterprofileService,
         IMitarbeiterUrlaubszeitraumRepository mitarbeiterUrlaubszeitraumRepository)
     {
-        _readDienstplanperiodenService = readDienstplanperiodenService
-            ?? throw new ArgumentNullException(nameof(readDienstplanperiodenService));
+        ArgumentNullException.ThrowIfNull(readDienstplanperiodenService);
+        _readDienstplanperiodenService = readDienstplanperiodenService;
 
-        _readAktiveWunschphaseService = readAktiveWunschphaseService
-            ?? throw new ArgumentNullException(nameof(readAktiveWunschphaseService));
+        ArgumentNullException.ThrowIfNull(readAktiveWunschphaseService);
+        _readAktiveWunschphaseService = readAktiveWunschphaseService;
 
-        _readItwMitarbeiterprofileService = readItwMitarbeiterprofileService
-            ?? throw new ArgumentNullException(nameof(readItwMitarbeiterprofileService));
+        ArgumentNullException.ThrowIfNull(readItwMitarbeiterprofileService);
+        _readItwMitarbeiterprofileService = readItwMitarbeiterprofileService;
 
-        _mitarbeiterUrlaubszeitraumRepository = mitarbeiterUrlaubszeitraumRepository
-            ?? throw new ArgumentNullException(nameof(mitarbeiterUrlaubszeitraumRepository));
+        ArgumentNullException.ThrowIfNull(mitarbeiterUrlaubszeitraumRepository);
+        _mitarbeiterUrlaubszeitraumRepository = mitarbeiterUrlaubszeitraumRepository;
     }
 
     public async Task<DienstplanIndexViewModel> ExecuteAsync(

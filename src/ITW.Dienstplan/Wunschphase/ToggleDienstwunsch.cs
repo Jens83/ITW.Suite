@@ -1,4 +1,4 @@
-﻿using ITW.Dienstplan.Application.Contracts;
+using ITW.Dienstplan.Application.Contracts;
 using ITW.Dienstplan.Application.Kalender;
 using ITW.Dienstplan.Domain.Entities;
 using ITW.Dienstplan.Domain.Enums;
@@ -45,11 +45,11 @@ public sealed class ToggleDienstwunschService
         IDienstplanPeriodeRepository dienstplanPeriodeRepository,
         IDienstwunschRepository dienstwunschRepository)
     {
-        _dienstplanPeriodeRepository = dienstplanPeriodeRepository
-            ?? throw new ArgumentNullException(nameof(dienstplanPeriodeRepository));
+        ArgumentNullException.ThrowIfNull(dienstplanPeriodeRepository);
+        _dienstplanPeriodeRepository = dienstplanPeriodeRepository;
 
-        _dienstwunschRepository = dienstwunschRepository
-            ?? throw new ArgumentNullException(nameof(dienstwunschRepository));
+        ArgumentNullException.ThrowIfNull(dienstwunschRepository);
+        _dienstwunschRepository = dienstwunschRepository;
     }
 
     public async Task<ToggleDienstwunschResult> ExecuteAsync(

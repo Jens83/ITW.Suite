@@ -1,4 +1,4 @@
-﻿// Datei: src/ITW.Application/Personnel/Documents/UploadMitarbeiterDokumentService.cs
+// Datei: src/ITW.Application/Personnel/Documents/UploadMitarbeiterDokumentService.cs
 using ITW.Application.Abstractions.DateTime;
 using ITW.Application.Abstractions.Persistence;
 using ITW.Domain.Organisation.Enums;
@@ -35,15 +35,16 @@ public sealed class UploadMitarbeiterDokumentService
         IDateTimeProvider dateTimeProvider,
         ILogger<UploadMitarbeiterDokumentService> logger)
     {
-        _benutzerBereichszuordnungRepository = benutzerBereichszuordnungRepository
-            ?? throw new ArgumentNullException(nameof(benutzerBereichszuordnungRepository));
-        _mitarbeiterDokumentRepository = mitarbeiterDokumentRepository
-            ?? throw new ArgumentNullException(nameof(mitarbeiterDokumentRepository));
-        _mitarbeiterDokumentDateiSpeicher = mitarbeiterDokumentDateiSpeicher
-            ?? throw new ArgumentNullException(nameof(mitarbeiterDokumentDateiSpeicher));
-        _dateTimeProvider = dateTimeProvider
-            ?? throw new ArgumentNullException(nameof(dateTimeProvider));
-        _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+        ArgumentNullException.ThrowIfNull(benutzerBereichszuordnungRepository);
+        _benutzerBereichszuordnungRepository = benutzerBereichszuordnungRepository;
+        ArgumentNullException.ThrowIfNull(mitarbeiterDokumentRepository);
+        _mitarbeiterDokumentRepository = mitarbeiterDokumentRepository;
+        ArgumentNullException.ThrowIfNull(mitarbeiterDokumentDateiSpeicher);
+        _mitarbeiterDokumentDateiSpeicher = mitarbeiterDokumentDateiSpeicher;
+        ArgumentNullException.ThrowIfNull(dateTimeProvider);
+        _dateTimeProvider = dateTimeProvider;
+        ArgumentNullException.ThrowIfNull(logger);
+        _logger = logger;
     }
 
     public async Task<UploadMitarbeiterDokumentResult> ExecuteAsync(

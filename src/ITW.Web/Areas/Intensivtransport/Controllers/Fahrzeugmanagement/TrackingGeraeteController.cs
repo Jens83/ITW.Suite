@@ -1,4 +1,4 @@
-﻿using ITW.Application.Organisation.Contracts;
+using ITW.Application.Organisation.Contracts;
 using ITW.Fahrzeugmanagement.Application.Tracking;
 using ITW.Web.Areas.Intensivtransport.ViewModels.Fahrzeugmanagement;
 using ITW.Web.Authorization.Modules;
@@ -23,14 +23,14 @@ public sealed class TrackingGeraeteController : IntensivtransportFahrzeugmanagem
         IConfiguration configuration)
         : base(currentUserContextAccessor)
     {
-        _readOverviewService = readOverviewService
-            ?? throw new ArgumentNullException(nameof(readOverviewService));
+        ArgumentNullException.ThrowIfNull(readOverviewService);
+        _readOverviewService = readOverviewService;
 
-        _createSetupCodeService = createSetupCodeService
-            ?? throw new ArgumentNullException(nameof(createSetupCodeService));
+        ArgumentNullException.ThrowIfNull(createSetupCodeService);
+        _createSetupCodeService = createSetupCodeService;
 
-        _configuration = configuration
-            ?? throw new ArgumentNullException(nameof(configuration));
+        ArgumentNullException.ThrowIfNull(configuration);
+        _configuration = configuration;
     }
 
     [HttpGet]

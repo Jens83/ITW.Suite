@@ -1,4 +1,4 @@
-﻿// Datei: src/ITW.Application/Users/RequestPasswordReset/SubmitPasswortResetAnfrageService.cs
+// Datei: src/ITW.Application/Users/RequestPasswordReset/SubmitPasswortResetAnfrageService.cs
 using ITW.Application.Abstractions.DateTime;
 using ITW.Application.Abstractions.Identity;
 using ITW.Application.Abstractions.Persistence;
@@ -27,17 +27,18 @@ public sealed class SubmitPasswortResetAnfrageService
         IDateTimeProvider dateTimeProvider,
         ILogger<SubmitPasswortResetAnfrageService> logger)
     {
-        _benutzerLookupRepository = benutzerLookupRepository
-            ?? throw new ArgumentNullException(nameof(benutzerLookupRepository));
-        _allgemeinesMitarbeiterprofilRepository = allgemeinesMitarbeiterprofilRepository
-            ?? throw new ArgumentNullException(nameof(allgemeinesMitarbeiterprofilRepository));
-        _benutzerBereichszuordnungRepository = benutzerBereichszuordnungRepository
-            ?? throw new ArgumentNullException(nameof(benutzerBereichszuordnungRepository));
-        _passwortResetAnfrageRepository = passwortResetAnfrageRepository
-            ?? throw new ArgumentNullException(nameof(passwortResetAnfrageRepository));
-        _dateTimeProvider = dateTimeProvider
-            ?? throw new ArgumentNullException(nameof(dateTimeProvider));
-        _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+        ArgumentNullException.ThrowIfNull(benutzerLookupRepository);
+        _benutzerLookupRepository = benutzerLookupRepository;
+        ArgumentNullException.ThrowIfNull(allgemeinesMitarbeiterprofilRepository);
+        _allgemeinesMitarbeiterprofilRepository = allgemeinesMitarbeiterprofilRepository;
+        ArgumentNullException.ThrowIfNull(benutzerBereichszuordnungRepository);
+        _benutzerBereichszuordnungRepository = benutzerBereichszuordnungRepository;
+        ArgumentNullException.ThrowIfNull(passwortResetAnfrageRepository);
+        _passwortResetAnfrageRepository = passwortResetAnfrageRepository;
+        ArgumentNullException.ThrowIfNull(dateTimeProvider);
+        _dateTimeProvider = dateTimeProvider;
+        ArgumentNullException.ThrowIfNull(logger);
+        _logger = logger;
     }
 
     public async Task<SubmitPasswortResetAnfrageResult> ExecuteAsync(

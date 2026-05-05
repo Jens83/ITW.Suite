@@ -1,4 +1,4 @@
-﻿using ITW.Application.Abstractions.DateTime;
+using ITW.Application.Abstractions.DateTime;
 using ITW.Application.Abstractions.Persistence;
 using ITW.Domain.Organisation.Enums;
 using ITW.Domain.Personnel.Qualifications;
@@ -19,13 +19,14 @@ public sealed class SaveItwMitarbeiterprofilService
         IDateTimeProvider dateTimeProvider,
         ILogger<SaveItwMitarbeiterprofilService> logger)
     {
-        _benutzerBereichszuordnungRepository = benutzerBereichszuordnungRepository
-            ?? throw new ArgumentNullException(nameof(benutzerBereichszuordnungRepository));
-        _itwMitarbeiterprofilRepository = itwMitarbeiterprofilRepository
-            ?? throw new ArgumentNullException(nameof(itwMitarbeiterprofilRepository));
-        _dateTimeProvider = dateTimeProvider
-            ?? throw new ArgumentNullException(nameof(dateTimeProvider));
-        _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+        ArgumentNullException.ThrowIfNull(benutzerBereichszuordnungRepository);
+        _benutzerBereichszuordnungRepository = benutzerBereichszuordnungRepository;
+        ArgumentNullException.ThrowIfNull(itwMitarbeiterprofilRepository);
+        _itwMitarbeiterprofilRepository = itwMitarbeiterprofilRepository;
+        ArgumentNullException.ThrowIfNull(dateTimeProvider);
+        _dateTimeProvider = dateTimeProvider;
+        ArgumentNullException.ThrowIfNull(logger);
+        _logger = logger;
     }
 
     public async Task<SaveItwMitarbeiterprofilResult> ExecuteAsync(

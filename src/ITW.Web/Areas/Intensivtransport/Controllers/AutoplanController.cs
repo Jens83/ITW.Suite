@@ -1,4 +1,4 @@
-﻿using ITW.Application.Organisation.Contracts;
+using ITW.Application.Organisation.Contracts;
 using ITW.Dienstplan.Application.Contracts;
 using ITW.Dienstplan.Application.Perioden;
 using ITW.Dienstplan.Application.Planung;
@@ -37,23 +37,23 @@ public sealed class AutoplanController : BereichsControllerBase
         ICurrentUserContextAccessor currentUserContextAccessor)
         : base(currentUserContextAccessor)
     {
-        _readDienstplanperiodenService = readDienstplanperiodenService
-            ?? throw new ArgumentNullException(nameof(readDienstplanperiodenService));
+        ArgumentNullException.ThrowIfNull(readDienstplanperiodenService);
+        _readDienstplanperiodenService = readDienstplanperiodenService;
 
-        _dienstplanPeriodeRepository = dienstplanPeriodeRepository
-            ?? throw new ArgumentNullException(nameof(dienstplanPeriodeRepository));
+        ArgumentNullException.ThrowIfNull(dienstplanPeriodeRepository);
+        _dienstplanPeriodeRepository = dienstplanPeriodeRepository;
 
-        _dienstwunschRepository = dienstwunschRepository
-            ?? throw new ArgumentNullException(nameof(dienstwunschRepository));
+        ArgumentNullException.ThrowIfNull(dienstwunschRepository);
+        _dienstwunschRepository = dienstwunschRepository;
 
-        _freelancerMonatswunschRepository = freelancerMonatswunschRepository
-            ?? throw new ArgumentNullException(nameof(freelancerMonatswunschRepository));
+        ArgumentNullException.ThrowIfNull(freelancerMonatswunschRepository);
+        _freelancerMonatswunschRepository = freelancerMonatswunschRepository;
 
-        _geplanterDienstTagRepository = geplanterDienstTagRepository
-            ?? throw new ArgumentNullException(nameof(geplanterDienstTagRepository));
+        ArgumentNullException.ThrowIfNull(geplanterDienstTagRepository);
+        _geplanterDienstTagRepository = geplanterDienstTagRepository;
 
-        _dienstbesetzungsAusfallRepository = dienstbesetzungsAusfallRepository
-            ?? throw new ArgumentNullException(nameof(dienstbesetzungsAusfallRepository));
+        ArgumentNullException.ThrowIfNull(dienstbesetzungsAusfallRepository);
+        _dienstbesetzungsAusfallRepository = dienstbesetzungsAusfallRepository;
     }
 
     protected override OrganisationsbereichCode Bereich => OrganisationsbereichCode.Intensivtransport;

@@ -1,4 +1,4 @@
-﻿using ITW.Fahrzeugmanagement.Application.Contracts;
+using ITW.Fahrzeugmanagement.Application.Contracts;
 using ITW.Fahrzeugmanagement.Domain.Entities;
 using ITW.Fahrzeugmanagement.Domain.Enums;
 
@@ -51,7 +51,8 @@ public sealed class CreateFahrzeugService
 
     public CreateFahrzeugService(IFahrzeugRepository repository)
     {
-        _repository = repository ?? throw new ArgumentNullException(nameof(repository));
+        ArgumentNullException.ThrowIfNull(repository);
+        _repository = repository;
     }
 
     public async Task<CreateFahrzeugResult> ExecuteAsync(

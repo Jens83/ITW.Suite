@@ -1,4 +1,4 @@
-﻿using ITW.Application.Abstractions.DateTime;
+using ITW.Application.Abstractions.DateTime;
 using ITW.Application.Abstractions.Persistence;
 using ITW.Application.Organisation.Contracts;
 using ITW.Domain.Organisation.Entities;
@@ -17,9 +17,12 @@ public sealed class AssignUserToPrimaryAreaService
         IDateTimeProvider dateTimeProvider,
         ILogger<AssignUserToPrimaryAreaService> logger)
     {
-        _repository = repository ?? throw new ArgumentNullException(nameof(repository));
-        _dateTimeProvider = dateTimeProvider ?? throw new ArgumentNullException(nameof(dateTimeProvider));
-        _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+        ArgumentNullException.ThrowIfNull(repository);
+        _repository = repository;
+        ArgumentNullException.ThrowIfNull(dateTimeProvider);
+        _dateTimeProvider = dateTimeProvider;
+        ArgumentNullException.ThrowIfNull(logger);
+        _logger = logger;
     }
 
     public async Task<AssignUserToPrimaryAreaResult> ExecuteAsync(

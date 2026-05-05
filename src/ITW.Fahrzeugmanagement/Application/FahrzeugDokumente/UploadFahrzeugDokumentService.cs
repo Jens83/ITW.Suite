@@ -1,4 +1,4 @@
-﻿using ITW.Fahrzeugmanagement.Application.Contracts;
+using ITW.Fahrzeugmanagement.Application.Contracts;
 using ITW.Fahrzeugmanagement.Domain.Entities;
 using ITW.Fahrzeugmanagement.Domain.Enums;
 
@@ -58,14 +58,14 @@ public sealed class UploadFahrzeugDokumentService
         IFahrzeugDokumentRepository dokumentRepository,
         IFahrzeugDokumentDateiSpeicher dateiSpeicher)
     {
-        _fahrzeugRepository = fahrzeugRepository
-            ?? throw new ArgumentNullException(nameof(fahrzeugRepository));
+        ArgumentNullException.ThrowIfNull(fahrzeugRepository);
+        _fahrzeugRepository = fahrzeugRepository;
 
-        _dokumentRepository = dokumentRepository
-            ?? throw new ArgumentNullException(nameof(dokumentRepository));
+        ArgumentNullException.ThrowIfNull(dokumentRepository);
+        _dokumentRepository = dokumentRepository;
 
-        _dateiSpeicher = dateiSpeicher
-            ?? throw new ArgumentNullException(nameof(dateiSpeicher));
+        ArgumentNullException.ThrowIfNull(dateiSpeicher);
+        _dateiSpeicher = dateiSpeicher;
     }
 
     public async Task<UploadFahrzeugDokumentResult> ExecuteAsync(

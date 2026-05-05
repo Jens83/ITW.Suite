@@ -1,4 +1,4 @@
-﻿using ITW.Dienstplan.Domain.Enums;
+using ITW.Dienstplan.Domain.Enums;
 
 namespace ITW.Dienstplan.Application.Planung;
 
@@ -64,8 +64,8 @@ public sealed class ReadAutoplanVertreterPraeferenzScoreService
     public ReadAutoplanVertreterPraeferenzScoreService(
         ReadAutoplanVertreterPraeferenzenService readAutoplanVertreterPraeferenzenService)
     {
-        _readAutoplanVertreterPraeferenzenService = readAutoplanVertreterPraeferenzenService
-            ?? throw new ArgumentNullException(nameof(readAutoplanVertreterPraeferenzenService));
+        ArgumentNullException.ThrowIfNull(readAutoplanVertreterPraeferenzenService);
+        _readAutoplanVertreterPraeferenzenService = readAutoplanVertreterPraeferenzenService;
     }
 
     public async Task<ReadAutoplanVertreterPraeferenzScoreResult> ExecuteAsync(

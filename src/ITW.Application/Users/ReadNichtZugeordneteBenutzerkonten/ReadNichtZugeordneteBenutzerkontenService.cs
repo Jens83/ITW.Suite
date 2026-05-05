@@ -1,4 +1,4 @@
-﻿using ITW.Application.Abstractions.Identity;
+using ITW.Application.Abstractions.Identity;
 using Microsoft.Extensions.Logging;
 
 namespace ITW.Application.Users.ReadNichtZugeordneteBenutzerkonten;
@@ -10,8 +10,10 @@ public sealed class ReadNichtZugeordneteBenutzerkontenService
 
     public ReadNichtZugeordneteBenutzerkontenService(IBenutzerkontoRepository repository, ILogger<ReadNichtZugeordneteBenutzerkontenService> logger)
     {
-        _repository = repository ?? throw new ArgumentNullException(nameof(repository));
-        _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+        ArgumentNullException.ThrowIfNull(repository);
+        _repository = repository;
+        ArgumentNullException.ThrowIfNull(logger);
+        _logger = logger;
     }
 
     public async Task<ReadNichtZugeordneteBenutzerkontenResult> ExecuteAsync(

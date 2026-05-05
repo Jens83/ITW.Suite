@@ -1,4 +1,4 @@
-﻿using ITW.Application.Organisation.Contracts;
+using ITW.Application.Organisation.Contracts;
 using ITW.Web.Navigation.AreaNavigation;
 using ITW.Web.Security.CurrentUser;
 using ITW.Web.ViewModels.Navigation;
@@ -15,8 +15,8 @@ public abstract class BereichsControllerBase : Controller
     protected BereichsControllerBase(
         ICurrentUserContextAccessor currentUserContextAccessor)
     {
-        _currentUserContextAccessor = currentUserContextAccessor
-            ?? throw new ArgumentNullException(nameof(currentUserContextAccessor));
+        ArgumentNullException.ThrowIfNull(currentUserContextAccessor);
+        _currentUserContextAccessor = currentUserContextAccessor;
     }
 
     protected abstract OrganisationsbereichCode Bereich { get; }

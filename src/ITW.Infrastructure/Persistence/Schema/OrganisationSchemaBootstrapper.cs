@@ -1,4 +1,4 @@
-﻿using ITW.Infrastructure.Persistence.DbContexts;
+using ITW.Infrastructure.Persistence.DbContexts;
 using Microsoft.EntityFrameworkCore;
 
 namespace ITW.Infrastructure.Persistence.Schema;
@@ -9,7 +9,8 @@ public sealed class OrganisationSchemaBootstrapper
 
     public OrganisationSchemaBootstrapper(PlatformDbContext dbContext)
     {
-        _dbContext = dbContext ?? throw new ArgumentNullException(nameof(dbContext));
+        ArgumentNullException.ThrowIfNull(dbContext);
+        _dbContext = dbContext;
     }
 
     public Task EnsureOrganisationSchemaAsync(CancellationToken cancellationToken = default)

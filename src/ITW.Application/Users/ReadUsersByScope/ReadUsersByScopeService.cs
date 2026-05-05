@@ -1,4 +1,4 @@
-﻿using ITW.Application.Abstractions.Identity;
+using ITW.Application.Abstractions.Identity;
 using ITW.Application.Abstractions.Persistence;
 using ITW.Application.Organisation.Contracts;
 using ITW.Application.Organisation.VisibilityScopes;
@@ -19,10 +19,14 @@ public sealed class ReadUsersByScopeService
         BenutzerSichtbarkeitsScopeErmittler scopeErmittler,
         ILogger<ReadUsersByScopeService> logger)
     {
-        _repository = repository ?? throw new ArgumentNullException(nameof(repository));
-        _benutzerkontoRepository = benutzerkontoRepository ?? throw new ArgumentNullException(nameof(benutzerkontoRepository));
-        _scopeErmittler = scopeErmittler ?? throw new ArgumentNullException(nameof(scopeErmittler));
-        _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+        ArgumentNullException.ThrowIfNull(repository);
+        _repository = repository;
+        ArgumentNullException.ThrowIfNull(benutzerkontoRepository);
+        _benutzerkontoRepository = benutzerkontoRepository;
+        ArgumentNullException.ThrowIfNull(scopeErmittler);
+        _scopeErmittler = scopeErmittler;
+        ArgumentNullException.ThrowIfNull(logger);
+        _logger = logger;
     }
 
     public async Task<ReadUsersByScopeResult> ExecuteAsync(

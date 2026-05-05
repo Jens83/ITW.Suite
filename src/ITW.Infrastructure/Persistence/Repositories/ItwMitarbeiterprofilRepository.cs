@@ -1,4 +1,4 @@
-﻿using ITW.Application.Abstractions.Persistence;
+using ITW.Application.Abstractions.Persistence;
 using ITW.Domain.Personnel.Entities;
 using ITW.Domain.Personnel.Qualifications;
 using ITW.Infrastructure.Persistence.DbContexts;
@@ -13,7 +13,8 @@ public sealed class ItwMitarbeiterprofilRepository : IItwMitarbeiterprofilReposi
 
     public ItwMitarbeiterprofilRepository(PlatformDbContext dbContext)
     {
-        _dbContext = dbContext ?? throw new ArgumentNullException(nameof(dbContext));
+        ArgumentNullException.ThrowIfNull(dbContext);
+        _dbContext = dbContext;
     }
 
     public async Task EnsureStandardqualifikationenAsync(CancellationToken cancellationToken = default)

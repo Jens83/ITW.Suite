@@ -1,4 +1,4 @@
-﻿using System.Security.Claims;
+using System.Security.Claims;
 using ITW.Application.Organisation.ReadAktiveModule;
 using ITW.Application.Users.ReadUserOrganisationskontext;
 
@@ -17,12 +17,12 @@ public sealed class CurrentUserContextAccessor : ICurrentUserContextAccessor
         ReadUserOrganisationskontextService readUserOrganisationskontextService,
         ReadAktiveModuleService readAktiveModuleService)
     {
-        _httpContextAccessor = httpContextAccessor
-            ?? throw new ArgumentNullException(nameof(httpContextAccessor));
-        _readUserOrganisationskontextService = readUserOrganisationskontextService
-            ?? throw new ArgumentNullException(nameof(readUserOrganisationskontextService));
-        _readAktiveModuleService = readAktiveModuleService
-            ?? throw new ArgumentNullException(nameof(readAktiveModuleService));
+        ArgumentNullException.ThrowIfNull(httpContextAccessor);
+        _httpContextAccessor = httpContextAccessor;
+        ArgumentNullException.ThrowIfNull(readUserOrganisationskontextService);
+        _readUserOrganisationskontextService = readUserOrganisationskontextService;
+        ArgumentNullException.ThrowIfNull(readAktiveModuleService);
+        _readAktiveModuleService = readAktiveModuleService;
     }
 
     public async Task<CurrentUserContextLookupResult> GetCurrentAsync(

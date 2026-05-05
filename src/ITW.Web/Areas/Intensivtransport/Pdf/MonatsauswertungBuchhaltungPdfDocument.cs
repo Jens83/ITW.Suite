@@ -1,4 +1,4 @@
-﻿using ITW.Web.Areas.Intensivtransport.ViewModels.Dienstplan;
+using ITW.Web.Areas.Intensivtransport.ViewModels.Dienstplan;
 using QuestPDF.Fluent;
 using QuestPDF.Helpers;
 using QuestPDF.Infrastructure;
@@ -11,7 +11,8 @@ public sealed class MonatsauswertungBuchhaltungPdfDocument
 
     public MonatsauswertungBuchhaltungPdfDocument(MonatsauswertungViewModel model)
     {
-        _model = model ?? throw new ArgumentNullException(nameof(model));
+        ArgumentNullException.ThrowIfNull(model);
+        _model = model;
     }
 
     public byte[] Generate()

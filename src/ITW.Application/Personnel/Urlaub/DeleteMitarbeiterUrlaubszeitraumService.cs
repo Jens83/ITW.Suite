@@ -1,4 +1,4 @@
-﻿using ITW.Application.Personnel.Urlaub.Contracts;
+using ITW.Application.Personnel.Urlaub.Contracts;
 using Microsoft.Extensions.Logging;
 
 namespace ITW.Application.Personnel.Urlaub;
@@ -36,8 +36,10 @@ public sealed class DeleteMitarbeiterUrlaubszeitraumService
         IMitarbeiterUrlaubszeitraumRepository repository,
         ILogger<DeleteMitarbeiterUrlaubszeitraumService> logger)
     {
-        _repository = repository ?? throw new ArgumentNullException(nameof(repository));
-        _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+        ArgumentNullException.ThrowIfNull(repository);
+        _repository = repository;
+        ArgumentNullException.ThrowIfNull(logger);
+        _logger = logger;
     }
 
     public async Task<DeleteMitarbeiterUrlaubszeitraumResult> ExecuteAsync(

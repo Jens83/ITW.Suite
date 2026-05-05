@@ -1,4 +1,4 @@
-﻿using ITW.Application.Abstractions.Identity;
+using ITW.Application.Abstractions.Identity;
 using ITW.Application.Abstractions.Persistence;
 using ITW.Domain.Organisation.Enums;
 using ITW.Domain.Personnel.Enums;
@@ -19,13 +19,14 @@ public sealed class ReadAllgemeinesMitarbeiterprofilDetailService
         IAllgemeinesMitarbeiterprofilRepository allgemeinesMitarbeiterprofilRepository,
         ILogger<ReadAllgemeinesMitarbeiterprofilDetailService> logger)
     {
-        _benutzerBereichszuordnungRepository = benutzerBereichszuordnungRepository
-            ?? throw new ArgumentNullException(nameof(benutzerBereichszuordnungRepository));
-        _benutzerkontoRepository = benutzerkontoRepository
-            ?? throw new ArgumentNullException(nameof(benutzerkontoRepository));
-        _allgemeinesMitarbeiterprofilRepository = allgemeinesMitarbeiterprofilRepository
-            ?? throw new ArgumentNullException(nameof(allgemeinesMitarbeiterprofilRepository));
-        _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+        ArgumentNullException.ThrowIfNull(benutzerBereichszuordnungRepository);
+        _benutzerBereichszuordnungRepository = benutzerBereichszuordnungRepository;
+        ArgumentNullException.ThrowIfNull(benutzerkontoRepository);
+        _benutzerkontoRepository = benutzerkontoRepository;
+        ArgumentNullException.ThrowIfNull(allgemeinesMitarbeiterprofilRepository);
+        _allgemeinesMitarbeiterprofilRepository = allgemeinesMitarbeiterprofilRepository;
+        ArgumentNullException.ThrowIfNull(logger);
+        _logger = logger;
     }
 
     public async Task<ReadAllgemeinesMitarbeiterprofilDetailResult> ExecuteAsync(

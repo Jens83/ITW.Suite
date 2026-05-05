@@ -1,4 +1,4 @@
-﻿using ITW.Application.Personnel.ProfileQueries;
+using ITW.Application.Personnel.ProfileQueries;
 using ITW.Application.Personnel.Urlaub.Contracts;
 using ITW.Dienstplan.Application.Contracts;
 using ITW.Dienstplan.Application.Perioden;
@@ -36,20 +36,20 @@ public sealed class ReadWachleiterPlanungsModalService
         ReadAutoplanVertreterPraeferenzScoreService readAutoplanVertreterPraeferenzScoreService,
         ReadAutoplanAllgemeinerVertreterPraeferenzScoreService readAutoplanAllgemeinerVertreterPraeferenzScoreService)
     {
-        _readItwMitarbeiterprofileService = readItwMitarbeiterprofileService
-            ?? throw new ArgumentNullException(nameof(readItwMitarbeiterprofileService));
+        ArgumentNullException.ThrowIfNull(readItwMitarbeiterprofileService);
+        _readItwMitarbeiterprofileService = readItwMitarbeiterprofileService;
 
-        _dienstwunschRepository = dienstwunschRepository
-            ?? throw new ArgumentNullException(nameof(dienstwunschRepository));
+        ArgumentNullException.ThrowIfNull(dienstwunschRepository);
+        _dienstwunschRepository = dienstwunschRepository;
 
-        _mitarbeiterUrlaubszeitraumRepository = mitarbeiterUrlaubszeitraumRepository
-            ?? throw new ArgumentNullException(nameof(mitarbeiterUrlaubszeitraumRepository));
+        ArgumentNullException.ThrowIfNull(mitarbeiterUrlaubszeitraumRepository);
+        _mitarbeiterUrlaubszeitraumRepository = mitarbeiterUrlaubszeitraumRepository;
 
-        _readAutoplanVertreterPraeferenzScoreService = readAutoplanVertreterPraeferenzScoreService
-            ?? throw new ArgumentNullException(nameof(readAutoplanVertreterPraeferenzScoreService));
+        ArgumentNullException.ThrowIfNull(readAutoplanVertreterPraeferenzScoreService);
+        _readAutoplanVertreterPraeferenzScoreService = readAutoplanVertreterPraeferenzScoreService;
 
-        _readAutoplanAllgemeinerVertreterPraeferenzScoreService = readAutoplanAllgemeinerVertreterPraeferenzScoreService
-            ?? throw new ArgumentNullException(nameof(readAutoplanAllgemeinerVertreterPraeferenzScoreService));
+        ArgumentNullException.ThrowIfNull(readAutoplanAllgemeinerVertreterPraeferenzScoreService);
+        _readAutoplanAllgemeinerVertreterPraeferenzScoreService = readAutoplanAllgemeinerVertreterPraeferenzScoreService;
     }
 
     public async Task<WachleiterPlanungsModalViewModel> ExecuteAsync(

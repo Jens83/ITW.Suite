@@ -1,4 +1,4 @@
-﻿using ITW.Application.Organisation.Contracts;
+using ITW.Application.Organisation.Contracts;
 using ITW.Dienstplan.Application.Contracts;
 using ITW.Dienstplan.Application.Kalender;
 using ITW.Dienstplan.Application.Perioden;
@@ -46,35 +46,35 @@ public sealed class DienstplanWachleiterController : IntensivtransportDienstplan
         ICurrentUserContextAccessor currentUserContextAccessor)
         : base(currentUserContextAccessor)
     {
-        _createDienstplanPeriodeService = createDienstplanPeriodeService
-            ?? throw new ArgumentNullException(nameof(createDienstplanPeriodeService));
+        ArgumentNullException.ThrowIfNull(createDienstplanPeriodeService);
+        _createDienstplanPeriodeService = createDienstplanPeriodeService;
 
-        _setWunschphaseStatusService = setWunschphaseStatusService
-            ?? throw new ArgumentNullException(nameof(setWunschphaseStatusService));
+        ArgumentNullException.ThrowIfNull(setWunschphaseStatusService);
+        _setWunschphaseStatusService = setWunschphaseStatusService;
 
-        _setPlanfreigabeStatusService = setPlanfreigabeStatusService
-            ?? throw new ArgumentNullException(nameof(setPlanfreigabeStatusService));
+        ArgumentNullException.ThrowIfNull(setPlanfreigabeStatusService);
+        _setPlanfreigabeStatusService = setPlanfreigabeStatusService;
 
-        _geplanterDienstTagRepository = geplanterDienstTagRepository
-            ?? throw new ArgumentNullException(nameof(geplanterDienstTagRepository));
+        ArgumentNullException.ThrowIfNull(geplanterDienstTagRepository);
+        _geplanterDienstTagRepository = geplanterDienstTagRepository;
 
-        _dienstbesetzungsAusfallRepository = dienstbesetzungsAusfallRepository
-            ?? throw new ArgumentNullException(nameof(dienstbesetzungsAusfallRepository));
+        ArgumentNullException.ThrowIfNull(dienstbesetzungsAusfallRepository);
+        _dienstbesetzungsAusfallRepository = dienstbesetzungsAusfallRepository;
 
-        _readWachleiterKalenderService = readWachleiterKalenderService
-            ?? throw new ArgumentNullException(nameof(readWachleiterKalenderService));
+        ArgumentNullException.ThrowIfNull(readWachleiterKalenderService);
+        _readWachleiterKalenderService = readWachleiterKalenderService;
 
-        _readWachleiterPlanungsModalService = readWachleiterPlanungsModalService
-            ?? throw new ArgumentNullException(nameof(readWachleiterPlanungsModalService));
+        ArgumentNullException.ThrowIfNull(readWachleiterPlanungsModalService);
+        _readWachleiterPlanungsModalService = readWachleiterPlanungsModalService;
 
-        _readDienstplanIndexViewModelService = readDienstplanIndexViewModelService
-            ?? throw new ArgumentNullException(nameof(readDienstplanIndexViewModelService));
+        ArgumentNullException.ThrowIfNull(readDienstplanIndexViewModelService);
+        _readDienstplanIndexViewModelService = readDienstplanIndexViewModelService;
 
-        _saveWachleiterTagesplanungService = saveWachleiterTagesplanungService
-            ?? throw new ArgumentNullException(nameof(saveWachleiterTagesplanungService));
+        ArgumentNullException.ThrowIfNull(saveWachleiterTagesplanungService);
+        _saveWachleiterTagesplanungService = saveWachleiterTagesplanungService;
 
-        _saveWachleiterAusfallService = saveWachleiterAusfallService
-            ?? throw new ArgumentNullException(nameof(saveWachleiterAusfallService));
+        ArgumentNullException.ThrowIfNull(saveWachleiterAusfallService);
+        _saveWachleiterAusfallService = saveWachleiterAusfallService;
     }
 
     [HttpGet("Wachleiter")]

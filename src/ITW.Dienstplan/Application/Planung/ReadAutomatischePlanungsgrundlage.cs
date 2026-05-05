@@ -1,4 +1,4 @@
-﻿using ITW.Dienstplan.Application.Contracts;
+using ITW.Dienstplan.Application.Contracts;
 using ITW.Dienstplan.Domain.Entities;
 using ITW.Dienstplan.Domain.Enums;
 using ITW.Domain.Personnel.Enums;
@@ -120,17 +120,17 @@ public sealed class ReadAutomatischePlanungsgrundlageService
         IDienstwunschRepository dienstwunschRepository,
         IFreelancerMonatswunschRepository freelancerMonatswunschRepository)
     {
-        _dienstplanPeriodeRepository = dienstplanPeriodeRepository
-            ?? throw new ArgumentNullException(nameof(dienstplanPeriodeRepository));
+        ArgumentNullException.ThrowIfNull(dienstplanPeriodeRepository);
+        _dienstplanPeriodeRepository = dienstplanPeriodeRepository;
 
-        _dienstplanMitarbeiterPlanungsRepository = dienstplanMitarbeiterPlanungsRepository
-            ?? throw new ArgumentNullException(nameof(dienstplanMitarbeiterPlanungsRepository));
+        ArgumentNullException.ThrowIfNull(dienstplanMitarbeiterPlanungsRepository);
+        _dienstplanMitarbeiterPlanungsRepository = dienstplanMitarbeiterPlanungsRepository;
 
-        _dienstwunschRepository = dienstwunschRepository
-            ?? throw new ArgumentNullException(nameof(dienstwunschRepository));
+        ArgumentNullException.ThrowIfNull(dienstwunschRepository);
+        _dienstwunschRepository = dienstwunschRepository;
 
-        _freelancerMonatswunschRepository = freelancerMonatswunschRepository
-            ?? throw new ArgumentNullException(nameof(freelancerMonatswunschRepository));
+        ArgumentNullException.ThrowIfNull(freelancerMonatswunschRepository);
+        _freelancerMonatswunschRepository = freelancerMonatswunschRepository;
     }
 
     public async Task<ReadAutomatischePlanungsgrundlageResult> ExecuteAsync(

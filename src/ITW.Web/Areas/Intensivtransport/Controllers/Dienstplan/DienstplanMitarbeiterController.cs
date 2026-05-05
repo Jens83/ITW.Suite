@@ -1,4 +1,4 @@
-﻿using Azure.Core;
+using Azure.Core;
 using ITW.Application.Organisation.Contracts;
 using ITW.Web.Areas.Intensivtransport.Controllers.Dienstplan;
 using ITW.Web.Areas.Intensivtransport.Services.Dienstplan;
@@ -28,17 +28,17 @@ public sealed class DienstplanMitarbeiterController : IntensivtransportDienstpla
         ICurrentUserContextAccessor currentUserContextAccessor)
         : base(currentUserContextAccessor)
     {
-        _readDienstplanIndexViewModelService = readDienstplanIndexViewModelService
-            ?? throw new ArgumentNullException(nameof(readDienstplanIndexViewModelService));
+        ArgumentNullException.ThrowIfNull(readDienstplanIndexViewModelService);
+        _readDienstplanIndexViewModelService = readDienstplanIndexViewModelService;
 
-        _readSichtbarerDienstplanViewModelService = readSichtbarerDienstplanViewModelService
-            ?? throw new ArgumentNullException(nameof(readSichtbarerDienstplanViewModelService));
+        ArgumentNullException.ThrowIfNull(readSichtbarerDienstplanViewModelService);
+        _readSichtbarerDienstplanViewModelService = readSichtbarerDienstplanViewModelService;
 
-        _toggleMitarbeiterWunschService = toggleMitarbeiterWunschService
-            ?? throw new ArgumentNullException(nameof(toggleMitarbeiterWunschService));
+        ArgumentNullException.ThrowIfNull(toggleMitarbeiterWunschService);
+        _toggleMitarbeiterWunschService = toggleMitarbeiterWunschService;
 
-        _saveFreelancerMonatswunschMitarbeiterService = saveFreelancerMonatswunschMitarbeiterService
-            ?? throw new ArgumentNullException(nameof(saveFreelancerMonatswunschMitarbeiterService));
+        ArgumentNullException.ThrowIfNull(saveFreelancerMonatswunschMitarbeiterService);
+        _saveFreelancerMonatswunschMitarbeiterService = saveFreelancerMonatswunschMitarbeiterService;
     }
 
     [HttpGet("Mitarbeiter")]

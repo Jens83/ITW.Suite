@@ -1,4 +1,4 @@
-﻿using ITW.Dienstplan.Application.Contracts;
+using ITW.Dienstplan.Application.Contracts;
 using ITW.Dienstplan.Application.Kalender;
 using ITW.Dienstplan.Domain.Entities;
 using ITW.Dienstplan.Domain.Enums;
@@ -47,17 +47,17 @@ public sealed class SaveGeplanterDienstTagService
         IDienstbesetzungsAusfallRepository dienstbesetzungsAusfallRepository,
         IAutoplanLernereignisRepository autoplanLernereignisRepository)
     {
-        _dienstplanPeriodeRepository = dienstplanPeriodeRepository
-            ?? throw new ArgumentNullException(nameof(dienstplanPeriodeRepository));
+        ArgumentNullException.ThrowIfNull(dienstplanPeriodeRepository);
+        _dienstplanPeriodeRepository = dienstplanPeriodeRepository;
 
-        _geplanterDienstTagRepository = geplanterDienstTagRepository
-            ?? throw new ArgumentNullException(nameof(geplanterDienstTagRepository));
+        ArgumentNullException.ThrowIfNull(geplanterDienstTagRepository);
+        _geplanterDienstTagRepository = geplanterDienstTagRepository;
 
-        _dienstbesetzungsAusfallRepository = dienstbesetzungsAusfallRepository
-            ?? throw new ArgumentNullException(nameof(dienstbesetzungsAusfallRepository));
+        ArgumentNullException.ThrowIfNull(dienstbesetzungsAusfallRepository);
+        _dienstbesetzungsAusfallRepository = dienstbesetzungsAusfallRepository;
 
-        _autoplanLernereignisRepository = autoplanLernereignisRepository
-            ?? throw new ArgumentNullException(nameof(autoplanLernereignisRepository));
+        ArgumentNullException.ThrowIfNull(autoplanLernereignisRepository);
+        _autoplanLernereignisRepository = autoplanLernereignisRepository;
     }
 
     public async Task<SaveGeplanterDienstTagResult> ExecuteAsync(

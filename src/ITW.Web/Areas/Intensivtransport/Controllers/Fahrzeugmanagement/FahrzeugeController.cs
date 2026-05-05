@@ -1,4 +1,4 @@
-﻿using ITW.Application.Organisation.Contracts;
+using ITW.Application.Organisation.Contracts;
 using ITW.Fahrzeugmanagement.Application.Fahrtenbuch;
 using ITW.Fahrzeugmanagement.Application.FahrzeugDokumente;
 using ITW.Fahrzeugmanagement.Application.Fahrzeuge;
@@ -50,44 +50,44 @@ public sealed class FahrzeugeController : IntensivtransportFahrzeugmanagementCon
         SaveFahrzeugPruefungService saveFahrzeugPruefungService)
         : base(currentUserContextAccessor)
     {
-        _readFahrzeugUebersichtService = readFahrzeugUebersichtService
-            ?? throw new ArgumentNullException(nameof(readFahrzeugUebersichtService));
+        ArgumentNullException.ThrowIfNull(readFahrzeugUebersichtService);
+        _readFahrzeugUebersichtService = readFahrzeugUebersichtService;
 
-        _createFahrzeugService = createFahrzeugService
-            ?? throw new ArgumentNullException(nameof(createFahrzeugService));
+        ArgumentNullException.ThrowIfNull(createFahrzeugService);
+        _createFahrzeugService = createFahrzeugService;
 
-        _readFahrzeugDetailService = readFahrzeugDetailService
-            ?? throw new ArgumentNullException(nameof(readFahrzeugDetailService));
+        ArgumentNullException.ThrowIfNull(readFahrzeugDetailService);
+        _readFahrzeugDetailService = readFahrzeugDetailService;
 
-        _updateFahrzeugStammdatenService = updateFahrzeugStammdatenService
-            ?? throw new ArgumentNullException(nameof(updateFahrzeugStammdatenService));
+        ArgumentNullException.ThrowIfNull(updateFahrzeugStammdatenService);
+        _updateFahrzeugStammdatenService = updateFahrzeugStammdatenService;
 
-        _readFahrzeugDokumenteService = readFahrzeugDokumenteService
-            ?? throw new ArgumentNullException(nameof(readFahrzeugDokumenteService));
+        ArgumentNullException.ThrowIfNull(readFahrzeugDokumenteService);
+        _readFahrzeugDokumenteService = readFahrzeugDokumenteService;
 
-        _uploadFahrzeugDokumentService = uploadFahrzeugDokumentService
-            ?? throw new ArgumentNullException(nameof(uploadFahrzeugDokumentService));
+        ArgumentNullException.ThrowIfNull(uploadFahrzeugDokumentService);
+        _uploadFahrzeugDokumentService = uploadFahrzeugDokumentService;
 
-        _downloadFahrzeugDokumentService = downloadFahrzeugDokumentService
-            ?? throw new ArgumentNullException(nameof(downloadFahrzeugDokumentService));
+        ArgumentNullException.ThrowIfNull(downloadFahrzeugDokumentService);
+        _downloadFahrzeugDokumentService = downloadFahrzeugDokumentService;
 
-        _deleteFahrzeugDokumentService = deleteFahrzeugDokumentService
-            ?? throw new ArgumentNullException(nameof(deleteFahrzeugDokumentService));
+        ArgumentNullException.ThrowIfNull(deleteFahrzeugDokumentService);
+        _deleteFahrzeugDokumentService = deleteFahrzeugDokumentService;
 
-        _readFahrtenbuchService = readFahrtenbuchService
-            ?? throw new ArgumentNullException(nameof(readFahrtenbuchService));
+        ArgumentNullException.ThrowIfNull(readFahrtenbuchService);
+        _readFahrtenbuchService = readFahrtenbuchService;
 
-        _createFahrtenbuchEintragService = createFahrtenbuchEintragService
-            ?? throw new ArgumentNullException(nameof(createFahrtenbuchEintragService));
+        ArgumentNullException.ThrowIfNull(createFahrtenbuchEintragService);
+        _createFahrtenbuchEintragService = createFahrtenbuchEintragService;
 
-        _readFahrtenbuchEintragDetailService = readFahrtenbuchEintragDetailService
-            ?? throw new ArgumentNullException(nameof(readFahrtenbuchEintragDetailService));
+        ArgumentNullException.ThrowIfNull(readFahrtenbuchEintragDetailService);
+        _readFahrtenbuchEintragDetailService = readFahrtenbuchEintragDetailService;
 
-        _readFahrzeugPruefstatusService = readFahrzeugPruefstatusService
-            ?? throw new ArgumentNullException(nameof(readFahrzeugPruefstatusService));
+        ArgumentNullException.ThrowIfNull(readFahrzeugPruefstatusService);
+        _readFahrzeugPruefstatusService = readFahrzeugPruefstatusService;
 
-        _saveFahrzeugPruefungService = saveFahrzeugPruefungService
-            ?? throw new ArgumentNullException(nameof(saveFahrzeugPruefungService));
+        ArgumentNullException.ThrowIfNull(saveFahrzeugPruefungService);
+        _saveFahrzeugPruefungService = saveFahrzeugPruefungService;
     }
 
     [HttpGet]

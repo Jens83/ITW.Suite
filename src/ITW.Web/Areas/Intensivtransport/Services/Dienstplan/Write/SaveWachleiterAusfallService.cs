@@ -1,4 +1,4 @@
-﻿using ITW.Application.Personnel.ProfileQueries;
+using ITW.Application.Personnel.ProfileQueries;
 using ITW.Application.Personnel.Urlaub.Contracts;
 using ITW.Dienstplan.Application.Contracts;
 using ITW.Dienstplan.Application.Planung;
@@ -49,20 +49,20 @@ public sealed class SaveWachleiterAusfallService
         IMitarbeiterUrlaubsanspruchRepository mitarbeiterUrlaubsanspruchRepository,
         SaveDienstbesetzungsAusfallService saveDienstbesetzungsAusfallService)
     {
-        _readItwMitarbeiterprofileService = readItwMitarbeiterprofileService
-            ?? throw new ArgumentNullException(nameof(readItwMitarbeiterprofileService));
+        ArgumentNullException.ThrowIfNull(readItwMitarbeiterprofileService);
+        _readItwMitarbeiterprofileService = readItwMitarbeiterprofileService;
 
-        _geplanterDienstTagRepository = geplanterDienstTagRepository
-            ?? throw new ArgumentNullException(nameof(geplanterDienstTagRepository));
+        ArgumentNullException.ThrowIfNull(geplanterDienstTagRepository);
+        _geplanterDienstTagRepository = geplanterDienstTagRepository;
 
-        _dienstbesetzungsAusfallRepository = dienstbesetzungsAusfallRepository
-            ?? throw new ArgumentNullException(nameof(dienstbesetzungsAusfallRepository));
+        ArgumentNullException.ThrowIfNull(dienstbesetzungsAusfallRepository);
+        _dienstbesetzungsAusfallRepository = dienstbesetzungsAusfallRepository;
 
-        _mitarbeiterUrlaubsanspruchRepository = mitarbeiterUrlaubsanspruchRepository
-            ?? throw new ArgumentNullException(nameof(mitarbeiterUrlaubsanspruchRepository));
+        ArgumentNullException.ThrowIfNull(mitarbeiterUrlaubsanspruchRepository);
+        _mitarbeiterUrlaubsanspruchRepository = mitarbeiterUrlaubsanspruchRepository;
 
-        _saveDienstbesetzungsAusfallService = saveDienstbesetzungsAusfallService
-            ?? throw new ArgumentNullException(nameof(saveDienstbesetzungsAusfallService));
+        ArgumentNullException.ThrowIfNull(saveDienstbesetzungsAusfallService);
+        _saveDienstbesetzungsAusfallService = saveDienstbesetzungsAusfallService;
     }
 
     public async Task<SaveWachleiterAusfallResult> ExecuteAsync(

@@ -1,4 +1,4 @@
-﻿using ITW.Dienstplan.Application.Contracts;
+using ITW.Dienstplan.Application.Contracts;
 using ITW.Dienstplan.Domain.Enums;
 
 namespace ITW.Dienstplan.Application.Wunschphase;
@@ -58,14 +58,14 @@ public sealed class ReadAktiveWunschphaseService
         IDienstwunschRepository dienstwunschRepository,
         IFreelancerMonatswunschRepository freelancerMonatswunschRepository)
     {
-        _dienstplanPeriodeRepository = dienstplanPeriodeRepository
-            ?? throw new ArgumentNullException(nameof(dienstplanPeriodeRepository));
+        ArgumentNullException.ThrowIfNull(dienstplanPeriodeRepository);
+        _dienstplanPeriodeRepository = dienstplanPeriodeRepository;
 
-        _dienstwunschRepository = dienstwunschRepository
-            ?? throw new ArgumentNullException(nameof(dienstwunschRepository));
+        ArgumentNullException.ThrowIfNull(dienstwunschRepository);
+        _dienstwunschRepository = dienstwunschRepository;
 
-        _freelancerMonatswunschRepository = freelancerMonatswunschRepository
-            ?? throw new ArgumentNullException(nameof(freelancerMonatswunschRepository));
+        ArgumentNullException.ThrowIfNull(freelancerMonatswunschRepository);
+        _freelancerMonatswunschRepository = freelancerMonatswunschRepository;
     }
 
     public async Task<ReadAktiveWunschphaseResult> ExecuteAsync(

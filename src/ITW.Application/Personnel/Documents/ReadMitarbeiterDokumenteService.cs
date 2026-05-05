@@ -1,4 +1,4 @@
-﻿// Datei: src/ITW.Application/Personnel/Documents/ReadMitarbeiterDokumenteService.cs
+// Datei: src/ITW.Application/Personnel/Documents/ReadMitarbeiterDokumenteService.cs
 using ITW.Application.Abstractions.Persistence;
 using ITW.Domain.Organisation.Enums;
 using Microsoft.Extensions.Logging;
@@ -16,11 +16,12 @@ public sealed class ReadMitarbeiterDokumenteService
         IMitarbeiterDokumentRepository mitarbeiterDokumentRepository,
         ILogger<ReadMitarbeiterDokumenteService> logger)
     {
-        _benutzerBereichszuordnungRepository = benutzerBereichszuordnungRepository
-            ?? throw new ArgumentNullException(nameof(benutzerBereichszuordnungRepository));
-        _mitarbeiterDokumentRepository = mitarbeiterDokumentRepository
-            ?? throw new ArgumentNullException(nameof(mitarbeiterDokumentRepository));
-        _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+        ArgumentNullException.ThrowIfNull(benutzerBereichszuordnungRepository);
+        _benutzerBereichszuordnungRepository = benutzerBereichszuordnungRepository;
+        ArgumentNullException.ThrowIfNull(mitarbeiterDokumentRepository);
+        _mitarbeiterDokumentRepository = mitarbeiterDokumentRepository;
+        ArgumentNullException.ThrowIfNull(logger);
+        _logger = logger;
     }
 
     public async Task<ReadMitarbeiterDokumenteResult> ExecuteAsync(
