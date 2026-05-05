@@ -4,148 +4,37 @@
    Fachstyles für Dienstplan, Wunschkalender, Wachleiterkalender,
    sichtbaren Plan, Auswertungen und Autoplan.
 
-   Regeln:
-   - Keine View-spezifischen CSS-Dateien.
-   - Keine Inline-Styles in Views.
-   - Nur Styles, die fachlich zum Dienstplan gehören.
+   Hinweis: Komponenten-artige Muster (Hero, Alert, Leer-Zustand, Badge,
+   KPI-Card) wurden nach app-components.css extrahiert.
 */
 
+
 /* ==========================================================================
-   03. ITW.Dienstplan
+   Shared Seiten-Basis
    ========================================================================== */
 
-
-/* --------------------------------------------------------------------------
-   03.01 Dienstplanperioden
-   Historische Herkunft: app-dienstplan-perioden.css
-   -------------------------------------------------------------------------- */
-
-
-.app-period-page {
+.app-period-page,
+.app-plan-page,
+.app-report-page,
+.app-wunsch-page,
+.app-autoplan-page {
     display: flex;
     flex-direction: column;
-    gap: 1.4rem;
+    gap: 1.35rem;
     padding-top: 0.25rem;
 }
 
-.app-period-hero {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    gap: 1rem;
-}
 
-.app-period-hero__content {
-    display: flex;
-    flex-direction: column;
-    gap: 0.55rem;
-    min-width: 0;
-}
+/* ==========================================================================
+   03.01 Dienstplanperioden
+   ========================================================================== */
 
-.app-period-hero__label {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.45rem;
-    align-self: flex-start;
-    padding: 0.36rem 0.8rem;
-    border-radius: 999px;
-    background-color: rgba(var(--accent-rgb), 0.08);
-    color: var(--accent-color);
-    font-size: 0.78rem;
-    font-weight: 700;
-    letter-spacing: 0.02em;
-}
-
-.app-period-hero__title {
-    margin: 0;
-    font-size: 1.45rem;
-    font-weight: 700;
-    line-height: 1.2;
-    color: var(--text-color-strong);
-    letter-spacing: -0.02em;
-}
-
-.app-period-hero__text {
-    max-width: 54rem;
-    margin: 0;
-    color: var(--text-color-muted);
-    font-size: 0.95rem;
-    line-height: 1.6;
-}
 
 .app-period-toolbar {
     display: flex;
     flex-wrap: wrap;
     gap: 0.75rem;
     justify-content: flex-end;
-}
-
-.app-period-alert {
-    display: flex;
-    align-items: flex-start;
-    justify-content: space-between;
-    gap: 1rem;
-    padding: 1rem 1.05rem;
-    border-radius: 18px;
-    border: 1px solid transparent;
-    box-shadow: 0 10px 24px rgba(15, 23, 42, 0.05);
-}
-
-.app-period-alert__main {
-    display: flex;
-    align-items: flex-start;
-    gap: 0.85rem;
-}
-
-.app-period-alert__icon {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: 2.15rem;
-    height: 2.15rem;
-    border-radius: 12px;
-    flex-shrink: 0;
-    font-size: 1rem;
-}
-
-.app-period-alert__title {
-    margin: 0 0 0.18rem 0;
-    font-size: 0.84rem;
-    font-weight: 800;
-    text-transform: uppercase;
-    letter-spacing: 0.06em;
-}
-
-.app-period-alert__text {
-    margin: 0;
-    font-size: 0.92rem;
-    line-height: 1.55;
-}
-
-.app-period-alert--success {
-    background: linear-gradient(180deg, rgba(var(--success-rgb), 0.1) 0%, rgba(var(--success-rgb), 0.05) 100%);
-    border-color: rgba(var(--success-rgb), 0.16);
-    color: var(--success-color-strong);
-}
-
-    .app-period-alert--success .app-period-alert__icon {
-        background: rgba(var(--success-rgb), 0.12);
-        color: var(--success-color-strong);
-    }
-
-.app-period-alert--danger {
-    background: linear-gradient(180deg, rgba(var(--danger-rgb), 0.1) 0%, rgba(var(--danger-rgb), 0.05) 100%);
-    border-color: rgba(var(--danger-rgb), 0.16);
-    color: var(--danger-color-strong);
-}
-
-    .app-period-alert--danger .app-period-alert__icon {
-        background: rgba(var(--danger-rgb), 0.12);
-        color: var(--danger-color-strong);
-    }
-
-.app-period-alert .btn-close {
-    opacity: 0.55;
 }
 
 .app-period-grid {
@@ -266,42 +155,6 @@
     gap: 0.55rem;
 }
 
-.app-period-badge {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.4rem;
-    padding: 0.42rem 0.8rem;
-    border-radius: 999px;
-    font-size: 0.78rem;
-    font-weight: 700;
-    line-height: 1.2;
-    border: 1px solid transparent;
-}
-
-.app-period-badge--active {
-    background: rgba(var(--success-rgb), 0.12);
-    color: var(--success-color-strong);
-    border-color: rgba(var(--success-rgb), 0.16);
-}
-
-.app-period-badge--released {
-    background: rgba(var(--accent-rgb), 0.08);
-    color: var(--accent-color);
-    border-color: rgba(var(--accent-rgb), 0.16);
-}
-
-.app-period-badge--draft {
-    background: rgba(var(--warning-rgb), 0.14);
-    color: var(--warning-color-strong);
-    border-color: rgba(var(--warning-rgb), 0.18);
-}
-
-.app-period-badge--closed {
-    background: var(--surface-bg-soft);
-    color: var(--text-color);
-    border-color: var(--border-color);
-}
-
 .app-period-card__note {
     margin: 0;
     color: var(--text-color-muted);
@@ -315,7 +168,14 @@
     align-items: center;
 }
 
-.app-period-empty {
+.app-period-empty,
+.app-plan-empty,
+.app-plan-section,
+.app-report-filter,
+.app-report-empty,
+.app-report-panel,
+.app-wunsch-panel,
+.app-autoplan-preview-panel {
     position: relative;
     border: 1px solid rgba(15, 23, 42, 0.06);
     border-radius: 24px;
@@ -324,21 +184,32 @@
     overflow: hidden;
 }
 
-    .app-period-empty::before {
-        content: "";
-        position: absolute;
-        inset: 0 auto auto 0;
-        width: 100%;
-        height: 4px;
-        background: linear-gradient(90deg, var(--accent-color) 0%, rgba(var(--accent-rgb), 0.45) 100%);
-    }
+.app-period-empty::before,
+.app-plan-empty::before,
+.app-plan-section::before,
+.app-report-filter::before,
+.app-report-empty::before,
+.app-report-panel::before,
+.app-wunsch-panel::before,
+.app-autoplan-preview-panel::before {
+    content: "";
+    position: absolute;
+    inset: 0 auto auto 0;
+    width: 100%;
+    height: 4px;
+    background: linear-gradient(90deg, var(--accent-color) 0%, rgba(var(--accent-rgb), 0.45) 100%);
+}
 
-.app-period-empty__body {
+/* --- Shared empty-state sub-elements --- */
+.app-period-empty__body,
+.app-report-empty__body,
+.app-wunsch-empty__body {
     padding: 2rem;
     text-align: center;
 }
 
-.app-period-empty__icon {
+.app-period-empty__icon,
+.app-wunsch-empty__icon {
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -351,19 +222,24 @@
     box-shadow: inset 0 0 0 1px rgba(var(--accent-rgb), 0.08);
 }
 
-    .app-period-empty__icon i {
-        font-size: 1.7rem;
-    }
+.app-period-empty__icon i,
+.app-wunsch-empty__icon i {
+    font-size: 1.7rem;
+}
 
-.app-period-empty__title {
+.app-period-empty__title,
+.app-report-empty__title,
+.app-wunsch-empty__title {
     margin: 0 0 0.5rem 0;
     font-size: 1.25rem;
     font-weight: 700;
     color: var(--text-color-strong);
 }
 
-.app-period-empty__text {
-    max-width: 42rem;
+.app-period-empty__text,
+.app-report-empty__text,
+.app-wunsch-empty__text {
+    max-width: 40rem;
     margin: 0 auto;
     color: var(--text-color-muted);
     font-size: 0.95rem;
@@ -387,20 +263,6 @@
 
 .app-period-modal__header {
     padding: 1.35rem 1.4rem 0.9rem;
-}
-
-.app-period-modal__label {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.45rem;
-    margin-bottom: 0.6rem;
-    padding: 0.34rem 0.74rem;
-    border-radius: 999px;
-    background: rgba(var(--accent-rgb), 0.08);
-    color: var(--accent-color);
-    font-size: 0.75rem;
-    font-weight: 700;
-    letter-spacing: 0.02em;
 }
 
 .app-period-modal__title {
@@ -516,14 +378,6 @@
         gap: 1.15rem;
     }
 
-    .app-period-hero__title {
-        font-size: 1.3rem;
-    }
-
-    .app-period-hero__text {
-        font-size: 0.92rem;
-    }
-
     .app-period-card__body,
     .app-period-empty__body {
         padding: 1.15rem;
@@ -536,98 +390,12 @@
 }
 
 
-/* --------------------------------------------------------------------------
+/* ==========================================================================
    03.02 Sichtbarer Plan
-   Historische Herkunft: app-sichtbarer-plan.css
-   -------------------------------------------------------------------------- */
+   ========================================================================== */
 
 
-.app-plan-page {
-    display: flex;
-    flex-direction: column;
-    gap: 1.35rem;
-    padding-top: 0.25rem;
-}
-
-.app-plan-hero {
-    display: flex;
-    flex-direction: column;
-    gap: 0.55rem;
-}
-
-.app-plan-hero__label {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.45rem;
-    align-self: flex-start;
-    padding: 0.36rem 0.8rem;
-    border-radius: 999px;
-    background-color: rgba(var(--accent-rgb), 0.08);
-    color: var(--accent-color);
-    font-size: 0.78rem;
-    font-weight: 700;
-    letter-spacing: 0.02em;
-}
-
-.app-plan-hero__title {
-    margin: 0;
-    font-size: 1.5rem;
-    font-weight: 700;
-    line-height: 1.2;
-    color: var(--text-color-strong);
-    letter-spacing: -0.02em;
-}
-
-.app-plan-hero__text {
-    max-width: 54rem;
-    margin: 0;
-    color: var(--text-color-muted);
-    font-size: 0.95rem;
-    line-height: 1.6;
-}
-
-.app-plan-alert {
-    display: flex;
-    align-items: flex-start;
-    gap: 0.85rem;
-    padding: 1rem 1.05rem;
-    border-radius: 18px;
-    border: 1px solid rgba(var(--danger-rgb), 0.16);
-    background: linear-gradient(180deg, rgba(var(--danger-rgb), 0.1) 0%, rgba(var(--danger-rgb), 0.05) 100%);
-    color: var(--danger-color-strong);
-    box-shadow: 0 10px 24px rgba(15, 23, 42, 0.05);
-}
-
-.app-plan-alert__icon {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: 2.2rem;
-    height: 2.2rem;
-    border-radius: 12px;
-    background: rgba(var(--danger-rgb), 0.12);
-    color: var(--danger-color-strong);
-    flex-shrink: 0;
-    font-size: 1rem;
-}
-
-.app-plan-alert__title {
-    margin: 0 0 0.18rem 0;
-    font-size: 0.85rem;
-    font-weight: 800;
-    text-transform: uppercase;
-    letter-spacing: 0.06em;
-}
-
-.app-plan-alert__text {
-    margin: 0;
-    font-size: 0.92rem;
-    line-height: 1.55;
-}
-
-.app-plan-empty,
-.app-plan-switcher-panel,
-.app-plan-section {
+.app-plan-switcher-panel {
     position: relative;
     border: 1px solid rgba(15, 23, 42, 0.06);
     border-radius: 24px;
@@ -636,58 +404,8 @@
     overflow: hidden;
 }
 
-    .app-plan-empty::before,
-    .app-plan-section::before {
-        content: "";
-        position: absolute;
-        inset: 0 auto auto 0;
-        width: 100%;
-        height: 4px;
-        background: linear-gradient(90deg, var(--accent-color) 0%, rgba(var(--accent-rgb), 0.45) 100%);
-    }
-
-    .app-plan-switcher-panel::before {
-        display: none;
-    }
-
-.app-plan-empty__body {
-    padding: 2rem;
-    text-align: center;
-}
-
-.app-plan-empty__icon {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: 4rem;
-    height: 4rem;
-    margin-bottom: 1rem;
-    border-radius: 20px;
-    background: rgba(var(--accent-rgb), 0.08);
-    color: var(--accent-color);
-    box-shadow: inset 0 0 0 1px rgba(var(--accent-rgb), 0.08);
-}
-
-    .app-plan-empty__icon i {
-        font-size: 1.7rem;
-    }
-
-.app-plan-empty__title {
-    margin: 0 0 0.5rem 0;
-    font-size: 1.25rem;
-    font-weight: 700;
-    color: var(--text-color-strong);
-}
-
-.app-plan-empty__text {
-    max-width: 40rem;
-    margin: 0 auto;
-    color: var(--text-color-muted);
-    font-size: 0.95rem;
-    line-height: 1.6;
-}
-
-.app-plan-empty__actions {
+.app-plan-empty__actions,
+.app-wunsch-empty__actions {
     display: flex;
     justify-content: center;
     gap: 0.8rem;
@@ -784,33 +502,6 @@
 
 .app-plan-section__body {
     padding: 1.1rem 1.35rem 1.3rem;
-}
-
-.app-plan-badge {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.45rem;
-    padding: 0.5rem 0.85rem;
-    border-radius: 999px;
-    font-size: 0.78rem;
-    font-weight: 700;
-    white-space: nowrap;
-}
-
-.app-plan-badge--released {
-    background: rgba(var(--accent-rgb), 0.08);
-    color: var(--accent-color);
-    border: 1px solid rgba(var(--accent-rgb), 0.16);
-}
-
-.app-plan-note {
-    padding: 1rem 1.05rem;
-    border-radius: 18px;
-    border: 1px solid var(--border-color);
-    background: linear-gradient(180deg, var(--surface-bg-soft) 0%, var(--surface-bg) 100%);
-    color: var(--text-color-muted);
-    font-size: 0.92rem;
-    line-height: 1.55;
 }
 
 .app-plan-calendar {
@@ -1071,14 +762,6 @@
         gap: 1.2rem;
     }
 
-    .app-plan-hero__title {
-        font-size: 1.35rem;
-    }
-
-    .app-plan-hero__text {
-        font-size: 0.92rem;
-    }
-
     .app-plan-empty__body,
     .app-plan-section__body,
     .app-plan-section__header,
@@ -1101,131 +784,10 @@
 }
 
 
-/* --------------------------------------------------------------------------
+/* ==========================================================================
    03.03 Monatsauswertung
-   Historische Herkunft: app-monatsauswertung.css
-   -------------------------------------------------------------------------- */
+   ========================================================================== */
 
-
-.app-report-page {
-    display: flex;
-    flex-direction: column;
-    gap: 1.35rem;
-    padding-top: 0.25rem;
-}
-
-.app-report-hero {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    gap: 1rem;
-}
-
-.app-report-hero__content {
-    display: flex;
-    flex-direction: column;
-    gap: 0.55rem;
-    min-width: 0;
-}
-
-.app-report-label {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.45rem;
-    align-self: flex-start;
-    padding: 0.36rem 0.8rem;
-    border-radius: 999px;
-    background-color: rgba(var(--accent-rgb), 0.08);
-    color: var(--accent-color);
-    font-size: 0.78rem;
-    font-weight: 700;
-    letter-spacing: 0.02em;
-}
-
-.app-report-title {
-    margin: 0;
-    color: var(--text-color-strong);
-    font-size: 1.55rem;
-    font-weight: 700;
-    line-height: 1.2;
-    letter-spacing: -0.02em;
-}
-
-.app-report-text {
-    max-width: 58rem;
-    margin: 0;
-    color: var(--text-color-muted);
-    font-size: 0.96rem;
-    line-height: 1.6;
-}
-
-.app-report-actions {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.7rem;
-    justify-content: flex-end;
-}
-
-    .app-report-actions .btn {
-        min-width: 170px;
-    }
-
-.app-report-alert {
-    display: flex;
-    align-items: flex-start;
-    gap: 0.9rem;
-    padding: 1rem 1.05rem;
-    border-radius: 18px;
-    border: 1px solid rgba(var(--danger-rgb), 0.16);
-    background: linear-gradient(180deg, rgba(var(--danger-rgb), 0.1) 0%, rgba(var(--danger-rgb), 0.05) 100%);
-    color: var(--danger-color-strong);
-    box-shadow: 0 10px 24px rgba(15, 23, 42, 0.05);
-}
-
-.app-report-alert__icon {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: 2.2rem;
-    height: 2.2rem;
-    border-radius: 12px;
-    background: rgba(var(--danger-rgb), 0.12);
-    color: var(--danger-color-strong);
-    flex-shrink: 0;
-    font-size: 1rem;
-}
-
-.app-report-alert__title {
-    margin: 0 0 0.15rem 0;
-    font-size: 0.84rem;
-    font-weight: 800;
-    text-transform: uppercase;
-    letter-spacing: 0.06em;
-}
-
-.app-report-alert__text {
-    margin: 0;
-    font-size: 0.92rem;
-    line-height: 1.55;
-}
-
-.app-report-filter {
-    position: relative;
-    border: 1px solid rgba(15, 23, 42, 0.06);
-    border-radius: 24px;
-    background: linear-gradient(180deg, rgba(255, 255, 255, 0.98) 0%, var(--surface-bg) 100%);
-    box-shadow: 0 18px 40px rgba(15, 23, 42, 0.08);
-    overflow: hidden;
-}
-
-    .app-report-filter::before {
-        content: "";
-        position: absolute;
-        inset: 0 auto auto 0;
-        width: 100%;
-        height: 4px;
-        background: linear-gradient(90deg, var(--accent-color) 0%, rgba(var(--accent-rgb), 0.45) 100%);
-    }
 
 .app-report-filter__body {
     position: relative;
@@ -1307,110 +869,6 @@
     align-items: end;
 }
 
-.app-report-kpi-card {
-    border: 1px solid rgba(15, 23, 42, 0.06);
-    border-radius: 22px;
-    background: linear-gradient(180deg, rgba(255, 255, 255, 0.98) 0%, var(--surface-bg) 100%);
-    box-shadow: 0 14px 30px rgba(15, 23, 42, 0.06);
-    height: 100%;
-}
-
-.app-report-kpi-card__body {
-    padding: 1.2rem 1.2rem 1.15rem;
-}
-
-.app-report-kpi-card__top {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    gap: 0.75rem;
-    margin-bottom: 0.7rem;
-}
-
-.app-report-kpi-card__label {
-    color: var(--text-color-subtle);
-    font-size: 0.72rem;
-    font-weight: 800;
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
-}
-
-.app-report-kpi-card__value {
-    color: var(--text-color-strong);
-    font-size: 1.7rem;
-    font-weight: 800;
-    line-height: 1.1;
-    margin: 0;
-}
-
-.app-report-kpi-card__text {
-    color: var(--text-color-muted);
-    font-size: 0.84rem;
-    line-height: 1.45;
-    margin: 0.25rem 0 0 0;
-}
-
-.app-report-icon {
-    width: 2.3rem;
-    height: 2.3rem;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: 50%;
-    font-size: 1rem;
-    flex-shrink: 0;
-    box-shadow: 0 6px 14px rgba(15, 23, 42, 0.08);
-}
-
-.app-report-meta {
-    border: 1px solid rgba(15, 23, 42, 0.06);
-    border-radius: 22px;
-    background: linear-gradient(180deg, rgba(255, 255, 255, 0.98) 0%, var(--surface-bg) 100%);
-    box-shadow: 0 14px 30px rgba(15, 23, 42, 0.06);
-}
-
-.app-report-meta__body {
-    padding: 1rem 1.15rem;
-}
-
-.app-report-meta__badges {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.75rem;
-}
-
-.app-report-meta__badge {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.45rem;
-    padding: 0.55rem 0.95rem;
-    border-radius: 999px;
-    background: var(--surface-bg-soft);
-    border: 1px solid var(--border-color);
-    color: var(--text-color);
-    font-size: 0.82rem;
-    font-weight: 700;
-    line-height: 1.2;
-}
-
-.app-report-panel {
-    position: relative;
-    border: 1px solid rgba(15, 23, 42, 0.06);
-    border-radius: 24px;
-    background: linear-gradient(180deg, rgba(255, 255, 255, 0.98) 0%, var(--surface-bg) 100%);
-    box-shadow: 0 18px 40px rgba(15, 23, 42, 0.08);
-    overflow: hidden;
-}
-
-    .app-report-panel::before {
-        content: "";
-        position: absolute;
-        inset: 0 auto auto 0;
-        width: 100%;
-        height: 4px;
-        background: linear-gradient(90deg, var(--accent-color) 0%, rgba(var(--accent-rgb), 0.45) 100%);
-    }
-
 .app-report-panel__header {
     position: relative;
     z-index: 1;
@@ -1436,47 +894,10 @@
     line-height: 1.3;
 }
 
-.app-report-empty {
-    position: relative;
-    border: 1px solid rgba(15, 23, 42, 0.06);
-    border-radius: 24px;
-    background: linear-gradient(180deg, rgba(255, 255, 255, 0.98) 0%, var(--surface-bg) 100%);
-    box-shadow: 0 18px 40px rgba(15, 23, 42, 0.08);
-    overflow: hidden;
-}
-
-    .app-report-empty::before {
-        content: "";
-        position: absolute;
-        inset: 0 auto auto 0;
-        width: 100%;
-        height: 4px;
-        background: linear-gradient(90deg, var(--accent-color) 0%, rgba(var(--accent-rgb), 0.45) 100%);
-    }
-
-.app-report-empty__body {
-    padding: 2rem;
-    text-align: center;
-}
-
 .app-report-empty__icon {
     font-size: 2.3rem;
     color: var(--border-color-strong);
     margin-bottom: 0.8rem;
-}
-
-.app-report-empty__title {
-    margin: 0 0 0.45rem 0;
-    color: var(--text-color-strong);
-    font-size: 1.15rem;
-    font-weight: 700;
-}
-
-.app-report-empty__text {
-    margin: 0;
-    color: var(--text-color-muted);
-    font-size: 0.92rem;
-    line-height: 1.55;
 }
 
 .app-report-table thead th {
@@ -1535,12 +956,6 @@
     color: var(--surface-bg);
 }
 
-@media (min-width: 1200px) {
-    .app-report-hero {
-        align-items: center;
-    }
-}
-
 @media (max-width: 1199.98px) {
     .app-report-filter__grid {
         grid-template-columns: 1fr;
@@ -1551,51 +966,29 @@
     }
 }
 
-@media (max-width: 991.98px) {
-    .app-report-hero {
-        flex-direction: column;
-        align-items: flex-start;
-    }
-
-    .app-report-actions {
-        justify-content: flex-start;
-    }
-}
-
 @media (max-width: 575.98px) {
-    .app-report-title {
-        font-size: 1.35rem;
-    }
-
-    .app-report-text {
-        font-size: 0.92rem;
-    }
-
-    .app-report-actions,
-    .app-report-meta__badges,
-    .app-report-filter__form {
-        flex-direction: column;
-        align-items: stretch;
-    }
-
-        .app-report-actions .btn,
-        .app-report-filter__form .btn {
-            width: 100%;
-        }
-
     .app-report-filter__body,
     .app-report-panel__header,
     .app-report-empty__body {
         padding-left: 1.05rem;
         padding-right: 1.05rem;
     }
+
+    .app-report-meta__badges,
+    .app-report-filter__form {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+        .app-report-filter__form .btn {
+            width: 100%;
+        }
 }
 
 
-/* --------------------------------------------------------------------------
+/* ==========================================================================
    03.04 Wachleiterkalender
-   Historische Herkunft: app-wachleiter-kalender.css
-   -------------------------------------------------------------------------- */
+   ========================================================================== */
 
 /*
    Wachleiterkalender
@@ -1608,9 +1001,6 @@
     gap: 1rem;
 }
 
-    /* =========================
-   OBERER BEREICH / Roter Faden
-   ========================= */
     .wl-page .wl-page-hero {
         display: flex;
         flex-direction: column;
@@ -1660,7 +1050,7 @@
 
     .wl-page .wl-control-card {
         position: relative;
-        border-left-width: 0 !important;
+        border-left: none;
     }
 
         .wl-page .wl-control-card::before {
@@ -1708,9 +1098,9 @@
 
     .wl-page .wl-control-form .input-group {
         min-height: 44px;
-        border-color: var(--border-color) !important;
-        border-radius: 0.9rem !important;
-        background: var(--surface-bg-soft) !important;
+        border-color: var(--border-color);
+        border-radius: 0.9rem;
+        background: var(--surface-bg-soft);
     }
 
     .wl-page .wl-control-form .input-group-text,
@@ -1750,7 +1140,7 @@
 
 .wl-btn-white {
     background: var(--surface-bg);
-    border-color: var(--border-color-strong) !important;
+    border-color: var(--border-color-strong);
     color: var(--text-color-strong);
 }
 
@@ -1827,12 +1217,9 @@
 }
 
 .wl-surface-muted {
-    background-color: var(--surface-bg-muted) !important;
+    background-color: var(--surface-bg-muted);
 }
 
-/* =========================
-   Kalender
-   ========================= */
 .wl-page .dienstplan-kalender-wrapper {
     overflow-x: auto;
 }
@@ -1951,9 +1338,6 @@
     color: var(--success-color);
 }
 
-/* =========================
-   Modal
-   ========================= */
 .wl-modal .wl-qualification-tag {
     display: inline-block;
     padding: 2px 8px;
@@ -2068,123 +1452,15 @@
 
     .wl-page .wl-control-form {
         flex-direction: column;
-        align-items: stretch !important;
+        align-items: stretch;
     }
 }
 
-/* --------------------------------------------------------------------------
+
+/* ==========================================================================
    03.05 Wunschkalender
-   Historische Herkunft: app-wunschkalender.css
-   -------------------------------------------------------------------------- */
+   ========================================================================== */
 
-
-.app-wunsch-page {
-    display: flex;
-    flex-direction: column;
-    gap: 1.5rem;
-    padding-top: 0.25rem;
-}
-
-.app-wunsch-hero {
-    display: flex;
-    flex-direction: column;
-    gap: 0.6rem;
-}
-
-.app-wunsch-hero__label {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.45rem;
-    align-self: flex-start;
-    padding: 0.36rem 0.8rem;
-    border-radius: 999px;
-    background-color: rgba(var(--accent-rgb), 0.08);
-    color: var(--accent-color);
-    font-size: 0.78rem;
-    font-weight: 700;
-    letter-spacing: 0.02em;
-}
-
-.app-wunsch-hero__title {
-    margin: 0;
-    font-size: 1.55rem;
-    font-weight: 700;
-    line-height: 1.2;
-    color: var(--text-color-strong);
-    letter-spacing: -0.02em;
-}
-
-.app-wunsch-hero__text {
-    max-width: 52rem;
-    margin: 0;
-    color: var(--text-color-muted);
-    font-size: 0.96rem;
-    line-height: 1.6;
-}
-
-
-.app-wunsch-empty__body {
-    padding: 2rem;
-    text-align: center;
-}
-
-.app-wunsch-empty__icon {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: 4.2rem;
-    height: 4.2rem;
-    margin-bottom: 1rem;
-    border-radius: 20px;
-    background: rgba(var(--accent-rgb), 0.08);
-    color: var(--accent-color);
-    box-shadow: inset 0 0 0 1px rgba(var(--accent-rgb), 0.08);
-}
-
-    .app-wunsch-empty__icon i {
-        font-size: 1.8rem;
-    }
-
-.app-wunsch-empty__title {
-    margin: 0 0 0.55rem 0;
-    font-size: 1.3rem;
-    font-weight: 700;
-    color: var(--text-color-strong);
-}
-
-.app-wunsch-empty__text {
-    max-width: 38rem;
-    margin: 0 auto;
-    color: var(--text-color-muted);
-    font-size: 0.95rem;
-    line-height: 1.6;
-}
-
-.app-wunsch-empty__actions {
-    display: flex;
-    justify-content: center;
-    gap: 0.8rem;
-    margin-top: 1.4rem;
-    flex-wrap: wrap;
-}
-
-.app-wunsch-panel {
-    position: relative;
-    border: 1px solid rgba(15, 23, 42, 0.06);
-    border-radius: 24px;
-    background: linear-gradient(180deg, rgba(255, 255, 255, 0.98) 0%, var(--surface-bg) 100%);
-    box-shadow: 0 18px 40px rgba(15, 23, 42, 0.08);
-    overflow: hidden;
-}
-
-    .app-wunsch-panel::before {
-        content: "";
-        position: absolute;
-        inset: 0 auto auto 0;
-        width: 100%;
-        height: 4px;
-        background: linear-gradient(90deg, var(--accent-color) 0%, rgba(var(--accent-rgb), 0.45) 100%);
-    }
 
 .app-wunsch-panel--soft::before {
     background: linear-gradient(90deg, var(--text-color-strong) 0%, rgba(15, 23, 42, 0.35) 100%);
@@ -2226,31 +1502,6 @@
     padding: 1.4rem 1.5rem 1.5rem;
 }
 
-.app-wunsch-kpi {
-    min-width: 8rem;
-    padding: 0.8rem 1rem;
-    border: 1px solid rgba(var(--accent-rgb), 0.14);
-    border-radius: 16px;
-    background: rgba(var(--accent-rgb), 0.05);
-    text-align: center;
-}
-
-.app-wunsch-kpi__value {
-    display: block;
-    color: var(--accent-color);
-    font-size: 1.3rem;
-    font-weight: 800;
-    line-height: 1.1;
-}
-
-.app-wunsch-kpi__label {
-    display: block;
-    margin-top: 0.2rem;
-    color: var(--text-color-muted);
-    font-size: 0.8rem;
-    font-weight: 600;
-}
-
 .app-wunsch-form-grid {
     display: grid;
     grid-template-columns: minmax(0, 18rem) auto;
@@ -2276,53 +1527,6 @@
     background: linear-gradient(180deg, rgba(var(--accent-rgb), 0.08) 0%, rgba(var(--accent-rgb), 0.04) 100%);
     border: 1px solid rgba(var(--accent-rgb), 0.14);
     color: var(--text-color);
-}
-
-.app-wunsch-legend {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.65rem;
-    margin-bottom: 1.1rem;
-}
-
-.app-wunsch-legend__item {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.45rem;
-    padding: 0.42rem 0.8rem;
-    border-radius: 999px;
-    border: 1px solid var(--border-color);
-    background: var(--surface-bg);
-    color: var(--text-color);
-    font-size: 0.8rem;
-    font-weight: 600;
-}
-
-.app-wunsch-legend__swatch {
-    width: 0.8rem;
-    height: 0.8rem;
-    border-radius: 50%;
-    flex-shrink: 0;
-}
-
-.app-wunsch-legend__swatch--wish {
-    background: var(--accent-color);
-}
-
-.app-wunsch-legend__swatch--block {
-    background: var(--danger-color);
-}
-
-.app-wunsch-legend__swatch--holiday {
-    background: #f59e0b;
-}
-
-.app-wunsch-legend__swatch--vacation {
-    background: #0ea5a4;
-}
-
-.app-wunsch-legend__swatch--weekend {
-    background: var(--border-color-strong);
 }
 
 .app-wunsch-calendar {
@@ -2352,48 +1556,15 @@
     border-color: #d6e0eb;
 }
 
-.app-wunsch-day.is-today {
-    border-color: var(--text-color-strong);
-}
-
-.app-wunsch-day.is-wish {
-    background: rgba(var(--accent-rgb), 0.05);
-    border-color: rgba(var(--accent-rgb), 0.45);
-}
-
-.app-wunsch-day.is-blocked {
-    background: rgba(var(--danger-rgb), 0.04);
-    border-color: rgba(var(--danger-rgb), 0.38);
-}
-
-.app-wunsch-day--locked {
-    background: var(--surface-bg-soft);
-    border-style: dashed;
-}
-
-.app-wunsch-day--holiday {
-    background: linear-gradient(180deg, rgba(var(--warning-rgb), 0.12) 0%, rgba(var(--warning-rgb), 0.06) 100%);
-    border-color: rgba(var(--warning-rgb), 0.3);
-}
-
-.app-wunsch-day--vacation {
-    background: linear-gradient(180deg, rgba(14, 165, 164, 0.1) 0%, rgba(14, 165, 164, 0.05) 100%);
-    border-color: rgba(14, 165, 164, 0.26);
-}
-
-.app-wunsch-day--weekend {
-    background: var(--surface-bg-soft);
-    border-color: var(--border-color);
-}
-
-.app-wunsch-day--empty {
-    visibility: hidden;
-}
-
-.app-wunsch-day.is-busy {
-    opacity: 0.72;
-    pointer-events: none;
-}
+.app-wunsch-day.is-today { border-color: var(--text-color-strong); }
+.app-wunsch-day.is-wish { background: rgba(var(--accent-rgb), 0.05); border-color: rgba(var(--accent-rgb), 0.45); }
+.app-wunsch-day.is-blocked { background: rgba(var(--danger-rgb), 0.04); border-color: rgba(var(--danger-rgb), 0.38); }
+.app-wunsch-day--locked { background: var(--surface-bg-soft); border-style: dashed; }
+.app-wunsch-day--holiday { background: linear-gradient(180deg, rgba(var(--warning-rgb), 0.12) 0%, rgba(var(--warning-rgb), 0.06) 100%); border-color: rgba(var(--warning-rgb), 0.3); }
+.app-wunsch-day--vacation { background: linear-gradient(180deg, rgba(14, 165, 164, 0.1) 0%, rgba(14, 165, 164, 0.05) 100%); border-color: rgba(14, 165, 164, 0.26); }
+.app-wunsch-day--weekend { background: var(--surface-bg-soft); border-color: var(--border-color); }
+.app-wunsch-day--empty { visibility: hidden; }
+.app-wunsch-day.is-busy { opacity: 0.72; pointer-events: none; }
 
 .app-wunsch-day__inner {
     display: flex;
@@ -2568,6 +1739,7 @@
     display: none;
 }
 
+
 @media (min-width: 768px) {
     .app-wunsch-calendar__weekdays {
         display: grid;
@@ -2641,14 +1813,6 @@
         gap: 1.2rem;
     }
 
-    .app-wunsch-hero__title {
-        font-size: 1.35rem;
-    }
-
-    .app-wunsch-hero__text {
-        font-size: 0.92rem;
-    }
-
     .app-wunsch-panel__header,
     .app-wunsch-panel__body,
     .app-wunsch-empty__body {
@@ -2661,74 +1825,9 @@
 }
 
 
-/* --------------------------------------------------------------------------
+/* ==========================================================================
    03.06 Autoplan
-   Historische Herkunft: app-autoplan.css
-   -------------------------------------------------------------------------- */
-
-
-.app-autoplan-page {
-    display: flex;
-    flex-direction: column;
-    gap: 1.35rem;
-    padding-top: 0.25rem;
-}
-
-.app-autoplan-hero {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    gap: 1rem;
-}
-
-.app-autoplan-hero__content {
-    display: flex;
-    flex-direction: column;
-    gap: 0.55rem;
-    min-width: 0;
-}
-
-.app-autoplan-label {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.45rem;
-    align-self: flex-start;
-    padding: 0.36rem 0.8rem;
-    border-radius: 999px;
-    background-color: rgba(var(--accent-rgb), 0.08);
-    color: var(--accent-color);
-    font-size: 0.78rem;
-    font-weight: 700;
-    letter-spacing: 0.02em;
-}
-
-.app-autoplan-title {
-    margin: 0;
-    color: var(--text-color-strong);
-    font-size: 1.55rem;
-    font-weight: 700;
-    line-height: 1.2;
-    letter-spacing: -0.02em;
-}
-
-.app-autoplan-text {
-    max-width: 58rem;
-    margin: 0;
-    color: var(--text-color-muted);
-    font-size: 0.96rem;
-    line-height: 1.6;
-}
-
-.app-autoplan-actions {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.7rem;
-    justify-content: flex-end;
-}
-
-    .app-autoplan-actions .btn {
-        min-width: 190px;
-    }
+   ========================================================================== */
 
 
 .app-autoplan-panel__body {
@@ -2794,112 +1893,12 @@
     gap: 1rem;
 }
 
-.app-autoplan-info-card {
-    border: 1px solid rgba(15, 23, 42, 0.06);
-    border-radius: 22px;
-    background: linear-gradient(180deg, rgba(255, 255, 255, 0.98) 0%, var(--surface-bg) 100%);
-    box-shadow: 0 14px 30px rgba(15, 23, 42, 0.06);
-    height: 100%;
-}
-
-.app-autoplan-info-card__body {
-    padding: 1.15rem 1.2rem;
-}
-
-.app-autoplan-info-card__eyebrow {
-    margin-bottom: 0.24rem;
-    color: var(--text-color-subtle);
-    font-size: 0.76rem;
-    font-weight: 800;
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
-}
-
-.app-autoplan-info-card__title {
-    margin: 0 0 0.3rem 0;
-    color: var(--text-color-strong);
-    font-size: 1.08rem;
-    font-weight: 700;
-    line-height: 1.3;
-}
-
-.app-autoplan-info-card__text {
-    margin: 0;
-    color: var(--text-color-muted);
-    font-size: 0.9rem;
-    line-height: 1.55;
-}
-
 .app-autoplan-badge-row {
     display: flex;
     flex-wrap: wrap;
     gap: 0.55rem;
     align-items: center;
 }
-
-.app-autoplan-kpi-card {
-    border: 1px solid rgba(15, 23, 42, 0.06);
-    border-radius: 22px;
-    background: linear-gradient(180deg, rgba(255, 255, 255, 0.98) 0%, var(--surface-bg) 100%);
-    box-shadow: 0 14px 30px rgba(15, 23, 42, 0.06);
-    height: 100%;
-}
-
-.app-autoplan-kpi-card__body {
-    padding: 1.2rem;
-}
-
-.app-autoplan-kpi-card__label {
-    color: var(--text-color-subtle);
-    font-size: 0.72rem;
-    font-weight: 800;
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
-    margin-bottom: 0.35rem;
-}
-
-.app-autoplan-kpi-card__value {
-    margin: 0;
-    font-size: 2rem;
-    font-weight: 800;
-    line-height: 1.05;
-}
-
-.app-autoplan-change-panel {
-    border: 1px solid rgba(15, 23, 42, 0.06);
-    border-radius: 22px;
-    background: linear-gradient(180deg, rgba(255, 255, 255, 0.98) 0%, var(--surface-bg) 100%);
-    box-shadow: 0 14px 30px rgba(15, 23, 42, 0.06);
-}
-
-.app-autoplan-change-panel__body {
-    padding: 1.15rem 1.2rem;
-}
-
-.app-autoplan-change-panel__title {
-    margin: 0 0 0.85rem 0;
-    color: var(--text-color-strong);
-    font-size: 1rem;
-    font-weight: 700;
-}
-
-.app-autoplan-preview-panel {
-    position: relative;
-    border: 1px solid rgba(15, 23, 42, 0.06);
-    border-radius: 24px;
-    background: linear-gradient(180deg, rgba(255, 255, 255, 0.98) 0%, var(--surface-bg) 100%);
-    box-shadow: 0 18px 40px rgba(15, 23, 42, 0.08);
-    overflow: hidden;
-}
-
-    .app-autoplan-preview-panel::before {
-        content: "";
-        position: absolute;
-        inset: 0 auto auto 0;
-        width: 100%;
-        height: 4px;
-        background: linear-gradient(90deg, var(--accent-color) 0%, rgba(var(--accent-rgb), 0.45) 100%);
-    }
 
 .app-autoplan-preview-panel__header {
     position: relative;
@@ -2937,26 +1936,16 @@
 }
 
 .app-autoplan-slot-card,
-.app-autoplan-conflict-card,
+.app-autoplan-conflict-card {
+    min-height: 100%;
+    border: 1px solid var(--border-color);
+    border-radius: 18px;
+    background: var(--surface-bg);
+    padding: 1rem;
+}
+
 .app-autoplan-ok-card {
     min-height: 100%;
-}
-
-.app-autoplan-slot-card {
-    border: 1px solid var(--border-color);
-    border-radius: 18px;
-    background: var(--surface-bg);
-    padding: 1rem;
-}
-
-.app-autoplan-conflict-card {
-    border: 1px solid var(--border-color);
-    border-radius: 18px;
-    background: var(--surface-bg);
-    padding: 1rem;
-}
-
-.app-autoplan-ok-card {
     border-radius: 18px;
     background: #f8fff9;
     border: 1px solid #d1f2d6;
@@ -2967,10 +1956,6 @@
     letter-spacing: 0.1em;
 }
 
-.bg-light-subtle {
-    background-color: #fbfbfc !important;
-}
-
 @media (max-width: 1199.98px) {
     .app-autoplan-info-grid {
         grid-template-columns: 1fr;
@@ -2978,15 +1963,6 @@
 }
 
 @media (max-width: 991.98px) {
-    .app-autoplan-hero {
-        flex-direction: column;
-        align-items: flex-start;
-    }
-
-    .app-autoplan-actions {
-        justify-content: flex-start;
-    }
-
     .app-autoplan-setup-grid {
         grid-template-columns: 1fr;
     }
@@ -3001,104 +1977,15 @@
         grid-template-columns: 1fr;
     }
 
-    .app-autoplan-actions .btn,
     .app-autoplan-side-action .btn {
         width: 100%;
     }
 }
 
 @media (max-width: 575.98px) {
-    .app-autoplan-title {
-        font-size: 1.35rem;
-    }
-
-    .app-autoplan-text {
-        font-size: 0.92rem;
-    }
-
-    .app-autoplan-actions {
-        flex-direction: column;
-        align-items: stretch;
-    }
-
     .app-autoplan-panel__body,
     .app-autoplan-preview-panel__header {
         padding-left: 1.05rem;
         padding-right: 1.05rem;
-    }
-}
-
-
-/* ------------------------------------------------------------
-   Konsolidierungs-Fixes: Dienstplan / Wachleiter / Wunschphase
-   ------------------------------------------------------------ */
-
-.badge-aldente {
-    padding: 0.4rem 0.8rem;
-    border-radius: 999px;
-    font-size: 0.72rem;
-    font-weight: 700;
-    display: inline-flex;
-    align-items: center;
-    line-height: 1.2;
-}
-
-.badge-aldente-success {
-    background: #e3fcef;
-    color: #006644;
-}
-
-.badge-aldente-primary {
-    background: #deebff;
-    color: #0747a6;
-}
-
-.badge-aldente-light {
-    background: #f4f5f7;
-    color: #42526e;
-}
-
-.arzt-slot-bg {
-    background-color: #fffafb;
-    border-color: #fecaca !important;
-}
-
-.nfs-slot-bg {
-    background-color: #f8fbff;
-    border-color: #bfdbfe !important;
-}
-
-.pulse-dot {
-    width: 7px;
-    height: 7px;
-    background: var(--ad-success);
-    border-radius: 50%;
-    animation: ad-pulse 2s infinite;
-}
-
-@keyframes ad-pulse {
-    0% {
-        transform: scale(0.95);
-        box-shadow: 0 0 0 0 rgba(0, 135, 90, 0.4);
-    }
-
-    70% {
-        transform: scale(1.1);
-        box-shadow: 0 0 0 6px rgba(0, 135, 90, 0);
-    }
-
-    100% {
-        transform: scale(0.95);
-        box-shadow: 0 0 0 0 rgba(0, 135, 90, 0);
-    }
-}
-
-.hover-translate-back:hover {
-    transform: translateY(-1px);
-}
-
-@media (min-width: 992px) {
-    .border-end-lg {
-        border-right: 1px solid rgba(15, 23, 42, 0.08) !important;
     }
 }
