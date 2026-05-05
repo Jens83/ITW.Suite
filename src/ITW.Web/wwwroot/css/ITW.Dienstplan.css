@@ -61,14 +61,14 @@
     font-size: 1.45rem;
     font-weight: 700;
     line-height: 1.2;
-    color: #0f172a;
+    color: var(--text-color-strong);
     letter-spacing: -0.02em;
 }
 
 .app-period-hero__text {
     max-width: 54rem;
     margin: 0;
-    color: #64748b;
+    color: var(--text-color-muted);
     font-size: 0.95rem;
     line-height: 1.6;
 }
@@ -216,7 +216,7 @@
     line-height: 1.05;
     background: #f8fafc;
     border: 1px solid #e2e8f0;
-    color: #64748b;
+    color: var(--text-color-muted);
     flex-shrink: 0;
 }
 
@@ -241,7 +241,7 @@
 
 .app-period-card__title {
     margin: 0 0 0.2rem 0;
-    color: #0f172a;
+    color: var(--text-color-strong);
     font-size: 1.1rem;
     font-weight: 700;
     line-height: 1.3;
@@ -249,7 +249,7 @@
 
 .app-period-card__subtext {
     margin: 0;
-    color: #64748b;
+    color: var(--text-color-muted);
     font-size: 0.86rem;
     line-height: 1.45;
 }
@@ -298,13 +298,13 @@
 
 .app-period-badge--closed {
     background: #f8fafc;
-    color: #475569;
+    color: var(--text-color);
     border-color: #e2e8f0;
 }
 
 .app-period-card__note {
     margin: 0;
-    color: #64748b;
+    color: var(--text-color-muted);
     font-size: 0.86rem;
     line-height: 1.45;
 }
@@ -359,13 +359,13 @@
     margin: 0 0 0.5rem 0;
     font-size: 1.25rem;
     font-weight: 700;
-    color: #0f172a;
+    color: var(--text-color-strong);
 }
 
 .app-period-empty__text {
     max-width: 42rem;
     margin: 0 auto;
-    color: #64748b;
+    color: var(--text-color-muted);
     font-size: 0.95rem;
     line-height: 1.6;
 }
@@ -405,7 +405,7 @@
 
 .app-period-modal__title {
     margin: 0;
-    color: #0f172a;
+    color: var(--text-color-strong);
     font-size: 1.15rem;
     font-weight: 700;
 }
@@ -425,7 +425,7 @@
 }
 
 .app-period-field__label {
-    color: #64748b;
+    color: var(--text-color-muted);
     font-size: 0.76rem;
     font-weight: 800;
     text-transform: uppercase;
@@ -437,7 +437,7 @@
     border: 1px solid #e2e8f0;
     border-radius: 14px;
     background: #f8fafc;
-    color: #0f172a;
+    color: var(--text-color-strong);
     font-size: 0.92rem;
     font-weight: 600;
     box-shadow: none;
@@ -472,7 +472,7 @@
 }
 
 .app-period-switch-card__text {
-    color: #475569;
+    color: var(--text-color);
     font-size: 0.88rem;
     line-height: 1.45;
 }
@@ -574,14 +574,14 @@
     font-size: 1.5rem;
     font-weight: 700;
     line-height: 1.2;
-    color: #0f172a;
+    color: var(--text-color-strong);
     letter-spacing: -0.02em;
 }
 
 .app-plan-hero__text {
     max-width: 54rem;
     margin: 0;
-    color: #64748b;
+    color: var(--text-color-muted);
     font-size: 0.95rem;
     line-height: 1.6;
 }
@@ -676,13 +676,13 @@
     margin: 0 0 0.5rem 0;
     font-size: 1.25rem;
     font-weight: 700;
-    color: #0f172a;
+    color: var(--text-color-strong);
 }
 
 .app-plan-empty__text {
     max-width: 40rem;
     margin: 0 auto;
-    color: #64748b;
+    color: var(--text-color-muted);
     font-size: 0.95rem;
     line-height: 1.6;
 }
@@ -721,7 +721,7 @@
     .app-plan-switcher__button.app-btn-outline-accent {
         background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%);
         border-color: rgba(15, 23, 42, 0.08);
-        color: #475569;
+        color: var(--text-color);
         box-shadow: 0 4px 10px rgba(15, 23, 42, 0.04);
     }
 
@@ -767,7 +767,7 @@
 
 .app-plan-section__eyebrow {
     margin-bottom: 0.25rem;
-    color: #94a3b8;
+    color: var(--text-color-subtle);
     font-size: 0.76rem;
     font-weight: 800;
     text-transform: uppercase;
@@ -778,7 +778,7 @@
     margin: 0;
     font-size: 1.08rem;
     font-weight: 700;
-    color: #0f172a;
+    color: var(--text-color-strong);
     line-height: 1.3;
 }
 
@@ -808,7 +808,7 @@
     border-radius: 18px;
     border: 1px solid #e2e8f0;
     background: linear-gradient(180deg, #f8fafc 0%, #ffffff 100%);
-    color: #64748b;
+    color: var(--text-color-muted);
     font-size: 0.92rem;
     line-height: 1.55;
 }
@@ -883,7 +883,7 @@
 
 .app-plan-day__eyebrow {
     margin-bottom: 0.1rem;
-    color: #94a3b8;
+    color: var(--text-color-subtle);
     font-size: 0.68rem;
     font-weight: 800;
     text-transform: uppercase;
@@ -891,7 +891,7 @@
 }
 
 .app-plan-day__date {
-    color: #0f172a;
+    color: var(--text-color-strong);
     font-size: 0.92rem;
     font-weight: 700;
     line-height: 1.25;
@@ -957,7 +957,7 @@
 
 .app-plan-day__flag--weekend {
     background: #e2e8f0;
-    color: #475569;
+    color: var(--text-color);
     border: 1px solid #d6dde8;
 }
 
@@ -969,7 +969,7 @@
 }
 
 .app-plan-day__empty {
-    color: #64748b;
+    color: var(--text-color-muted);
     font-size: 0.82rem;
     line-height: 1.4;
 }
@@ -1001,12 +1001,12 @@
 .app-plan-slot--offen {
     background: #f8fafc;
     border-style: dashed;
-    color: #94a3b8;
+    color: var(--text-color-subtle);
 }
 
 .app-plan-slot__name {
     display: block;
-    color: #0f172a;
+    color: var(--text-color-strong);
     font-size: 0.84rem;
     font-weight: 600;
     line-height: 1.32;
@@ -1014,7 +1014,7 @@
 }
 
 .app-plan-slot--offen .app-plan-slot__name {
-    color: #64748b;
+    color: var(--text-color-muted);
     font-style: italic;
 }
 
@@ -1031,7 +1031,7 @@
             padding: 0.75rem 0.35rem;
             border-radius: 14px;
             background: #f8fafc;
-            color: #64748b;
+            color: var(--text-color-muted);
             font-size: 0.72rem;
             font-weight: 800;
             text-transform: uppercase;
@@ -1144,7 +1144,7 @@
 
 .app-report-title {
     margin: 0;
-    color: #0f172a;
+    color: var(--text-color-strong);
     font-size: 1.55rem;
     font-weight: 700;
     line-height: 1.2;
@@ -1154,7 +1154,7 @@
 .app-report-text {
     max-width: 58rem;
     margin: 0;
-    color: #64748b;
+    color: var(--text-color-muted);
     font-size: 0.96rem;
     line-height: 1.6;
 }
@@ -1242,7 +1242,7 @@
 
 .app-report-filter__eyebrow {
     margin-bottom: 0.24rem;
-    color: #94a3b8;
+    color: var(--text-color-subtle);
     font-size: 0.76rem;
     font-weight: 800;
     text-transform: uppercase;
@@ -1251,7 +1251,7 @@
 
 .app-report-filter__title {
     margin: 0 0 0.25rem 0;
-    color: #0f172a;
+    color: var(--text-color-strong);
     font-size: 1.12rem;
     font-weight: 700;
     line-height: 1.3;
@@ -1259,7 +1259,7 @@
 
 .app-report-filter__text {
     margin: 0;
-    color: #64748b;
+    color: var(--text-color-muted);
     font-size: 0.9rem;
     line-height: 1.55;
 }
@@ -1277,7 +1277,7 @@
 .app-report-filter__label {
     display: block;
     margin-bottom: 0.35rem;
-    color: #64748b;
+    color: var(--text-color-muted);
     font-size: 0.74rem;
     font-weight: 800;
     text-transform: uppercase;
@@ -1289,7 +1289,7 @@
     border: 1px solid #e2e8f0;
     border-radius: 14px;
     background: #f8fafc;
-    color: #0f172a;
+    color: var(--text-color-strong);
     font-size: 0.94rem;
     font-weight: 600;
     box-shadow: none;
@@ -1328,7 +1328,7 @@
 }
 
 .app-report-kpi-card__label {
-    color: #94a3b8;
+    color: var(--text-color-subtle);
     font-size: 0.72rem;
     font-weight: 800;
     text-transform: uppercase;
@@ -1336,7 +1336,7 @@
 }
 
 .app-report-kpi-card__value {
-    color: #0f172a;
+    color: var(--text-color-strong);
     font-size: 1.7rem;
     font-weight: 800;
     line-height: 1.1;
@@ -1344,7 +1344,7 @@
 }
 
 .app-report-kpi-card__text {
-    color: #64748b;
+    color: var(--text-color-muted);
     font-size: 0.84rem;
     line-height: 1.45;
     margin: 0.25rem 0 0 0;
@@ -1387,7 +1387,7 @@
     border-radius: 999px;
     background: #f8fafc;
     border: 1px solid #e2e8f0;
-    color: #475569;
+    color: var(--text-color);
     font-size: 0.82rem;
     font-weight: 700;
     line-height: 1.2;
@@ -1421,7 +1421,7 @@
 
 .app-report-panel__eyebrow {
     margin-bottom: 0.22rem;
-    color: #94a3b8;
+    color: var(--text-color-subtle);
     font-size: 0.76rem;
     font-weight: 800;
     text-transform: uppercase;
@@ -1430,7 +1430,7 @@
 
 .app-report-panel__title {
     margin: 0;
-    color: #0f172a;
+    color: var(--text-color-strong);
     font-size: 1.1rem;
     font-weight: 700;
     line-height: 1.3;
@@ -1467,14 +1467,14 @@
 
 .app-report-empty__title {
     margin: 0 0 0.45rem 0;
-    color: #0f172a;
+    color: var(--text-color-strong);
     font-size: 1.15rem;
     font-weight: 700;
 }
 
 .app-report-empty__text {
     margin: 0;
-    color: #64748b;
+    color: var(--text-color-muted);
     font-size: 0.92rem;
     line-height: 1.55;
 }
@@ -1484,7 +1484,7 @@
     letter-spacing: 0.05em;
     border-bottom: none;
     white-space: nowrap;
-    color: #94a3b8;
+    color: var(--text-color-subtle);
     font-weight: 800;
     text-transform: uppercase;
     background: #f8fafc;
@@ -1685,7 +1685,7 @@
     .wl-page .wl-control-eyebrow {
         font-size: 0.7rem;
         font-weight: 800;
-        color: #94a3b8;
+        color: var(--text-color-subtle);
         text-transform: uppercase;
         letter-spacing: 0.08em;
         margin-bottom: 0.3rem;
@@ -1948,7 +1948,7 @@
 .wl-page .tag-status.status-vollstaendig,
 .wl-page .staff-combined-badge.status-vollstaendig {
     background-color: #f0fdf4;
-    color: #15803d;
+    color: var(--success-color);
 }
 
 /* =========================
@@ -2110,14 +2110,14 @@
     font-size: 1.55rem;
     font-weight: 700;
     line-height: 1.2;
-    color: #0f172a;
+    color: var(--text-color-strong);
     letter-spacing: -0.02em;
 }
 
 .app-wunsch-hero__text {
     max-width: 52rem;
     margin: 0;
-    color: #64748b;
+    color: var(--text-color-muted);
     font-size: 0.96rem;
     line-height: 1.6;
 }
@@ -2149,13 +2149,13 @@
     margin: 0 0 0.55rem 0;
     font-size: 1.3rem;
     font-weight: 700;
-    color: #0f172a;
+    color: var(--text-color-strong);
 }
 
 .app-wunsch-empty__text {
     max-width: 38rem;
     margin: 0 auto;
-    color: #64748b;
+    color: var(--text-color-muted);
     font-size: 0.95rem;
     line-height: 1.6;
 }
@@ -2187,7 +2187,7 @@
     }
 
 .app-wunsch-panel--soft::before {
-    background: linear-gradient(90deg, #0f172a 0%, rgba(15, 23, 42, 0.35) 100%);
+    background: linear-gradient(90deg, var(--text-color-strong) 0%, rgba(15, 23, 42, 0.35) 100%);
 }
 
 .app-wunsch-panel__header {
@@ -2200,7 +2200,7 @@
 
 .app-wunsch-panel__eyebrow {
     margin-bottom: 0.25rem;
-    color: #94a3b8;
+    color: var(--text-color-subtle);
     font-size: 0.76rem;
     font-weight: 800;
     text-transform: uppercase;
@@ -2211,13 +2211,13 @@
     margin: 0 0 0.25rem 0;
     font-size: 1.15rem;
     font-weight: 700;
-    color: #0f172a;
+    color: var(--text-color-strong);
     line-height: 1.3;
 }
 
 .app-wunsch-panel__text {
     margin: 0;
-    color: #64748b;
+    color: var(--text-color-muted);
     font-size: 0.92rem;
     line-height: 1.55;
 }
@@ -2246,7 +2246,7 @@
 .app-wunsch-kpi__label {
     display: block;
     margin-top: 0.2rem;
-    color: #64748b;
+    color: var(--text-color-muted);
     font-size: 0.8rem;
     font-weight: 600;
 }
@@ -2275,7 +2275,7 @@
 .app-wunsch-note--info {
     background: linear-gradient(180deg, rgba(var(--accent-rgb), 0.08) 0%, rgba(var(--accent-rgb), 0.04) 100%);
     border: 1px solid rgba(var(--accent-rgb), 0.14);
-    color: #475569;
+    color: var(--text-color);
 }
 
 .app-wunsch-legend {
@@ -2293,7 +2293,7 @@
     border-radius: 999px;
     border: 1px solid #e2e8f0;
     background: #ffffff;
-    color: #475569;
+    color: var(--text-color);
     font-size: 0.8rem;
     font-weight: 600;
 }
@@ -2353,7 +2353,7 @@
 }
 
 .app-wunsch-day.is-today {
-    border-color: #0f172a;
+    border-color: var(--text-color-strong);
 }
 
 .app-wunsch-day.is-wish {
@@ -2418,14 +2418,14 @@
 }
 
 .app-wunsch-day__date {
-    color: #0f172a;
+    color: var(--text-color-strong);
     font-size: 1.2rem;
     font-weight: 800;
     line-height: 1;
 }
 
 .app-wunsch-day__weekday {
-    color: #64748b;
+    color: var(--text-color-muted);
     font-size: 0.86rem;
     font-weight: 600;
 }
@@ -2435,7 +2435,7 @@
     align-items: center;
     padding: 0.28rem 0.55rem;
     border-radius: 999px;
-    background: #0f172a;
+    background: var(--text-color-strong);
     color: #ffffff;
     font-size: 0.72rem;
     font-weight: 700;
@@ -2448,7 +2448,7 @@
     display: inline-flex;
     align-items: center;
     gap: 0.4rem;
-    color: #64748b;
+    color: var(--text-color-muted);
     font-size: 0.82rem;
     font-weight: 600;
 }
@@ -2488,25 +2488,25 @@
 
 .app-wunsch-day__flag--weekend {
     background: #e2e8f0;
-    color: #475569;
+    color: var(--text-color);
     border: 1px solid #d6dde8;
 }
 
 .app-wunsch-day__flag--locked {
     background: #eef2f7;
-    color: #64748b;
+    color: var(--text-color-muted);
     border: 1px solid #e2e8f0;
 }
 
 .app-wunsch-day__reason {
-    color: #0f172a;
+    color: var(--text-color-strong);
     font-size: 0.9rem;
     font-weight: 700;
     line-height: 1.45;
 }
 
 .app-wunsch-day__subreason {
-    color: #64748b;
+    color: var(--text-color-muted);
     font-size: 0.82rem;
     line-height: 1.45;
 }
@@ -2529,7 +2529,7 @@
     border: 1px solid #dbe3ee;
     border-radius: 12px;
     background: #ffffff;
-    color: #64748b;
+    color: var(--text-color-muted);
     font-size: 0.86rem;
     font-weight: 700;
     display: inline-flex;
@@ -2581,7 +2581,7 @@
             padding: 0.85rem 0.4rem;
             border-radius: 14px;
             background: #f8fafc;
-            color: #64748b;
+            color: var(--text-color-muted);
             font-size: 0.76rem;
             font-weight: 800;
             text-transform: uppercase;
@@ -2704,7 +2704,7 @@
 
 .app-autoplan-title {
     margin: 0;
-    color: #0f172a;
+    color: var(--text-color-strong);
     font-size: 1.55rem;
     font-weight: 700;
     line-height: 1.2;
@@ -2714,7 +2714,7 @@
 .app-autoplan-text {
     max-width: 58rem;
     margin: 0;
-    color: #64748b;
+    color: var(--text-color-muted);
     font-size: 0.96rem;
     line-height: 1.6;
 }
@@ -2758,7 +2758,7 @@
 .app-autoplan-field__label {
     display: block;
     margin-bottom: 0.35rem;
-    color: #64748b;
+    color: var(--text-color-muted);
     font-size: 0.74rem;
     font-weight: 800;
     text-transform: uppercase;
@@ -2770,7 +2770,7 @@
     border: 1px solid #e2e8f0;
     border-radius: 14px;
     background: #f8fafc;
-    color: #0f172a;
+    color: var(--text-color-strong);
     font-size: 0.94rem;
     font-weight: 600;
     box-shadow: none;
@@ -2808,7 +2808,7 @@
 
 .app-autoplan-info-card__eyebrow {
     margin-bottom: 0.24rem;
-    color: #94a3b8;
+    color: var(--text-color-subtle);
     font-size: 0.76rem;
     font-weight: 800;
     text-transform: uppercase;
@@ -2817,7 +2817,7 @@
 
 .app-autoplan-info-card__title {
     margin: 0 0 0.3rem 0;
-    color: #0f172a;
+    color: var(--text-color-strong);
     font-size: 1.08rem;
     font-weight: 700;
     line-height: 1.3;
@@ -2825,7 +2825,7 @@
 
 .app-autoplan-info-card__text {
     margin: 0;
-    color: #64748b;
+    color: var(--text-color-muted);
     font-size: 0.9rem;
     line-height: 1.55;
 }
@@ -2850,7 +2850,7 @@
 }
 
 .app-autoplan-kpi-card__label {
-    color: #94a3b8;
+    color: var(--text-color-subtle);
     font-size: 0.72rem;
     font-weight: 800;
     text-transform: uppercase;
@@ -2878,7 +2878,7 @@
 
 .app-autoplan-change-panel__title {
     margin: 0 0 0.85rem 0;
-    color: #0f172a;
+    color: var(--text-color-strong);
     font-size: 1rem;
     font-weight: 700;
 }
@@ -2911,7 +2911,7 @@
 
 .app-autoplan-preview-panel__title {
     margin: 0 0 0.2rem 0;
-    color: #0f172a;
+    color: var(--text-color-strong);
     font-size: 1.12rem;
     font-weight: 700;
     line-height: 1.3;
@@ -2919,7 +2919,7 @@
 
 .app-autoplan-preview-panel__text {
     margin: 0;
-    color: #64748b;
+    color: var(--text-color-muted);
     font-size: 0.9rem;
     line-height: 1.5;
 }

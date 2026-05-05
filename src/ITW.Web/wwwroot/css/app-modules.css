@@ -73,7 +73,7 @@
 .app-dashboard-header__text {
     margin: 0;
     max-width: 40rem;
-    color: #64748b;
+    color: var(--text-color-muted);
     font-size: 0.92rem;
     line-height: 1.55;
 }
@@ -86,7 +86,7 @@
     border-radius: 999px;
     background-color: #ffffff;
     border: 1px solid rgba(var(--accent-rgb), 0.14);
-    color: #475569;
+    color: var(--text-color);
     font-size: 0.8rem;
     font-weight: 600;
     white-space: nowrap;
@@ -164,12 +164,12 @@
     font-size: clamp(2rem, 4vw, 2.8rem);
     font-weight: 700;
     line-height: 1.1;
-    color: #0f172a;
+    color: var(--text-color-strong);
     letter-spacing: -0.03em;
 }
 
 .app-home-hero__brand-primary {
-    color: #475569;
+    color: var(--text-color);
     font-weight: 700;
 }
 
@@ -181,7 +181,7 @@
 .app-home-hero__text {
     max-width: 42rem;
     margin: 0 auto;
-    color: #64748b;
+    color: var(--text-color-muted);
     font-size: 1rem;
     line-height: 1.65;
 }
@@ -310,7 +310,7 @@
 
 .app-home-status--muted {
     background-color: #f8fafc;
-    color: #64748b;
+    color: var(--text-color-muted);
     border: 1px solid #e2e8f0;
 }
 
@@ -336,14 +336,14 @@
     text-align: center;
     font-size: 1.28rem;
     font-weight: 700;
-    color: #0f172a;
+    color: var(--text-color-strong);
     line-height: 1.25;
 }
 
 .app-home-module__text {
     margin: 0;
     text-align: center;
-    color: #64748b;
+    color: var(--text-color-muted);
     font-size: 0.94rem;
     line-height: 1.6;
 }
@@ -393,7 +393,7 @@
 
 .app-home-module__action--muted {
     background-color: #f8fafc;
-    color: #64748b;
+    color: var(--text-color-muted);
     border-color: #dbe3ee;
     box-shadow: none;
 }
@@ -402,7 +402,7 @@
     .app-home-module__action--muted:focus,
     .app-home-module__action--muted:active {
         background-color: #f1f5f9;
-        color: #475569;
+        color: var(--text-color);
         border-color: #cbd5e1;
         box-shadow: none;
     }
@@ -410,7 +410,7 @@
 .app-home-footer {
     margin-top: 2.5rem;
     text-align: center;
-    color: #94a3b8;
+    color: var(--text-color-subtle);
     font-size: 0.82rem;
 }
 
@@ -514,7 +514,7 @@
     font-weight: 700;
     line-height: 1.15;
     letter-spacing: -0.02em;
-    color: #0f172a;
+    color: var(--text-color-strong);
 }
 
     .app-auth-hero__brand .app-brand-name {
@@ -525,7 +525,7 @@
 .app-auth-hero__text {
     max-width: 30rem;
     margin: 0 auto;
-    color: #64748b;
+    color: var(--text-color-muted);
     font-size: 0.95rem;
     line-height: 1.6;
 }
@@ -539,12 +539,12 @@
     margin: 0 0 0.2rem 0;
     font-size: 1rem;
     font-weight: 700;
-    color: #0f172a;
+    color: var(--text-color-strong);
 }
 
 .app-auth-form-text {
     margin: 0;
-    color: #64748b;
+    color: var(--text-color-muted);
     font-size: 0.9rem;
     line-height: 1.5;
 }
@@ -565,7 +565,7 @@
     border-radius: 16px;
     border: 1px solid rgba(var(--accent-rgb), 0.14);
     background: linear-gradient(180deg, rgba(var(--accent-rgb), 0.08) 0%, rgba(var(--accent-rgb), 0.04) 100%);
-    color: #475569;
+    color: var(--text-color);
 }
 
 .app-auth-note__icon {
@@ -588,12 +588,12 @@
     margin: 0 0 0.2rem 0;
     font-size: 0.92rem;
     font-weight: 700;
-    color: #0f172a;
+    color: var(--text-color-strong);
 }
 
 .app-auth-note__text {
     margin: 0;
-    color: #64748b;
+    color: var(--text-color-muted);
     font-size: 0.88rem;
     line-height: 1.55;
 }
@@ -665,7 +665,7 @@
     margin-bottom: 0.45rem;
     font-size: 0.8rem;
     font-weight: 700;
-    color: #64748b;
+    color: var(--text-color-muted);
     letter-spacing: 0.01em;
 }
 
@@ -699,7 +699,7 @@
     }
 
 .app-auth-check-label {
-    color: #64748b;
+    color: var(--text-color-muted);
     font-size: 0.88rem;
 }
 
@@ -722,7 +722,7 @@
 .app-auth-footer {
     margin-top: 1.25rem;
     text-align: center;
-    color: #94a3b8;
+    color: var(--text-color-subtle);
     font-size: 0.78rem;
 }
 
@@ -941,7 +941,7 @@
     font-weight: 800;
     letter-spacing: 0.08em;
     text-transform: uppercase;
-    color: #64748b;
+    color: var(--text-color-muted);
     padding-top: 1rem;
     padding-bottom: 1rem;
     white-space: nowrap;
@@ -965,7 +965,7 @@
 
 .app-staff-table__subtext {
     font-size: 0.84rem;
-    color: #64748b;
+    color: var(--text-color-muted);
 }
 
 .app-staff-chip {
@@ -995,7 +995,7 @@
 
 .app-staff-badge--neutral {
     background: #f8fafc;
-    color: #475569;
+    color: var(--text-color);
     border-color: rgba(148, 163, 184, 0.24);
 }
 
@@ -1007,7 +1007,7 @@
 
 .app-staff-badge--success {
     background: rgba(21, 128, 61, 0.08);
-    color: #15803d;
+    color: var(--success-color);
     border-color: rgba(21, 128, 61, 0.16);
 }
 

@@ -184,7 +184,7 @@
     font-weight: 800;
     letter-spacing: 0.08em;
     text-transform: uppercase;
-    color: #64748b;
+    color: var(--text-color-muted);
     padding-top: 1rem;
     padding-bottom: 1rem;
     white-space: nowrap;
@@ -213,7 +213,7 @@
 
 .app-personal-table__subtext {
     font-size: 0.84rem;
-    color: #64748b;
+    color: var(--text-color-muted);
 }
 
 .app-personal-table__subtext--spaced {
@@ -245,7 +245,7 @@
 
 .app-personal-chip--neutral {
     background: #f8fafc;
-    color: #475569;
+    color: var(--text-color);
     border-color: rgba(148, 163, 184, 0.22);
 }
 
@@ -282,7 +282,7 @@
 
 .app-personal-badge--success {
     background: rgba(21, 128, 61, 0.08);
-    color: #15803d;
+    color: var(--success-color);
     border-color: rgba(21, 128, 61, 0.16);
 }
 
@@ -382,7 +382,7 @@
         font-weight: 800;
         letter-spacing: 0.08em;
         text-transform: uppercase;
-        color: #64748b;
+        color: var(--text-color-muted);
     }
 
         .app-employee-detail-breadcrumb .breadcrumb-item.active {
@@ -452,7 +452,7 @@
 
 .app-employee-detail-status--success {
     background: rgba(21, 128, 61, 0.08);
-    color: #15803d;
+    color: var(--success-color);
     border-color: rgba(21, 128, 61, 0.16);
 }
 
@@ -542,7 +542,7 @@
 
 .app-employee-card__footer {
     padding: 0 1.35rem 1rem;
-    color: #64748b;
+    color: var(--text-color-muted);
     font-size: 0.78rem;
 }
 
@@ -572,7 +572,7 @@
     font-weight: 800;
     text-transform: uppercase;
     letter-spacing: 0.08em;
-    color: #94a3b8;
+    color: var(--text-color-subtle);
 }
 
 .app-employee-detail-field__value {
@@ -587,7 +587,7 @@
 }
 
 .app-employee-detail-field__value--muted {
-    color: #64748b;
+    color: var(--text-color-muted);
 }
 
 .app-employee-detail-highlight {
@@ -608,7 +608,7 @@
 
 .app-employee-chip--neutral {
     background: #f8fafc;
-    color: #475569;
+    color: var(--text-color);
     border-color: rgba(148, 163, 184, 0.22);
 }
 
@@ -644,7 +644,7 @@
 
 .app-employee-badge--success {
     background: rgba(21, 128, 61, 0.08);
-    color: #15803d;
+    color: var(--success-color);
     border-color: rgba(21, 128, 61, 0.16);
 }
 
@@ -704,7 +704,7 @@
 }
 
 .app-employee-nav__label {
-    color: #94a3b8;
+    color: var(--text-color-subtle);
     font-size: 0.68rem;
     font-weight: 800;
     letter-spacing: 0.08em;
@@ -719,7 +719,7 @@
 }
 
 .app-employee-nav__qualification {
-    color: #64748b;
+    color: var(--text-color-muted);
     font-size: 0.83rem;
 }
 
@@ -737,7 +737,7 @@
     padding: 0.8rem 0.95rem;
     border-radius: 18px;
     text-decoration: none;
-    color: #475569;
+    color: var(--text-color);
     font-size: 0.94rem;
     font-weight: 700;
     transition: all 0.18s ease;
@@ -746,7 +746,7 @@
     .app-employee-nav__link i {
         width: 1.35rem;
         text-align: center;
-        color: #64748b;
+        color: var(--text-color-muted);
     }
 
     .app-employee-nav__link:hover {
@@ -777,7 +777,7 @@
 
 .app-employee-form-note {
     margin-top: 0.45rem;
-    color: #64748b;
+    color: var(--text-color-muted);
     font-size: 0.84rem;
     line-height: 1.6;
 }
@@ -794,7 +794,7 @@
     justify-items: center;
     gap: 0.7rem;
     padding: 2.6rem 1rem;
-    color: #64748b;
+    color: var(--text-color-muted);
     text-align: center;
 }
 
@@ -853,7 +853,7 @@
 }
 
 .app-employee-doc-card__meta {
-    color: #64748b;
+    color: var(--text-color-muted);
     font-size: 0.75rem;
     line-height: 1.5;
 }
@@ -1039,7 +1039,7 @@
     font-weight: 800;
     letter-spacing: 0.08em;
     text-transform: uppercase;
-    color: #64748b;
+    color: var(--text-color-muted);
 }
 
 .app-vacation-input {
@@ -1056,7 +1056,7 @@
     align-items: center;
     justify-content: center;
     width: 3rem;
-    color: #64748b;
+    color: var(--text-color-muted);
     font-size: 0.95rem;
 }
 
@@ -1099,7 +1099,7 @@
     font-weight: 800;
     letter-spacing: 0.08em;
     text-transform: uppercase;
-    color: #64748b;
+    color: var(--text-color-muted);
 }
 
 .app-vacation-kpi__value {
@@ -1113,7 +1113,7 @@
     .app-vacation-kpi__value span {
         font-size: 0.92rem;
         font-weight: 600;
-        color: #64748b;
+        color: var(--text-color-muted);
     }
 
 .app-vacation-kpi__value--primary {
@@ -1121,11 +1121,11 @@
 }
 
 .app-vacation-kpi__value--neutral {
-    color: #475569;
+    color: var(--text-color);
 }
 
 .app-vacation-kpi__value--success {
-    color: #15803d;
+    color: var(--success-color);
 }
 
 .app-vacation-kpi__value--danger {
@@ -1266,7 +1266,7 @@
     padding: 0.85rem 0.95rem;
     border-radius: 16px;
     background: rgba(3, 105, 161, 0.06);
-    color: #0f172a;
+    color: var(--text-color-strong);
     font-size: 0.9rem;
     line-height: 1.55;
 }
@@ -1341,7 +1341,7 @@
     font-weight: 800;
     letter-spacing: 0.08em;
     text-transform: uppercase;
-    color: #64748b;
+    color: var(--text-color-muted);
     padding-top: 1rem;
     padding-bottom: 1rem;
 }
@@ -1359,7 +1359,7 @@
 
 .app-vacation-table__subtext {
     font-size: 0.8rem;
-    color: #64748b;
+    color: var(--text-color-muted);
 }
 
 .app-vacation-table__note {
