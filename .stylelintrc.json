@@ -13,6 +13,12 @@
     "no-duplicate-selectors": [true, { "severity": "warning" }],
     "color-no-invalid-hex": true,
     "no-descending-specificity": null,
+    "selector-disallowed-list": [
+      [
+        "/^\\.btn-(primary|secondary|warning|info|light|dark|success|danger|sm|lg|pill|block|link)$/",
+        { "message": "Bootstrap btn-* Varianten nicht erlaubt; stattdessen app-btn-* verwenden.", "severity": "warning" }
+      ]
+    ],
     "declaration-property-value-disallowed-list": {
       "/^(color|background|background-color|border|border-color|border-top-color|border-right-color|border-bottom-color|border-left-color|outline|outline-color|fill|stroke|box-shadow|text-shadow|caret-color)$/": [
         "/#[0-9a-fA-F]{3,8}/"

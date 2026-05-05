@@ -32,7 +32,7 @@
             <a asp-area="Intensivtransport"
                asp-controller="DienstplanWachleiter"
                asp-action="Index"
-               class="btn btn-neutral"
+               class="app-btn app-btn-neutral"
                data-app-loading-link
                data-app-loading-text="Übersicht wird geöffnet...">
                 <i class="bi bi-arrow-left"></i>Zur Übersicht
@@ -44,7 +44,7 @@
                    asp-controller="DienstplanWachleiter"
                    asp-action="Wachleiterkalender"
                    asp-route-periodeId="@Model.AusgewaehltePeriodeId"
-                   class="btn btn-outline-accent"
+                   class="app-btn app-btn-outline-accent"
                    data-app-loading-link
                    data-app-loading-text="Tagesplanung wird geöffnet...">
                     <i class="bi bi-calendar3"></i>Zur Tagesplanung
@@ -97,7 +97,7 @@
 
                     <div class="app-autoplan-field">
                         <button type="submit"
-                                class="btn btn-neutral h-100"
+                                class="app-btn app-btn-neutral h-100"
                                 data-app-loading-form
                                 data-app-loading-text="Vorschau wird geladen...">
                             <i class="bi bi-arrow-repeat me-2"></i>Vorschau laden
@@ -112,7 +112,7 @@
                             @Html.AntiForgeryToken()
                             <input type="hidden" name="periodeId" value="@Model.AusgewaehltePeriodeId" />
                             <input type="hidden" name="modus" value="@Model.AusgewaehlterModus" />
-                            <button type="submit" class="btn btn-accent">
+                            <button type="submit" class="app-btn app-btn-accent">
                                 <i class="bi bi-magic me-2"></i>Autoplan speichern
                             </button>
                         </form>
@@ -377,7 +377,7 @@
                                                asp-route-planMonat="@tag.Datum.Month"
                                                asp-route-planTag="@tag.Datum.Day"
                                                asp-route-returnUrl="@autoplanReturnUrl"
-                                               class="btn btn-outline-accent"
+                                               class="app-btn app-btn-outline-accent"
                                                data-app-loading-link
                                                data-app-loading-text="Tagesplanung wird geöffnet...">
                                                 <i class="bi bi-pencil-square me-2"></i>Tag manuell öffnen

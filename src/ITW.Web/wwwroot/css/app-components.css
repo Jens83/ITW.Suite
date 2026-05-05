@@ -394,6 +394,33 @@
     border-color: rgba(var(--danger-rgb), 0.16);
 }
 
+.app-btn-outline-danger {
+    background: transparent;
+    color: var(--danger-color);
+    border-color: rgba(var(--danger-rgb), 0.4);
+}
+
+    .app-btn-outline-danger:hover {
+        background: rgba(var(--danger-rgb), 0.06);
+        border-color: rgba(var(--danger-rgb), 0.6);
+        color: var(--danger-color);
+    }
+
+.app-btn-white {
+    background: var(--surface-bg);
+    color: var(--text-color-strong);
+    border-color: rgba(148, 163, 184, 0.22);
+    box-shadow: var(--shadow-xs);
+}
+
+.app-btn-xs {
+    min-height: unset;
+    padding: 1px 6px;
+    font-size: 0.65rem;
+    font-weight: 700;
+    border-radius: 6px;
+}
+
 .itw-input-wrapper {
     display: flex;
     align-items: center;

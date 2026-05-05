@@ -106,7 +106,7 @@
                                 </div>
                             </div>
 
-                            <button type="submit" class="btn btn-dark btn-sm fw-bold px-3 py-2 rounded-3 shadow-sm">
+                            <button type="submit" class="app-btn app-btn-neutral app-btn-sm">
                                 Laden
                             </button>
                         </form>
@@ -142,7 +142,7 @@
                                     <input type="hidden" name="periodeId" value="@Model.AusgewaehltePeriodeId" />
                                     <input type="hidden" name="oeffnen" value="@(Model.WunschphaseIstOffen ? "false" : "true")" />
                                     <input type="hidden" name="returnUrl" value="@returnUrl" />
-                                    <button type="submit" class="btn btn-sm @(Model.WunschphaseIstOffen ? "wl-btn-white border" : "wl-btn-primary wl-shadow-primary") fw-bold px-3 py-2 rounded-3">
+                                    <button type="submit" class="app-btn app-btn-sm @(Model.WunschphaseIstOffen ? "app-btn-neutral" : "app-btn-accent") fw-bold">
                                         @(Model.WunschphaseIstOffen ? "Phase beenden" : "Wunschphase öffnen")
                                     </button>
                                 </form>
@@ -160,7 +160,7 @@
                                         <input type="hidden" name="periodeId" value="@Model.AusgewaehltePeriodeId" />
                                         <input type="hidden" name="freigeben" value="@(Model.PlanIstFreigegeben ? "false" : "true")" />
                                         <input type="hidden" name="returnUrl" value="@returnUrl" />
-                                        <button type="submit" class="btn btn-sm @(Model.PlanIstFreigegeben ? "wl-btn-white border" : "btn-success wl-shadow-success") fw-bold px-3 py-2 rounded-3">
+                                        <button type="submit" class="app-btn app-btn-sm @(Model.PlanIstFreigegeben ? "app-btn-neutral" : "app-btn-success wl-shadow-success") fw-bold">
                                             @(Model.PlanIstFreigegeben ? "Freigabe entfernen" : "Veröffentlichen")
                                         </button>
                                     </form>
@@ -235,7 +235,7 @@
                                                asp-route-planJahr="@tag.Datum.Year"
                                                asp-route-planMonat="@tag.Datum.Month"
                                                asp-route-planTag="@tag.Datum.Day"
-                                               class="btn btn-sm btn-outline-primary w-100 fw-bold rounded-3">
+                                               class="app-btn app-btn-outline-accent app-btn-sm app-btn-block fw-bold">
                                                 <i class="bi bi-pencil-square me-1"></i>Planen
                                             </a>
                                         </div>
@@ -557,8 +557,8 @@
                                             </div>
 
                                             <div class="mt-4 pt-3 border-top d-flex gap-2">
-                                                <button type="submit" class="btn btn-primary fw-bold px-4 shadow-sm">Besetzung speichern</button>
-                                                <button type="submit" name="planungLeeren" value="true" class="btn btn-outline-secondary btn-sm px-3">Leeren</button>
+                                                <button type="submit" class="app-btn app-btn-accent fw-bold">Besetzung speichern</button>
+                                                <button type="submit" name="planungLeeren" value="true" class="app-btn app-btn-neutral app-btn-sm">Leeren</button>
                                             </div>
                                         </form>
                                     </div>
@@ -613,7 +613,7 @@
                                                                     <select name="vertretungsUserId" asp-items="slot.VertretungsOptionen" class="form-select form-select-sm shadow-none border-light-subtle"></select>
                                                                 </div>
                                                                 <div class="col-md-2">
-                                                                    <button type="submit" class="btn btn-sm btn-dark w-100 fw-bold shadow-sm">OK</button>
+                                                                    <button type="submit" class="app-btn app-btn-neutral app-btn-sm app-btn-block fw-bold">OK</button>
                                                                 </div>
                                                             </form>
                                                         </div>

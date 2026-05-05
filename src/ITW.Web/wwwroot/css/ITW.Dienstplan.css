@@ -3058,17 +3058,6 @@
     color: #42526e;
 }
 
-.btn-white {
-    background: var(--surface-bg);
-    border-color: #dfe1e6 !important;
-}
-
-.btn-xs {
-    padding: 1px 6px;
-    font-size: 0.65rem;
-    font-weight: 700;
-}
-
 .arzt-slot-bg {
     background-color: #fffafb;
     border-color: #fecaca !important;

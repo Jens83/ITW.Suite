@@ -10,7 +10,9 @@
       "Bash(dotnet test *)",
       "Bash(dotnet format *)",
       "Bash(git add *)",
-      "Bash(git commit -m ' *)"
+      "Bash(git commit -m ' *)",
+      "Bash(sed -n '230,245p' src/ITW.Web/Areas/Intensivtransport/Views/Dienstplan/Wachleiterkalender.cshtml)",
+      "Bash(sed -n '555,620p' src/ITW.Web/Areas/Intensivtransport/Views/Dienstplan/Wachleiterkalender.cshtml)"
     ]
   }
 }

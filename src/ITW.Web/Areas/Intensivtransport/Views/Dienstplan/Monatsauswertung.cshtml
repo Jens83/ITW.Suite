@@ -1,4 +1,4 @@
-﻿@using ITW.Web.ViewModels.UI
+@using ITW.Web.ViewModels.UI
 @model ITW.Web.Areas.Intensivtransport.ViewModels.Dienstplan.MonatsauswertungViewModel
 
 @{
@@ -23,7 +23,7 @@
             <a asp-area="Intensivtransport"
                asp-controller="Dienstplan"
                asp-action="Index"
-               class="btn btn-neutral">
+               class="app-btn app-btn-neutral">
                 <i class="bi bi-arrow-left"></i>Zurück zur Übersicht
             </a>           
         </div>
@@ -68,7 +68,7 @@
                             </select>
                         </div>
 
-                        <button type="submit" class="btn btn-accent">
+                        <button type="submit" class="app-btn app-btn-accent">
                             <i class="bi bi-arrow-repeat me-2"></i>Daten aktualisieren
                         </button>
                     </form>
@@ -80,7 +80,7 @@
                                asp-controller="DienstplanAuswertung"
                                asp-action="BuchhaltungPdf"
                                asp-route-periodeId="@Model.AusgewaehltePeriodeId"
-                               class="btn btn-danger"
+                               class="app-btn app-btn-danger"
                                data-app-loading-link
                                data-app-loading-download="true"
                                data-app-loading-text="PDF wird erstellt...">
