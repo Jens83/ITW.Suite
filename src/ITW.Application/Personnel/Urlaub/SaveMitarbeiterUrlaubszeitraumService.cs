@@ -1,5 +1,6 @@
 ﻿using ITW.Application.Personnel.Urlaub.Contracts;
 using ITW.Domain.Personnel.Entities;
+using Microsoft.Extensions.Logging;
 
 namespace ITW.Application.Personnel.Urlaub;
 
@@ -38,34 +39,43 @@ public sealed class SaveMitarbeiterUrlaubszeitraumResult
 public sealed class SaveMitarbeiterUrlaubszeitraumService
 {
     private readonly IMitarbeiterUrlaubszeitraumRepository _repository;
+    private readonly ILogger<SaveMitarbeiterUrlaubszeitraumService> _logger;
 
     public SaveMitarbeiterUrlaubszeitraumService(
-        IMitarbeiterUrlaubszeitraumRepository repository)
+        IMitarbeiterUrlaubszeitraumRepository repository,
+        ILogger<SaveMitarbeiterUrlaubszeitraumService> logger)
     {
         _repository = repository ?? throw new ArgumentNullException(nameof(repository));
+        _logger = logger ?? throw new ArgumentNullException(nameof(logger));
     }
 
     public async Task<SaveMitarbeiterUrlaubszeitraumResult> ExecuteAsync(
      SaveMitarbeiterUrlaubszeitraumCommand command,
      CancellationToken cancellationToken = default)
     {
+        _logger.LogInformation("UseCase {UseCase} begonnen", nameof(SaveMitarbeiterUrlaubszeitraumService));
+
         if (command is null)
         {
+            _logger.LogWarning("UseCase {UseCase} fehlgeschlagen: Command ist null", nameof(SaveMitarbeiterUrlaubszeitraumService));
             return SaveMitarbeiterUrlaubszeitraumResult.Fehler("Die Anfrage ist ungültig.");
         }
 
         if (string.IsNullOrWhiteSpace(command.UserId))
         {
+            _logger.LogWarning("UseCase {UseCase} fehlgeschlagen: UserId leer", nameof(SaveMitarbeiterUrlaubszeitraumService));
             return SaveMitarbeiterUrlaubszeitraumResult.Fehler("Es wurde kein Mitarbeiter ausgewählt.");
         }
 
         if (command.Von == default || command.Bis == default)
         {
+            _logger.LogWarning("UseCase {UseCase} fehlgeschlagen: Zeitraum ungültig", nameof(SaveMitarbeiterUrlaubszeitraumService));
             return SaveMitarbeiterUrlaubszeitraumResult.Fehler("Bitte wählen Sie einen gültigen Zeitraum mit Start- und Enddatum aus.");
         }
 
         if (command.Bis < command.Von)
         {
+            _logger.LogWarning("UseCase {UseCase} fehlgeschlagen: Enddatum vor Startdatum", nameof(SaveMitarbeiterUrlaubszeitraumService));
             return SaveMitarbeiterUrlaubszeitraumResult.Fehler("Das Enddatum darf nicht vor dem Startdatum liegen.");
         }
 
@@ -78,6 +88,7 @@ public sealed class SaveMitarbeiterUrlaubszeitraumService
 
         if (hatUeberschneidung)
         {
+            _logger.LogWarning("UseCase {UseCase} fehlgeschlagen: {Reason}", nameof(SaveMitarbeiterUrlaubszeitraumService), "Zeitraumüberschneidung");
             return SaveMitarbeiterUrlaubszeitraumResult.Fehler("Der Zeitraum überschneidet sich mit einem bereits hinterlegten Urlaub.");
         }
 
@@ -112,6 +123,7 @@ public sealed class SaveMitarbeiterUrlaubszeitraumService
 
         await _repository.AddOrUpdateAsync(entity, cancellationToken);
 
+        _logger.LogInformation("UseCase {UseCase} erfolgreich", nameof(SaveMitarbeiterUrlaubszeitraumService));
         return SaveMitarbeiterUrlaubszeitraumResult.Erfolg();
     }
 }

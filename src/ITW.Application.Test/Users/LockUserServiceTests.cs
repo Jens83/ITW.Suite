@@ -1,5 +1,6 @@
 ﻿using ITW.Application.Abstractions.Identity;
 using ITW.Application.Users.LockUser;
+using ITW.Application.Test.Helpers;
 using Xunit;
 
 namespace ITW.Application.Test.Users;
@@ -11,7 +12,7 @@ public sealed class LockUserServiceTests
     {
         var repository = new FakeBenutzerkontoRepository(
             sperrenErgebnis: UpdateBenutzerkontoStatusRepositoryResult.Erfolg());
-        var service = new LockUserService(repository);
+        var service = new LockUserService(repository, FakeLogger<LockUserService>.Instance);
 
         var result = await service.ExecuteAsync(new LockUserCommand("user-1"));
 
@@ -24,7 +25,7 @@ public sealed class LockUserServiceTests
     {
         var repository = new FakeBenutzerkontoRepository(
             sperrenErgebnis: UpdateBenutzerkontoStatusRepositoryResult.Fehler("Benutzer nicht gefunden."));
-        var service = new LockUserService(repository);
+        var service = new LockUserService(repository, FakeLogger<LockUserService>.Instance);
 
         var result = await service.ExecuteAsync(new LockUserCommand("user-1"));
 
@@ -38,7 +39,7 @@ public sealed class LockUserServiceTests
     public async Task ExecuteAsync_LeereUserId_GibtValidierungsfehlerZurueck(string userId)
     {
         var repository = new FakeBenutzerkontoRepository();
-        var service = new LockUserService(repository);
+        var service = new LockUserService(repository, FakeLogger<LockUserService>.Instance);
 
         var result = await service.ExecuteAsync(new LockUserCommand(userId));
 

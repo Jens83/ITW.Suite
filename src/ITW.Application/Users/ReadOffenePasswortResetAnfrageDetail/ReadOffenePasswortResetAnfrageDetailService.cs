@@ -1,18 +1,22 @@
 ﻿// Datei: src/ITW.Application/Users/ReadOffenePasswortResetAnfrageDetail/ReadOffenePasswortResetAnfrageDetailService.cs
 using ITW.Application.Abstractions.Persistence;
 using ITW.Application.Organisation.Contracts;
+using Microsoft.Extensions.Logging;
 
 namespace ITW.Application.Users.ReadOffenePasswortResetAnfrageDetail;
 
 public sealed class ReadOffenePasswortResetAnfrageDetailService
 {
     private readonly IPasswortResetAnfrageRepository _passwortResetAnfrageRepository;
+    private readonly ILogger<ReadOffenePasswortResetAnfrageDetailService> _logger;
 
     public ReadOffenePasswortResetAnfrageDetailService(
-        IPasswortResetAnfrageRepository passwortResetAnfrageRepository)
+        IPasswortResetAnfrageRepository passwortResetAnfrageRepository,
+        ILogger<ReadOffenePasswortResetAnfrageDetailService> logger)
     {
         _passwortResetAnfrageRepository = passwortResetAnfrageRepository
             ?? throw new ArgumentNullException(nameof(passwortResetAnfrageRepository));
+        _logger = logger ?? throw new ArgumentNullException(nameof(logger));
     }
 
     public async Task<ReadOffenePasswortResetAnfrageDetailResult> ExecuteAsync(
@@ -21,6 +25,7 @@ public sealed class ReadOffenePasswortResetAnfrageDetailService
     {
         if (query.AnfrageId == Guid.Empty)
         {
+            _logger.LogWarning("UseCase {UseCase} fehlgeschlagen: AnfrageId leer", nameof(ReadOffenePasswortResetAnfrageDetailService));
             return ReadOffenePasswortResetAnfrageDetailResult.Fehler(
                 "Die Passwort-Reset-Anfrage ist ungültig.");
         }
@@ -31,6 +36,7 @@ public sealed class ReadOffenePasswortResetAnfrageDetailService
 
         if (anfrage is null)
         {
+            _logger.LogWarning("UseCase {UseCase} fehlgeschlagen: {Reason}", nameof(ReadOffenePasswortResetAnfrageDetailService), "Anfrage nicht gefunden oder bereits bearbeitet");
             return ReadOffenePasswortResetAnfrageDetailResult.Fehler(
                 "Die offene Passwort-Reset-Anfrage wurde nicht gefunden oder wurde bereits bearbeitet.");
         }

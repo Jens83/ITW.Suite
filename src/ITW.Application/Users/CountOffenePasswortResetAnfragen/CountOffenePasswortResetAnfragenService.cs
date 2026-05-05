@@ -1,18 +1,22 @@
 ﻿// Datei: src/ITW.Application/Users/CountOffenePasswortResetAnfragen/CountOffenePasswortResetAnfragenService.cs
 using ITW.Application.Abstractions.Persistence;
 using ITW.Application.Organisation.Contracts;
+using Microsoft.Extensions.Logging;
 
 namespace ITW.Application.Users.CountOffenePasswortResetAnfragen;
 
 public sealed class CountOffenePasswortResetAnfragenService
 {
     private readonly IPasswortResetAnfrageRepository _passwortResetAnfrageRepository;
+    private readonly ILogger<CountOffenePasswortResetAnfragenService> _logger;
 
     public CountOffenePasswortResetAnfragenService(
-        IPasswortResetAnfrageRepository passwortResetAnfrageRepository)
+        IPasswortResetAnfrageRepository passwortResetAnfrageRepository,
+        ILogger<CountOffenePasswortResetAnfragenService> logger)
     {
         _passwortResetAnfrageRepository = passwortResetAnfrageRepository
             ?? throw new ArgumentNullException(nameof(passwortResetAnfrageRepository));
+        _logger = logger ?? throw new ArgumentNullException(nameof(logger));
     }
 
     public async Task<CountOffenePasswortResetAnfragenResult> ExecuteAsync(
@@ -21,6 +25,7 @@ public sealed class CountOffenePasswortResetAnfragenService
     {
         if (query.Bereich == OrganisationsbereichCode.Unbekannt)
         {
+            _logger.LogWarning("UseCase {UseCase} fehlgeschlagen: Bereich ungültig", nameof(CountOffenePasswortResetAnfragenService));
             return CountOffenePasswortResetAnfragenResult.Fehler(
                 "Der Bereich für die Passwort-Reset-Zählung ist ungültig.");
         }

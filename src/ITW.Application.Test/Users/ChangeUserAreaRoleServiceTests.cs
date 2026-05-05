@@ -3,6 +3,7 @@ using ITW.Application.Organisation.Contracts;
 using ITW.Application.Users.ChangeAreaRole;
 using ITW.Domain.Organisation.Entities;
 using ITW.Domain.Organisation.Enums;
+using ITW.Application.Test.Helpers;
 using Xunit;
 
 namespace ITW.Application.Test.Users;
@@ -24,7 +25,7 @@ public sealed class ChangeUserAreaRoleServiceTests
             _fixedNow);
 
         var repository = new FakeBenutzerBereichszuordnungRepository(zuordnung);
-        var service = new ChangeUserAreaRoleService(repository);
+        var service = new ChangeUserAreaRoleService(repository, FakeLogger<ChangeUserAreaRoleService>.Instance);
 
         var command = new ChangeUserAreaRoleCommand(
             "user-1",
@@ -43,7 +44,7 @@ public sealed class ChangeUserAreaRoleServiceTests
     public async Task ExecuteAsync_KeineBestehendePrimaereZuordnung_GibtFehlerZurueck()
     {
         var repository = new FakeBenutzerBereichszuordnungRepository(bestehendeZuordnung: null);
-        var service = new ChangeUserAreaRoleService(repository);
+        var service = new ChangeUserAreaRoleService(repository, FakeLogger<ChangeUserAreaRoleService>.Instance);
 
         var command = new ChangeUserAreaRoleCommand(
             "user-1",
@@ -63,7 +64,7 @@ public sealed class ChangeUserAreaRoleServiceTests
     public async Task ExecuteAsync_LeereUserId_GibtValidierungsfehlerZurueck(string userId)
     {
         var repository = new FakeBenutzerBereichszuordnungRepository();
-        var service = new ChangeUserAreaRoleService(repository);
+        var service = new ChangeUserAreaRoleService(repository, FakeLogger<ChangeUserAreaRoleService>.Instance);
 
         var command = new ChangeUserAreaRoleCommand(
             userId,

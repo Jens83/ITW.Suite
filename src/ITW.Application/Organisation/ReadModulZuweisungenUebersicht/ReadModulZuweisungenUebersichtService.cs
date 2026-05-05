@@ -1,10 +1,12 @@
 ﻿using ITW.Application.Organisation.Contracts;
+using Microsoft.Extensions.Logging;
 
 namespace ITW.Application.Organisation.ReadModulZuweisungenUebersicht;
 
 public sealed class ReadModulZuweisungenUebersichtService
 {
     private readonly IModulZuweisungRepository _repository;
+    private readonly ILogger<ReadModulZuweisungenUebersichtService> _logger;
 
     private static readonly ModulEmpfaengerDefinitionDto[] EmpfaengerDefinitionen =
     {
@@ -15,9 +17,10 @@ public sealed class ReadModulZuweisungenUebersichtService
         new(OrganisationsbereichCode.Vorstand, BereichsrolleCode.Vorstand)
     };
 
-    public ReadModulZuweisungenUebersichtService(IModulZuweisungRepository repository)
+    public ReadModulZuweisungenUebersichtService(IModulZuweisungRepository repository, ILogger<ReadModulZuweisungenUebersichtService> logger)
     {
         _repository = repository ?? throw new ArgumentNullException(nameof(repository));
+        _logger = logger ?? throw new ArgumentNullException(nameof(logger));
     }
 
     public async Task<ReadModulZuweisungenUebersichtResult> ExecuteAsync(

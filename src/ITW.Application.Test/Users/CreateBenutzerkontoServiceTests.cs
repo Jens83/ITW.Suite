@@ -1,5 +1,6 @@
 ﻿using ITW.Application.Abstractions.Identity;
 using ITW.Application.Users.CreateUser;
+using ITW.Application.Test.Helpers;
 using Xunit;
 
 namespace ITW.Application.Test.Users;
@@ -13,7 +14,7 @@ public sealed class CreateBenutzerkontoServiceTests
         var repository = new FakeBenutzerkontoRepository(
             createResult: CreateBenutzerkontoRepositoryResult.Erfolg(dto));
 
-        var service = new CreateBenutzerkontoService(repository);
+        var service = new CreateBenutzerkontoService(repository, FakeLogger<CreateBenutzerkontoService>.Instance);
 
         var result = await service.ExecuteAsync(
             new CreateBenutzerkontoCommand("maxmuster", "max@example.invalid", "Passwort123!"));
@@ -30,7 +31,7 @@ public sealed class CreateBenutzerkontoServiceTests
         var repository = new FakeBenutzerkontoRepository(
             createResult: CreateBenutzerkontoRepositoryResult.Fehler("Benutzername bereits vergeben."));
 
-        var service = new CreateBenutzerkontoService(repository);
+        var service = new CreateBenutzerkontoService(repository, FakeLogger<CreateBenutzerkontoService>.Instance);
 
         var result = await service.ExecuteAsync(
             new CreateBenutzerkontoCommand("maxmuster", "max@example.invalid", "Passwort123!"));
@@ -47,7 +48,7 @@ public sealed class CreateBenutzerkontoServiceTests
         string benutzername, string email, string passwort)
     {
         var repository = new FakeBenutzerkontoRepository();
-        var service = new CreateBenutzerkontoService(repository);
+        var service = new CreateBenutzerkontoService(repository, FakeLogger<CreateBenutzerkontoService>.Instance);
 
         var result = await service.ExecuteAsync(
             new CreateBenutzerkontoCommand(benutzername, email, passwort));
@@ -64,7 +65,7 @@ public sealed class CreateBenutzerkontoServiceTests
         string benutzername, string email, string passwort)
     {
         var repository = new FakeBenutzerkontoRepository();
-        var service = new CreateBenutzerkontoService(repository);
+        var service = new CreateBenutzerkontoService(repository, FakeLogger<CreateBenutzerkontoService>.Instance);
 
         var result = await service.ExecuteAsync(
             new CreateBenutzerkontoCommand(benutzername, email, passwort));
@@ -81,7 +82,7 @@ public sealed class CreateBenutzerkontoServiceTests
         string benutzername, string email, string passwort)
     {
         var repository = new FakeBenutzerkontoRepository();
-        var service = new CreateBenutzerkontoService(repository);
+        var service = new CreateBenutzerkontoService(repository, FakeLogger<CreateBenutzerkontoService>.Instance);
 
         var result = await service.ExecuteAsync(
             new CreateBenutzerkontoCommand(benutzername, email, passwort));

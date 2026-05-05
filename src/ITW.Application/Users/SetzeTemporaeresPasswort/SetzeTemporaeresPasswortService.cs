@@ -2,6 +2,7 @@
 using ITW.Application.Abstractions.DateTime;
 using ITW.Application.Abstractions.Identity;
 using ITW.Application.Abstractions.Persistence;
+using Microsoft.Extensions.Logging;
 
 namespace ITW.Application.Users.SetzeTemporaeresPasswort;
 
@@ -10,11 +11,13 @@ public sealed class SetzeTemporaeresPasswortService
     private readonly IPasswortResetAnfrageRepository _passwortResetAnfrageRepository;
     private readonly IBenutzerkontoRepository _benutzerkontoRepository;
     private readonly IDateTimeProvider _dateTimeProvider;
+    private readonly ILogger<SetzeTemporaeresPasswortService> _logger;
 
     public SetzeTemporaeresPasswortService(
         IPasswortResetAnfrageRepository passwortResetAnfrageRepository,
         IBenutzerkontoRepository benutzerkontoRepository,
-        IDateTimeProvider dateTimeProvider)
+        IDateTimeProvider dateTimeProvider,
+        ILogger<SetzeTemporaeresPasswortService> logger)
     {
         _passwortResetAnfrageRepository = passwortResetAnfrageRepository
             ?? throw new ArgumentNullException(nameof(passwortResetAnfrageRepository));
@@ -22,24 +25,30 @@ public sealed class SetzeTemporaeresPasswortService
             ?? throw new ArgumentNullException(nameof(benutzerkontoRepository));
         _dateTimeProvider = dateTimeProvider
             ?? throw new ArgumentNullException(nameof(dateTimeProvider));
+        _logger = logger ?? throw new ArgumentNullException(nameof(logger));
     }
 
     public async Task<SetzeTemporaeresPasswortResult> ExecuteAsync(
         SetzeTemporaeresPasswortCommand command,
         CancellationToken cancellationToken = default)
     {
+        _logger.LogInformation("UseCase {UseCase} begonnen", nameof(SetzeTemporaeresPasswortService));
+
         if (command.AnfrageId == Guid.Empty)
         {
+            _logger.LogWarning("UseCase {UseCase} fehlgeschlagen: AnfrageId leer", nameof(SetzeTemporaeresPasswortService));
             return SetzeTemporaeresPasswortResult.Fehler("Die Passwort-Reset-Anfrage ist ungültig.");
         }
 
         if (string.IsNullOrWhiteSpace(command.BearbeitetVonUserId))
         {
+            _logger.LogWarning("UseCase {UseCase} fehlgeschlagen: BearbeitetVonUserId leer", nameof(SetzeTemporaeresPasswortService));
             return SetzeTemporaeresPasswortResult.Fehler("Die Bearbeiter-UserId ist erforderlich.");
         }
 
         if (string.IsNullOrWhiteSpace(command.TemporaeresPasswort))
         {
+            _logger.LogWarning("UseCase {UseCase} fehlgeschlagen: TemporaeresPasswort leer", nameof(SetzeTemporaeresPasswortService));
             return SetzeTemporaeresPasswortResult.Fehler("Das temporäre Passwort ist erforderlich.");
         }
 
@@ -49,6 +58,7 @@ public sealed class SetzeTemporaeresPasswortService
 
         if (anfrage is null)
         {
+            _logger.LogWarning("UseCase {UseCase} fehlgeschlagen: {Reason}", nameof(SetzeTemporaeresPasswortService), "Anfrage nicht gefunden oder bereits bearbeitet");
             return SetzeTemporaeresPasswortResult.Fehler(
                 "Die offene Passwort-Reset-Anfrage wurde nicht gefunden oder wurde bereits bearbeitet.");
         }
@@ -60,6 +70,7 @@ public sealed class SetzeTemporaeresPasswortService
 
         if (!setPasswortResult.IsSuccess)
         {
+            _logger.LogWarning("UseCase {UseCase} fehlgeschlagen: {Reason}", nameof(SetzeTemporaeresPasswortService), setPasswortResult.ErrorMessage);
             return SetzeTemporaeresPasswortResult.Fehler(
                 setPasswortResult.ErrorMessage ?? "Das temporäre Passwort konnte nicht gesetzt werden.");
         }
@@ -70,6 +81,7 @@ public sealed class SetzeTemporaeresPasswortService
 
         await _passwortResetAnfrageRepository.SaveChangesAsync(cancellationToken);
 
+        _logger.LogInformation("UseCase {UseCase} erfolgreich", nameof(SetzeTemporaeresPasswortService));
         return SetzeTemporaeresPasswortResult.Erfolg();
     }
 }

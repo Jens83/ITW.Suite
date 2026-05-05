@@ -1,16 +1,20 @@
 ﻿using ITW.Application.Abstractions.Persistence;
 using ITW.Application.Organisation.Contracts;
+using Microsoft.Extensions.Logging;
 
 namespace ITW.Application.Users.ReadUserOrganisationskontext;
 
 public sealed class ReadUserOrganisationskontextService
 {
     private readonly IBenutzerBereichszuordnungRepository _repository;
+    private readonly ILogger<ReadUserOrganisationskontextService> _logger;
 
     public ReadUserOrganisationskontextService(
-        IBenutzerBereichszuordnungRepository repository)
+        IBenutzerBereichszuordnungRepository repository,
+        ILogger<ReadUserOrganisationskontextService> logger)
     {
         _repository = repository ?? throw new ArgumentNullException(nameof(repository));
+        _logger = logger ?? throw new ArgumentNullException(nameof(logger));
     }
 
     public async Task<ReadUserOrganisationskontextResult> ExecuteAsync(
@@ -24,6 +28,7 @@ public sealed class ReadUserOrganisationskontextService
 
         if (string.IsNullOrWhiteSpace(query.UserId))
         {
+            _logger.LogWarning("UseCase {UseCase} fehlgeschlagen: UserId leer", nameof(ReadUserOrganisationskontextService));
             return ReadUserOrganisationskontextResult.Fehler(
                 "Die UserId des Mitarbeiters ist leer.");
         }
@@ -34,6 +39,7 @@ public sealed class ReadUserOrganisationskontextService
 
         if (zuordnung is null)
         {
+            _logger.LogWarning("UseCase {UseCase} fehlgeschlagen: {Reason}", nameof(ReadUserOrganisationskontextService), "Keine aktive primäre Bereichszuordnung gefunden");
             return ReadUserOrganisationskontextResult.Fehler(
                 "Für den Mitarbeiter wurde keine aktive primäre Bereichszuordnung gefunden.");
         }

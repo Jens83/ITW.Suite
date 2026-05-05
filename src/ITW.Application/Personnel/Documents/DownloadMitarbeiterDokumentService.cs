@@ -1,5 +1,6 @@
 ﻿// Datei: src/ITW.Application/Personnel/Documents/DownloadMitarbeiterDokumentService.cs
 using ITW.Application.Abstractions.Persistence;
+using Microsoft.Extensions.Logging;
 
 namespace ITW.Application.Personnel.Documents;
 
@@ -7,15 +8,18 @@ public sealed class DownloadMitarbeiterDokumentService
 {
     private readonly IMitarbeiterDokumentRepository _mitarbeiterDokumentRepository;
     private readonly IMitarbeiterDokumentDateiSpeicher _mitarbeiterDokumentDateiSpeicher;
+    private readonly ILogger<DownloadMitarbeiterDokumentService> _logger;
 
     public DownloadMitarbeiterDokumentService(
         IMitarbeiterDokumentRepository mitarbeiterDokumentRepository,
-        IMitarbeiterDokumentDateiSpeicher mitarbeiterDokumentDateiSpeicher)
+        IMitarbeiterDokumentDateiSpeicher mitarbeiterDokumentDateiSpeicher,
+        ILogger<DownloadMitarbeiterDokumentService> logger)
     {
         _mitarbeiterDokumentRepository = mitarbeiterDokumentRepository
             ?? throw new ArgumentNullException(nameof(mitarbeiterDokumentRepository));
         _mitarbeiterDokumentDateiSpeicher = mitarbeiterDokumentDateiSpeicher
             ?? throw new ArgumentNullException(nameof(mitarbeiterDokumentDateiSpeicher));
+        _logger = logger ?? throw new ArgumentNullException(nameof(logger));
     }
 
     public async Task<DownloadMitarbeiterDokumentResult> ExecuteAsync(
@@ -24,11 +28,13 @@ public sealed class DownloadMitarbeiterDokumentService
     {
         if (string.IsNullOrWhiteSpace(query.UserId))
         {
+            _logger.LogWarning("UseCase {UseCase} fehlgeschlagen: UserId leer", nameof(DownloadMitarbeiterDokumentService));
             return DownloadMitarbeiterDokumentResult.Fehler("Die UserId ist erforderlich.");
         }
 
         if (query.DokumentId == Guid.Empty)
         {
+            _logger.LogWarning("UseCase {UseCase} fehlgeschlagen: DokumentId leer", nameof(DownloadMitarbeiterDokumentService));
             return DownloadMitarbeiterDokumentResult.Fehler("Die Dokument-ID ist ungültig.");
         }
 
@@ -38,6 +44,7 @@ public sealed class DownloadMitarbeiterDokumentService
 
         if (dokument is null || !string.Equals(dokument.UserId, query.UserId, StringComparison.Ordinal))
         {
+            _logger.LogWarning("UseCase {UseCase} fehlgeschlagen: {Reason}", nameof(DownloadMitarbeiterDokumentService), "Dokument nicht gefunden");
             return DownloadMitarbeiterDokumentResult.Fehler("Das Dokument wurde nicht gefunden.");
         }
 
@@ -47,6 +54,7 @@ public sealed class DownloadMitarbeiterDokumentService
 
         if (dateiinhalt is null || dateiinhalt.Length == 0)
         {
+            _logger.LogWarning("UseCase {UseCase} fehlgeschlagen: {Reason}", nameof(DownloadMitarbeiterDokumentService), "Dokumentdatei konnte nicht geladen werden");
             return DownloadMitarbeiterDokumentResult.Fehler(
                 "Die Dokumentdatei konnte nicht geladen werden.");
         }

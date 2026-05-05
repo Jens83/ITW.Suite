@@ -1,4 +1,5 @@
 ﻿using ITW.Application.Personnel.Urlaub.Contracts;
+using Microsoft.Extensions.Logging;
 
 namespace ITW.Application.Personnel.Urlaub;
 
@@ -29,24 +30,31 @@ public sealed class DeleteMitarbeiterUrlaubszeitraumResult
 public sealed class DeleteMitarbeiterUrlaubszeitraumService
 {
     private readonly IMitarbeiterUrlaubszeitraumRepository _repository;
+    private readonly ILogger<DeleteMitarbeiterUrlaubszeitraumService> _logger;
 
     public DeleteMitarbeiterUrlaubszeitraumService(
-        IMitarbeiterUrlaubszeitraumRepository repository)
+        IMitarbeiterUrlaubszeitraumRepository repository,
+        ILogger<DeleteMitarbeiterUrlaubszeitraumService> logger)
     {
         _repository = repository ?? throw new ArgumentNullException(nameof(repository));
+        _logger = logger ?? throw new ArgumentNullException(nameof(logger));
     }
 
     public async Task<DeleteMitarbeiterUrlaubszeitraumResult> ExecuteAsync(
         DeleteMitarbeiterUrlaubszeitraumCommand command,
         CancellationToken cancellationToken = default)
     {
+        _logger.LogInformation("UseCase {UseCase} begonnen", nameof(DeleteMitarbeiterUrlaubszeitraumService));
+
         if (command is null || command.Id == Guid.Empty)
         {
+            _logger.LogWarning("UseCase {UseCase} fehlgeschlagen: Id leer oder ungültig", nameof(DeleteMitarbeiterUrlaubszeitraumService));
             return DeleteMitarbeiterUrlaubszeitraumResult.Fehler("Der ausgewählte Urlaubszeitraum ist ungültig.");
         }
 
         await _repository.DeleteAsync(command.Id, cancellationToken);
 
+        _logger.LogInformation("UseCase {UseCase} erfolgreich", nameof(DeleteMitarbeiterUrlaubszeitraumService));
         return DeleteMitarbeiterUrlaubszeitraumResult.Erfolg();
     }
 }

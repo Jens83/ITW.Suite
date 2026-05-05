@@ -2,6 +2,7 @@
 using ITW.Application.Abstractions.Persistence;
 using ITW.Domain.Organisation.Enums;
 using ITW.Domain.Personnel.Enums;
+using Microsoft.Extensions.Logging;
 
 namespace ITW.Application.Personnel.ProfileQueries;
 
@@ -11,12 +12,14 @@ public sealed class ReadItwMitarbeiterDetailUebersichtService
     private readonly IBenutzerkontoRepository _benutzerkontoRepository;
     private readonly IItwMitarbeiterprofilRepository _itwMitarbeiterprofilRepository;
     private readonly IAllgemeinesMitarbeiterprofilRepository _allgemeinesMitarbeiterprofilRepository;
+    private readonly ILogger<ReadItwMitarbeiterDetailUebersichtService> _logger;
 
     public ReadItwMitarbeiterDetailUebersichtService(
         IBenutzerBereichszuordnungRepository benutzerBereichszuordnungRepository,
         IBenutzerkontoRepository benutzerkontoRepository,
         IItwMitarbeiterprofilRepository itwMitarbeiterprofilRepository,
-        IAllgemeinesMitarbeiterprofilRepository allgemeinesMitarbeiterprofilRepository)
+        IAllgemeinesMitarbeiterprofilRepository allgemeinesMitarbeiterprofilRepository,
+        ILogger<ReadItwMitarbeiterDetailUebersichtService> logger)
     {
         _benutzerBereichszuordnungRepository = benutzerBereichszuordnungRepository
             ?? throw new ArgumentNullException(nameof(benutzerBereichszuordnungRepository));
@@ -26,6 +29,7 @@ public sealed class ReadItwMitarbeiterDetailUebersichtService
             ?? throw new ArgumentNullException(nameof(itwMitarbeiterprofilRepository));
         _allgemeinesMitarbeiterprofilRepository = allgemeinesMitarbeiterprofilRepository
             ?? throw new ArgumentNullException(nameof(allgemeinesMitarbeiterprofilRepository));
+        _logger = logger ?? throw new ArgumentNullException(nameof(logger));
     }
 
     public async Task<ReadItwMitarbeiterDetailUebersichtResult> ExecuteAsync(
@@ -34,6 +38,7 @@ public sealed class ReadItwMitarbeiterDetailUebersichtService
     {
         if (string.IsNullOrWhiteSpace(userId))
         {
+            _logger.LogWarning("UseCase {UseCase} fehlgeschlagen: UserId leer", nameof(ReadItwMitarbeiterDetailUebersichtService));
             return ReadItwMitarbeiterDetailUebersichtResult.Fehler("Die UserId ist erforderlich.");
         }
 
@@ -43,6 +48,7 @@ public sealed class ReadItwMitarbeiterDetailUebersichtService
 
         if (zuordnung is null || zuordnung.Bereich != Organisationsbereich.Intensivtransport)
         {
+            _logger.LogWarning("UseCase {UseCase} fehlgeschlagen: {Reason}", nameof(ReadItwMitarbeiterDetailUebersichtService), "Keine aktive ITW-Zuordnung");
             return ReadItwMitarbeiterDetailUebersichtResult.Fehler(
                 "Für dieses Benutzerkonto existiert keine aktive ITW-Zuordnung.");
         }
@@ -52,6 +58,7 @@ public sealed class ReadItwMitarbeiterDetailUebersichtService
 
         if (konto is null)
         {
+            _logger.LogWarning("UseCase {UseCase} fehlgeschlagen: {Reason}", nameof(ReadItwMitarbeiterDetailUebersichtService), "Benutzerkonto nicht gefunden");
             return ReadItwMitarbeiterDetailUebersichtResult.Fehler("Das Benutzerkonto wurde nicht gefunden.");
         }
 

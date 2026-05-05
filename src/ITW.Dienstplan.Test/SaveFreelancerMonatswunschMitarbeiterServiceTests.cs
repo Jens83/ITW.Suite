@@ -3,6 +3,7 @@ using ITW.Application.Abstractions.Persistence;
 using ITW.Application.Personnel.ProfileQueries;
 using ITW.Dienstplan.Application.Contracts;
 using ITW.Dienstplan.Application.Wunschphase;
+using ITW.Dienstplan.Test.Helpers;
 using ITW.Dienstplan.Domain.Entities;
 using ITW.Domain.Organisation.Entities;
 using ITW.Domain.Organisation.Enums;
@@ -167,7 +168,8 @@ public sealed class SaveFreelancerMonatswunschMitarbeiterServiceTests
             new FakeAllgemeinesMitarbeiterprofilRepository
             {
                 Profile = [allgemeinesProfil]
-            });
+            },
+            FakeLogger<ReadItwMitarbeiterprofileService>.Instance);
     }
 
     private static DienstplanPeriode ErzeugePeriode(

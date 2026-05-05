@@ -2,6 +2,7 @@
 using ITW.Application.Abstractions.Persistence;
 using ITW.Application.Organisation.Contracts;
 using ITW.Domain.Organisation.Entities;
+using Microsoft.Extensions.Logging;
 
 namespace ITW.Application.Users.AssignArea;
 
@@ -9,21 +10,27 @@ public sealed class AssignUserToPrimaryAreaService
 {
     private readonly IBenutzerBereichszuordnungRepository _repository;
     private readonly IDateTimeProvider _dateTimeProvider;
+    private readonly ILogger<AssignUserToPrimaryAreaService> _logger;
 
     public AssignUserToPrimaryAreaService(
         IBenutzerBereichszuordnungRepository repository,
-        IDateTimeProvider dateTimeProvider)
+        IDateTimeProvider dateTimeProvider,
+        ILogger<AssignUserToPrimaryAreaService> logger)
     {
         _repository = repository ?? throw new ArgumentNullException(nameof(repository));
         _dateTimeProvider = dateTimeProvider ?? throw new ArgumentNullException(nameof(dateTimeProvider));
+        _logger = logger ?? throw new ArgumentNullException(nameof(logger));
     }
 
     public async Task<AssignUserToPrimaryAreaResult> ExecuteAsync(
         AssignUserToPrimaryAreaCommand command,
         CancellationToken cancellationToken = default)
     {
+        _logger.LogInformation("UseCase {UseCase} begonnen", nameof(AssignUserToPrimaryAreaService));
+
         if (string.IsNullOrWhiteSpace(command.UserId))
         {
+            _logger.LogWarning("UseCase {UseCase} fehlgeschlagen: UserId leer", nameof(AssignUserToPrimaryAreaService));
             return AssignUserToPrimaryAreaResult.Fehler("Die UserId darf nicht leer sein.");
         }
 
@@ -40,11 +47,13 @@ public sealed class AssignUserToPrimaryAreaService
 
             if (istIdentisch)
             {
+                _logger.LogInformation("UseCase {UseCase} erfolgreich", nameof(AssignUserToPrimaryAreaService));
                 return AssignUserToPrimaryAreaResult.Erfolg(bestehendeZuordnung.Id);
             }
 
             if (!command.BestehendePrimaereZuordnungErsetzen)
             {
+                _logger.LogWarning("UseCase {UseCase} fehlgeschlagen: {Reason}", nameof(AssignUserToPrimaryAreaService), "Bestehende primäre Zuordnung vorhanden");
                 return AssignUserToPrimaryAreaResult.Fehler(
                     "Der Benutzer besitzt bereits eine aktive primäre Bereichszuordnung.");
             }
@@ -64,6 +73,7 @@ public sealed class AssignUserToPrimaryAreaService
         await _repository.AddAsync(neueZuordnung, cancellationToken);
         await _repository.SaveChangesAsync(cancellationToken);
 
+        _logger.LogInformation("UseCase {UseCase} erfolgreich", nameof(AssignUserToPrimaryAreaService));
         return AssignUserToPrimaryAreaResult.Erfolg(neueZuordnung.Id);
     }
 }

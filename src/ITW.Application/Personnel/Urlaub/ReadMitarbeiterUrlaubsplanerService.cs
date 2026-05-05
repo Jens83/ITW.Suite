@@ -1,5 +1,6 @@
 ﻿using ITW.Application.Personnel.Urlaub.Contracts;
 using ITW.Domain.Personnel.Enums;
+using Microsoft.Extensions.Logging;
 
 namespace ITW.Application.Personnel.Urlaub;
 
@@ -109,16 +110,20 @@ public sealed class ReadMitarbeiterUrlaubsplanerService
 {
     private readonly IMitarbeiterUrlaubsanspruchRepository _urlaubsanspruchRepository;
     private readonly IMitarbeiterUrlaubszeitraumRepository _urlaubszeitraumRepository;
+    private readonly ILogger<ReadMitarbeiterUrlaubsplanerService> _logger;
 
     public ReadMitarbeiterUrlaubsplanerService(
         IMitarbeiterUrlaubsanspruchRepository urlaubsanspruchRepository,
-        IMitarbeiterUrlaubszeitraumRepository urlaubszeitraumRepository)
+        IMitarbeiterUrlaubszeitraumRepository urlaubszeitraumRepository,
+        ILogger<ReadMitarbeiterUrlaubsplanerService> logger)
     {
         _urlaubsanspruchRepository = urlaubsanspruchRepository
             ?? throw new ArgumentNullException(nameof(urlaubsanspruchRepository));
 
         _urlaubszeitraumRepository = urlaubszeitraumRepository
             ?? throw new ArgumentNullException(nameof(urlaubszeitraumRepository));
+
+        _logger = logger ?? throw new ArgumentNullException(nameof(logger));
     }
 
     public async Task<ReadMitarbeiterUrlaubsplanerResult> ExecuteAsync(
@@ -127,16 +132,19 @@ public sealed class ReadMitarbeiterUrlaubsplanerService
     {
         if (query is null)
         {
+            _logger.LogWarning("UseCase {UseCase} fehlgeschlagen: Query ist null", nameof(ReadMitarbeiterUrlaubsplanerService));
             return ReadMitarbeiterUrlaubsplanerResult.Fehler("Die Anfrage ist ungültig.");
         }
 
         if (string.IsNullOrWhiteSpace(query.UserId))
         {
+            _logger.LogWarning("UseCase {UseCase} fehlgeschlagen: UserId leer", nameof(ReadMitarbeiterUrlaubsplanerService));
             return ReadMitarbeiterUrlaubsplanerResult.Fehler("Es wurde kein Mitarbeiter ausgewählt.");
         }
 
         if (query.Jahr is < 2000 or > 2100)
         {
+            _logger.LogWarning("UseCase {UseCase} fehlgeschlagen: Jahr ungültig", nameof(ReadMitarbeiterUrlaubsplanerService));
             return ReadMitarbeiterUrlaubsplanerResult.Fehler("Das ausgewählte Jahr ist ungültig.");
         }
 

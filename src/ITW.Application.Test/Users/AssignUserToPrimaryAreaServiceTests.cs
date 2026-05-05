@@ -4,6 +4,7 @@ using ITW.Application.Organisation.Contracts;
 using ITW.Application.Users.AssignArea;
 using ITW.Domain.Organisation.Entities;
 using ITW.Domain.Organisation.Enums;
+using ITW.Application.Test.Helpers;
 using Xunit;
 
 namespace ITW.Application.Test.Users;
@@ -16,7 +17,7 @@ public sealed class AssignUserToPrimaryAreaServiceTests
     public async Task ExecuteAsync_KeineBestehendeZuordnung_Legt_NeueZuordnungAn()
     {
         var repository = new FakeBenutzerBereichszuordnungRepository();
-        var service = new AssignUserToPrimaryAreaService(repository, new FakeDateTimeProvider(_fixedNow));
+        var service = new AssignUserToPrimaryAreaService(repository, new FakeDateTimeProvider(_fixedNow), FakeLogger<AssignUserToPrimaryAreaService>.Instance);
 
         var command = new AssignUserToPrimaryAreaCommand(
             "user-1",
@@ -46,7 +47,7 @@ public sealed class AssignUserToPrimaryAreaServiceTests
             _fixedNow);
 
         var repository = new FakeBenutzerBereichszuordnungRepository(bestehendeZuordnung);
-        var service = new AssignUserToPrimaryAreaService(repository, new FakeDateTimeProvider(_fixedNow));
+        var service = new AssignUserToPrimaryAreaService(repository, new FakeDateTimeProvider(_fixedNow), FakeLogger<AssignUserToPrimaryAreaService>.Instance);
 
         var command = new AssignUserToPrimaryAreaCommand(
             "user-1",
@@ -75,7 +76,7 @@ public sealed class AssignUserToPrimaryAreaServiceTests
             _fixedNow);
 
         var repository = new FakeBenutzerBereichszuordnungRepository(bestehendeZuordnung);
-        var service = new AssignUserToPrimaryAreaService(repository, new FakeDateTimeProvider(_fixedNow));
+        var service = new AssignUserToPrimaryAreaService(repository, new FakeDateTimeProvider(_fixedNow), FakeLogger<AssignUserToPrimaryAreaService>.Instance);
 
         var command = new AssignUserToPrimaryAreaCommand(
             "user-1",
@@ -104,7 +105,7 @@ public sealed class AssignUserToPrimaryAreaServiceTests
             _fixedNow);
 
         var repository = new FakeBenutzerBereichszuordnungRepository(bestehendeZuordnung);
-        var service = new AssignUserToPrimaryAreaService(repository, new FakeDateTimeProvider(_fixedNow));
+        var service = new AssignUserToPrimaryAreaService(repository, new FakeDateTimeProvider(_fixedNow), FakeLogger<AssignUserToPrimaryAreaService>.Instance);
 
         var command = new AssignUserToPrimaryAreaCommand(
             "user-1",
@@ -127,7 +128,7 @@ public sealed class AssignUserToPrimaryAreaServiceTests
     public async Task ExecuteAsync_LeereUserId_GibtValidierungsfehlerZurueck(string userId)
     {
         var repository = new FakeBenutzerBereichszuordnungRepository();
-        var service = new AssignUserToPrimaryAreaService(repository, new FakeDateTimeProvider(_fixedNow));
+        var service = new AssignUserToPrimaryAreaService(repository, new FakeDateTimeProvider(_fixedNow), FakeLogger<AssignUserToPrimaryAreaService>.Instance);
 
         var command = new AssignUserToPrimaryAreaCommand(
             userId,

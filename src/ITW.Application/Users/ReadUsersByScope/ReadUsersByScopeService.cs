@@ -2,6 +2,7 @@
 using ITW.Application.Abstractions.Persistence;
 using ITW.Application.Organisation.Contracts;
 using ITW.Application.Organisation.VisibilityScopes;
+using Microsoft.Extensions.Logging;
 
 namespace ITW.Application.Users.ReadUsersByScope;
 
@@ -10,15 +11,18 @@ public sealed class ReadUsersByScopeService
     private readonly IBenutzerBereichszuordnungRepository _repository;
     private readonly IBenutzerkontoRepository _benutzerkontoRepository;
     private readonly BenutzerSichtbarkeitsScopeErmittler _scopeErmittler;
+    private readonly ILogger<ReadUsersByScopeService> _logger;
 
     public ReadUsersByScopeService(
         IBenutzerBereichszuordnungRepository repository,
         IBenutzerkontoRepository benutzerkontoRepository,
-        BenutzerSichtbarkeitsScopeErmittler scopeErmittler)
+        BenutzerSichtbarkeitsScopeErmittler scopeErmittler,
+        ILogger<ReadUsersByScopeService> logger)
     {
         _repository = repository ?? throw new ArgumentNullException(nameof(repository));
         _benutzerkontoRepository = benutzerkontoRepository ?? throw new ArgumentNullException(nameof(benutzerkontoRepository));
         _scopeErmittler = scopeErmittler ?? throw new ArgumentNullException(nameof(scopeErmittler));
+        _logger = logger ?? throw new ArgumentNullException(nameof(logger));
     }
 
     public async Task<ReadUsersByScopeResult> ExecuteAsync(
@@ -31,6 +35,7 @@ public sealed class ReadUsersByScopeService
 
         if (!scope.DarfBenutzerlistenLesen || scope.Zielbereich is null)
         {
+            _logger.LogWarning("UseCase {UseCase} fehlgeschlagen: {Reason}", nameof(ReadUsersByScopeService), scope.ErrorMessage);
             return ReadUsersByScopeResult.Fehler(
                 scope.ErrorMessage ?? "Der Sichtbarkeits-Scope konnte nicht ermittelt werden.");
         }

@@ -2,8 +2,10 @@
 using ITW.Application.Abstractions.Persistence;
 using ITW.Application.Organisation.Contracts;
 using ITW.Application.Personnel.ProfileQueries;
+using ITW.Application.Personnel.Urlaub;
 using ITW.Application.Personnel.Urlaub.Contracts;
 using ITW.Dienstplan.Application.Contracts;
+using ITW.Web.Test.Helpers;
 using ITW.Dienstplan.Domain.Entities;
 using ITW.Dienstplan.Domain.Enums;
 using ITW.Domain.Organisation.Entities;
@@ -73,6 +75,10 @@ public sealed class UrlaubsplanerControllerTests
             urlaubszeitraumRepository,
             dienstplanPeriodeRepository,
             dienstwunschRepository,
+            new SaveMitarbeiterUrlaubsanspruchService(urlaubsanspruchRepository, FakeLogger<SaveMitarbeiterUrlaubsanspruchService>.Instance),
+            new SaveMitarbeiterUrlaubszeitraumService(urlaubszeitraumRepository, FakeLogger<SaveMitarbeiterUrlaubszeitraumService>.Instance),
+            new DeleteMitarbeiterUrlaubszeitraumService(urlaubszeitraumRepository, FakeLogger<DeleteMitarbeiterUrlaubszeitraumService>.Instance),
+            new ReadMitarbeiterUrlaubsplanerService(urlaubsanspruchRepository, urlaubszeitraumRepository, FakeLogger<ReadMitarbeiterUrlaubsplanerService>.Instance),
             currentUserAccessor);
 
         controller.ControllerContext = new ControllerContext
@@ -167,6 +173,10 @@ public sealed class UrlaubsplanerControllerTests
             urlaubszeitraumRepository,
             dienstplanPeriodeRepository,
             dienstwunschRepository,
+            new SaveMitarbeiterUrlaubsanspruchService(urlaubsanspruchRepository, FakeLogger<SaveMitarbeiterUrlaubsanspruchService>.Instance),
+            new SaveMitarbeiterUrlaubszeitraumService(urlaubszeitraumRepository, FakeLogger<SaveMitarbeiterUrlaubszeitraumService>.Instance),
+            new DeleteMitarbeiterUrlaubszeitraumService(urlaubszeitraumRepository, FakeLogger<DeleteMitarbeiterUrlaubszeitraumService>.Instance),
+            new ReadMitarbeiterUrlaubsplanerService(urlaubsanspruchRepository, urlaubszeitraumRepository, FakeLogger<ReadMitarbeiterUrlaubsplanerService>.Instance),
             currentUserAccessor);
 
         controller.ControllerContext = new ControllerContext
@@ -253,6 +263,10 @@ public sealed class UrlaubsplanerControllerTests
             urlaubszeitraumRepository,
             dienstplanPeriodeRepository,
             dienstwunschRepository,
+            new SaveMitarbeiterUrlaubsanspruchService(urlaubsanspruchRepository, FakeLogger<SaveMitarbeiterUrlaubsanspruchService>.Instance),
+            new SaveMitarbeiterUrlaubszeitraumService(urlaubszeitraumRepository, FakeLogger<SaveMitarbeiterUrlaubszeitraumService>.Instance),
+            new DeleteMitarbeiterUrlaubszeitraumService(urlaubszeitraumRepository, FakeLogger<DeleteMitarbeiterUrlaubszeitraumService>.Instance),
+            new ReadMitarbeiterUrlaubsplanerService(urlaubsanspruchRepository, urlaubszeitraumRepository, FakeLogger<ReadMitarbeiterUrlaubsplanerService>.Instance),
             currentUserAccessor);
 
         controller.ControllerContext = new ControllerContext
@@ -355,6 +369,10 @@ public sealed class UrlaubsplanerControllerTests
             urlaubszeitraumRepository,
             dienstplanPeriodeRepository,
             dienstwunschRepository,
+            new SaveMitarbeiterUrlaubsanspruchService(urlaubsanspruchRepository, FakeLogger<SaveMitarbeiterUrlaubsanspruchService>.Instance),
+            new SaveMitarbeiterUrlaubszeitraumService(urlaubszeitraumRepository, FakeLogger<SaveMitarbeiterUrlaubszeitraumService>.Instance),
+            new DeleteMitarbeiterUrlaubszeitraumService(urlaubszeitraumRepository, FakeLogger<DeleteMitarbeiterUrlaubszeitraumService>.Instance),
+            new ReadMitarbeiterUrlaubsplanerService(urlaubsanspruchRepository, urlaubszeitraumRepository, FakeLogger<ReadMitarbeiterUrlaubsplanerService>.Instance),
             currentUserAccessor);
 
         controller.ControllerContext = new ControllerContext
@@ -452,6 +470,10 @@ public sealed class UrlaubsplanerControllerTests
             urlaubszeitraumRepository,
             dienstplanPeriodeRepository,
             dienstwunschRepository,
+            new SaveMitarbeiterUrlaubsanspruchService(urlaubsanspruchRepository, FakeLogger<SaveMitarbeiterUrlaubsanspruchService>.Instance),
+            new SaveMitarbeiterUrlaubszeitraumService(urlaubszeitraumRepository, FakeLogger<SaveMitarbeiterUrlaubszeitraumService>.Instance),
+            new DeleteMitarbeiterUrlaubszeitraumService(urlaubszeitraumRepository, FakeLogger<DeleteMitarbeiterUrlaubszeitraumService>.Instance),
+            new ReadMitarbeiterUrlaubsplanerService(urlaubsanspruchRepository, urlaubszeitraumRepository, FakeLogger<ReadMitarbeiterUrlaubsplanerService>.Instance),
             currentUserAccessor);
 
         controller.ControllerContext = new ControllerContext
@@ -540,6 +562,10 @@ public sealed class UrlaubsplanerControllerTests
             urlaubszeitraumRepository,
             dienstplanPeriodeRepository,
             dienstwunschRepository,
+            new SaveMitarbeiterUrlaubsanspruchService(urlaubsanspruchRepository, FakeLogger<SaveMitarbeiterUrlaubsanspruchService>.Instance),
+            new SaveMitarbeiterUrlaubszeitraumService(urlaubszeitraumRepository, FakeLogger<SaveMitarbeiterUrlaubszeitraumService>.Instance),
+            new DeleteMitarbeiterUrlaubszeitraumService(urlaubszeitraumRepository, FakeLogger<DeleteMitarbeiterUrlaubszeitraumService>.Instance),
+            new ReadMitarbeiterUrlaubsplanerService(urlaubsanspruchRepository, urlaubszeitraumRepository, FakeLogger<ReadMitarbeiterUrlaubsplanerService>.Instance),
             currentUserAccessor);
 
         controller.ControllerContext = new ControllerContext
@@ -636,7 +662,8 @@ public sealed class UrlaubsplanerControllerTests
             new FakeAllgemeinesMitarbeiterprofilRepository
             {
                 Profile = [allgemeinesProfil]
-            });
+            },
+            FakeLogger<ReadItwMitarbeiterprofileService>.Instance);
     }
 
     private static DienstplanPeriode ErzeugePeriode(Guid periodeId, int jahr, int monat)

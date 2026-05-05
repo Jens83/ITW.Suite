@@ -3,6 +3,7 @@ using ITW.Application.Abstractions.DateTime;
 using ITW.Application.Abstractions.Identity;
 using ITW.Application.Abstractions.Persistence;
 using ITW.Domain.Security.Entities;
+using Microsoft.Extensions.Logging;
 
 namespace ITW.Application.Users.RequestPasswordReset;
 
@@ -16,13 +17,15 @@ public sealed class SubmitPasswortResetAnfrageService
     private readonly IBenutzerBereichszuordnungRepository _benutzerBereichszuordnungRepository;
     private readonly IPasswortResetAnfrageRepository _passwortResetAnfrageRepository;
     private readonly IDateTimeProvider _dateTimeProvider;
+    private readonly ILogger<SubmitPasswortResetAnfrageService> _logger;
 
     public SubmitPasswortResetAnfrageService(
         IPasswortResetBenutzerLookupRepository benutzerLookupRepository,
         IAllgemeinesMitarbeiterprofilRepository allgemeinesMitarbeiterprofilRepository,
         IBenutzerBereichszuordnungRepository benutzerBereichszuordnungRepository,
         IPasswortResetAnfrageRepository passwortResetAnfrageRepository,
-        IDateTimeProvider dateTimeProvider)
+        IDateTimeProvider dateTimeProvider,
+        ILogger<SubmitPasswortResetAnfrageService> logger)
     {
         _benutzerLookupRepository = benutzerLookupRepository
             ?? throw new ArgumentNullException(nameof(benutzerLookupRepository));
@@ -34,24 +37,30 @@ public sealed class SubmitPasswortResetAnfrageService
             ?? throw new ArgumentNullException(nameof(passwortResetAnfrageRepository));
         _dateTimeProvider = dateTimeProvider
             ?? throw new ArgumentNullException(nameof(dateTimeProvider));
+        _logger = logger ?? throw new ArgumentNullException(nameof(logger));
     }
 
     public async Task<SubmitPasswortResetAnfrageResult> ExecuteAsync(
         SubmitPasswortResetAnfrageCommand command,
         CancellationToken cancellationToken = default)
     {
+        _logger.LogInformation("UseCase {UseCase} begonnen", nameof(SubmitPasswortResetAnfrageService));
+
         if (string.IsNullOrWhiteSpace(command.Benutzername))
         {
+            _logger.LogWarning("UseCase {UseCase} fehlgeschlagen: Benutzername leer", nameof(SubmitPasswortResetAnfrageService));
             return SubmitPasswortResetAnfrageResult.Fehler("Der Benutzername ist erforderlich.");
         }
 
         if (string.IsNullOrWhiteSpace(command.Vorname))
         {
+            _logger.LogWarning("UseCase {UseCase} fehlgeschlagen: Vorname leer", nameof(SubmitPasswortResetAnfrageService));
             return SubmitPasswortResetAnfrageResult.Fehler("Der Vorname ist erforderlich.");
         }
 
         if (string.IsNullOrWhiteSpace(command.Nachname))
         {
+            _logger.LogWarning("UseCase {UseCase} fehlgeschlagen: Nachname leer", nameof(SubmitPasswortResetAnfrageService));
             return SubmitPasswortResetAnfrageResult.Fehler("Der Nachname ist erforderlich.");
         }
 
@@ -65,6 +74,7 @@ public sealed class SubmitPasswortResetAnfrageService
 
         if (konto is null)
         {
+            _logger.LogInformation("UseCase {UseCase} erfolgreich", nameof(SubmitPasswortResetAnfrageService));
             return SubmitPasswortResetAnfrageResult.Erfolg(GenerischeBestaetigung);
         }
 
@@ -74,12 +84,14 @@ public sealed class SubmitPasswortResetAnfrageService
 
         if (profil is null)
         {
+            _logger.LogInformation("UseCase {UseCase} erfolgreich", nameof(SubmitPasswortResetAnfrageService));
             return SubmitPasswortResetAnfrageResult.Erfolg(GenerischeBestaetigung);
         }
 
         if (!IstGleicherName(profil.Vorname, vorname) ||
             !IstGleicherName(profil.Nachname, nachname))
         {
+            _logger.LogInformation("UseCase {UseCase} erfolgreich", nameof(SubmitPasswortResetAnfrageService));
             return SubmitPasswortResetAnfrageResult.Erfolg(GenerischeBestaetigung);
         }
 
@@ -89,6 +101,7 @@ public sealed class SubmitPasswortResetAnfrageService
 
         if (zuordnung is null)
         {
+            _logger.LogInformation("UseCase {UseCase} erfolgreich", nameof(SubmitPasswortResetAnfrageService));
             return SubmitPasswortResetAnfrageResult.Erfolg(GenerischeBestaetigung);
         }
 
@@ -98,6 +111,7 @@ public sealed class SubmitPasswortResetAnfrageService
 
         if (offeneAnfrage is not null)
         {
+            _logger.LogInformation("UseCase {UseCase} erfolgreich", nameof(SubmitPasswortResetAnfrageService));
             return SubmitPasswortResetAnfrageResult.Erfolg(GenerischeBestaetigung);
         }
 
@@ -113,6 +127,7 @@ public sealed class SubmitPasswortResetAnfrageService
         await _passwortResetAnfrageRepository.AddAsync(anfrage, cancellationToken);
         await _passwortResetAnfrageRepository.SaveChangesAsync(cancellationToken);
 
+        _logger.LogInformation("UseCase {UseCase} erfolgreich", nameof(SubmitPasswortResetAnfrageService));
         return SubmitPasswortResetAnfrageResult.Erfolg(GenerischeBestaetigung);
     }
 

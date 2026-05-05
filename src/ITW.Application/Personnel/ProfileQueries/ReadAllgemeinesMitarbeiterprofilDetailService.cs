@@ -2,6 +2,7 @@
 using ITW.Application.Abstractions.Persistence;
 using ITW.Domain.Organisation.Enums;
 using ITW.Domain.Personnel.Enums;
+using Microsoft.Extensions.Logging;
 
 namespace ITW.Application.Personnel.ProfileQueries;
 
@@ -10,11 +11,13 @@ public sealed class ReadAllgemeinesMitarbeiterprofilDetailService
     private readonly IBenutzerBereichszuordnungRepository _benutzerBereichszuordnungRepository;
     private readonly IBenutzerkontoRepository _benutzerkontoRepository;
     private readonly IAllgemeinesMitarbeiterprofilRepository _allgemeinesMitarbeiterprofilRepository;
+    private readonly ILogger<ReadAllgemeinesMitarbeiterprofilDetailService> _logger;
 
     public ReadAllgemeinesMitarbeiterprofilDetailService(
         IBenutzerBereichszuordnungRepository benutzerBereichszuordnungRepository,
         IBenutzerkontoRepository benutzerkontoRepository,
-        IAllgemeinesMitarbeiterprofilRepository allgemeinesMitarbeiterprofilRepository)
+        IAllgemeinesMitarbeiterprofilRepository allgemeinesMitarbeiterprofilRepository,
+        ILogger<ReadAllgemeinesMitarbeiterprofilDetailService> logger)
     {
         _benutzerBereichszuordnungRepository = benutzerBereichszuordnungRepository
             ?? throw new ArgumentNullException(nameof(benutzerBereichszuordnungRepository));
@@ -22,6 +25,7 @@ public sealed class ReadAllgemeinesMitarbeiterprofilDetailService
             ?? throw new ArgumentNullException(nameof(benutzerkontoRepository));
         _allgemeinesMitarbeiterprofilRepository = allgemeinesMitarbeiterprofilRepository
             ?? throw new ArgumentNullException(nameof(allgemeinesMitarbeiterprofilRepository));
+        _logger = logger ?? throw new ArgumentNullException(nameof(logger));
     }
 
     public async Task<ReadAllgemeinesMitarbeiterprofilDetailResult> ExecuteAsync(
@@ -30,6 +34,7 @@ public sealed class ReadAllgemeinesMitarbeiterprofilDetailService
     {
         if (string.IsNullOrWhiteSpace(userId))
         {
+            _logger.LogWarning("UseCase {UseCase} fehlgeschlagen: UserId leer", nameof(ReadAllgemeinesMitarbeiterprofilDetailService));
             return ReadAllgemeinesMitarbeiterprofilDetailResult.Fehler("Die UserId ist erforderlich.");
         }
 
@@ -39,6 +44,7 @@ public sealed class ReadAllgemeinesMitarbeiterprofilDetailService
 
         if (zuordnung is null || zuordnung.Bereich != Organisationsbereich.Intensivtransport)
         {
+            _logger.LogWarning("UseCase {UseCase} fehlgeschlagen: {Reason}", nameof(ReadAllgemeinesMitarbeiterprofilDetailService), "Keine aktive ITW-Zuordnung");
             return ReadAllgemeinesMitarbeiterprofilDetailResult.Fehler(
                 "Für dieses Benutzerkonto existiert keine aktive ITW-Zuordnung.");
         }
@@ -48,6 +54,7 @@ public sealed class ReadAllgemeinesMitarbeiterprofilDetailService
 
         if (konto is null)
         {
+            _logger.LogWarning("UseCase {UseCase} fehlgeschlagen: {Reason}", nameof(ReadAllgemeinesMitarbeiterprofilDetailService), "Benutzerkonto nicht gefunden");
             return ReadAllgemeinesMitarbeiterprofilDetailResult.Fehler("Das Benutzerkonto wurde nicht gefunden.");
         }
 

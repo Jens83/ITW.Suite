@@ -5,8 +5,29 @@ using ITW.Web.Setup.Identity;
 using ITW.Web.Setup.Startup;
 using Microsoft.AspNetCore.StaticFiles;
 using Microsoft.EntityFrameworkCore;
+using Serilog;
+using Serilog.Formatting.Compact;
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Host.UseSerilog((ctx, cfg) =>
+{
+    var logDir = ctx.Configuration["Logging:LogVerzeichnis"]
+        ?? Path.Combine(AppContext.BaseDirectory, "logs");
+
+    cfg
+        .ReadFrom.Configuration(ctx.Configuration)
+        .Enrich.FromLogContext()
+        .Enrich.WithProperty("Application", "ITW.Suite")
+        .WriteTo.Console(outputTemplate:
+            "{Timestamp:HH:mm:ss} [{Level:u3}] {SourceContext} {Message:lj}{NewLine}{Exception}")
+        .WriteTo.File(
+            new CompactJsonFormatter(),
+            Path.Combine(logDir, "itw-suite-.clef"),
+            rollingInterval: RollingInterval.Day,
+            retainedFileCountLimit: 30,
+            shared: true);
+});
 
 builder.Services.AddControllersWithViews();
 builder.Services.AddHttpContextAccessor();

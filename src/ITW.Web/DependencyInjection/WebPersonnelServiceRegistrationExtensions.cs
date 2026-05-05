@@ -17,6 +17,9 @@ public static class WebPersonnelServiceRegistrationExtensions
         services.AddScoped<SaveItwMitarbeiterprofilService>();
         services.AddScoped<SaveAllgemeinesMitarbeiterprofilService>();
 
+        services.AddScoped<SaveMitarbeiterUrlaubsanspruchService>();
+        services.AddScoped<SaveMitarbeiterUrlaubszeitraumService>();
+        services.AddScoped<DeleteMitarbeiterUrlaubszeitraumService>();
         services.AddScoped<ReadMitarbeiterUrlaubsplanerService>();
 
         services.AddScoped<ReadMitarbeiterDokumenteService>();

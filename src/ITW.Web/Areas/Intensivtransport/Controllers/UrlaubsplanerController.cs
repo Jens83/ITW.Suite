@@ -24,33 +24,44 @@ public sealed class UrlaubsplanerController : BereichsControllerBase
     private readonly ReadItwMitarbeiterprofileService _readItwMitarbeiterprofileService;
     private readonly IMitarbeiterUrlaubsanspruchRepository _urlaubsanspruchRepository;
     private readonly IMitarbeiterUrlaubszeitraumRepository _urlaubszeitraumRepository;
-
     private readonly IDienstplanPeriodeRepository _dienstplanPeriodeRepository;
     private readonly IDienstwunschRepository _dienstwunschRepository;
+    private readonly SaveMitarbeiterUrlaubsanspruchService _saveAnspruchService;
+    private readonly SaveMitarbeiterUrlaubszeitraumService _saveZeitraumService;
+    private readonly DeleteMitarbeiterUrlaubszeitraumService _deleteZeitraumService;
+    private readonly ReadMitarbeiterUrlaubsplanerService _readUrlaubsplanerService;
 
     public UrlaubsplanerController(
-    ReadItwMitarbeiterprofileService readItwMitarbeiterprofileService,
-    IMitarbeiterUrlaubsanspruchRepository urlaubsanspruchRepository,
-    IMitarbeiterUrlaubszeitraumRepository urlaubszeitraumRepository,
-    IDienstplanPeriodeRepository dienstplanPeriodeRepository,
-    IDienstwunschRepository dienstwunschRepository,
-    ICurrentUserContextAccessor currentUserContextAccessor)
-    : base(currentUserContextAccessor)
+        ReadItwMitarbeiterprofileService readItwMitarbeiterprofileService,
+        IMitarbeiterUrlaubsanspruchRepository urlaubsanspruchRepository,
+        IMitarbeiterUrlaubszeitraumRepository urlaubszeitraumRepository,
+        IDienstplanPeriodeRepository dienstplanPeriodeRepository,
+        IDienstwunschRepository dienstwunschRepository,
+        SaveMitarbeiterUrlaubsanspruchService saveAnspruchService,
+        SaveMitarbeiterUrlaubszeitraumService saveZeitraumService,
+        DeleteMitarbeiterUrlaubszeitraumService deleteZeitraumService,
+        ReadMitarbeiterUrlaubsplanerService readUrlaubsplanerService,
+        ICurrentUserContextAccessor currentUserContextAccessor)
+        : base(currentUserContextAccessor)
     {
         _readItwMitarbeiterprofileService = readItwMitarbeiterprofileService
             ?? throw new ArgumentNullException(nameof(readItwMitarbeiterprofileService));
-
         _urlaubsanspruchRepository = urlaubsanspruchRepository
             ?? throw new ArgumentNullException(nameof(urlaubsanspruchRepository));
-
         _urlaubszeitraumRepository = urlaubszeitraumRepository
             ?? throw new ArgumentNullException(nameof(urlaubszeitraumRepository));
-
         _dienstplanPeriodeRepository = dienstplanPeriodeRepository
             ?? throw new ArgumentNullException(nameof(dienstplanPeriodeRepository));
-
         _dienstwunschRepository = dienstwunschRepository
             ?? throw new ArgumentNullException(nameof(dienstwunschRepository));
+        _saveAnspruchService = saveAnspruchService
+            ?? throw new ArgumentNullException(nameof(saveAnspruchService));
+        _saveZeitraumService = saveZeitraumService
+            ?? throw new ArgumentNullException(nameof(saveZeitraumService));
+        _deleteZeitraumService = deleteZeitraumService
+            ?? throw new ArgumentNullException(nameof(deleteZeitraumService));
+        _readUrlaubsplanerService = readUrlaubsplanerService
+            ?? throw new ArgumentNullException(nameof(readUrlaubsplanerService));
     }
 
     protected override OrganisationsbereichCode Bereich => OrganisationsbereichCode.Intensivtransport;
@@ -103,9 +114,7 @@ public sealed class UrlaubsplanerController : BereichsControllerBase
             return RedirectToAction(nameof(Index), new { userId, jahr });
         }
 
-        var service = new SaveMitarbeiterUrlaubsanspruchService(_urlaubsanspruchRepository);
-
-        var result = await service.ExecuteAsync(
+        var result = await _saveAnspruchService.ExecuteAsync(
             new SaveMitarbeiterUrlaubsanspruchCommand
             {
                 UserId = userId,
@@ -157,9 +166,7 @@ public sealed class UrlaubsplanerController : BereichsControllerBase
             return RedirectToAction(nameof(Index), new { userId, jahr });
         }
 
-        var service = new SaveMitarbeiterUrlaubszeitraumService(_urlaubszeitraumRepository);
-
-        var result = await service.ExecuteAsync(
+        var result = await _saveZeitraumService.ExecuteAsync(
             new SaveMitarbeiterUrlaubszeitraumCommand
             {
                 UserId = userId,
@@ -211,9 +218,7 @@ public sealed class UrlaubsplanerController : BereichsControllerBase
             return RedirectToAction(nameof(Index), new { userId, jahr });
         }
 
-        var service = new DeleteMitarbeiterUrlaubszeitraumService(_urlaubszeitraumRepository);
-
-        var result = await service.ExecuteAsync(
+        var result = await _deleteZeitraumService.ExecuteAsync(
             new DeleteMitarbeiterUrlaubszeitraumCommand
             {
                 Id = id
@@ -286,11 +291,7 @@ public sealed class UrlaubsplanerController : BereichsControllerBase
             return viewModel;
         }
 
-        var readService = new ReadMitarbeiterUrlaubsplanerService(
-            _urlaubsanspruchRepository,
-            _urlaubszeitraumRepository);
-
-        var readResult = await readService.ExecuteAsync(
+        var readResult = await _readUrlaubsplanerService.ExecuteAsync(
             new ReadMitarbeiterUrlaubsplanerQuery
             {
                 UserId = ausgewaehlterMitarbeiter.UserId,

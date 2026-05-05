@@ -1,5 +1,6 @@
 ﻿using ITW.Application.Abstractions.Identity;
 using ITW.Application.Users.ActivateUser;
+using ITW.Application.Test.Helpers;
 using Xunit;
 
 namespace ITW.Application.Test.Users;
@@ -10,7 +11,7 @@ public sealed class ActivateUserServiceTests
     public async Task ExecuteAsync_ErfolgreicheAktivierung_GibtErfolgZurueck()
     {
         var repository = new FakeBenutzerkontoRepository(aktivierenErgebnis: UpdateBenutzerkontoStatusRepositoryResult.Erfolg());
-        var service = new ActivateUserService(repository);
+        var service = new ActivateUserService(repository, FakeLogger<ActivateUserService>.Instance);
 
         var result = await service.ExecuteAsync(new ActivateUserCommand("user-1"));
 
@@ -23,7 +24,7 @@ public sealed class ActivateUserServiceTests
     {
         var repository = new FakeBenutzerkontoRepository(
             aktivierenErgebnis: UpdateBenutzerkontoStatusRepositoryResult.Fehler("Benutzer nicht gefunden."));
-        var service = new ActivateUserService(repository);
+        var service = new ActivateUserService(repository, FakeLogger<ActivateUserService>.Instance);
 
         var result = await service.ExecuteAsync(new ActivateUserCommand("user-1"));
 
@@ -37,7 +38,7 @@ public sealed class ActivateUserServiceTests
     public async Task ExecuteAsync_LeereUserId_GibtValidierungsfehlerZurueck(string userId)
     {
         var repository = new FakeBenutzerkontoRepository();
-        var service = new ActivateUserService(repository);
+        var service = new ActivateUserService(repository, FakeLogger<ActivateUserService>.Instance);
 
         var result = await service.ExecuteAsync(new ActivateUserCommand(userId));
 

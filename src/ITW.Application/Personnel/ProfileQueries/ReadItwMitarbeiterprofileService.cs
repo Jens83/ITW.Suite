@@ -2,6 +2,7 @@
 using ITW.Application.Abstractions.Persistence;
 using ITW.Domain.Organisation.Enums;
 using ITW.Domain.Personnel.Enums;
+using Microsoft.Extensions.Logging;
 
 namespace ITW.Application.Personnel.ProfileQueries;
 
@@ -11,12 +12,14 @@ public sealed class ReadItwMitarbeiterprofileService
     private readonly IBenutzerkontoRepository _benutzerkontoRepository;
     private readonly IItwMitarbeiterprofilRepository _itwMitarbeiterprofilRepository;
     private readonly IAllgemeinesMitarbeiterprofilRepository _allgemeinesMitarbeiterprofilRepository;
+    private readonly ILogger<ReadItwMitarbeiterprofileService> _logger;
 
     public ReadItwMitarbeiterprofileService(
         IBenutzerBereichszuordnungRepository benutzerBereichszuordnungRepository,
         IBenutzerkontoRepository benutzerkontoRepository,
         IItwMitarbeiterprofilRepository itwMitarbeiterprofilRepository,
-        IAllgemeinesMitarbeiterprofilRepository allgemeinesMitarbeiterprofilRepository)
+        IAllgemeinesMitarbeiterprofilRepository allgemeinesMitarbeiterprofilRepository,
+        ILogger<ReadItwMitarbeiterprofileService> logger)
     {
         _benutzerBereichszuordnungRepository = benutzerBereichszuordnungRepository
             ?? throw new ArgumentNullException(nameof(benutzerBereichszuordnungRepository));
@@ -26,6 +29,7 @@ public sealed class ReadItwMitarbeiterprofileService
             ?? throw new ArgumentNullException(nameof(itwMitarbeiterprofilRepository));
         _allgemeinesMitarbeiterprofilRepository = allgemeinesMitarbeiterprofilRepository
             ?? throw new ArgumentNullException(nameof(allgemeinesMitarbeiterprofilRepository));
+        _logger = logger ?? throw new ArgumentNullException(nameof(logger));
     }
 
     public async Task<ReadItwMitarbeiterprofileResult> ExecuteAsync(
