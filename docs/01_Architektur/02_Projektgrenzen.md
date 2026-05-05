@@ -442,6 +442,20 @@ Diese sind erlaubt, wenn sie:
 
 Sie sind nicht als neuer allgemeiner Layer zu verstehen, sondern als konkrete Web-Koordinationslogik innerhalb von `ITW.Web`.
 
+### Verbote für Web.Areas.*
+
+Folgende Abhängigkeiten sind in `ITW.Web.Areas.*` ausdrücklich verboten:
+
+| Verboten | Begründung |
+|---|---|
+| `DbContext` direkt referenzieren | Infrastrukturdetail, verletzt Schichtentrennung |
+| Konkreten `ITW.Infrastructure.*` Typ verwenden | Implementierungsdetail der Infrastruktur |
+| Domain-Entitäten (`*.Entities.*`) als Action-Return oder ViewModel-Property | ViewModels sind die Schnittstelle; Entities enthalten EF-Abhängigkeiten |
+| Fachlogik in Controllern implementieren | Gehört in Application-Services |
+
+Diese Regeln werden automatisch durch NetArchTest in `ITW.Web.Test/ArchitekturTests.cs` geprüft.  
+Vollständige Konventionen: [`docs/05_Konventionen/02_Web_Orchestration.md`](../05_Konventionen/02_Web_Orchestration.md)
+
 ---
 
 ## 11. Zusammenfassung

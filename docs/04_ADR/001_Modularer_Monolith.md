@@ -1,37 +1,38 @@
-# ADR 001 – Entscheidung für einen modularen Monolithen
+# ADR 001 â€“ Entscheidung fÃ¼r einen modularen Monolithen
 
 ## Status
 Akzeptiert
 
 ## Datum
-Wird beim ersten Commit des Architekturstands ergänzt.
+Wird beim ersten Commit des Architekturstands ergÃ¤nzt.
 
 ---
 
 ## Kontext
 
-Für die neue ITW-Suite wird eine zentrale Webanwendung aufgebaut, die mehrere organisatorische Bereiche in einem System vereint:
+FÃ¼r die neue ITW-Suite wird eine zentrale Webanwendung aufgebaut, die mehrere organisatorische Bereiche in einem System vereint:
 
 - Intensivtransport
 - Verwaltung
-- Geschäftsführung
+- GeschÃ¤ftsfÃ¼hrung
 
-Zusätzlich soll das System langfristig um neue Fachmodule erweitert werden können, insbesondere:
+ZusÃ¤tzlich soll das System langfristig um neue Fachmodule erweitert werden kÃ¶nnen, insbesondere:
 
 - Benutzerverwaltung
 - ITW-Personal
 - Dienstplan
-- Einsätze
-- weitere spätere Fachmodule
+- Fahrzeugmanagement
+- EinsÃ¤tze
+- weitere spÃ¤tere Fachmodule
 
 Wichtige Rahmenbedingungen:
 
 - eine zentrale Identity-Basis
 - strikte Bereichstrennung
-- serverseitige Rechte- und Sichtbarkeitsprüfung
+- serverseitige Rechte- und SichtbarkeitsprÃ¼fung
 - langfristige Erweiterbarkeit
 - praxisnahe Umsetzbarkeit in ASP.NET Core
-- kein unnötiger technischer Overhead zu Beginn
+- kein unnÃ¶tiger technischer Overhead zu Beginn
 
 ---
 
@@ -48,35 +49,38 @@ Das bedeutet konkret:
 - definierte Referenzrichtungen,
 - keine Microservice-Aufteilung im Startsystem.
 
-Die Ziel-Projektstruktur lautet:
+Die aktuelle Projektstruktur lautet:
 
-- `ITW.Web`
-- `ITW.Application`
-- `ITW.Domain`
-- `ITW.Infrastructure`
-- `ITW.Dienstplan`
-- `ITW.Einsatz`
+| Projekt | Status |
+|---|---|
+| `ITW.Web` | aktiv |
+| `ITW.Application` | aktiv |
+| `ITW.Domain` | aktiv |
+| `ITW.Infrastructure` | aktiv |
+| `ITW.Dienstplan` | aktiv |
+| `ITW.Fahrzeugmanagement` | aktiv |
+| `ITW.Einsatz` | geplant |
 
 ---
 
-## Begründung
+## BegrÃ¼ndung
 
-Diese Entscheidung wurde getroffen, weil ein modularer Monolith für das Vorhaben die beste Balance aus Klarheit, Erweiterbarkeit und Umsetzbarkeit bietet.
+Diese Entscheidung wurde getroffen, weil ein modularer Monolith fÃ¼r das Vorhaben die beste Balance aus Klarheit, Erweiterbarkeit und Umsetzbarkeit bietet.
 
 ### Vorteile
-- zentrale Identity lässt sich sauber integrieren
+- zentrale Identity lÃ¤sst sich sauber integrieren
 - Rechte und Sichtbarkeiten bleiben zentral kontrollierbar
-- Bereiche können in einer Anwendung getrennt dargestellt werden
+- Bereiche kÃ¶nnen in einer Anwendung getrennt dargestellt werden
 - fachliche Module bleiben sauber abgrenzbar
 - Deployment und Betrieb bleiben beherrschbar
 - die Architektur ist mit ASP.NET Core gut umsetzbar
-- spätere Erweiterungen sind möglich, ohne sofort verteilte Systeme einzuführen
+- spÃ¤tere Erweiterungen sind mÃ¶glich, ohne sofort verteilte Systeme einzufÃ¼hren
 
-### Vermeidete Nachteile anderer Ansätze
-- kein verfrühter Microservice-Aufwand
-- keine unnötig komplexe verteilte Kommunikation
-- keine übergroße Ein-Projekt-Struktur ohne klare Grenzen
-- keine frühe Aufsplitterung in künstliche Teilprojekte ohne fachlichen Bedarf
+### Vermiedene Nachteile anderer AnsÃ¤tze
+- kein verfrÃ¼hter Microservice-Aufwand
+- keine unnÃ¶tig komplexe verteilte Kommunikation
+- keine Ã¼bergroÃŸe Ein-Projekt-Struktur ohne klare Grenzen
+- keine frÃ¼he Aufsplitterung in kÃ¼nstliche Teilprojekte ohne fachlichen Bedarf
 
 ---
 
@@ -84,64 +88,64 @@ Diese Entscheidung wurde getroffen, weil ein modularer Monolith für das Vorhaben
 
 ### Positive Konsequenzen
 - zentrale Plattformthemen bleiben zentral
-- Fachmodule können sauber wachsen
+- Fachmodule kÃ¶nnen sauber wachsen
 - Bereiche und Module lassen sich getrennt denken
 - Web, Plattform und Fachlogik bleiben besser strukturierbar
-- Dienstwünsche können sauber als Teil von `ITW.Dienstplan` verbleiben
+- DienstwÃ¼nsche kÃ¶nnen sauber als Teil von `ITW.Dienstplan` verbleiben
 
 ### Bewusste Konsequenzen
-- Modulgrenzen müssen diszipliniert eingehalten werden
+- Modulgrenzen mÃ¼ssen diszipliniert eingehalten werden
 - Fachlogik darf nicht ins Web-Projekt ausweichen
-- zentrale Projekte dürfen nicht zum Sammelbecken für alles werden
-- Bereichsrechte müssen immer serverseitig geprüft werden
+- zentrale Projekte dÃ¼rfen nicht zum Sammelbecken fÃ¼r alles werden
+- Bereichsrechte mÃ¼ssen immer serverseitig geprÃ¼ft werden
 
 ---
 
 ## Abgelehnte Alternativen
 
-### 1. Klassischer großer Monolith ohne klare Modulgrenzen
+### 1. Klassischer groÃŸer Monolith ohne klare Modulgrenzen
 Abgelehnt, weil:
 - Verantwortlichkeiten schnell verschwimmen,
 - Fachlogik leichter vermischt wird,
-- spätere Erweiterungen schwieriger werden.
+- spÃ¤tere Erweiterungen schwieriger werden.
 
 ### 2. Microservices von Anfang an
 Abgelehnt, weil:
-- die Komplexität für den Start unnötig hoch wäre,
-- Betrieb, Authentifizierung und Kommunikation deutlich aufwendiger würden,
+- die KomplexitÃ¤t fÃ¼r den Start unnÃ¶tig hoch wÃ¤re,
+- Betrieb, Authentifizierung und Kommunikation deutlich aufwendiger wÃ¼rden,
 - der aktuelle fachliche Zuschnitt noch keinen verteilten Systemzuschnitt erzwingt.
 
-### 3. Eigenes Projekt für Dienstwünsche
+### 3. Eigenes Projekt fÃ¼r DienstwÃ¼nsche
 Abgelehnt, weil:
-- Dienstwünsche fachlich Teil des Dienstplanprozesses sind,
+- DienstwÃ¼nsche fachlich Teil des Dienstplanprozesses sind,
 - Perioden, Wunschphase, Wunschabgabe und Planung einen gemeinsamen Lebenszyklus bilden,
-- eine Trennung künstliche Kopplung und Doppelstrukturen erzeugen würde.
+- eine Trennung kÃ¼nstliche Kopplung und Doppelstrukturen erzeugen wÃ¼rde.
 
 ---
 
-## Zusätzliche Festlegungen
+## ZusÃ¤tzliche Festlegungen
 
-Im Rahmen dieser Architekturentscheidung gelten zusätzlich folgende Festlegungen:
+Im Rahmen dieser Architekturentscheidung gelten zusÃ¤tzlich folgende Festlegungen:
 
-- Dienstwünsche bleiben Teil von `ITW.Dienstplan`
+- DienstwÃ¼nsche bleiben Teil von `ITW.Dienstplan`
 - `ITW.Infrastructure` darf `ITW.Web` nicht kennen
 - Qualifikationen sind keine Rollen
-- Geschäftsführung ist nicht automatisch technischer Volladmin
+- GeschÃ¤ftsfÃ¼hrung ist nicht automatisch technischer Volladmin
 - Bereichstrennung wird serverseitig durchgesetzt
-- Web-Areas strukturieren die Oberfläche, besitzen aber nicht die Fachlogik
+- Web-Areas strukturieren die OberflÃ¤che, besitzen aber nicht die Fachlogik
 
 ---
 
-## Überprüfung
+## ÃœberprÃ¼fung
 
-Diese Entscheidung ist gültig, solange:
+Diese Entscheidung ist gÃ¼ltig, solange:
 
-- die Lösung als gemeinsame Webanwendung betrieben wird,
+- die LÃ¶sung als gemeinsame Webanwendung betrieben wird,
 - die Anzahl der Fachmodule im Rahmen eines modularen Monolithen gut beherrschbar bleibt,
-- keine betrieblichen oder fachlichen Gründe eine verteilte Architektur erzwingen.
+- keine betrieblichen oder fachlichen GrÃ¼nde eine verteilte Architektur erzwingen.
 
-Eine spätere Neubewertung ist möglich, wenn:
-- fachliche Module organisatorisch deutlich unabhängiger werden,
+Eine spÃ¤tere Neubewertung ist mÃ¶glich, wenn:
+- fachliche Module organisatorisch deutlich unabhÃ¤ngiger werden,
 - Betrieb oder Skalierung eine andere Architektur erzwingen,
 - Integrationsanforderungen grundlegend steigen.
 
@@ -149,11 +153,11 @@ Eine spätere Neubewertung ist möglich, wenn:
 
 ## Zusammenfassung
 
-Für die ITW-Suite ist der modulare Monolith die passende Zielarchitektur.
+FÃ¼r die ITW-Suite ist der modulare Monolith die passende Zielarchitektur.
 
-Er ermöglicht:
+Er ermÃ¶glicht:
 - zentrale Identity,
 - saubere Bereichstrennung,
 - klare Modulgrenzen,
 - realistische Umsetzbarkeit,
-- langfristige Erweiterbarkeit ohne unnötige Anfangskomplexität.
+- langfristige Erweiterbarkeit ohne unnÃ¶tige AnfangskomplexitÃ¤t.
