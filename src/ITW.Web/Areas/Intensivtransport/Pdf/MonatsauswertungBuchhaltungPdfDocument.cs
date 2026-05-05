@@ -8,11 +8,13 @@ namespace ITW.Web.Areas.Intensivtransport.Pdf;
 public sealed class MonatsauswertungBuchhaltungPdfDocument
 {
     private readonly MonatsauswertungViewModel _model;
+    private readonly DateTimeOffset _druckZeit;
 
-    public MonatsauswertungBuchhaltungPdfDocument(MonatsauswertungViewModel model)
+    public MonatsauswertungBuchhaltungPdfDocument(MonatsauswertungViewModel model, DateTimeOffset druckZeit)
     {
         ArgumentNullException.ThrowIfNull(model);
         _model = model;
+        _druckZeit = druckZeit;
     }
 
     public byte[] Generate()
@@ -112,7 +114,7 @@ public sealed class MonatsauswertungBuchhaltungPdfDocument
                 {
                     column.Spacing(2);
                     column.Item().Text("Exportdatum").FontSize(8).SemiBold().FontColor(Colors.Grey.Medium);
-                    column.Item().Text(DateTime.Now.ToString("dd.MM.yyyy HH:mm"));
+                    column.Item().Text(_druckZeit.LocalDateTime.ToString("dd.MM.yyyy HH:mm"));
                 });
 
                 row.RelativeItem().Column(column =>

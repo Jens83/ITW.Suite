@@ -1,4 +1,5 @@
 using Azure.Core;
+using ITW.Application.Abstractions.DateTime;
 using ITW.Application.Organisation.Contracts;
 using ITW.Web.Areas.Intensivtransport.Controllers.Dienstplan;
 using ITW.Web.Areas.Intensivtransport.Services.Dienstplan;
@@ -19,12 +20,14 @@ public sealed class DienstplanMitarbeiterController : IntensivtransportDienstpla
     private readonly ReadSichtbarerDienstplanViewModelService _readSichtbarerDienstplanViewModelService;
     private readonly ToggleMitarbeiterWunschService _toggleMitarbeiterWunschService;
     private readonly SaveFreelancerMonatswunschMitarbeiterService _saveFreelancerMonatswunschMitarbeiterService;
+    private readonly IDateTimeProvider _dateTimeProvider;
 
     public DienstplanMitarbeiterController(
         ReadDienstplanIndexViewModelService readDienstplanIndexViewModelService,
         ReadSichtbarerDienstplanViewModelService readSichtbarerDienstplanViewModelService,
         ToggleMitarbeiterWunschService toggleMitarbeiterWunschService,
         SaveFreelancerMonatswunschMitarbeiterService saveFreelancerMonatswunschMitarbeiterService,
+        IDateTimeProvider dateTimeProvider,
         ICurrentUserContextAccessor currentUserContextAccessor)
         : base(currentUserContextAccessor)
     {
@@ -39,6 +42,9 @@ public sealed class DienstplanMitarbeiterController : IntensivtransportDienstpla
 
         ArgumentNullException.ThrowIfNull(saveFreelancerMonatswunschMitarbeiterService);
         _saveFreelancerMonatswunschMitarbeiterService = saveFreelancerMonatswunschMitarbeiterService;
+
+        ArgumentNullException.ThrowIfNull(dateTimeProvider);
+        _dateTimeProvider = dateTimeProvider;
     }
 
     [HttpGet("Mitarbeiter")]
@@ -61,8 +67,8 @@ public sealed class DienstplanMitarbeiterController : IntensivtransportDienstpla
         var viewModel = await _readDienstplanIndexViewModelService.ExecuteAsync(
             new ReadDienstplanIndexViewModelQuery(
                 zugriff.CurrentUser,
-                DateTime.Today.Month,
-                DateTime.Today.Year,
+                _dateTimeProvider.Today.Month,
+                _dateTimeProvider.Today.Year,
                 WunschphaseDirektOeffnen: true,
                 ModalAutomatischOeffnen: false),
             cancellationToken);

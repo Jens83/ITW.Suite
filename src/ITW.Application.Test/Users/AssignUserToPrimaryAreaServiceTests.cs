@@ -147,6 +147,7 @@ public sealed class AssignUserToPrimaryAreaServiceTests
     {
         public FakeDateTimeProvider(DateTimeOffset utcNow) => UtcNow = utcNow;
         public DateTimeOffset UtcNow { get; }
+        public DateOnly Today => DateOnly.FromDateTime(UtcNow.ToLocalTime().DateTime);
     }
 
     private sealed class FakeBenutzerBereichszuordnungRepository : IBenutzerBereichszuordnungRepository

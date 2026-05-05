@@ -1,3 +1,4 @@
+using ITW.Application.Abstractions.DateTime;
 using ITW.Application.Organisation.Contracts;
 using ITW.Dienstplan.Application.Contracts;
 using ITW.Dienstplan.Application.Kalender;
@@ -31,6 +32,7 @@ public sealed class DienstplanWachleiterController : IntensivtransportDienstplan
     private readonly ReadDienstplanIndexViewModelService _readDienstplanIndexViewModelService;
     private readonly SaveWachleiterTagesplanungService _saveWachleiterTagesplanungService;
     private readonly SaveWachleiterAusfallService _saveWachleiterAusfallService;
+    private readonly IDateTimeProvider _dateTimeProvider;
 
     public DienstplanWachleiterController(
         CreateDienstplanPeriodeService createDienstplanPeriodeService,
@@ -43,6 +45,7 @@ public sealed class DienstplanWachleiterController : IntensivtransportDienstplan
         ReadDienstplanIndexViewModelService readDienstplanIndexViewModelService,
         SaveWachleiterTagesplanungService saveWachleiterTagesplanungService,
         SaveWachleiterAusfallService saveWachleiterAusfallService,
+        IDateTimeProvider dateTimeProvider,
         ICurrentUserContextAccessor currentUserContextAccessor)
         : base(currentUserContextAccessor)
     {
@@ -75,6 +78,9 @@ public sealed class DienstplanWachleiterController : IntensivtransportDienstplan
 
         ArgumentNullException.ThrowIfNull(saveWachleiterAusfallService);
         _saveWachleiterAusfallService = saveWachleiterAusfallService;
+
+        ArgumentNullException.ThrowIfNull(dateTimeProvider);
+        _dateTimeProvider = dateTimeProvider;
     }
 
     [HttpGet("Wachleiter")]
@@ -92,8 +98,8 @@ public sealed class DienstplanWachleiterController : IntensivtransportDienstplan
         var viewModel = await _readDienstplanIndexViewModelService.ExecuteAsync(
             new ReadDienstplanIndexViewModelQuery(
                 zugriff.CurrentUser!,
-                DateTime.Today.Month,
-                DateTime.Today.Year,
+                _dateTimeProvider.Today.Month,
+                _dateTimeProvider.Today.Year,
                 WunschphaseDirektOeffnen: true,
                 ModalAutomatischOeffnen: false),
             cancellationToken);
@@ -121,7 +127,7 @@ public sealed class DienstplanWachleiterController : IntensivtransportDienstplan
         }
 
         var kalenderResult = await _readWachleiterKalenderService.ExecuteAsync(
-            new ReadWachleiterKalenderQuery(periodeId),
+            new ReadWachleiterKalenderQuery(periodeId, _dateTimeProvider.Today),
             cancellationToken);
 
         var kalenderWochen = MappeWachleiterKalenderWochen(kalenderResult.KalenderWochen);

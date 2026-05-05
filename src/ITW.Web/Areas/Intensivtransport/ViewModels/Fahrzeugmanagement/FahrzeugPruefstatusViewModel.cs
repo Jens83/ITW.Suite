@@ -57,6 +57,8 @@ public sealed class FahrzeugPruefstatusItemViewModel
         ? LetzteErledigungAm.Value.ToString("dd.MM.yyyy")
         : "-";
 
+    public DateOnly Heute { get; init; }
+
     public bool IstHinterlegt => FaelligAm.HasValue;
 
     public bool IstUeberfaellig
@@ -68,7 +70,7 @@ public sealed class FahrzeugPruefstatusItemViewModel
                 return false;
             }
 
-            return FaelligAm.Value < DateOnly.FromDateTime(DateTime.Today);
+            return FaelligAm.Value < Heute;
         }
     }
 
@@ -81,8 +83,7 @@ public sealed class FahrzeugPruefstatusItemViewModel
                 return false;
             }
 
-            var heute = DateOnly.FromDateTime(DateTime.Today);
-            var warnGrenze = heute.AddDays(30);
+            var warnGrenze = Heute.AddDays(30);
 
             return FaelligAm.Value <= warnGrenze;
         }
@@ -99,13 +100,13 @@ public sealed class FahrzeugPruefstatusItemViewModel
 
             if (IstUeberfaellig)
             {
-                var tage = DateOnly.FromDateTime(DateTime.Today).DayNumber - FaelligAm.Value.DayNumber;
+                var tage = Heute.DayNumber - FaelligAm.Value.DayNumber;
                 return $"Überfällig seit {tage} Tagen";
             }
 
             if (WirdBaldFaellig)
             {
-                var tage = FaelligAm.Value.DayNumber - DateOnly.FromDateTime(DateTime.Today).DayNumber;
+                var tage = FaelligAm.Value.DayNumber - Heute.DayNumber;
                 return $"Fällig in {tage} Tagen";
             }
 

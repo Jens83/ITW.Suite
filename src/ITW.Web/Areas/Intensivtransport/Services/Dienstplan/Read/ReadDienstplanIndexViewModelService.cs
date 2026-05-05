@@ -1,3 +1,4 @@
+using ITW.Application.Abstractions.DateTime;
 using ITW.Application.Organisation.Contracts;
 using ITW.Application.Personnel.ProfileQueries;
 using ITW.Application.Personnel.Urlaub.Contracts;
@@ -26,12 +27,14 @@ public sealed class ReadDienstplanIndexViewModelService
     private readonly ReadAktiveWunschphaseService _readAktiveWunschphaseService;
     private readonly ReadItwMitarbeiterprofileService _readItwMitarbeiterprofileService;
     private readonly IMitarbeiterUrlaubszeitraumRepository _mitarbeiterUrlaubszeitraumRepository;
+    private readonly IDateTimeProvider _dateTimeProvider;
 
     public ReadDienstplanIndexViewModelService(
         ReadDienstplanperiodenService readDienstplanperiodenService,
         ReadAktiveWunschphaseService readAktiveWunschphaseService,
         ReadItwMitarbeiterprofileService readItwMitarbeiterprofileService,
-        IMitarbeiterUrlaubszeitraumRepository mitarbeiterUrlaubszeitraumRepository)
+        IMitarbeiterUrlaubszeitraumRepository mitarbeiterUrlaubszeitraumRepository,
+        IDateTimeProvider dateTimeProvider)
     {
         ArgumentNullException.ThrowIfNull(readDienstplanperiodenService);
         _readDienstplanperiodenService = readDienstplanperiodenService;
@@ -44,6 +47,9 @@ public sealed class ReadDienstplanIndexViewModelService
 
         ArgumentNullException.ThrowIfNull(mitarbeiterUrlaubszeitraumRepository);
         _mitarbeiterUrlaubszeitraumRepository = mitarbeiterUrlaubszeitraumRepository;
+
+        ArgumentNullException.ThrowIfNull(dateTimeProvider);
+        _dateTimeProvider = dateTimeProvider;
     }
 
     public async Task<DienstplanIndexViewModel> ExecuteAsync(
@@ -85,7 +91,8 @@ public sealed class ReadDienstplanIndexViewModelService
             query.Jahr,
             query.WunschphaseDirektOeffnen,
             query.ModalAutomatischOeffnen,
-            beschaeftigungsart);
+            beschaeftigungsart,
+            _dateTimeProvider.Today);
 
         if (!istWachleiter)
         {
@@ -124,7 +131,8 @@ public sealed class ReadDienstplanIndexViewModelService
         int jahr,
         bool wunschphaseDirektOeffnen,
         bool modalAutomatischOeffnen,
-        Domain.Personnel.Enums.MitarbeiterBeschaeftigungsart beschaeftigungsart)
+        Domain.Personnel.Enums.MitarbeiterBeschaeftigungsart beschaeftigungsart,
+        DateOnly heute)
     {
         var aktiveWunschphase = readWunschphaseResult.AktiveWunschphase;
         var wunschTage = aktiveWunschphase?.WunschTage ?? Array.Empty<int>();
@@ -145,12 +153,12 @@ public sealed class ReadDienstplanIndexViewModelService
             IsSuccess = readPeriodenResult.IsSuccess && readWunschphaseResult.IsSuccess,
             ErrorMessage = readPeriodenResult.ErrorMessage ?? readWunschphaseResult.ErrorMessage,
             DarfPeriodeAnlegen = istWachleiter,
-            Monat = monat is >= 1 and <= 12 ? monat : DateTime.Today.Month,
-            Jahr = jahr is >= 2000 and <= 2100 ? jahr : DateTime.Today.Year,
+            Monat = monat is >= 1 and <= 12 ? monat : heute.Month,
+            Jahr = jahr is >= 2000 and <= 2100 ? jahr : heute.Year,
             WunschphaseDirektOeffnen = wunschphaseDirektOeffnen,
             ModalAutomatischOeffnen = modalAutomatischOeffnen,
             MonatOptionen = BaueMonatOptionen(monat),
-            JahrOptionen = BaueJahrOptionen(jahr),
+            JahrOptionen = BaueJahrOptionen(jahr, heute.Year),
             FreelancerDienstanzahlOptionen = new[]
             {
                 new SelectListItem { Value = string.Empty, Text = "Bitte auswählen", Selected = !aktiveWunschphase?.FreelancerGewuenschteDienste.HasValue ?? true },
@@ -187,7 +195,8 @@ public sealed class ReadDienstplanIndexViewModelService
                     aktiveWunschphase.Jahr,
                     aktiveWunschphase.Monat,
                     wunschTage,
-                    nichtVerfuegbareTage)
+                    nichtVerfuegbareTage,
+                    heute)
                 : Array.Empty<DienstplanKalenderWocheViewModel>()
         };
     }
@@ -196,7 +205,8 @@ public sealed class ReadDienstplanIndexViewModelService
         int jahr,
         int monat,
         IReadOnlyList<int> wunschTage,
-        IReadOnlyList<int> nichtVerfuegbareTage)
+        IReadOnlyList<int> nichtVerfuegbareTage,
+        DateOnly heute)
     {
         var ersteDatum = new DateOnly(jahr, monat, 1);
         var letzteDatum = ersteDatum.AddMonths(1).AddDays(-1);
@@ -204,8 +214,6 @@ public sealed class ReadDienstplanIndexViewModelService
         var kalenderStart = ersteDatum.AddDays(-startOffset);
         var endOffset = 6 - ((int)letzteDatum.DayOfWeek + 6) % 7;
         var kalenderEnde = letzteDatum.AddDays(endOffset);
-
-        var heute = DateOnly.FromDateTime(DateTime.Today);
         var feiertage = MecklenburgVorpommernFeiertage.GetFeiertage(jahr);
 
         var wunschTageSet = wunschTage.ToHashSet();
@@ -324,9 +332,8 @@ public sealed class ReadDienstplanIndexViewModelService
             .ToArray();
     }
 
-    private static IReadOnlyList<SelectListItem> BaueJahrOptionen(int ausgewaehltesJahr)
+    private static IReadOnlyList<SelectListItem> BaueJahrOptionen(int ausgewaehltesJahr, int basisJahr)
     {
-        var basisJahr = DateTime.Today.Year;
 
         return Enumerable.Range(basisJahr - 1, 5)
             .Select(jahr => new SelectListItem

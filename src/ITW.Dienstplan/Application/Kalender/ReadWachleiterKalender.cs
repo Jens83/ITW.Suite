@@ -6,7 +6,7 @@ using ITW.Dienstplan.Domain.Enums;
 
 namespace ITW.Dienstplan.Application.Kalender;
 
-public sealed record ReadWachleiterKalenderQuery(Guid? PeriodeId);
+public sealed record ReadWachleiterKalenderQuery(Guid? PeriodeId, DateOnly Heute);
 
 public sealed class WachleiterKalenderTagEintrag
 {
@@ -148,6 +148,7 @@ public sealed class ReadWachleiterKalenderService
             ausgewaehltePeriode.Monat,
             Array.Empty<int>(),
             Array.Empty<int>(),
+            query.Heute,
             statistikLookup,
             planLookup,
             automatikKonfliktLookup);
@@ -184,6 +185,7 @@ public sealed class ReadWachleiterKalenderService
         int monat,
         IReadOnlyList<int> wunschTage,
         IReadOnlyList<int> nichtVerfuegbareTage,
+        DateOnly heute,
         IReadOnlyDictionary<DateOnly, DienstwunschTagesstatistik>? statistikLookup = null,
         IReadOnlyDictionary<DateOnly, GeplanterDienstTag>? planLookup = null,
         IReadOnlyDictionary<DateOnly, string>? automatikKonfliktLookup = null)
@@ -194,8 +196,6 @@ public sealed class ReadWachleiterKalenderService
         var kalenderStart = ersteDatum.AddDays(-startOffset);
         var endOffset = 6 - (((int)letzteDatum.DayOfWeek + 6) % 7);
         var kalenderEnde = letzteDatum.AddDays(endOffset);
-
-        var heute = DateOnly.FromDateTime(DateTime.Today);
         var feiertage = MecklenburgVorpommernFeiertage.GetFeiertage(jahr);
 
         var wunschTageSet = wunschTage.ToHashSet();

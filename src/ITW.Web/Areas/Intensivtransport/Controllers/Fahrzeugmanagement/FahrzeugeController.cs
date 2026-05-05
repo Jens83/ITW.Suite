@@ -1,3 +1,4 @@
+using ITW.Application.Abstractions.DateTime;
 using ITW.Application.Organisation.Contracts;
 using ITW.Fahrzeugmanagement.Application.Fahrtenbuch;
 using ITW.Fahrzeugmanagement.Application.FahrzeugDokumente;
@@ -32,6 +33,7 @@ public sealed class FahrzeugeController : IntensivtransportFahrzeugmanagementCon
 
     private readonly ReadFahrzeugPruefstatusService _readFahrzeugPruefstatusService;
     private readonly SaveFahrzeugPruefungService _saveFahrzeugPruefungService;
+    private readonly IDateTimeProvider _dateTimeProvider;
 
     public FahrzeugeController(
         ReadFahrzeugUebersichtService readFahrzeugUebersichtService,
@@ -47,7 +49,8 @@ public sealed class FahrzeugeController : IntensivtransportFahrzeugmanagementCon
         CreateFahrtenbuchEintragService createFahrtenbuchEintragService,
         ReadFahrtenbuchEintragDetailService readFahrtenbuchEintragDetailService,
         ReadFahrzeugPruefstatusService readFahrzeugPruefstatusService,
-        SaveFahrzeugPruefungService saveFahrzeugPruefungService)
+        SaveFahrzeugPruefungService saveFahrzeugPruefungService,
+        IDateTimeProvider dateTimeProvider)
         : base(currentUserContextAccessor)
     {
         ArgumentNullException.ThrowIfNull(readFahrzeugUebersichtService);
@@ -88,6 +91,9 @@ public sealed class FahrzeugeController : IntensivtransportFahrzeugmanagementCon
 
         ArgumentNullException.ThrowIfNull(saveFahrzeugPruefungService);
         _saveFahrzeugPruefungService = saveFahrzeugPruefungService;
+
+        ArgumentNullException.ThrowIfNull(dateTimeProvider);
+        _dateTimeProvider = dateTimeProvider;
     }
 
     [HttpGet]
@@ -192,10 +198,11 @@ public sealed class FahrzeugeController : IntensivtransportFahrzeugmanagementCon
                     Bezeichnung = x.Bezeichnung,
                     ContentType = x.ContentType,
                     GueltigBis = x.GueltigBis,
-                    HochgeladenAm = x.HochgeladenAm
+                    HochgeladenAm = x.HochgeladenAm,
+                    Heute = _dateTimeProvider.Today
                 })
                 .ToList(),
-            Pruefungen = BaueFahrzeugPruefstatusItems(pruefstatusResult)
+            Pruefungen = BaueFahrzeugPruefstatusItems(pruefstatusResult, _dateTimeProvider.Today)
         };
 
         return View(viewModel);
@@ -950,7 +957,8 @@ public sealed class FahrzeugeController : IntensivtransportFahrzeugmanagementCon
                     Bezeichnung = x.Bezeichnung,
                     ContentType = x.ContentType,
                     GueltigBis = x.GueltigBis,
-                    HochgeladenAm = x.HochgeladenAm
+                    HochgeladenAm = x.HochgeladenAm,
+                    Heute = _dateTimeProvider.Today
                 })
                 .ToList()
         };
@@ -976,8 +984,8 @@ public sealed class FahrzeugeController : IntensivtransportFahrzeugmanagementCon
             FahrzeugText = fahrzeugText,
             Titel = "Fahrtenbuch",
             Beschreibung = "Fahrten und Kilometerstände zum Fahrzeug dokumentieren.",
-            Startzeit = DateTime.Today.AddHours(7),
-            Endzeit = DateTime.Now,
+            Startzeit = _dateTimeProvider.Today.ToDateTime(new TimeOnly(7, 0)),
+            Endzeit = _dateTimeProvider.UtcNow.LocalDateTime,
             Navigation = BaueNavigation(detail, "Fahrtenbuch"),
             FahrtKategorieOptionen = BaueFahrtKategorieOptionen(),
             Eintraege = fahrtenbuchResult.Eintraege
@@ -1039,12 +1047,13 @@ public sealed class FahrzeugeController : IntensivtransportFahrzeugmanagementCon
             FahrzeugId = detail.FahrzeugId,
             Navigation = BaueNavigation(detail, "Pruefstatus"),
             PruefungTypOptionen = BaueFahrzeugPruefungTypOptionen(),
-            Pruefungen = BaueFahrzeugPruefstatusItems(result)
+            Pruefungen = BaueFahrzeugPruefstatusItems(result, _dateTimeProvider.Today)
         };
     }
 
     private static IReadOnlyList<FahrzeugPruefstatusItemViewModel> BaueFahrzeugPruefstatusItems(
-        ReadFahrzeugPruefstatusResult result)
+        ReadFahrzeugPruefstatusResult result,
+        DateOnly heute)
     {
         var vorhandenePruefungen = result.Pruefungen
             .ToDictionary(x => x.Typ, x => x);
@@ -1069,7 +1078,8 @@ public sealed class FahrzeugeController : IntensivtransportFahrzeugmanagementCon
                     Typ = typ,
                     FaelligAm = pruefung?.FaelligAm,
                     LetzteErledigungAm = pruefung?.LetzteErledigungAm,
-                    Bemerkung = pruefung?.Bemerkung
+                    Bemerkung = pruefung?.Bemerkung,
+                    Heute = heute
                 };
             })
             .ToList();

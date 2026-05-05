@@ -1,4 +1,5 @@
-﻿using ITW.Application.Abstractions.Identity;
+﻿using ITW.Application.Abstractions.DateTime;
+using ITW.Application.Abstractions.Identity;
 using ITW.Application.Abstractions.Persistence;
 using ITW.Application.Organisation.Contracts;
 using ITW.Application.Personnel.ProfileQueries;
@@ -79,6 +80,7 @@ public sealed class UrlaubsplanerControllerTests
             new SaveMitarbeiterUrlaubszeitraumService(urlaubszeitraumRepository, FakeLogger<SaveMitarbeiterUrlaubszeitraumService>.Instance),
             new DeleteMitarbeiterUrlaubszeitraumService(urlaubszeitraumRepository, FakeLogger<DeleteMitarbeiterUrlaubszeitraumService>.Instance),
             new ReadMitarbeiterUrlaubsplanerService(urlaubsanspruchRepository, urlaubszeitraumRepository, FakeLogger<ReadMitarbeiterUrlaubsplanerService>.Instance),
+            new FakeDateTimeProvider(),
             currentUserAccessor);
 
         controller.ControllerContext = new ControllerContext
@@ -177,6 +179,7 @@ public sealed class UrlaubsplanerControllerTests
             new SaveMitarbeiterUrlaubszeitraumService(urlaubszeitraumRepository, FakeLogger<SaveMitarbeiterUrlaubszeitraumService>.Instance),
             new DeleteMitarbeiterUrlaubszeitraumService(urlaubszeitraumRepository, FakeLogger<DeleteMitarbeiterUrlaubszeitraumService>.Instance),
             new ReadMitarbeiterUrlaubsplanerService(urlaubsanspruchRepository, urlaubszeitraumRepository, FakeLogger<ReadMitarbeiterUrlaubsplanerService>.Instance),
+            new FakeDateTimeProvider(),
             currentUserAccessor);
 
         controller.ControllerContext = new ControllerContext
@@ -267,6 +270,7 @@ public sealed class UrlaubsplanerControllerTests
             new SaveMitarbeiterUrlaubszeitraumService(urlaubszeitraumRepository, FakeLogger<SaveMitarbeiterUrlaubszeitraumService>.Instance),
             new DeleteMitarbeiterUrlaubszeitraumService(urlaubszeitraumRepository, FakeLogger<DeleteMitarbeiterUrlaubszeitraumService>.Instance),
             new ReadMitarbeiterUrlaubsplanerService(urlaubsanspruchRepository, urlaubszeitraumRepository, FakeLogger<ReadMitarbeiterUrlaubsplanerService>.Instance),
+            new FakeDateTimeProvider(),
             currentUserAccessor);
 
         controller.ControllerContext = new ControllerContext
@@ -373,6 +377,7 @@ public sealed class UrlaubsplanerControllerTests
             new SaveMitarbeiterUrlaubszeitraumService(urlaubszeitraumRepository, FakeLogger<SaveMitarbeiterUrlaubszeitraumService>.Instance),
             new DeleteMitarbeiterUrlaubszeitraumService(urlaubszeitraumRepository, FakeLogger<DeleteMitarbeiterUrlaubszeitraumService>.Instance),
             new ReadMitarbeiterUrlaubsplanerService(urlaubsanspruchRepository, urlaubszeitraumRepository, FakeLogger<ReadMitarbeiterUrlaubsplanerService>.Instance),
+            new FakeDateTimeProvider(),
             currentUserAccessor);
 
         controller.ControllerContext = new ControllerContext
@@ -474,6 +479,7 @@ public sealed class UrlaubsplanerControllerTests
             new SaveMitarbeiterUrlaubszeitraumService(urlaubszeitraumRepository, FakeLogger<SaveMitarbeiterUrlaubszeitraumService>.Instance),
             new DeleteMitarbeiterUrlaubszeitraumService(urlaubszeitraumRepository, FakeLogger<DeleteMitarbeiterUrlaubszeitraumService>.Instance),
             new ReadMitarbeiterUrlaubsplanerService(urlaubsanspruchRepository, urlaubszeitraumRepository, FakeLogger<ReadMitarbeiterUrlaubsplanerService>.Instance),
+            new FakeDateTimeProvider(),
             currentUserAccessor);
 
         controller.ControllerContext = new ControllerContext
@@ -566,6 +572,7 @@ public sealed class UrlaubsplanerControllerTests
             new SaveMitarbeiterUrlaubszeitraumService(urlaubszeitraumRepository, FakeLogger<SaveMitarbeiterUrlaubszeitraumService>.Instance),
             new DeleteMitarbeiterUrlaubszeitraumService(urlaubszeitraumRepository, FakeLogger<DeleteMitarbeiterUrlaubszeitraumService>.Instance),
             new ReadMitarbeiterUrlaubsplanerService(urlaubsanspruchRepository, urlaubszeitraumRepository, FakeLogger<ReadMitarbeiterUrlaubsplanerService>.Instance),
+            new FakeDateTimeProvider(),
             currentUserAccessor);
 
         controller.ControllerContext = new ControllerContext
@@ -1093,6 +1100,12 @@ public sealed class UrlaubsplanerControllerTests
 
 
         
+    }
+
+    private sealed class FakeDateTimeProvider : IDateTimeProvider
+    {
+        public DateTimeOffset UtcNow => DateTimeOffset.UtcNow;
+        public DateOnly Today => DateOnly.FromDateTime(DateTimeOffset.Now.DateTime);
     }
 
     private static ICurrentUserContextAccessor ErzeugeGueltigenUrlaubsplanerWachleiterAccessor()

@@ -1,3 +1,4 @@
+using ITW.Application.Abstractions.DateTime;
 using ITW.Application.Organisation.Contracts;
 using ITW.Application.Personnel.ProfileQueries;
 using ITW.Application.Personnel.Urlaub;
@@ -30,6 +31,7 @@ public sealed class UrlaubsplanerController : BereichsControllerBase
     private readonly SaveMitarbeiterUrlaubszeitraumService _saveZeitraumService;
     private readonly DeleteMitarbeiterUrlaubszeitraumService _deleteZeitraumService;
     private readonly ReadMitarbeiterUrlaubsplanerService _readUrlaubsplanerService;
+    private readonly IDateTimeProvider _dateTimeProvider;
 
     public UrlaubsplanerController(
         ReadItwMitarbeiterprofileService readItwMitarbeiterprofileService,
@@ -41,6 +43,7 @@ public sealed class UrlaubsplanerController : BereichsControllerBase
         SaveMitarbeiterUrlaubszeitraumService saveZeitraumService,
         DeleteMitarbeiterUrlaubszeitraumService deleteZeitraumService,
         ReadMitarbeiterUrlaubsplanerService readUrlaubsplanerService,
+        IDateTimeProvider dateTimeProvider,
         ICurrentUserContextAccessor currentUserContextAccessor)
         : base(currentUserContextAccessor)
     {
@@ -62,6 +65,9 @@ public sealed class UrlaubsplanerController : BereichsControllerBase
         _deleteZeitraumService = deleteZeitraumService;
         ArgumentNullException.ThrowIfNull(readUrlaubsplanerService);
         _readUrlaubsplanerService = readUrlaubsplanerService;
+
+        ArgumentNullException.ThrowIfNull(dateTimeProvider);
+        _dateTimeProvider = dateTimeProvider;
     }
 
     protected override OrganisationsbereichCode Bereich => OrganisationsbereichCode.Intensivtransport;
@@ -83,7 +89,7 @@ public sealed class UrlaubsplanerController : BereichsControllerBase
         var viewModel = await BaueViewModelAsync(
             mitarbeiterResult,
             userId,
-            jahr ?? DateTime.Today.Year,
+            jahr ?? _dateTimeProvider.Today.Year,
             cancellationToken);
 
         return BereichsView("Index", viewModel);
@@ -258,7 +264,7 @@ public sealed class UrlaubsplanerController : BereichsControllerBase
             ?? urlaubsrelevanteMitarbeiter.FirstOrDefault();
 
         var ausgewaehlterUserId = ausgewaehlterMitarbeiter?.UserId;
-        var ausgewaehltesJahr = jahr is >= 2000 and <= 2100 ? jahr : DateTime.Today.Year;
+        var ausgewaehltesJahr = jahr is >= 2000 and <= 2100 ? jahr : _dateTimeProvider.Today.Year;
 
         var viewModel = new UrlaubsplanerIndexViewModel
         {
@@ -276,7 +282,7 @@ public sealed class UrlaubsplanerController : BereichsControllerBase
                     Selected = string.Equals(x.UserId, ausgewaehlterUserId, StringComparison.OrdinalIgnoreCase)
                 })
                 .ToArray(),
-            JahrOptionen = Enumerable.Range(DateTime.Today.Year - 1, 5)
+            JahrOptionen = Enumerable.Range(_dateTimeProvider.Today.Year - 1, 5)
                 .Select(x => new SelectListItem
                 {
                     Value = x.ToString(),

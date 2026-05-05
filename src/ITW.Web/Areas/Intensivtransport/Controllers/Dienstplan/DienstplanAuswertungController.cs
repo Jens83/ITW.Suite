@@ -1,3 +1,4 @@
+using ITW.Application.Abstractions.DateTime;
 using ITW.Application.Organisation.Contracts;
 using ITW.Web.Areas.Intensivtransport.Controllers.Dienstplan;
 using ITW.Web.Areas.Intensivtransport.Services.Dienstplan;
@@ -14,14 +15,19 @@ namespace ITW.Web.Areas.Intensivtransport.Controllers.Dienstplan;
 public sealed class DienstplanAuswertungController : IntensivtransportDienstplanControllerBase
 {
     private readonly ReadMonatsauswertungViewModelService _readMonatsauswertungViewModelService;
+    private readonly IDateTimeProvider _dateTimeProvider;
 
     public DienstplanAuswertungController(
         ReadMonatsauswertungViewModelService readMonatsauswertungViewModelService,
+        IDateTimeProvider dateTimeProvider,
         ICurrentUserContextAccessor currentUserContextAccessor)
         : base(currentUserContextAccessor)
     {
         ArgumentNullException.ThrowIfNull(readMonatsauswertungViewModelService);
         _readMonatsauswertungViewModelService = readMonatsauswertungViewModelService;
+
+        ArgumentNullException.ThrowIfNull(dateTimeProvider);
+        _dateTimeProvider = dateTimeProvider;
     }
 
     [HttpGet("Monatsauswertung")]
@@ -69,10 +75,11 @@ public sealed class DienstplanAuswertungController : IntensivtransportDienstplan
             return RedirectToAction(nameof(Monatsauswertung), new { periodeId });
         }
 
-        var document = new ITW.Web.Areas.Intensivtransport.Pdf.MonatsauswertungBuchhaltungPdfDocument(viewModel);
+        var druckZeit = _dateTimeProvider.UtcNow;
+        var document = new ITW.Web.Areas.Intensivtransport.Pdf.MonatsauswertungBuchhaltungPdfDocument(viewModel, druckZeit);
         var pdfBytes = document.Generate();
 
-        var dateiname = $"buchhaltung-monatsauswertung-{DateTime.Now:yyyy-MM-dd-HHmm}.pdf";
+        var dateiname = $"buchhaltung-monatsauswertung-{druckZeit.LocalDateTime:yyyy-MM-dd-HHmm}.pdf";
 
         return File(pdfBytes, "application/pdf", dateiname);
     }

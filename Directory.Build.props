@@ -33,7 +33,7 @@
          CancellationToken. CS8618 (Konstruktor initialisiert nicht) bleibt
          bewusst Warnung – ist bei EF-Core-Entities ein häufiges
          False-Positive und wird in Phase 5 sauber gemacht. -->
-    <WarningsAsErrors>CS8600;CS8601;CS8602;CS8603;CS8604;CA2016</WarningsAsErrors>
+    <WarningsAsErrors>CS8600;CS8601;CS8602;CS8603;CS8604;CA2016;RS0030</WarningsAsErrors>
 
     <!-- Deterministische Builds (gleicher Input = gleicher Output) -->
     <Deterministic>true</Deterministic>
@@ -44,6 +44,15 @@
     <!-- Standard-Encoding für generierte Files -->
     <NeutralLanguage>de-DE</NeutralLanguage>
   </PropertyGroup>
+
+  <!-- BannedApiAnalyzers: erzwingt die Verbote in BannedSymbols.txt (RS0030) -->
+  <ItemGroup>
+    <PackageReference Include="Microsoft.CodeAnalysis.BannedApiAnalyzers" Version="3.3.4">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <AdditionalFiles Include="$(MSBuildThisFileDirectory)BannedSymbols.txt" />
+  </ItemGroup>
 
   <!--
     Ab hier könnte später Folgendes ergänzt werden:

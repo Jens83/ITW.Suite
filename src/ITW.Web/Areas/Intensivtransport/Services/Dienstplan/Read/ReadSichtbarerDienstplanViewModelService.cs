@@ -1,3 +1,4 @@
+using ITW.Application.Abstractions.DateTime;
 using ITW.Application.Personnel.ProfileQueries;
 using ITW.Dienstplan.Application.Contracts;
 using ITW.Dienstplan.Application.Kalender;
@@ -20,12 +21,14 @@ public sealed class ReadSichtbarerDienstplanViewModelService
     private readonly ReadItwMitarbeiterprofileService _readItwMitarbeiterprofileService;
     private readonly IGeplanterDienstTagRepository _geplanterDienstTagRepository;
     private readonly IDienstbesetzungsAusfallRepository _dienstbesetzungsAusfallRepository;
+    private readonly IDateTimeProvider _dateTimeProvider;
 
     public ReadSichtbarerDienstplanViewModelService(
         ReadDienstplanperiodenService readDienstplanperiodenService,
         ReadItwMitarbeiterprofileService readItwMitarbeiterprofileService,
         IGeplanterDienstTagRepository geplanterDienstTagRepository,
-        IDienstbesetzungsAusfallRepository dienstbesetzungsAusfallRepository)
+        IDienstbesetzungsAusfallRepository dienstbesetzungsAusfallRepository,
+        IDateTimeProvider dateTimeProvider)
     {
         ArgumentNullException.ThrowIfNull(readDienstplanperiodenService);
         _readDienstplanperiodenService = readDienstplanperiodenService;
@@ -38,6 +41,9 @@ public sealed class ReadSichtbarerDienstplanViewModelService
 
         ArgumentNullException.ThrowIfNull(dienstbesetzungsAusfallRepository);
         _dienstbesetzungsAusfallRepository = dienstbesetzungsAusfallRepository;
+
+        ArgumentNullException.ThrowIfNull(dateTimeProvider);
+        _dateTimeProvider = dateTimeProvider;
     }
 
     public async Task<SichtbarerDienstplanViewModel> ExecuteAsync(
@@ -76,8 +82,9 @@ public sealed class ReadSichtbarerDienstplanViewModelService
             ? mitarbeiterResult.Profile.ToDictionary(x => x.UserId, StringComparer.OrdinalIgnoreCase)
             : new Dictionary<string, ItwMitarbeiterprofilUebersichtDto>(StringComparer.OrdinalIgnoreCase);
 
-        var aktuellerPlan = ErmittleAktuellenFreigegebenenPlan(freigegebenePerioden);
-        var neuerPlan = ErmittleNeuenFreigegebenenPlan(freigegebenePerioden);
+        var heute = _dateTimeProvider.Today;
+        var aktuellerPlan = ErmittleAktuellenFreigegebenenPlan(freigegebenePerioden, heute);
+        var neuerPlan = ErmittleNeuenFreigegebenenPlan(freigegebenePerioden, heute);
 
         var abschnitte = new List<SichtbarerPlanAbschnittViewModel>();
 
@@ -134,6 +141,7 @@ public sealed class ReadSichtbarerDienstplanViewModelService
             .GroupBy(x => x.DienstDatum)
             .ToDictionary(x => x.Key, x => (IReadOnlyList<GeplanterDienstTagAusfall>)x.ToArray());
 
+        var heute = _dateTimeProvider.Today;
         var feiertage = MecklenburgVorpommernFeiertage.GetFeiertage(periode.Jahr);
         var tageImMonat = DateTime.DaysInMonth(periode.Jahr, periode.Monat);
 
@@ -167,7 +175,7 @@ public sealed class ReadSichtbarerDienstplanViewModelService
                     Datum = datum,
                     DatumAnzeige = datum.ToDateTime(TimeOnly.MinValue).ToString("dd.MM.yyyy", DeutscheKultur),
                     WochentagKurz = datum.ToDateTime(TimeOnly.MinValue).ToString("ddd", DeutscheKultur),
-                    IstHeute = datum == DateOnly.FromDateTime(DateTime.Today),
+                    IstHeute = datum == heute,
                     IstWochenende = istWochenende,
                     IstFeiertag = istFeiertag,
                     FeiertagsName = istFeiertag ? feiertagsName! : string.Empty,
@@ -190,9 +198,10 @@ public sealed class ReadSichtbarerDienstplanViewModelService
     }
 
     private static DienstplanPeriodeListenEintrag? ErmittleAktuellenFreigegebenenPlan(
-        IReadOnlyList<DienstplanPeriodeListenEintrag> freigegebenePerioden)
+        IReadOnlyList<DienstplanPeriodeListenEintrag> freigegebenePerioden,
+        DateOnly heute)
     {
-        var aktuellerSchluessel = DateTime.Today.Year * 100 + DateTime.Today.Month;
+        var aktuellerSchluessel = heute.Year * 100 + heute.Month;
 
         return freigegebenePerioden
             .Where(x => ErzeugePeriodenSchluessel(x) <= aktuellerSchluessel)
@@ -202,9 +211,10 @@ public sealed class ReadSichtbarerDienstplanViewModelService
     }
 
     private static DienstplanPeriodeListenEintrag? ErmittleNeuenFreigegebenenPlan(
-        IReadOnlyList<DienstplanPeriodeListenEintrag> freigegebenePerioden)
+        IReadOnlyList<DienstplanPeriodeListenEintrag> freigegebenePerioden,
+        DateOnly heute)
     {
-        var aktuellerSchluessel = DateTime.Today.Year * 100 + DateTime.Today.Month;
+        var aktuellerSchluessel = heute.Year * 100 + heute.Month;
 
         return freigegebenePerioden
             .Where(x => ErzeugePeriodenSchluessel(x) > aktuellerSchluessel)

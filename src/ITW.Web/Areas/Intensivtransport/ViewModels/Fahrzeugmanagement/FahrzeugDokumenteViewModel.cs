@@ -57,6 +57,8 @@ public sealed class FahrzeugDokumentItemViewModel
 
     public DateTimeOffset HochgeladenAm { get; init; }
 
+    public DateOnly Heute { get; init; }
+
     public string HochgeladenAmText => HochgeladenAm.ToLocalTime().ToString("dd.MM.yyyy");
 
     public string GueltigBisText => GueltigBis.HasValue
@@ -96,7 +98,7 @@ public sealed class FahrzeugDokumentItemViewModel
                 return false;
             }
 
-            return GueltigBis.Value < DateOnly.FromDateTime(DateTime.Today);
+            return GueltigBis.Value < Heute;
         }
     }
 
@@ -109,8 +111,7 @@ public sealed class FahrzeugDokumentItemViewModel
                 return false;
             }
 
-            var heute = DateOnly.FromDateTime(DateTime.Today);
-            var warnGrenze = heute.AddDays(30);
+            var warnGrenze = Heute.AddDays(30);
 
             return GueltigBis.Value <= warnGrenze;
         }
