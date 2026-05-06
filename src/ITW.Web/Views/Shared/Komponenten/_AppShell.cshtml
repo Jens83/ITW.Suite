@@ -1,106 +1,128 @@
 @model ITW.Web.ViewModels.Layout.AppShellViewModel
 
+@* Drawer-Overlay *@
+<div class="itw-drawer-overlay" id="itwDrawerOverlay" aria-hidden="true"></div>
+
+@* Drawer (Mobile-Navigation) *@
 @if (Model.ShowMenu)
 {
-    <div class="offcanvas offcanvas-start itw-menu shadow" tabindex="-1" id="mainMenu" aria-labelledby="mainMenuLabel">
-        <div class="offcanvas-header">
-            <div class="app-menu-brand">
-                <div class="app-menu-brand__mark">
-                    <i class="@Model.MenuBrandIconCssClass"></i>
-                </div>
-
-                <div class="app-menu-brand__content">
-                    <div class="app-menu-brand__title">
-                        <span class="app-brand-name">
-                            <span class="app-brand-name__primary">@Model.MenuBrandPrimaryText</span>
-                            <span class="app-brand-name__accent">@Model.MenuBrandAccentText</span>
-                        </span>
-                    </div>
-                    <div class="app-menu-brand__subtitle">@Model.MenuBrandSubtitle</div>
-                </div>
-            </div>
-
-            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+    <aside class="itw-drawer" id="itwDrawer" role="dialog" aria-modal="true" aria-label="Navigation">
+        <div class="itw-drawer__header">
+            <span class="app-brand-name">
+                <span class="app-brand-name__primary">@Model.MenuBrandPrimaryText</span>
+                <span class="app-brand-name__accent">@Model.MenuBrandAccentText</span>
+            </span>
         </div>
 
-        <div class="offcanvas-body">
-            <div class="menu-scroll-content">
-                @if (Model.Navigation is not null)
-                {
-                    @await Html.PartialAsync("~/Views/Shared/Navigation/_BereichsNavigation.cshtml", Model.Navigation)
-                }
-            </div>
-
-            <div class="menu-footer">
-                <a class="menu-footer-link"
-                   asp-area=""
-                   asp-controller="Home"
-                   asp-action="Index"
-                   data-app-loading-link
-                   data-app-loading-text="Startseite wird geöffnet...">
-                    <span class="menu-link__main">
-                        <span class="menu-link__icon">
-                            <i class="bi bi-house-door"></i>
-                        </span>
-                        <span class="menu-link__text">Startseite</span>
-                    </span>
-                </a>
-            </div>
+        <div class="itw-drawer__nav">
+            @if (Model.Navigation is not null)
+            {
+                @await Html.PartialAsync("~/Views/Shared/Navigation/_BereichsNavigation.cshtml", Model.Navigation)
+            }
         </div>
-    </div>
+
+        <div class="itw-drawer__footer">
+            <a class="itw-nav__footer-link"
+               asp-area=""
+               asp-controller="Home"
+               asp-action="Index"
+               data-app-loading-link
+               data-app-loading-text="Startseite wird geöffnet...">
+                <i class="bi bi-house-door" aria-hidden="true"></i>
+                Startseite
+            </a>
+        </div>
+    </aside>
 }
 
-<header class="ops-navbar sticky-top d-flex align-items-center px-4 shadow-sm">
-    @if (Model.ShowMenu)
+@* Navbar *@
+<header class="itw-navbar">
+
+    @* Brand *@
+    <a asp-area=""
+       asp-controller="Home"
+       asp-action="Index"
+       class="itw-navbar__brand"
+       data-app-loading-link
+       data-app-loading-text="Startseite wird geöffnet...">
+        <span class="app-brand-name">
+            <span class="app-brand-name__primary">@Model.MenuBrandPrimaryText</span>
+            <span class="app-brand-name__accent">@Model.MenuBrandAccentText</span>
+        </span>
+    </a>
+
+    @* Desktop Dropdown-Navigation *@
+    @if (Model.ShowMenu && Model.Navigation is not null)
     {
-        <button class="btn-menu-toggle me-3" type="button" data-bs-toggle="offcanvas" data-bs-target="#mainMenu">
-            <i class="bi bi-list fs-4"></i>
-        </button>
+        <nav class="itw-nav-menu" aria-label="Hauptnavigation">
+            @foreach (var sektion in Model.Navigation.Sektionen.Where(s => s.Eintraege.Any()))
+            {
+                @if (sektion.Eintraege.Count == 1)
+                {
+                    var eintrag = sektion.Eintraege[0];
+                    <a class="itw-nav-menu__direct @(eintrag.IstAktiv ? "active" : "")"
+                       asp-area="@eintrag.Area"
+                       asp-controller="@eintrag.Controller"
+                       asp-action="@eintrag.Action">
+                        <i class="@eintrag.IconCssClass" aria-hidden="true"></i>
+                        @eintrag.Text
+                    </a>
+                }
+                else
+                {
+                    var hatAktiven = sektion.Eintraege.Any(e => e.IstAktiv);
+                    <div class="itw-nav-menu__item" data-nav-dropdown>
+                        <button type="button"
+                                class="itw-nav-menu__btn @(hatAktiven ? "is-active" : "")"
+                                aria-haspopup="true"
+                                aria-expanded="false">
+                            @sektion.Titel
+                            <i class="bi bi-chevron-down itw-nav-menu__btn-chevron" aria-hidden="true"></i>
+                        </button>
+                        <div class="itw-nav-menu__dropdown" role="menu">
+                            @foreach (var eintrag in sektion.Eintraege)
+                            {
+                                <a class="itw-nav-menu__link @(eintrag.IstAktiv ? "active" : "")"
+                                   asp-area="@eintrag.Area"
+                                   asp-controller="@eintrag.Controller"
+                                   asp-action="@eintrag.Action"
+                                   role="menuitem">
+                                    <i class="@eintrag.IconCssClass itw-nav-menu__link-icon" aria-hidden="true"></i>
+                                    @eintrag.Text
+                                </a>
+                            }
+                        </div>
+                    </div>
+                }
+            }
+        </nav>
     }
 
-    @if (Model.ShowMenu)
-    {
-        <div class="d-none d-md-block me-auto">
-            <div class="app-area-title">
-                <span class="app-area-title__bereich">@Model.AreaDisplayName</span>
-                <span class="app-area-title__separator"></span>
-                <span class="app-area-title__seite">@Model.PageTitle</span>
-            </div>
-        </div>
-    }
-    else
-    {
-        <a asp-area=""
-           asp-controller="Home"
-           asp-action="Index"
-           class="text-decoration-none me-auto"
-           data-app-loading-link
-           data-app-loading-text="Startseite wird geöffnet...">
-            <div class="app-area-title">
-                <span class="app-area-title__bereich">ITW.Suite</span>
-                <span class="app-area-title__separator"></span>
-                <span class="app-area-title__seite">@Model.PageTitle</span>
-            </div>
-        </a>
-    }
-
-    <div class="ms-auto d-flex align-items-center gap-2 flex-wrap">
+    @* Rechte Aktionen *@
+    <div class="itw-navbar__actions">
+        @* Hamburger — nur auf Mobile, steht rechts wie in der Testseite *@
+        @if (Model.ShowMenu)
+        {
+            <button class="itw-navbar__ham"
+                    id="itwDrawerToggle"
+                    type="button"
+                    aria-controls="itwDrawer"
+                    aria-expanded="false"
+                    aria-label="Navigation öffnen">
+                <i class="bi bi-list" aria-hidden="true"></i>
+            </button>
+        }
         @if (Model.UserMenu is not null && User.Identity?.IsAuthenticated == true)
         {
             <partial name="~/Views/Shared/Komponenten/_BereichsBenutzerMenu.cshtml" model="Model.UserMenu" />
         }
         else if (User.Identity?.IsAuthenticated == true)
         {
-            <span class="app-page-meta">
-                <i class="bi bi-person-circle"></i>
-                <span>@User.Identity.Name</span>
-            </span>
-
             <form asp-area="" asp-controller="Account" asp-action="Logout" method="post" class="m-0">
                 @Html.AntiForgeryToken()
-                <button type="submit" class="app-btn app-btn-sm app-btn-danger">
-                    <i class="bi bi-box-arrow-right"></i>
-                    <span>Abmelden</span>
+                <button type="submit" class="itw-user-menu__action itw-user-menu__action--danger">
+                    <i class="bi bi-box-arrow-right" aria-hidden="true"></i>
+                    Abmelden
                 </button>
             </form>
         }
@@ -109,11 +131,10 @@
             <a asp-area=""
                asp-controller="Account"
                asp-action="Login"
-               class="app-btn app-btn-sm app-btn-outline-accent"
                data-app-loading-link
                data-app-loading-text="Anmeldung wird geöffnet...">
-                <i class="bi bi-box-arrow-in-right"></i>
-                <span>Anmelden</span>
+                <i class="bi bi-box-arrow-in-right" aria-hidden="true"></i>
+                Anmelden
             </a>
         }
     </div>
