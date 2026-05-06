@@ -863,8 +863,40 @@
     }
 }
 
-@media (max-width: 479.98px) {
+@media (max-width: 480px) {
     .itw-main {
         padding: 0.75rem;
     }
+}
+
+/* =================================================================
+ * FOCUS-VISIBLE — Keyboard-Navigation (WCAG 2.4.7)
+ * Alle interaktiven Shell-Elemente erhalten einen sichtbaren Ring
+ * ausschließlich bei Tastatur-Fokus (nicht bei Maus-Klick).
+ * ================================================================= */
+
+.itw-navbar__ham:focus-visible,
+.itw-user-menu__toggle:focus-visible {
+    outline: 2px solid var(--pri);
+    outline-offset: 2px;
+}
+
+.itw-nav-menu__btn:focus-visible,
+.itw-nav-menu__link:focus-visible,
+.itw-nav-menu__direct:focus-visible {
+    outline: 2px solid var(--pri);
+    outline-offset: -2px;
+}
+
+.itw-nav__link:focus-visible,
+.itw-nav__footer-link:focus-visible,
+.itw-dg-hd:focus-visible,
+.itw-dg-item:focus-visible {
+    outline: 2px solid var(--pri);
+    outline-offset: -2px;
+}
+
+.itw-user-menu__action:focus-visible {
+    outline: 2px solid var(--pri);
+    outline-offset: -2px;
 }

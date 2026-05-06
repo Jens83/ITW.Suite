@@ -402,10 +402,10 @@
     }
 
         .app-plan-switcher__button.app-btn-outline-accent:hover,
-        .app-plan-switcher__button.app-btn-outline-accent:focus {
+        .app-plan-switcher__button.app-btn-outline-accent:focus-visible {
             background: rgba(var(--pri-rgb), 0.05);
             border-color: rgba(var(--pri-rgb), 0.2);
-            color: var(--pri);
+            color: var(--on-s);
         }
 
     .app-plan-switcher__button.app-btn-accent {
@@ -416,7 +416,7 @@
     }
 
         .app-plan-switcher__button.app-btn-accent:hover,
-        .app-plan-switcher__button.app-btn-accent:focus {
+        .app-plan-switcher__button.app-btn-accent:focus-visible {
             color: var(--on-pri);
             filter: brightness(0.92);
         }
@@ -1862,6 +1862,13 @@
 }
 
 .app-autoplan-accordion .accordion-button:focus {
+    box-shadow: none;
+    outline: none;
+}
+
+.app-autoplan-accordion .accordion-button:focus-visible {
+    outline: 2px solid var(--pri);
+    outline-offset: -2px;
     box-shadow: none;
 }
 

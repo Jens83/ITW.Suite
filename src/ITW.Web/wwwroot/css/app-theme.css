@@ -123,6 +123,10 @@
     --menu-width:        288px;
     --content-max-width: 1240px;
 
+    /* --- Transitions -------------------------------------------- */
+    --transition-fast: 0.12s ease;
+    --transition-base: 0.18s ease;
+
     /* --- Form-Elemente -------------------------------------------- */
     --btn-height:      36px;
     --btn-height-sm:   30px;

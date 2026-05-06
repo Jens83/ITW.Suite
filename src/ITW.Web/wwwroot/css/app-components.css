@@ -300,7 +300,17 @@
     line-height: 1;
     cursor: pointer;
     white-space: nowrap;
-    transition: background 0.12s, box-shadow 0.12s, border-color 0.12s;
+    transition: background var(--transition-fast), box-shadow var(--transition-fast), border-color var(--transition-fast);
+}
+
+/* Keyboard-Navigation — sichtbarer Focus-Ring (WCAG 2.4.7) */
+.app-btn:focus-visible,
+.btn-accent:focus-visible,
+.btn-outline-accent:focus-visible,
+.btn-neutral:focus-visible {
+    outline: 2px solid var(--pri);
+    outline-offset: 2px;
+    box-shadow: 0 0 0 4px rgba(var(--pri-rgb), 0.18);
 }
 
 .app-btn:disabled,
