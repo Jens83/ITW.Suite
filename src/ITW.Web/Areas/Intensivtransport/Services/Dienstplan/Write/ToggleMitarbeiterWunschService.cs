@@ -1,3 +1,5 @@
+using ITW.Application.Aktivitaet;
+using ITW.Application.Organisation.Contracts;
 using ITW.Application.Personnel.ProfileQueries;
 using ITW.Application.Personnel.Urlaub.Contracts;
 using ITW.Dienstplan.Application.Contracts;
@@ -42,12 +44,16 @@ public sealed class ToggleMitarbeiterWunschService
     private readonly ReadItwMitarbeiterprofileService _readItwMitarbeiterprofileService;
     private readonly IFreelancerMonatswunschRepository _freelancerMonatswunschRepository;
     private readonly ToggleDienstwunschService _toggleDienstwunschService;
+    private readonly IDienstplanPeriodeRepository _dienstplanPeriodeRepository;
+    private readonly IAktivitaetsLogRepository _aktivitaetsLogRepository;
 
     public ToggleMitarbeiterWunschService(
         IMitarbeiterUrlaubszeitraumRepository mitarbeiterUrlaubszeitraumRepository,
         ReadItwMitarbeiterprofileService readItwMitarbeiterprofileService,
         IFreelancerMonatswunschRepository freelancerMonatswunschRepository,
-        ToggleDienstwunschService toggleDienstwunschService)
+        ToggleDienstwunschService toggleDienstwunschService,
+        IDienstplanPeriodeRepository dienstplanPeriodeRepository,
+        IAktivitaetsLogRepository aktivitaetsLogRepository)
     {
         ArgumentNullException.ThrowIfNull(mitarbeiterUrlaubszeitraumRepository);
         _mitarbeiterUrlaubszeitraumRepository = mitarbeiterUrlaubszeitraumRepository;
@@ -60,6 +66,12 @@ public sealed class ToggleMitarbeiterWunschService
 
         ArgumentNullException.ThrowIfNull(toggleDienstwunschService);
         _toggleDienstwunschService = toggleDienstwunschService;
+
+        ArgumentNullException.ThrowIfNull(dienstplanPeriodeRepository);
+        _dienstplanPeriodeRepository = dienstplanPeriodeRepository;
+
+        ArgumentNullException.ThrowIfNull(aktivitaetsLogRepository);
+        _aktivitaetsLogRepository = aktivitaetsLogRepository;
     }
 
     public async Task<ToggleMitarbeiterWunschResult> ExecuteAsync(
@@ -88,9 +100,8 @@ public sealed class ToggleMitarbeiterWunschService
                 $"Der {command.Datum.ToString("dd.MM.yyyy", DeutscheKultur)} liegt in Ihrem hinterlegten Urlaub und kann nicht ausgewählt werden.");
         }
 
-        var beschaeftigungsart = await ErmittleBeschaeftigungsartAsync(
-            command.UserId,
-            cancellationToken);
+        var mitarbeiterprofil = await ErmittleMitarbeiterprofilAsync(command.UserId, cancellationToken);
+        var beschaeftigungsart = ErmittleBeschaeftigungsart(mitarbeiterprofil);
 
         var istFreelancer = beschaeftigungsart == Domain.Personnel.Enums.MitarbeiterBeschaeftigungsart.Freelancer;
         var istHonorarkraft = beschaeftigungsart == Domain.Personnel.Enums.MitarbeiterBeschaeftigungsart.Honorarkraft;
@@ -149,24 +160,58 @@ public sealed class ToggleMitarbeiterWunschService
                 result.ErrorMessage ?? "Der Wunsch konnte nicht gespeichert werden.");
         }
 
+        await LogWunschAktivitaetAsync(command, result.IstJetztGesetzt, cancellationToken);
+
         return ToggleMitarbeiterWunschResult.Erfolg();
     }
 
-    private async Task<Domain.Personnel.Enums.MitarbeiterBeschaeftigungsart> ErmittleBeschaeftigungsartAsync(
+    private async Task LogWunschAktivitaetAsync(
+        ToggleMitarbeiterWunschCommand command,
+        bool istJetztGesetzt,
+        CancellationToken cancellationToken)
+    {
+        var profilTask  = ErmittleMitarbeiterprofilAsync(command.UserId, cancellationToken);
+        var periodeTask = _dienstplanPeriodeRepository.GetByIdAsync(command.PeriodeId, cancellationToken);
+        await Task.WhenAll(profilTask, periodeTask);
+
+        var profil  = profilTask.Result;
+        var periode = periodeTask.Result;
+
+        if (profil is null || periode is null)
+            return;
+
+        var datumText = command.Datum.ToString("dd.MM.yyyy", DeutscheKultur);
+        var aktion = istJetztGesetzt ? "abgegeben" : "entfernt";
+        var icon = istJetztGesetzt ? "bi bi-calendar2-check" : "bi bi-calendar2-x";
+        var text = $"<strong>{profil.AnzeigeName}</strong> hat Dienstwunsch für den <strong>{datumText}</strong> {aktion}.";
+
+        var eintrag = new AktivitaetsEintrag(
+            Guid.NewGuid(),
+            OrganisationsbereichCode.Intensivtransport,
+            text,
+            AktivitaetsKategorie.Info,
+            icon,
+            DateTimeOffset.UtcNow);
+
+        await _aktivitaetsLogRepository.AddAsync(eintrag, cancellationToken);
+        await _aktivitaetsLogRepository.SaveChangesAsync(cancellationToken);
+    }
+
+    private async Task<ItwMitarbeiterprofilUebersichtDto?> ErmittleMitarbeiterprofilAsync(
         string userId,
         CancellationToken cancellationToken)
     {
         var result = await _readItwMitarbeiterprofileService.ExecuteAsync(cancellationToken);
 
         if (!result.IsSuccess)
-        {
-            return Domain.Personnel.Enums.MitarbeiterBeschaeftigungsart.Unbekannt;
-        }
+            return null;
 
-        var profil = result.Profile.FirstOrDefault(x =>
+        return result.Profile.FirstOrDefault(x =>
             string.Equals(x.UserId, userId, StringComparison.OrdinalIgnoreCase));
-
-        return profil?.Beschaeftigungsart
-            ?? Domain.Personnel.Enums.MitarbeiterBeschaeftigungsart.Unbekannt;
     }
+
+    private static Domain.Personnel.Enums.MitarbeiterBeschaeftigungsart ErmittleBeschaeftigungsart(
+        ItwMitarbeiterprofilUebersichtDto? profil)
+        => profil?.Beschaeftigungsart
+           ?? Domain.Personnel.Enums.MitarbeiterBeschaeftigungsart.Unbekannt;
 }

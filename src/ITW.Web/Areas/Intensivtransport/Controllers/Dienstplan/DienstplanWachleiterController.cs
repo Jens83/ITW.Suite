@@ -1,4 +1,5 @@
 using ITW.Application.Abstractions.DateTime;
+using ITW.Application.Aktivitaet;
 using ITW.Application.Organisation.Contracts;
 using ITW.Dienstplan.Application.Contracts;
 using ITW.Dienstplan.Application.Kalender;
@@ -34,6 +35,8 @@ public sealed class DienstplanWachleiterController : IntensivtransportDienstplan
     private readonly SaveWachleiterTagesplanungService _saveWachleiterTagesplanungService;
     private readonly SaveWachleiterAusfallService _saveWachleiterAusfallService;
     private readonly IDateTimeProvider _dateTimeProvider;
+    private readonly IDienstplanPeriodeRepository _dienstplanPeriodeRepository;
+    private readonly IAktivitaetsLogRepository _aktivitaetsLogRepository;
 
     public DienstplanWachleiterController(
         CreateDienstplanPeriodeService createDienstplanPeriodeService,
@@ -47,6 +50,8 @@ public sealed class DienstplanWachleiterController : IntensivtransportDienstplan
         SaveWachleiterTagesplanungService saveWachleiterTagesplanungService,
         SaveWachleiterAusfallService saveWachleiterAusfallService,
         IDateTimeProvider dateTimeProvider,
+        IDienstplanPeriodeRepository dienstplanPeriodeRepository,
+        IAktivitaetsLogRepository aktivitaetsLogRepository,
         ICurrentUserContextAccessor currentUserContextAccessor)
         : base(currentUserContextAccessor)
     {
@@ -82,6 +87,12 @@ public sealed class DienstplanWachleiterController : IntensivtransportDienstplan
 
         ArgumentNullException.ThrowIfNull(dateTimeProvider);
         _dateTimeProvider = dateTimeProvider;
+
+        ArgumentNullException.ThrowIfNull(dienstplanPeriodeRepository);
+        _dienstplanPeriodeRepository = dienstplanPeriodeRepository;
+
+        ArgumentNullException.ThrowIfNull(aktivitaetsLogRepository);
+        _aktivitaetsLogRepository = aktivitaetsLogRepository;
     }
 
     [HttpGet("Wachleiter")]
@@ -261,6 +272,8 @@ public sealed class DienstplanWachleiterController : IntensivtransportDienstplan
             return RedirectToLocalOrIndex(returnUrl);
         }
 
+        await LogWunschphaseAktivitaetAsync(periodeId, oeffnen, cancellationToken);
+
         TempData[FlashKeys.Success] = oeffnen
             ? "Die Wunschphase wurde geöffnet. Andere offene Perioden wurden dabei automatisch geschlossen."
             : "Die Wunschphase wurde geschlossen.";
@@ -297,6 +310,8 @@ public sealed class DienstplanWachleiterController : IntensivtransportDienstplan
             TempData[FlashKeys.Error] = result.ErrorMessage ?? "Die Planfreigabe konnte nicht geändert werden.";
             return RedirectToLocalOrIndex(returnUrl);
         }
+
+        await LogPlanfreigabeAktivitaetAsync(periodeId, freigeben, cancellationToken);
 
         TempData[FlashKeys.Success] = freigeben
             ? "Der Plan wurde freigegeben und ist jetzt für Mitarbeiter sichtbar."
@@ -413,6 +428,58 @@ public sealed class DienstplanWachleiterController : IntensivtransportDienstplan
 
         TempData[FlashKeys.Success] = "Ausfall und Vertretung wurden gespeichert.";
         return RedirectToReturnUrlOderPlanungsModal(returnUrl, periodeId, datum);
+    }
+
+    private async Task LogWunschphaseAktivitaetAsync(
+        Guid periodeId,
+        bool oeffnen,
+        CancellationToken cancellationToken)
+    {
+        var periode = await _dienstplanPeriodeRepository.GetByIdAsync(periodeId, cancellationToken);
+        if (periode is null) return;
+
+        var text = oeffnen
+            ? $"Wunschphase <strong>{periode.Bezeichnung}</strong> wurde geöffnet."
+            : $"Wunschphase <strong>{periode.Bezeichnung}</strong> wurde geschlossen.";
+        var icon     = oeffnen ? "bi bi-calendar-plus" : "bi bi-calendar-minus";
+        var kategorie = oeffnen ? AktivitaetsKategorie.Info : AktivitaetsKategorie.Warnung;
+
+        var eintrag = new AktivitaetsEintrag(
+            Guid.NewGuid(),
+            OrganisationsbereichCode.Intensivtransport,
+            text,
+            kategorie,
+            icon,
+            DateTimeOffset.UtcNow);
+
+        await _aktivitaetsLogRepository.AddAsync(eintrag, cancellationToken);
+        await _aktivitaetsLogRepository.SaveChangesAsync(cancellationToken);
+    }
+
+    private async Task LogPlanfreigabeAktivitaetAsync(
+        Guid periodeId,
+        bool freigeben,
+        CancellationToken cancellationToken)
+    {
+        var periode = await _dienstplanPeriodeRepository.GetByIdAsync(periodeId, cancellationToken);
+        if (periode is null) return;
+
+        var text = freigeben
+            ? $"Dienstplan <strong>{periode.Bezeichnung}</strong> wurde freigegeben."
+            : $"Dienstplan <strong>{periode.Bezeichnung}</strong> – Freigabe zurückgenommen.";
+        var icon      = freigeben ? "bi bi-unlock" : "bi bi-lock";
+        var kategorie = freigeben ? AktivitaetsKategorie.Erfolg : AktivitaetsKategorie.Warnung;
+
+        var eintrag = new AktivitaetsEintrag(
+            Guid.NewGuid(),
+            OrganisationsbereichCode.Intensivtransport,
+            text,
+            kategorie,
+            icon,
+            DateTimeOffset.UtcNow);
+
+        await _aktivitaetsLogRepository.AddAsync(eintrag, cancellationToken);
+        await _aktivitaetsLogRepository.SaveChangesAsync(cancellationToken);
     }
 
     private async Task<DienstplanIndexViewModel> BaueAktuellesIndexViewModelAsync(
