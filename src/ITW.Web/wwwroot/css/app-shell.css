@@ -833,7 +833,7 @@
 }
 
 /* Mobile (≤767px): Hamburger + Breadcrumb sichtbar, Desktop-Nav versteckt */
-@media (max-width: 767.98px) {
+@media (max-width: 768px) {
     .itw-navbar {
         padding: 0 1rem;
     }

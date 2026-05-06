@@ -1,0 +1,1071 @@
+/* =================================================================
+ * app-utils.css — Minimaler Utility-Layer (Bootstrap-Compat)
+ *
+ * Enthält nur die Klassen, die in den Views tatsächlich genutzt
+ * werden. Kein vollständiges Bootstrap-Clone — nur das Nötigste.
+ * ================================================================= */
+
+/* --- Container ---------------------------------------------------- */
+
+.container {
+    max-width: var(--content-max-width);
+    margin-inline: auto;
+    padding-inline: var(--sp-cont);
+    width: 100%;
+}
+
+/* --- Responsive Grid (Bootstrap 12-Spalten Compat) --------------- */
+/*
+ * Nutzt CSS Grid statt Flexbox+Margin-Trick.
+ * row = 12-Spalten-Grid; col-* = span N.
+ */
+
+.row {
+    display: grid;
+    grid-template-columns: repeat(12, 1fr);
+    gap: 1rem;
+    min-width: 0;
+}
+
+/* Gap-Varianten */
+.row.g-0 { gap: 0; }
+.row.g-1 { gap: 0.25rem; }
+.row.g-2 { gap: 0.5rem; }
+.row.g-3 { gap: 1rem; }
+.row.g-4 { gap: 1.5rem; }
+.row.g-5 { gap: 3rem; }
+
+/* Alignment */
+.row.align-items-center  { align-items: center; }
+.row.align-items-start   { align-items: start; }
+.row.align-items-end     { align-items: end; }
+
+/* Zentrierter Modus (z.B. Login, Error) — Flexbox statt Grid */
+.row.justify-content-center {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 1rem;
+}
+
+.row.justify-content-center > [class*="col-"] {
+    flex: 0 0 auto;
+    width: 100%;
+}
+
+@media (min-width: 576px) {
+    .row.justify-content-center > .col-sm-6  { width: calc(50% - 0.5rem); }
+    .row.justify-content-center > .col-sm-8  { width: calc(66.67% - 0.33rem); }
+    .row.justify-content-center > .col-sm-10 { width: calc(83.33% - 0.17rem); }
+}
+
+@media (min-width: 768px) {
+    .row.justify-content-center > .col-md-6  { width: calc(50% - 0.5rem); }
+    .row.justify-content-center > .col-md-8  { width: calc(66.67% - 0.33rem); }
+    .row.justify-content-center > .col-md-10 { width: calc(83.33% - 0.17rem); }
+}
+
+@media (min-width: 992px) {
+    .row.justify-content-center > .col-lg-5  { width: calc(41.67% - 0.58rem); }
+    .row.justify-content-center > .col-lg-6  { width: calc(50% - 0.5rem); }
+    .row.justify-content-center > .col-lg-8  { width: calc(66.67% - 0.33rem); }
+    .row.justify-content-center > .col-lg-10 { width: calc(83.33% - 0.17rem); }
+}
+
+@media (min-width: 1200px) {
+    .row.justify-content-center > .col-xl-4  { width: calc(33.33% - 0.67rem); }
+    .row.justify-content-center > .col-xl-6  { width: calc(50% - 0.5rem); }
+    .row.justify-content-center > .col-xl-8  { width: calc(66.67% - 0.33rem); }
+    .row.justify-content-center > .col-xl-9  { width: calc(75% - 0.25rem); }
+    .row.justify-content-center > .col-xl-10 { width: calc(83.33% - 0.17rem); }
+}
+
+/* Alle col-* Elemente: mobile-first = volle Breite */
+[class*="col-"] {
+    grid-column: span 12;
+    min-width: 0;
+}
+
+/* Explizite Spaltenbreiten (mobile) */
+.col-1  { grid-column: span 1; }
+.col-2  { grid-column: span 2; }
+.col-3  { grid-column: span 3; }
+.col-4  { grid-column: span 4; }
+.col-5  { grid-column: span 5; }
+.col-6  { grid-column: span 6; }
+.col-7  { grid-column: span 7; }
+.col-8  { grid-column: span 8; }
+.col-9  { grid-column: span 9; }
+.col-10 { grid-column: span 10; }
+.col-11 { grid-column: span 11; }
+.col-12 { grid-column: span 12; }
+
+/* Small (≥576px) */
+@media (min-width: 576px) {
+    .col-sm-1  { grid-column: span 1; }
+    .col-sm-2  { grid-column: span 2; }
+    .col-sm-4  { grid-column: span 4; }
+    .col-sm-6  { grid-column: span 6; }
+    .col-sm-8  { grid-column: span 8; }
+    .col-sm-12 { grid-column: span 12; }
+}
+
+/* Medium (≥768px) */
+@media (min-width: 768px) {
+    .col-md-3  { grid-column: span 3; }
+    .col-md-4  { grid-column: span 4; }
+    .col-md-5  { grid-column: span 5; }
+    .col-md-6  { grid-column: span 6; }
+    .col-md-7  { grid-column: span 7; }
+    .col-md-8  { grid-column: span 8; }
+    .col-md-9  { grid-column: span 9; }
+    .col-md-10 { grid-column: span 10; }
+    .col-md-12 { grid-column: span 12; }
+}
+
+/* Large (≥992px) */
+@media (min-width: 992px) {
+    .col-lg-3  { grid-column: span 3; }
+    .col-lg-4  { grid-column: span 4; }
+    .col-lg-5  { grid-column: span 5; }
+    .col-lg-6  { grid-column: span 6; }
+    .col-lg-7  { grid-column: span 7; }
+    .col-lg-8  { grid-column: span 8; }
+    .col-lg-9  { grid-column: span 9; }
+    .col-lg-10 { grid-column: span 10; }
+    .col-lg-12 { grid-column: span 12; }
+}
+
+/* XL (≥1200px) */
+@media (min-width: 1200px) {
+    .col-xl-2  { grid-column: span 2; }
+    .col-xl-3  { grid-column: span 3; }
+    .col-xl-4  { grid-column: span 4; }
+    .col-xl-5  { grid-column: span 5; }
+    .col-xl-6  { grid-column: span 6; }
+    .col-xl-7  { grid-column: span 7; }
+    .col-xl-8  { grid-column: span 8; }
+    .col-xl-9  { grid-column: span 9; }
+    .col-xl-10 { grid-column: span 10; }
+    .col-xl-12 { grid-column: span 12; }
+}
+
+/* XXL (≥1400px) */
+@media (min-width: 1400px) {
+    .col-xxl-3 { grid-column: span 3; }
+    .col-xxl-4 { grid-column: span 4; }
+    .col-xxl-6 { grid-column: span 6; }
+}
+
+/* --- Bootstrap-Button-Kompatibilität ----------------------------- */
+/*
+ * Viele Views nutzen noch Bootstrap btn-* Klassen.
+ * Diese werden hier auf das DESIGN.md-Tokensystem gemappt.
+ */
+
+.btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    height: var(--btn-height);
+    padding: 0 1rem;
+    border-radius: var(--btn-radius);
+    border: 1px solid transparent;
+    font-size: var(--btn-font-size);
+    font-weight: var(--btn-font-weight);
+    font-family: var(--font-family-base);
+    text-decoration: none;
+    line-height: 1;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: background 0.12s, box-shadow 0.12s, border-color 0.12s;
+}
+
+.btn:disabled,
+.btn.disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.btn-sm { height: var(--btn-height-sm); padding: 0 0.75rem; font-size: var(--type-body-sm-size); }
+.btn-lg { height: var(--btn-height-lg); padding: 0 1.25rem; font-size: 1rem; }
+
+.btn-primary {
+    background: var(--pri);
+    color: var(--on-pri);
+    border-color: var(--pri);
+}
+
+.btn-primary:hover {
+    background: var(--pri-c);
+    color: var(--on-pri);
+    box-shadow: 0 2px 10px rgba(var(--pri-rgb), 0.3);
+}
+
+.btn-secondary {
+    background: var(--surface-0);
+    color: var(--on-s);
+    border-color: var(--outline-v);
+}
+
+.btn-secondary:hover {
+    background: var(--surface-1);
+}
+
+.btn-outline-primary {
+    background: transparent;
+    color: var(--pri);
+    border-color: var(--pri);
+}
+
+.btn-outline-primary:hover {
+    background: rgba(var(--pri-rgb), 0.06);
+}
+
+.btn-outline-secondary {
+    background: transparent;
+    color: var(--on-s);
+    border-color: var(--outline-v);
+}
+
+.btn-outline-secondary:hover {
+    background: var(--surface-1);
+}
+
+.btn-success {
+    background: var(--ter);
+    color: var(--on-ter);
+    border-color: var(--ter);
+}
+
+.btn-success:hover {
+    background: var(--ter-c);
+    color: var(--on-ter);
+}
+
+.btn-outline-success {
+    background: transparent;
+    color: var(--ter);
+    border-color: var(--ter);
+}
+
+.btn-outline-success:hover {
+    background: var(--on-ter-c);
+}
+
+.btn-danger {
+    background: var(--err);
+    color: var(--on-err);
+    border-color: var(--err);
+}
+
+.btn-danger:hover {
+    filter: brightness(0.9);
+}
+
+.btn-outline-danger {
+    background: transparent;
+    color: var(--err);
+    border-color: var(--err);
+}
+
+.btn-outline-danger:hover {
+    background: var(--err-c);
+    color: var(--on-err-c);
+}
+
+.btn-warning {
+    background: var(--warn);
+    color: var(--on-pri);
+    border-color: var(--warn);
+}
+
+.btn-warning:hover {
+    filter: brightness(0.9);
+}
+
+.btn-info {
+    background: rgba(var(--pri-rgb), 0.1);
+    color: var(--pri);
+    border-color: rgba(var(--pri-rgb), 0.2);
+}
+
+.btn-info:hover {
+    background: rgba(var(--pri-rgb), 0.15);
+}
+
+.btn-light {
+    background: var(--surface-1);
+    color: var(--on-s);
+    border-color: var(--outline-v);
+}
+
+.btn-light:hover {
+    background: var(--surface-2);
+}
+
+.btn-dark {
+    background: var(--on-s);
+    color: var(--surface-0);
+    border-color: var(--on-s);
+}
+
+.btn-dark:hover {
+    filter: brightness(1.2);
+}
+
+.btn-link {
+    background: transparent;
+    color: var(--pri);
+    border-color: transparent;
+    text-decoration: underline;
+    height: auto;
+    padding: 0;
+}
+
+.btn-link:hover {
+    color: var(--pri-c);
+    text-decoration: underline;
+}
+
+/* --- Display ------------------------------------------------------ */
+
+.d-flex  { display: flex !important; }
+.d-grid  { display: grid !important; }
+.d-block { display: block !important; }
+.d-none  { display: none !important; }
+
+@media (min-width: 768px) {
+    .d-md-flex  { display: flex !important; }
+    .d-md-block { display: block !important; }
+    .d-md-none  { display: none !important; }
+}
+
+@media (min-width: 992px) {
+    .d-lg-flex  { display: flex !important; }
+    .d-lg-block { display: block !important; }
+    .d-lg-none  { display: none !important; }
+}
+
+/* --- Flexbox ------------------------------------------------------ */
+
+.flex-row      { flex-direction: row !important; }
+.flex-column   { flex-direction: column !important; }
+.flex-wrap     { flex-wrap: wrap !important; }
+.flex-nowrap   { flex-wrap: nowrap !important; }
+.flex-shrink-0 { flex-shrink: 0 !important; }
+.flex-grow-1   { flex-grow: 1 !important; }
+
+.align-items-start   { align-items: flex-start !important; }
+.align-items-center  { align-items: center !important; }
+.align-items-end     { align-items: flex-end !important; }
+
+.justify-content-start   { justify-content: flex-start !important; }
+.justify-content-center  { justify-content: center !important; }
+.justify-content-end     { justify-content: flex-end !important; }
+.justify-content-between { justify-content: space-between !important; }
+
+/* --- Gap ---------------------------------------------------------- */
+
+.gap-1 { gap: 0.25rem !important; }
+.gap-2 { gap: 0.5rem !important; }
+.gap-3 { gap: 1rem !important; }
+.gap-4 { gap: 1.5rem !important; }
+.gap-5 { gap: 3rem !important; }
+
+/* --- Width / Min-Width -------------------------------------------- */
+
+.w-100  { width: 100% !important; }
+.w-auto { width: auto !important; }
+.mw-100 { max-width: 100% !important; }
+.min-w-0 { min-width: 0 !important; }
+
+/* --- Margin ------------------------------------------------------- */
+
+.m-0  { margin: 0 !important; }
+.mb-0 { margin-bottom: 0 !important; }
+.mb-1 { margin-bottom: 0.25rem !important; }
+.mb-2 { margin-bottom: 0.5rem !important; }
+.mb-3 { margin-bottom: 1rem !important; }
+.mb-4 { margin-bottom: 1.5rem !important; }
+.mb-5 { margin-bottom: 3rem !important; }
+.mt-0 { margin-top: 0 !important; }
+.mt-1 { margin-top: 0.25rem !important; }
+.mt-2 { margin-top: 0.5rem !important; }
+.mt-3 { margin-top: 1rem !important; }
+.mt-4 { margin-top: 1.5rem !important; }
+.ms-0 { margin-left: 0 !important; }
+.ms-1 { margin-left: 0.25rem !important; }
+.ms-2 { margin-left: 0.5rem !important; }
+.ms-3 { margin-left: 1rem !important; }
+.ms-auto { margin-left: auto !important; }
+.me-0 { margin-right: 0 !important; }
+.me-1 { margin-right: 0.25rem !important; }
+.me-2 { margin-right: 0.5rem !important; }
+.me-3 { margin-right: 1rem !important; }
+.me-auto { margin-right: auto !important; }
+.mx-auto { margin-inline: auto !important; }
+.my-1 { margin-block: 0.25rem !important; }
+.my-2 { margin-block: 0.5rem !important; }
+.my-3 { margin-block: 1rem !important; }
+
+/* --- Padding ------------------------------------------------------ */
+
+.p-0  { padding: 0 !important; }
+.p-1  { padding: 0.25rem !important; }
+.p-2  { padding: 0.5rem !important; }
+.p-3  { padding: 1rem !important; }
+.p-4  { padding: 1.5rem !important; }
+.px-1 { padding-inline: 0.25rem !important; }
+.px-2 { padding-inline: 0.5rem !important; }
+.px-3 { padding-inline: 1rem !important; }
+.px-4 { padding-inline: 1.5rem !important; }
+.py-1 { padding-block: 0.25rem !important; }
+.py-2 { padding-block: 0.5rem !important; }
+.py-3 { padding-block: 1rem !important; }
+.py-4 { padding-block: 1.5rem !important; }
+.ps-1 { padding-left: 0.25rem !important; }
+.ps-2 { padding-left: 0.5rem !important; }
+.ps-3 { padding-left: 1rem !important; }
+.ps-4 { padding-left: 1.5rem !important; }
+.pe-1 { padding-right: 0.25rem !important; }
+.pe-2 { padding-right: 0.5rem !important; }
+.pe-3 { padding-right: 1rem !important; }
+.pe-4 { padding-right: 1.5rem !important; }
+.pt-0 { padding-top: 0 !important; }
+.pt-1 { padding-top: 0.25rem !important; }
+.pt-2 { padding-top: 0.5rem !important; }
+.pt-3 { padding-top: 1rem !important; }
+.pt-4 { padding-top: 1.5rem !important; }
+.pt-5 { padding-top: 3rem !important; }
+.pb-0 { padding-bottom: 0 !important; }
+.pb-1 { padding-bottom: 0.25rem !important; }
+.pb-2 { padding-bottom: 0.5rem !important; }
+.pb-3 { padding-bottom: 1rem !important; }
+.pb-4 { padding-bottom: 1.5rem !important; }
+.pb-5 { padding-bottom: 3rem !important; }
+
+/* --- Text --------------------------------------------------------- */
+
+.text-start   { text-align: left !important; }
+.text-center  { text-align: center !important; }
+.text-end     { text-align: right !important; }
+.text-nowrap  { white-space: nowrap !important; }
+.text-truncate {
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+    white-space: nowrap !important;
+}
+
+.text-muted            { color: var(--outline) !important; }
+.text-danger           { color: var(--err) !important; }
+.text-success          { color: var(--ter) !important; }
+.text-warning          { color: var(--warn) !important; }
+.text-primary          { color: var(--pri) !important; }
+.text-secondary        { color: var(--outline) !important; }
+.text-uppercase        { text-transform: uppercase !important; }
+.text-lowercase        { text-transform: lowercase !important; }
+.text-capitalize       { text-transform: capitalize !important; }
+.text-decoration-none  { text-decoration: none !important; }
+.text-decoration-underline { text-decoration: underline !important; }
+.text-warning-emphasis { color: var(--warn) !important; }
+.text-success-emphasis { color: var(--ter) !important; }
+.text-danger-emphasis  { color: var(--err) !important; }
+.text-primary-emphasis { color: var(--pri) !important; }
+.lh-1    { line-height: 1 !important; }
+.lh-sm   { line-height: 1.25 !important; }
+.lh-base { line-height: 1.5 !important; }
+.lh-lg   { line-height: 2 !important; }
+
+/* --- Font --------------------------------------------------------- */
+
+.fw-light    { font-weight: 300 !important; }
+.fw-normal   { font-weight: 400 !important; }
+.fw-medium   { font-weight: 500 !important; }
+.fw-semibold { font-weight: 600 !important; }
+.fw-bold     { font-weight: 700 !important; }
+.fw-bolder   { font-weight: 800 !important; }
+.small       { font-size: 0.875em !important; }
+.fs-1 { font-size: 2.5rem !important; }
+.fs-2 { font-size: 2rem !important; }
+.fs-3 { font-size: 1.75rem !important; }
+.fs-4 { font-size: 1.5rem !important; }
+.fs-5 { font-size: 1.25rem !important; }
+.fs-6 { font-size: 1rem !important; }
+
+/* --- Vertical Align ----------------------------------------------- */
+
+.align-top    { vertical-align: top !important; }
+.align-middle { vertical-align: middle !important; }
+.align-bottom { vertical-align: bottom !important; }
+
+/* --- Tables ------------------------------------------------------- */
+
+.table-responsive {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+}
+
+/* Base table styles für Klassen, die direkt auf <table> gesetzt werden */
+.table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.table-hover tbody tr:hover {
+    background: var(--surface-1);
+}
+
+/* --- Badge -------------------------------------------------------- */
+
+.badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.28rem 0.6rem;
+    border-radius: var(--r-full);
+    font-size: var(--type-label-size);
+    font-weight: var(--type-label-wt);
+    letter-spacing: 0.04em;
+    white-space: nowrap;
+}
+
+/* Badge-Varianten (auf dem jeweiligen C#-Model als CSS-Klasse übergeben) */
+.badge-success,
+.bg-success { background: rgba(var(--ter-rgb), 0.12); color: var(--success-color-strong); }
+
+.badge-danger,
+.bg-danger { background: rgba(var(--err-rgb), 0.12); color: var(--danger-color-strong); }
+
+.badge-warning,
+.bg-warning { background: var(--warn-c); color: var(--warn); border: 1px solid var(--warn-brd); }
+
+.badge-primary,
+.bg-primary { background: rgba(var(--pri-rgb), 0.12); color: var(--pri); }
+
+.badge-secondary,
+.bg-secondary { background: var(--surface-2); color: var(--on-sv); border: 1px solid var(--outline-v); }
+
+.badge-info,
+.bg-info { background: rgba(var(--pri-rgb), 0.08); color: var(--pri-c); }
+
+/* --- Breadcrumb --------------------------------------------------- */
+
+.breadcrumb {
+    display: flex;
+    flex-wrap: wrap;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    gap: 0;
+    font-size: var(--type-body-sm-size);
+    color: var(--outline);
+}
+
+.breadcrumb-item {
+    display: flex;
+    align-items: center;
+}
+
+.breadcrumb-item + .breadcrumb-item::before {
+    content: "/";
+    padding: 0 0.45rem;
+    color: var(--outline-v);
+}
+
+.breadcrumb-item.active {
+    color: var(--on-s);
+}
+
+/* --- Input Group -------------------------------------------------- */
+
+.input-group {
+    display: flex;
+    align-items: stretch;
+}
+
+.input-group > .form-control,
+.input-group > .form-select {
+    flex: 1 1 auto;
+    min-width: 0;
+    border-radius: 0;
+}
+
+.input-group > :first-child {
+    border-top-left-radius: var(--input-radius);
+    border-bottom-left-radius: var(--input-radius);
+}
+
+.input-group > :last-child {
+    border-top-right-radius: var(--input-radius);
+    border-bottom-right-radius: var(--input-radius);
+}
+
+.input-group-text {
+    display: flex;
+    align-items: center;
+    padding: 0 0.85rem;
+    background: var(--surface-1);
+    border: 1px solid var(--outline-v);
+    color: var(--outline);
+    font-size: var(--type-body-md-size);
+    white-space: nowrap;
+}
+
+/* --- Misc --------------------------------------------------------- */
+
+.overflow-hidden { overflow: hidden !important; }
+.overflow-auto   { overflow: auto !important; }
+.position-relative { position: relative !important; }
+.visually-hidden {
+    position: absolute !important;
+    width: 1px !important;
+    height: 1px !important;
+    padding: 0 !important;
+    margin: -1px !important;
+    overflow: hidden !important;
+    clip: rect(0, 0, 0, 0) !important;
+    white-space: nowrap !important;
+    border: 0 !important;
+}
+
+/* --- Accordion (Bootstrap JS compat) ----------------------------- */
+
+.accordion-body {
+    padding: 1rem 1.25rem;
+}
+
+.accordion-button {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    padding: 1rem 1.25rem;
+    background: var(--surface-0);
+    border: 0;
+    font-size: var(--type-body-md-size);
+    font-weight: 600;
+    color: var(--on-s);
+    cursor: pointer;
+    text-align: left;
+    gap: 0.5rem;
+    transition: background 0.15s ease;
+}
+
+.accordion-button:not(.collapsed) {
+    background: var(--surface-1);
+    color: var(--pri);
+}
+
+.accordion-button::after {
+    content: "";
+    margin-left: auto;
+    flex-shrink: 0;
+    width: 1.25rem;
+    height: 1.25rem;
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='%23727784'%3e%3cpath fill-rule='evenodd' d='M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z'/%3e%3c/svg%3e");
+    background-repeat: no-repeat;
+    background-size: 1.25rem;
+    transition: transform 0.2s ease;
+}
+
+.accordion-button.collapsed::after {
+    transform: none;
+}
+
+.accordion-button:not(.collapsed)::after {
+    transform: rotate(180deg);
+}
+
+.accordion-item {
+    border: 1px solid var(--outline-v);
+    border-radius: var(--r-lg);
+    overflow: hidden;
+}
+
+.accordion-item + .accordion-item {
+    margin-top: 0.5rem;
+}
+
+/* --- Collapse (Bootstrap JS compat — Accordion) ------------------- */
+
+.collapse {
+    display: none;
+}
+
+.collapse.show {
+    display: block;
+}
+
+.collapsing {
+    height: 0;
+    overflow: hidden;
+    transition: height 0.35s ease;
+}
+
+/* --- Modal (Bootstrap JS compat) --------------------------------- */
+
+body.modal-open {
+    overflow: hidden;
+}
+
+.modal-backdrop {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 1040;
+    opacity: 0;
+    transition: opacity 0.15s linear;
+}
+
+.modal-backdrop.show {
+    opacity: 1;
+}
+
+.modal {
+    display: none;
+    position: fixed;
+    inset: 0;
+    z-index: 1055;
+    overflow-x: hidden;
+    overflow-y: auto;
+    outline: 0;
+}
+
+.modal.show {
+    display: block;
+}
+
+.modal-dialog {
+    position: relative;
+    width: auto;
+    margin: 1.75rem auto;
+    max-width: 500px;
+    pointer-events: none;
+}
+
+.modal-dialog-centered {
+    display: flex;
+    align-items: center;
+    min-height: calc(100% - 3.5rem);
+}
+
+.modal-content {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    pointer-events: auto;
+    background: var(--surface-0);
+    border: 1px solid var(--outline-v);
+    border-radius: var(--r-xl);
+    box-shadow: var(--sh-drop);
+    outline: 0;
+}
+
+.modal-header {
+    display: flex;
+    flex-shrink: 0;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1.25rem 1.5rem;
+    border-bottom: 1px solid var(--outline-v);
+}
+
+.modal-title {
+    margin: 0;
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--on-s);
+    line-height: 1.3;
+}
+
+.modal-body {
+    position: relative;
+    flex: 1 1 auto;
+    padding: 1.25rem 1.5rem;
+}
+
+.modal-footer {
+    display: flex;
+    flex-wrap: wrap;
+    flex-shrink: 0;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 0.5rem;
+    padding: 0.75rem 1.5rem 1.25rem;
+    border-top: 1px solid var(--outline-v);
+}
+
+.btn-close {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 2rem;
+    height: 2rem;
+    padding: 0;
+    background: transparent;
+    border: 0;
+    border-radius: var(--r-md);
+    color: var(--outline);
+    cursor: pointer;
+    opacity: 0.7;
+    transition: opacity 0.15s ease, background 0.15s ease;
+}
+
+.btn-close:hover {
+    opacity: 1;
+    background: var(--surface-1);
+}
+
+.btn-close::before {
+    content: "✕";
+    font-size: 0.875rem;
+}
+
+/* --- Height / Width ------------------------------------------------ */
+
+.h-100  { height: 100% !important; }
+.h-auto { height: auto !important; }
+.h-0    { height: 0 !important; }
+.min-vh-100 { min-height: 100vh !important; }
+
+/* --- Shadows ------------------------------------------------------- */
+
+.shadow    { box-shadow: var(--sh-hover) !important; }
+.shadow-sm { box-shadow: var(--sh-card) !important; }
+.shadow-lg { box-shadow: var(--sh-drop) !important; }
+.shadow-none { box-shadow: none !important; }
+
+/* --- Borders ------------------------------------------------------- */
+
+.border        { border: 1px solid var(--outline-v) !important; }
+.border-0      { border: 0 !important; }
+.border-top    { border-top: 1px solid var(--outline-v) !important; }
+.border-bottom { border-bottom: 1px solid var(--outline-v) !important; }
+.border-start  { border-left: 1px solid var(--outline-v) !important; }
+.border-end    { border-right: 1px solid var(--outline-v) !important; }
+
+.border-1 { --bs-border-width: 1px; border-width: 1px !important; }
+.border-2 { border-width: 2px !important; }
+.border-3 { border-width: 3px !important; }
+.border-4 { border-width: 4px !important; }
+.border-5 { border-width: 5px !important; }
+
+.border-primary   { border-color: var(--pri) !important; }
+.border-secondary { border-color: var(--outline-v) !important; }
+.border-success   { border-color: var(--ter) !important; }
+.border-danger    { border-color: var(--err) !important; }
+.border-warning   { border-color: var(--warn) !important; }
+.border-info      { border-color: var(--pri) !important; }
+.border-light     { border-color: var(--surface-3) !important; }
+.border-dark      { border-color: var(--on-s) !important; }
+.border-white     { border-color: var(--surface-0) !important; }
+
+/* --- Rounded ------------------------------------------------------- */
+
+.rounded       { border-radius: var(--r) !important; }
+.rounded-0     { border-radius: 0 !important; }
+.rounded-1     { border-radius: var(--r-sm) !important; }
+.rounded-2     { border-radius: var(--r) !important; }
+.rounded-3     { border-radius: var(--r-md) !important; }
+.rounded-4     { border-radius: var(--r-lg) !important; }
+.rounded-5     { border-radius: var(--r-xl) !important; }
+.rounded-pill  { border-radius: var(--r-full) !important; }
+.rounded-circle { border-radius: 50% !important; }
+
+/* --- Backgrounds --------------------------------------------------- */
+
+.bg-white       { background-color: var(--surface-0) !important; }
+.bg-light       { background-color: var(--surface-1) !important; }
+.bg-transparent { background-color: transparent !important; }
+.bg-primary-subtle { background-color: rgba(var(--pri-rgb), 0.08) !important; }
+.bg-success-subtle { background-color: var(--on-ter-c) !important; }
+.bg-danger-subtle  { background-color: var(--err-c) !important; }
+.bg-warning-subtle { background-color: var(--warn-c) !important; }
+
+/* --- Opacity ------------------------------------------------------- */
+
+.opacity-0   { opacity: 0 !important; }
+.opacity-25  { opacity: 0.25 !important; }
+.opacity-50  { opacity: 0.5 !important; }
+.opacity-75  { opacity: 0.75 !important; }
+.opacity-100 { opacity: 1 !important; }
+
+/* --- Display ------------------------------------------------------- */
+
+.d-inline       { display: inline !important; }
+.d-inline-block { display: inline-block !important; }
+.d-inline-flex  { display: inline-flex !important; }
+.d-table        { display: table !important; }
+.d-table-cell   { display: table-cell !important; }
+
+/* --- Positioning --------------------------------------------------- */
+
+.position-absolute { position: absolute !important; }
+.position-fixed    { position: fixed !important; }
+.position-sticky   { position: sticky !important; }
+.top-0     { top: 0 !important; }
+.bottom-0  { bottom: 0 !important; }
+.start-0   { left: 0 !important; }
+.end-0     { right: 0 !important; }
+
+/* --- Text color additions ----------------------------------------- */
+
+.text-white { color: var(--surface-0) !important; }
+.text-dark  { color: var(--on-s) !important; }
+.text-body  { color: var(--on-sv) !important; }
+.text-info  { color: var(--pri) !important; }
+.link-primary { color: var(--pri) !important; }
+
+/* --- Cursor ------------------------------------------------------- */
+
+.cursor-pointer { cursor: pointer !important; }
+
+/* --- Object fit ---------------------------------------------------- */
+
+.object-fit-cover    { object-fit: cover !important; }
+.object-fit-contain  { object-fit: contain !important; }
+
+/* --- Responsive spacing ------------------------------------------- */
+
+@media (min-width: 992px) {
+    .p-lg-5   { padding: 3rem !important; }
+    .px-lg-4  { padding-inline: 1.5rem !important; }
+    .px-lg-5  { padding-inline: 3rem !important; }
+    .py-lg-5  { padding-block: 3rem !important; }
+    .mt-lg-0  { margin-top: 0 !important; }
+    .mb-lg-0  { margin-bottom: 0 !important; }
+    .mb-lg-4  { margin-bottom: 1.5rem !important; }
+}
+
+/* --- Responsive flex direction & alignment ------------------------ */
+
+@media (min-width: 576px) {
+    .flex-sm-row    { flex-direction: row !important; }
+    .flex-sm-column { flex-direction: column !important; }
+    .align-items-sm-start   { align-items: flex-start !important; }
+    .align-items-sm-center  { align-items: center !important; }
+    .align-items-sm-end     { align-items: flex-end !important; }
+}
+
+@media (min-width: 768px) {
+    .flex-md-row    { flex-direction: row !important; }
+    .flex-md-column { flex-direction: column !important; }
+    .align-items-md-start   { align-items: flex-start !important; }
+    .align-items-md-center  { align-items: center !important; }
+    .align-items-md-end     { align-items: flex-end !important; }
+    .justify-content-md-between { justify-content: space-between !important; }
+    .justify-content-md-end     { justify-content: flex-end !important; }
+    .justify-content-md-center  { justify-content: center !important; }
+    .text-md-start  { text-align: left !important; }
+    .text-md-center { text-align: center !important; }
+    .text-md-end    { text-align: right !important; }
+}
+
+@media (min-width: 992px) {
+    .flex-lg-row    { flex-direction: row !important; }
+    .flex-lg-column { flex-direction: column !important; }
+    .align-items-lg-start   { align-items: flex-start !important; }
+    .align-items-lg-center  { align-items: center !important; }
+    .align-items-lg-end     { align-items: flex-end !important; }
+    .justify-content-lg-end { justify-content: flex-end !important; }
+    .text-lg-start  { text-align: left !important; }
+    .text-lg-end    { text-align: right !important; }
+}
+
+/* --- Bootstrap Card inner classes --------------------------------- */
+
+.card-header {
+    padding: var(--sp-pad);
+    background: var(--surface-1);
+    border-bottom: 1px solid var(--surface-3);
+    font-size: var(--type-body-md-size);
+    font-weight: 600;
+    color: var(--on-s);
+}
+
+.card-body {
+    padding: var(--sp-pad);
+}
+
+.card-footer {
+    padding: var(--sp-pad);
+    background: var(--surface-1);
+    border-top: 1px solid var(--surface-3);
+}
+
+.card-title {
+    margin: 0 0 0.5rem;
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--on-s);
+}
+
+.card-text {
+    color: var(--on-sv);
+    font-size: var(--type-body-md-size);
+}
+
+/* --- Modal size variants ------------------------------------------ */
+
+@media (min-width: 576px) {
+    .modal-dialog.modal-sm { max-width: 300px; }
+}
+
+@media (min-width: 992px) {
+    .modal-dialog.modal-lg,
+    .modal-dialog.modal-xl { max-width: 800px; }
+}
+
+@media (min-width: 1200px) {
+    .modal-dialog.modal-xl { max-width: 1140px; }
+}
+
+.modal-dialog.modal-dialog-scrollable {
+    height: calc(100% - 3.5rem);
+}
+
+.modal-dialog.modal-dialog-scrollable .modal-content {
+    max-height: 100%;
+    overflow: hidden;
+}
+
+.modal-dialog.modal-dialog-scrollable .modal-body {
+    overflow-y: auto;
+}
+
+/* --- Input Group size variants ------------------------------------ */
+
+.input-group-sm > .form-control,
+.input-group-sm > .form-select,
+.input-group-sm > .input-group-text,
+.input-group-sm > .btn {
+    padding: 0.25rem 0.5rem;
+    font-size: var(--type-body-sm-size);
+    border-radius: var(--r);
+}
+
+/* --- Form control / select size variants -------------------------- */
+
+.form-control-sm,
+.form-select-sm {
+    min-height: 32px;
+    padding: 0.25rem 0.5rem;
+    font-size: var(--type-body-sm-size);
+    border-radius: var(--r);
+}
+
+/* --- Form Switch --------------------------------------------------- */
+
+.form-switch .form-check-input {
+    width: 2.5em;
+    margin-left: -2.5em;
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='-4 -4 8 8'%3e%3ccircle r='3' fill='rgba%2866%2C71%2C83%2C0.5%29'/%3e%3c/svg%3e");
+    background-position: left center;
+    border-radius: 2em;
+    transition: background-position 0.15s ease-in-out;
+}
+
+.form-switch .form-check-input:checked {
+    background-position: right center;
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='-4 -4 8 8'%3e%3ccircle r='3' fill='%23fff'/%3e%3c/svg%3e");
+}

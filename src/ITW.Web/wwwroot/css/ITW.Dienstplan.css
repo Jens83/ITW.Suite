@@ -44,37 +44,22 @@
 }
 
 .app-period-card {
-    position: relative;
-    border: 1px solid rgba(15, 23, 42, 0.06);
-    border-radius: 24px;
-    background: linear-gradient(180deg, rgba(255, 255, 255, 0.98) 0%, var(--surface-bg) 100%);
-    box-shadow: 0 18px 40px rgba(15, 23, 42, 0.08);
+    border: 1px solid var(--outline-v);
+    border-radius: var(--r-xl);
+    background: var(--surface-0);
+    box-shadow: var(--sh-card);
     overflow: hidden;
-    transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease;
+    transition: box-shadow 0.18s ease, border-color 0.18s ease;
 }
 
-    .app-period-card::before {
-        content: "";
-        position: absolute;
-        inset: 0 auto auto 0;
-        width: 100%;
-        height: 4px;
-        background: linear-gradient(90deg, var(--border-color-strong) 0%, var(--border-color) 100%);
-    }
-
     .app-period-card:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 22px 44px rgba(15, 23, 42, 0.1);
+        box-shadow: var(--sh-hover);
     }
 
 .app-period-card--active {
-    border-color: rgba(var(--success-rgb), 0.2);
-    box-shadow: 0 20px 44px rgba(var(--success-rgb), 0.1);
+    border-color: rgba(var(--ter-rgb), 0.3);
+    box-shadow: 0 4px 20px rgba(var(--ter-rgb), 0.1), 0 1px 3px rgba(0, 0, 0, 0.03);
 }
-
-    .app-period-card--active::before {
-        background: linear-gradient(90deg, #198754 0%, #69c69c 100%);
-    }
 
 .app-period-card__body {
     padding: 1.35rem 1.45rem;
@@ -103,17 +88,17 @@
     align-items: center;
     justify-content: center;
     line-height: 1.05;
-    background: var(--surface-bg-soft);
-    border: 1px solid var(--border-color);
-    color: var(--text-color-muted);
+    background: var(--surface-1);
+    border: 1px solid var(--outline-v);
+    color: var(--outline);
     flex-shrink: 0;
 }
 
 .app-period-date--active {
-    background: linear-gradient(180deg, rgba(var(--success-rgb), 0.98) 0%, rgba(var(--success-rgb), 0.85) 100%);
-    border-color: rgba(var(--success-rgb), 0.35);
-    color: var(--surface-bg);
-    box-shadow: 0 12px 24px rgba(var(--success-rgb), 0.18);
+    background: var(--ter);
+    border-color: transparent;
+    color: var(--on-ter);
+    box-shadow: 0 4px 12px rgba(var(--ter-rgb), 0.25);
 }
 
 .app-period-date__month {
@@ -130,7 +115,7 @@
 
 .app-period-card__title {
     margin: 0 0 0.2rem 0;
-    color: var(--text-color-strong);
+    color: var(--on-s);
     font-size: 1.1rem;
     font-weight: 700;
     line-height: 1.3;
@@ -138,7 +123,7 @@
 
 .app-period-card__subtext {
     margin: 0;
-    color: var(--text-color-muted);
+    color: var(--outline);
     font-size: 0.86rem;
     line-height: 1.45;
 }
@@ -157,7 +142,7 @@
 
 .app-period-card__note {
     margin: 0;
-    color: var(--text-color-muted);
+    color: var(--outline);
     font-size: 0.86rem;
     line-height: 1.45;
 }
@@ -176,28 +161,11 @@
 .app-report-panel,
 .app-wunsch-panel,
 .app-autoplan-preview-panel {
-    position: relative;
-    border: 1px solid rgba(15, 23, 42, 0.06);
-    border-radius: 24px;
-    background: linear-gradient(180deg, rgba(255, 255, 255, 0.98) 0%, var(--surface-bg) 100%);
-    box-shadow: 0 18px 40px rgba(15, 23, 42, 0.08);
+    border: 1px solid var(--outline-v);
+    border-radius: var(--r-xl);
+    background: var(--surface-0);
+    box-shadow: var(--sh-card);
     overflow: hidden;
-}
-
-.app-period-empty::before,
-.app-plan-empty::before,
-.app-plan-section::before,
-.app-report-filter::before,
-.app-report-empty::before,
-.app-report-panel::before,
-.app-wunsch-panel::before,
-.app-autoplan-preview-panel::before {
-    content: "";
-    position: absolute;
-    inset: 0 auto auto 0;
-    width: 100%;
-    height: 4px;
-    background: linear-gradient(90deg, var(--accent-color) 0%, rgba(var(--accent-rgb), 0.45) 100%);
 }
 
 /* --- Shared empty-state sub-elements --- */
@@ -217,9 +185,9 @@
     height: 4rem;
     margin-bottom: 1rem;
     border-radius: 20px;
-    background: rgba(var(--accent-rgb), 0.08);
-    color: var(--accent-color);
-    box-shadow: inset 0 0 0 1px rgba(var(--accent-rgb), 0.08);
+    background: rgba(var(--pri-rgb), 0.08);
+    color: var(--pri);
+    box-shadow: inset 0 0 0 1px rgba(var(--pri-rgb), 0.08);
 }
 
 .app-period-empty__icon i,
@@ -233,7 +201,7 @@
     margin: 0 0 0.5rem 0;
     font-size: 1.25rem;
     font-weight: 700;
-    color: var(--text-color-strong);
+    color: var(--on-s);
 }
 
 .app-period-empty__text,
@@ -241,25 +209,17 @@
 .app-wunsch-empty__text {
     max-width: 40rem;
     margin: 0 auto;
-    color: var(--text-color-muted);
+    color: var(--outline);
     font-size: 0.95rem;
     line-height: 1.6;
 }
 
 .app-period-modal .modal-content {
-    border: 1px solid rgba(15, 23, 42, 0.06);
-    border-radius: 24px;
+    border: 1px solid var(--outline-v);
+    border-radius: var(--r-xl);
     overflow: hidden;
-    box-shadow: 0 22px 50px rgba(15, 23, 42, 0.14);
+    box-shadow: var(--sh-drop);
 }
-
-    .app-period-modal .modal-content::before {
-        content: "";
-        display: block;
-        width: 100%;
-        height: 4px;
-        background: linear-gradient(90deg, var(--accent-color) 0%, rgba(var(--accent-rgb), 0.45) 100%);
-    }
 
 .app-period-modal__header {
     padding: 1.35rem 1.4rem 0.9rem;
@@ -267,7 +227,7 @@
 
 .app-period-modal__title {
     margin: 0;
-    color: var(--text-color-strong);
+    color: var(--on-s);
     font-size: 1.15rem;
     font-weight: 700;
 }
@@ -287,7 +247,7 @@
 }
 
 .app-period-field__label {
-    color: var(--text-color-muted);
+    color: var(--outline);
     font-size: 0.76rem;
     font-weight: 800;
     text-transform: uppercase;
@@ -296,19 +256,19 @@
 
 .app-period-field__control {
     min-height: 46px;
-    border: 1px solid var(--border-color);
+    border: 1px solid var(--outline-v);
     border-radius: 14px;
-    background: var(--surface-bg-soft);
-    color: var(--text-color-strong);
+    background: var(--surface-1);
+    color: var(--on-s);
     font-size: 0.92rem;
     font-weight: 600;
     box-shadow: none;
 }
 
     .app-period-field__control:focus {
-        border-color: rgba(var(--accent-rgb), 0.28);
-        box-shadow: 0 0 0 0.2rem rgba(var(--accent-rgb), 0.12);
-        background: var(--surface-bg);
+        border-color: rgba(var(--pri-rgb), 0.28);
+        box-shadow: 0 0 0 0.2rem rgba(var(--pri-rgb), 0.12);
+        background: var(--surface-0);
     }
 
 .app-period-switch-card {
@@ -317,8 +277,8 @@
     gap: 0.8rem;
     padding: 1rem;
     border-radius: 18px;
-    background: linear-gradient(180deg, rgba(var(--accent-rgb), 0.08) 0%, rgba(var(--accent-rgb), 0.04) 100%);
-    border: 1px solid rgba(var(--accent-rgb), 0.14);
+    background: rgba(var(--pri-rgb), 0.06);
+    border: 1px solid rgba(var(--pri-rgb), 0.14);
 }
 
 .app-period-switch-card__icon {
@@ -328,13 +288,13 @@
     width: 2.5rem;
     height: 2.5rem;
     border-radius: 14px;
-    background: rgba(var(--accent-rgb), 0.12);
-    color: var(--accent-color);
+    background: rgba(var(--pri-rgb), 0.12);
+    color: var(--pri);
     flex-shrink: 0;
 }
 
 .app-period-switch-card__text {
-    color: var(--text-color);
+    color: var(--on-sv);
     font-size: 0.88rem;
     line-height: 1.45;
 }
@@ -344,16 +304,16 @@
 }
 
     .app-period-switch-card .form-check-input:checked {
-        background-color: var(--accent-color);
-        border-color: var(--accent-color);
+        background-color: var(--pri);
+        border-color: var(--pri);
     }
 
     .app-period-switch-card .form-check-input:focus {
-        border-color: var(--accent-color);
-        box-shadow: 0 0 0 0.2rem rgba(var(--accent-rgb), 0.18);
+        border-color: var(--pri);
+        box-shadow: 0 0 0 0.2rem rgba(var(--pri-rgb), 0.18);
     }
 
-@media (max-width: 991.98px) {
+@media (max-width: 992px) {
     .app-period-hero {
         flex-direction: column;
         align-items: flex-start;
@@ -373,7 +333,7 @@
     }
 }
 
-@media (max-width: 575.98px) {
+@media (max-width: 576px) {
     .app-period-page {
         gap: 1.15rem;
     }
@@ -396,11 +356,10 @@
 
 
 .app-plan-switcher-panel {
-    position: relative;
-    border: 1px solid rgba(15, 23, 42, 0.06);
-    border-radius: 24px;
-    background: linear-gradient(180deg, rgba(255, 255, 255, 0.98) 0%, var(--surface-bg) 100%);
-    box-shadow: 0 18px 40px rgba(15, 23, 42, 0.08);
+    border: 1px solid var(--outline-v);
+    border-radius: var(--r-xl);
+    background: var(--surface-0);
+    box-shadow: var(--sh-card);
     overflow: hidden;
 }
 
@@ -415,7 +374,7 @@
 
 .app-plan-switcher-panel__body {
     padding: 1.15rem 1.25rem 1.2rem;
-    background: linear-gradient(180deg, rgba(248, 250, 252, 0.9) 0%, rgba(255, 255, 255, 1) 100%);
+    background: var(--surface-1);
 }
 
 .app-plan-switcher {
@@ -433,35 +392,33 @@
     font-size: 0.9rem;
     font-weight: 700;
     letter-spacing: -0.01em;
-    box-shadow: 0 6px 14px rgba(15, 23, 42, 0.04);
+    box-shadow: var(--sh-card);
 }
 
     .app-plan-switcher__button.app-btn-outline-accent {
-        background: linear-gradient(180deg, var(--surface-bg) 0%, var(--surface-bg-soft) 100%);
-        border-color: rgba(15, 23, 42, 0.08);
-        color: var(--text-color);
-        box-shadow: 0 4px 10px rgba(15, 23, 42, 0.04);
+        background: var(--surface-0);
+        border-color: var(--outline-v);
+        color: var(--on-sv);
     }
 
         .app-plan-switcher__button.app-btn-outline-accent:hover,
         .app-plan-switcher__button.app-btn-outline-accent:focus {
-            background: linear-gradient(180deg, rgba(var(--accent-rgb), 0.07) 0%, rgba(var(--accent-rgb), 0.03) 100%);
-            border-color: rgba(var(--accent-rgb), 0.2);
-            color: var(--accent-color);
-            box-shadow: 0 10px 18px rgba(var(--accent-rgb), 0.08);
+            background: rgba(var(--pri-rgb), 0.05);
+            border-color: rgba(var(--pri-rgb), 0.2);
+            color: var(--pri);
         }
 
     .app-plan-switcher__button.app-btn-accent {
-        background: linear-gradient(180deg, rgba(var(--accent-rgb), 0.96) 0%, rgba(var(--accent-rgb), 0.84) 100%);
-        border-color: var(--accent-color);
-        color: var(--surface-bg);
-        box-shadow: 0 12px 22px rgba(var(--accent-rgb), 0.18);
+        background: var(--pri);
+        border-color: var(--pri);
+        color: var(--on-pri);
+        box-shadow: 0 4px 12px rgba(var(--pri-rgb), 0.2);
     }
 
         .app-plan-switcher__button.app-btn-accent:hover,
         .app-plan-switcher__button.app-btn-accent:focus {
-            color: var(--surface-bg);
-            box-shadow: 0 14px 24px rgba(var(--accent-rgb), 0.22);
+            color: var(--on-pri);
+            filter: brightness(0.92);
         }
 
     .app-plan-switcher__button[aria-pressed="true"]::after {
@@ -471,8 +428,8 @@
         right: 16px;
         bottom: 7px;
         height: 3px;
-        border-radius: 999px;
-        background: rgba(255, 255, 255, 0.72);
+        border-radius: var(--r-full);
+        background: rgba(var(--on-pri-rgb, 255, 255, 255), 0.72);
     }
 
 .app-plan-section__header {
@@ -480,12 +437,12 @@
     justify-content: space-between;
     gap: 1rem;
     padding: 1.2rem 1.35rem 0.95rem;
-    border-bottom: 1px solid var(--surface-bg-soft);
+    border-bottom: 1px solid var(--surface-1);
 }
 
 .app-plan-section__eyebrow {
     margin-bottom: 0.25rem;
-    color: var(--text-color-subtle);
+    color: var(--outline-v);
     font-size: 0.76rem;
     font-weight: 800;
     text-transform: uppercase;
@@ -496,7 +453,7 @@
     margin: 0;
     font-size: 1.08rem;
     font-weight: 700;
-    color: var(--text-color-strong);
+    color: var(--on-s);
     line-height: 1.3;
 }
 
@@ -523,35 +480,33 @@
 }
 
 .app-plan-day {
-    border: 1px solid var(--border-color);
+    border: 1px solid var(--outline-v);
     border-radius: 18px;
-    background: var(--surface-bg);
-    transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease;
+    background: var(--surface-0);
+    transition: box-shadow 0.18s ease, border-color 0.18s ease;
 }
 
     .app-plan-day:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 12px 24px rgba(15, 23, 42, 0.06);
+        box-shadow: var(--sh-hover);
     }
 
 .app-plan-day--today {
-    border-color: rgba(var(--accent-rgb), 0.4);
+    border-color: rgba(var(--pri-rgb), 0.4);
 }
 
 .app-plan-day--mine {
-    border: 2px solid rgba(var(--success-rgb), 0.72);
-    background: linear-gradient(180deg, rgba(var(--success-rgb), 0.05) 0%, rgba(var(--success-rgb), 0.015) 100%);
-    box-shadow: 0 0 0 0.16rem rgba(var(--success-rgb), 0.08);
+    border: 2px solid rgba(var(--ter-rgb), 0.6);
+    background: rgba(var(--ter-rgb), 0.04);
 }
 
 .app-plan-day--weekend {
-    background: var(--surface-bg-soft);
-    border-color: var(--border-color);
+    background: var(--surface-1);
+    border-color: var(--outline-v);
 }
 
 .app-plan-day--holiday {
-    background: linear-gradient(180deg, rgba(var(--warning-rgb), 0.12) 0%, rgba(var(--warning-rgb), 0.06) 100%);
-    border-color: rgba(var(--warning-rgb), 0.28);
+    background: rgba(var(--warn-rgb), 0.06);
+    border-color: rgba(var(--warn-rgb), 0.22);
 }
 
 .app-plan-day__body {
@@ -574,7 +529,7 @@
 
 .app-plan-day__eyebrow {
     margin-bottom: 0.1rem;
-    color: var(--text-color-subtle);
+    color: var(--outline-v);
     font-size: 0.68rem;
     font-weight: 800;
     text-transform: uppercase;
@@ -582,7 +537,7 @@
 }
 
 .app-plan-day__date {
-    color: var(--text-color-strong);
+    color: var(--on-s);
     font-size: 0.92rem;
     font-weight: 700;
     line-height: 1.25;
@@ -596,7 +551,7 @@
     align-items: center;
     gap: 0.35rem;
     padding: 0.34rem 0.6rem;
-    border-radius: 999px;
+    border-radius: var(--r-full);
     font-size: 0.7rem;
     font-weight: 700;
     line-height: 1.2;
@@ -606,15 +561,15 @@
 }
 
 .app-plan-day__status--dienst {
-    background: rgba(var(--success-rgb), 0.12);
+    background: rgba(var(--ter-rgb), 0.1);
     color: var(--success-color-strong);
-    border: 1px solid rgba(var(--success-rgb), 0.16);
+    border: 1px solid rgba(var(--ter-rgb), 0.16);
 }
 
 .app-plan-day__status--vertretung {
-    background: rgba(var(--warning-rgb), 0.16);
+    background: rgba(var(--warn-rgb), 0.12);
     color: var(--warning-color-strong);
-    border: 1px solid rgba(var(--warning-rgb), 0.22);
+    border: 1px solid rgba(var(--warn-rgb), 0.18);
 }
 
 .app-plan-day__meta {
@@ -628,28 +583,28 @@
     align-items: center;
     gap: 0.35rem;
     padding: 0.28rem 0.58rem;
-    border-radius: 999px;
+    border-radius: var(--r-full);
     font-size: 0.7rem;
     font-weight: 700;
     line-height: 1.2;
 }
 
 .app-plan-day__flag--today {
-    background: rgba(var(--accent-rgb), 0.08);
-    color: var(--accent-color);
-    border: 1px solid rgba(var(--accent-rgb), 0.14);
+    background: rgba(var(--pri-rgb), 0.08);
+    color: var(--pri);
+    border: 1px solid rgba(var(--pri-rgb), 0.14);
 }
 
 .app-plan-day__flag--holiday {
-    background: rgba(var(--warning-rgb), 0.14);
+    background: rgba(var(--warn-rgb), 0.1);
     color: var(--warning-color-strong);
-    border: 1px solid rgba(var(--warning-rgb), 0.18);
+    border: 1px solid rgba(var(--warn-rgb), 0.16);
 }
 
 .app-plan-day__flag--weekend {
-    background: var(--border-color);
-    color: var(--text-color);
-    border: 1px solid var(--border-color);
+    background: var(--outline-v);
+    color: var(--on-sv);
+    border: 1px solid var(--outline-v);
 }
 
 .app-plan-day__holiday-name {
@@ -660,7 +615,7 @@
 }
 
 .app-plan-day__empty {
-    color: var(--text-color-muted);
+    color: var(--outline);
     font-size: 0.82rem;
     line-height: 1.4;
 }
@@ -673,31 +628,31 @@
 }
 
 .app-plan-slot {
-    border: 1px solid var(--border-color);
+    border: 1px solid var(--outline-v);
     border-radius: 14px;
     padding: 0.52rem 0.6rem;
-    background: #fafbfc;
+    background: var(--surface-1);
 }
 
 .app-plan-slot--arzt {
-    background: rgba(var(--accent-rgb), 0.08);
-    border-color: rgba(var(--accent-rgb), 0.2);
+    background: rgba(var(--pri-rgb), 0.06);
+    border-color: rgba(var(--pri-rgb), 0.18);
 }
 
 .app-plan-slot--nfs {
-    background: rgba(var(--success-rgb), 0.06);
-    border-color: rgba(var(--success-rgb), 0.15);
+    background: rgba(var(--ter-rgb), 0.05);
+    border-color: rgba(var(--ter-rgb), 0.12);
 }
 
 .app-plan-slot--offen {
-    background: var(--surface-bg-soft);
+    background: var(--surface-1);
     border-style: dashed;
-    color: var(--text-color-subtle);
+    color: var(--outline-v);
 }
 
 .app-plan-slot__name {
     display: block;
-    color: var(--text-color-strong);
+    color: var(--on-s);
     font-size: 0.84rem;
     font-weight: 600;
     line-height: 1.32;
@@ -705,7 +660,7 @@
 }
 
 .app-plan-slot--offen .app-plan-slot__name {
-    color: var(--text-color-muted);
+    color: var(--outline);
     font-style: italic;
 }
 
@@ -721,8 +676,8 @@
             text-align: center;
             padding: 0.75rem 0.35rem;
             border-radius: 14px;
-            background: var(--surface-bg-soft);
-            color: var(--text-color-muted);
+            background: var(--surface-1);
+            color: var(--outline);
             font-size: 0.72rem;
             font-weight: 800;
             text-transform: uppercase;
@@ -731,7 +686,7 @@
 
         .app-plan-calendar__weekdays .is-weekend {
             color: var(--danger-color-strong);
-            background: rgba(var(--danger-rgb), 0.06);
+            background: rgba(var(--err-rgb), 0.06);
         }
 
     .app-plan-calendar__days {
@@ -750,14 +705,14 @@
     }
 }
 
-@media (max-width: 991.98px) {
+@media (max-width: 992px) {
     .app-plan-section__header {
         flex-direction: column;
         align-items: flex-start;
     }
 }
 
-@media (max-width: 575.98px) {
+@media (max-width: 576px) {
     .app-plan-page {
         gap: 1.2rem;
     }
@@ -804,7 +759,7 @@
 
 .app-report-filter__eyebrow {
     margin-bottom: 0.24rem;
-    color: var(--text-color-subtle);
+    color: var(--outline-v);
     font-size: 0.76rem;
     font-weight: 800;
     text-transform: uppercase;
@@ -813,7 +768,7 @@
 
 .app-report-filter__title {
     margin: 0 0 0.25rem 0;
-    color: var(--text-color-strong);
+    color: var(--on-s);
     font-size: 1.12rem;
     font-weight: 700;
     line-height: 1.3;
@@ -821,7 +776,7 @@
 
 .app-report-filter__text {
     margin: 0;
-    color: var(--text-color-muted);
+    color: var(--outline);
     font-size: 0.9rem;
     line-height: 1.55;
 }
@@ -839,7 +794,7 @@
 .app-report-filter__label {
     display: block;
     margin-bottom: 0.35rem;
-    color: var(--text-color-muted);
+    color: var(--outline);
     font-size: 0.74rem;
     font-weight: 800;
     text-transform: uppercase;
@@ -848,19 +803,19 @@
 
 .app-report-select {
     min-height: 46px;
-    border: 1px solid var(--border-color);
+    border: 1px solid var(--outline-v);
     border-radius: 14px;
-    background: var(--surface-bg-soft);
-    color: var(--text-color-strong);
+    background: var(--surface-1);
+    color: var(--on-s);
     font-size: 0.94rem;
     font-weight: 600;
     box-shadow: none;
 }
 
     .app-report-select:focus {
-        border-color: rgba(var(--accent-rgb), 0.28);
-        box-shadow: 0 0 0 0.2rem rgba(var(--accent-rgb), 0.12);
-        background: var(--surface-bg);
+        border-color: rgba(var(--pri-rgb), 0.28);
+        box-shadow: 0 0 0 0.2rem rgba(var(--pri-rgb), 0.12);
+        background: var(--surface-0);
     }
 
 .app-report-filter__pdf {
@@ -873,13 +828,13 @@
     position: relative;
     z-index: 1;
     padding: 1.2rem 1.35rem 0.95rem;
-    border-bottom: 1px solid var(--surface-bg-soft);
-    background: var(--surface-bg);
+    border-bottom: 1px solid var(--surface-1);
+    background: var(--surface-0);
 }
 
 .app-report-panel__eyebrow {
     margin-bottom: 0.22rem;
-    color: var(--text-color-subtle);
+    color: var(--outline-v);
     font-size: 0.76rem;
     font-weight: 800;
     text-transform: uppercase;
@@ -888,7 +843,7 @@
 
 .app-report-panel__title {
     margin: 0;
-    color: var(--text-color-strong);
+    color: var(--on-s);
     font-size: 1.1rem;
     font-weight: 700;
     line-height: 1.3;
@@ -896,7 +851,7 @@
 
 .app-report-empty__icon {
     font-size: 2.3rem;
-    color: var(--border-color-strong);
+    color: var(--outline);
     margin-bottom: 0.8rem;
 }
 
@@ -905,10 +860,10 @@
     letter-spacing: 0.05em;
     border-bottom: none;
     white-space: nowrap;
-    color: var(--text-color-subtle);
+    color: var(--outline-v);
     font-weight: 800;
     text-transform: uppercase;
-    background: var(--surface-bg-soft);
+    background: var(--surface-1);
 }
 
 .app-report-table tbody td {
@@ -916,11 +871,11 @@
 }
 
 .app-report-table tfoot {
-    background: var(--surface-bg-soft);
+    background: var(--surface-1);
 }
 
     .app-report-table tfoot td {
-        border-top: 2px solid var(--border-color);
+        border-top: 2px solid var(--outline-v);
     }
 
 .app-report-xsmall {
@@ -928,32 +883,32 @@
 }
 
 .app-report-btn-white {
-    background: var(--surface-bg);
+    background: var(--surface-0);
 }
 
 .bg-light-subtle {
-    background-color: var(--surface-bg-soft);
+    background-color: var(--surface-1);
 }
 
 .bg-primary-subtle {
-    background-color: rgba(13, 110, 253, 0.1) !important;
+    background-color: rgba(var(--pri-rgb), 0.1);
 }
 
 .bg-info-subtle {
-    background-color: rgba(13, 202, 240, 0.15) !important;
+    background-color: rgba(var(--pri-rgb), 0.08);
 }
 
 .bg-success-subtle {
-    background-color: rgba(25, 135, 84, 0.12) !important;
+    background-color: rgba(var(--ter-rgb), 0.1);
 }
 
 .bg-warning-subtle {
-    background-color: rgba(255, 193, 7, 0.18) !important;
+    background-color: rgba(var(--warn-rgb), 0.12);
 }
 
 .custom-select-dark option {
-    background-color: #212529;
-    color: var(--surface-bg);
+    background-color: var(--on-s);
+    color: var(--surface-0);
 }
 
 @media (max-width: 1199.98px) {
@@ -966,7 +921,7 @@
     }
 }
 
-@media (max-width: 575.98px) {
+@media (max-width: 576px) {
     .app-report-filter__body,
     .app-report-panel__header,
     .app-report-empty__body {
@@ -989,12 +944,6 @@
 /* ==========================================================================
    03.04 Wachleiterkalender
    ========================================================================== */
-
-/*
-   Wachleiterkalender
-   Moduldatei ohne globale Theme- oder Body-Eingriffe.
-   Alle Regeln bleiben auf das Wachleiter-Frontend bzw. das Modal begrenzt.
-*/
 
 .wl-page {
     display: grid;
@@ -1019,9 +968,9 @@
         gap: 0.45rem;
         align-self: flex-start;
         padding: 0.36rem 0.8rem;
-        border-radius: var(--radius-pill);
-        background-color: rgba(var(--accent-rgb), 0.08);
-        color: var(--accent-color);
+        border-radius: var(--r-full);
+        background-color: rgba(var(--pri-rgb), 0.08);
+        color: var(--pri);
         font-size: 0.78rem;
         font-weight: 700;
         letter-spacing: 0.02em;
@@ -1029,7 +978,7 @@
 
     .wl-page .wl-page-title {
         margin: 0;
-        color: var(--text-color-strong);
+        color: var(--on-s);
         font-size: 1.55rem;
         font-weight: 700;
         line-height: 1.2;
@@ -1039,7 +988,7 @@
     .wl-page .wl-page-text {
         max-width: 58rem;
         margin: 0;
-        color: var(--text-color-muted);
+        color: var(--outline);
         font-size: 0.96rem;
         line-height: 1.6;
     }
@@ -1053,21 +1002,6 @@
         border-left: none;
     }
 
-        .wl-page .wl-control-card::before {
-            content: "";
-            position: absolute;
-            inset: 0 auto auto 0;
-            width: 100%;
-            height: 4px;
-            background: linear-gradient(90deg, var(--accent-color) 0%, rgba(var(--accent-rgb), 0.35) 100%);
-            z-index: 1;
-        }
-
-        .wl-page .wl-control-card .card-body {
-            position: relative;
-            z-index: 2;
-        }
-
     .wl-page .wl-control-block {
         min-width: 0;
     }
@@ -1075,7 +1009,7 @@
     .wl-page .wl-control-eyebrow {
         font-size: 0.7rem;
         font-weight: 800;
-        color: var(--text-color-subtle);
+        color: var(--outline-v);
         text-transform: uppercase;
         letter-spacing: 0.08em;
         margin-bottom: 0.3rem;
@@ -1084,13 +1018,13 @@
     .wl-page .wl-control-heading {
         font-size: 1.18rem;
         font-weight: 700;
-        color: var(--text-color-strong);
+        color: var(--on-s);
         line-height: 1.25;
         margin-bottom: 0.35rem;
     }
 
     .wl-page .wl-control-copy {
-        color: var(--text-color-muted);
+        color: var(--outline);
         font-size: 0.9rem;
         line-height: 1.55;
         margin-bottom: 0;
@@ -1098,9 +1032,9 @@
 
     .wl-page .wl-control-form .input-group {
         min-height: 44px;
-        border-color: var(--border-color);
+        border-color: var(--outline-v);
         border-radius: 0.9rem;
-        background: var(--surface-bg-soft);
+        background: var(--surface-1);
     }
 
     .wl-page .wl-control-form .input-group-text,
@@ -1139,34 +1073,34 @@
         }
 
 .wl-btn-white {
-    background: var(--surface-bg);
-    border-color: var(--border-color-strong);
-    color: var(--text-color-strong);
+    background: var(--surface-0);
+    border-color: var(--outline);
+    color: var(--on-s);
 }
 
 .wl-btn-primary {
-    background: linear-gradient(180deg, color-mix(in srgb, var(--accent-color) 92%, var(--surface-bg) 8%) 0%, var(--accent-color) 100%);
-    border: 1px solid rgba(var(--accent-rgb), 0.26);
-    color: var(--surface-bg);
+    background: var(--pri);
+    border: 1px solid rgba(var(--pri-rgb), 0.26);
+    color: var(--on-pri);
 }
 
     .wl-btn-primary:hover,
     .wl-btn-primary:focus {
-        color: var(--surface-bg);
-        background: linear-gradient(180deg, color-mix(in srgb, var(--accent-color) 88%, var(--surface-bg) 12%) 0%, var(--accent-color-hover) 100%);
+        color: var(--on-pri);
+        filter: brightness(0.92);
     }
 
 .wl-shadow-primary {
-    box-shadow: 0 4px 12px rgba(var(--accent-rgb), 0.3);
+    box-shadow: 0 4px 12px rgba(var(--pri-rgb), 0.3);
 }
 
 .wl-shadow-success {
-    box-shadow: 0 4px 12px rgba(var(--success-rgb), 0.25);
+    box-shadow: 0 4px 12px rgba(var(--ter-rgb), 0.25);
 }
 
 .wl-badge {
     padding: 0.4rem 0.8rem;
-    border-radius: var(--radius-pill);
+    border-radius: var(--r-full);
     font-size: 0.72rem;
     font-weight: 700;
     display: inline-flex;
@@ -1175,18 +1109,18 @@
 }
 
 .wl-badge-success {
-    background: rgba(var(--success-rgb), 0.12);
-    color: color-mix(in srgb, var(--success-color), #000 18%);
+    background: rgba(var(--ter-rgb), 0.12);
+    color: var(--success-color-strong);
 }
 
 .wl-badge-primary {
-    background: rgba(var(--accent-rgb), 0.12);
-    color: color-mix(in srgb, var(--accent-color), #000 18%);
+    background: rgba(var(--pri-rgb), 0.12);
+    color: var(--pri-c);
 }
 
 .wl-badge-light {
-    background: var(--surface-bg-muted);
-    color: #42526e;
+    background: var(--surface-2);
+    color: var(--on-sv);
 }
 
 .wl-modal-icon {
@@ -1196,8 +1130,8 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    background: var(--accent-color);
-    color: var(--surface-bg);
+    background: var(--pri);
+    color: var(--on-pri);
 }
 
 .wl-text-xs {
@@ -1217,7 +1151,7 @@
 }
 
 .wl-surface-muted {
-    background-color: var(--surface-bg-muted);
+    background-color: var(--surface-2);
 }
 
 .wl-page .dienstplan-kalender-wrapper {
@@ -1233,8 +1167,8 @@
 }
 
 .wl-page .kalender-tag {
-    background: var(--surface-bg);
-    border: 1px solid #e9ecef;
+    background: var(--surface-0);
+    border: 1px solid var(--outline-v);
     border-radius: 12px;
     min-height: 190px;
     padding: 12px;
@@ -1244,21 +1178,21 @@
 }
 
     .wl-page .kalender-tag.heute {
-        border: 2px solid var(--accent-color);
+        border: 2px solid var(--pri);
     }
 
     .wl-page .kalender-tag.wochenende {
-        background-color: var(--surface-bg-soft);
+        background-color: var(--surface-1);
     }
 
     .wl-page .kalender-tag.leer {
         opacity: 0.5;
-        background-color: #fcfcfc;
+        background-color: var(--surface-1);
     }
 
 .wl-page .tag-number {
     font-weight: 900;
-    color: #212529;
+    color: var(--on-s);
 }
 
 .wl-page .tag-status {
@@ -1275,14 +1209,14 @@
     padding: 6px;
     border-radius: 8px;
     font-size: 0.7rem;
-    background: var(--surface-bg);
-    border: 1px solid #eeeeee;
+    background: var(--surface-0);
+    border: 1px solid var(--outline-v);
 }
 
     .wl-page .staff-combined-badge .divider {
         width: 1px;
         height: 12px;
-        background: #dddddd;
+        background: var(--outline-v);
     }
 
 .wl-page .hinweis-badge {
@@ -1294,47 +1228,47 @@
 }
 
     .wl-page .hinweis-badge.feiertag {
-        background: #fff1f2;
-        color: #be123c;
-        border: 1px solid #fecdd3;
+        background: var(--err-c);
+        color: var(--on-err-c);
+        border: 1px solid rgba(var(--err-rgb), 0.3);
     }
 
     .wl-page .hinweis-badge.wochenende {
-        background: #f3f4f6;
-        color: #495057;
-        border: 1px solid #d1d5db;
+        background: var(--surface-2);
+        color: var(--on-sv);
+        border: 1px solid var(--outline-v);
     }
 
 .wl-page .kalender-tag.status-offen {
-    background-color: #fff7f7;
-    border-color: #f5c2c7;
+    background-color: rgba(var(--err-rgb), 0.04);
+    border-color: rgba(var(--err-rgb), 0.2);
 }
 
 .wl-page .kalender-tag.status-teilweise {
-    background-color: #fffdf0;
-    border-color: #fde68a;
+    background-color: var(--warn-c);
+    border-color: rgba(var(--warn-rgb), 0.3);
 }
 
 .wl-page .kalender-tag.status-vollstaendig {
-    background-color: #f4fff6;
-    border-color: #bbf7d0;
+    background-color: var(--on-ter-c);
+    border-color: rgba(var(--ter-rgb), 0.3);
 }
 
 .wl-page .tag-status.status-offen,
 .wl-page .staff-combined-badge.status-offen {
-    background-color: #fff1f2;
-    color: #be123c;
+    background-color: var(--err-c);
+    color: var(--on-err-c);
 }
 
 .wl-page .tag-status.status-teilweise,
 .wl-page .staff-combined-badge.status-teilweise {
-    background-color: #fefce8;
-    color: #a16207;
+    background-color: var(--warn-c);
+    color: var(--warn);
 }
 
 .wl-page .tag-status.status-vollstaendig,
 .wl-page .staff-combined-badge.status-vollstaendig {
-    background-color: #f0fdf4;
+    background-color: var(--on-ter-c);
     color: var(--success-color);
 }
 
@@ -1348,23 +1282,23 @@
 }
 
 .wl-modal .wl-qualification-arzt {
-    background-color: #fee2e2;
-    color: #991b1b;
+    background-color: var(--err-c);
+    color: var(--on-err-c);
 }
 
 .wl-modal .wl-qualification-nfs {
-    background-color: #dbeafe;
-    color: #1e40af;
+    background-color: var(--pri-fixed);
+    color: var(--pri);
 }
 
 .wl-modal .wl-slot-arzt {
-    background-color: #fffafb;
-    border-color: #fecaca !important;
+    background-color: rgba(var(--err-rgb), 0.04);
+    border-color: rgba(var(--err-rgb), 0.2);
 }
 
 .wl-modal .wl-slot-nfs {
-    background-color: #f8fbff;
-    border-color: #bfdbfe !important;
+    background-color: rgba(var(--pri-rgb), 0.04);
+    border-color: rgba(var(--pri-rgb), 0.2);
 }
 
 .wl-btn-xs {
@@ -1384,23 +1318,23 @@
 @keyframes wl-pulse {
     0% {
         transform: scale(0.95);
-        box-shadow: 0 0 0 0 rgba(var(--success-rgb), 0.4);
+        box-shadow: 0 0 0 0 rgba(var(--ter-rgb), 0.4);
     }
 
     70% {
         transform: scale(1.1);
-        box-shadow: 0 0 0 6px rgba(var(--success-rgb), 0);
+        box-shadow: 0 0 0 6px rgba(var(--ter-rgb), 0);
     }
 
     100% {
         transform: scale(0.95);
-        box-shadow: 0 0 0 0 rgba(var(--success-rgb), 0);
+        box-shadow: 0 0 0 0 rgba(var(--ter-rgb), 0);
     }
 }
 
 @media (min-width: 992px) {
     .wl-page .wl-border-end-lg {
-        border-right: 1px solid #f0f0f0;
+        border-right: 1px solid var(--outline-v);
     }
 }
 
@@ -1422,7 +1356,7 @@
     }
 }
 
-@media (max-width: 991.98px) {
+@media (max-width: 992px) {
     .wl-page .wl-control-status {
         margin-top: 0.25rem;
     }
@@ -1432,7 +1366,7 @@
     }
 }
 
-@media (max-width: 575.98px) {
+@media (max-width: 576px) {
     .wl-page .wl-page-title {
         font-size: 1.35rem;
     }
@@ -1462,8 +1396,8 @@
    ========================================================================== */
 
 
-.app-wunsch-panel--soft::before {
-    background: linear-gradient(90deg, var(--text-color-strong) 0%, rgba(15, 23, 42, 0.35) 100%);
+.app-wunsch-panel--soft {
+    background: var(--surface-1);
 }
 
 .app-wunsch-panel__header {
@@ -1471,12 +1405,12 @@
     justify-content: space-between;
     gap: 1rem;
     padding: 1.35rem 1.5rem 1rem;
-    border-bottom: 1px solid var(--surface-bg-soft);
+    border-bottom: 1px solid var(--surface-1);
 }
 
 .app-wunsch-panel__eyebrow {
     margin-bottom: 0.25rem;
-    color: var(--text-color-subtle);
+    color: var(--outline-v);
     font-size: 0.76rem;
     font-weight: 800;
     text-transform: uppercase;
@@ -1487,13 +1421,13 @@
     margin: 0 0 0.25rem 0;
     font-size: 1.15rem;
     font-weight: 700;
-    color: var(--text-color-strong);
+    color: var(--on-s);
     line-height: 1.3;
 }
 
 .app-wunsch-panel__text {
     margin: 0;
-    color: var(--text-color-muted);
+    color: var(--outline);
     font-size: 0.92rem;
     line-height: 1.55;
 }
@@ -1512,21 +1446,21 @@
 .app-wunsch-note {
     margin-top: 1rem;
     padding: 0.95rem 1rem;
-    border-radius: 16px;
+    border-radius: var(--r-lg);
     font-size: 0.9rem;
     line-height: 1.55;
 }
 
 .app-wunsch-note--warning {
-    background: linear-gradient(180deg, rgba(var(--warning-rgb), 0.14) 0%, rgba(var(--warning-rgb), 0.07) 100%);
-    border: 1px solid rgba(var(--warning-rgb), 0.22);
+    background: rgba(var(--warn-rgb), 0.1);
+    border: 1px solid rgba(var(--warn-rgb), 0.22);
     color: var(--danger-color-strong);
 }
 
 .app-wunsch-note--info {
-    background: linear-gradient(180deg, rgba(var(--accent-rgb), 0.08) 0%, rgba(var(--accent-rgb), 0.04) 100%);
-    border: 1px solid rgba(var(--accent-rgb), 0.14);
-    color: var(--text-color);
+    background: rgba(var(--pri-rgb), 0.06);
+    border: 1px solid rgba(var(--pri-rgb), 0.14);
+    color: var(--on-sv);
 }
 
 .app-wunsch-calendar {
@@ -1544,25 +1478,24 @@
 }
 
 .app-wunsch-day {
-    border: 1px solid var(--border-color);
+    border: 1px solid var(--outline-v);
     border-radius: 20px;
-    background: var(--surface-bg);
-    transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease, opacity 0.18s ease;
+    background: var(--surface-0);
+    transition: box-shadow 0.18s ease, border-color 0.18s ease, opacity 0.18s ease;
 }
 
 .app-wunsch-day--interactive:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 14px 26px rgba(15, 23, 42, 0.07);
-    border-color: #d6e0eb;
+    box-shadow: var(--sh-hover);
+    border-color: var(--outline);
 }
 
-.app-wunsch-day.is-today { border-color: var(--text-color-strong); }
-.app-wunsch-day.is-wish { background: rgba(var(--accent-rgb), 0.05); border-color: rgba(var(--accent-rgb), 0.45); }
-.app-wunsch-day.is-blocked { background: rgba(var(--danger-rgb), 0.04); border-color: rgba(var(--danger-rgb), 0.38); }
-.app-wunsch-day--locked { background: var(--surface-bg-soft); border-style: dashed; }
-.app-wunsch-day--holiday { background: linear-gradient(180deg, rgba(var(--warning-rgb), 0.12) 0%, rgba(var(--warning-rgb), 0.06) 100%); border-color: rgba(var(--warning-rgb), 0.3); }
-.app-wunsch-day--vacation { background: linear-gradient(180deg, rgba(14, 165, 164, 0.1) 0%, rgba(14, 165, 164, 0.05) 100%); border-color: rgba(14, 165, 164, 0.26); }
-.app-wunsch-day--weekend { background: var(--surface-bg-soft); border-color: var(--border-color); }
+.app-wunsch-day.is-today { border-color: var(--on-s); }
+.app-wunsch-day.is-wish { background: rgba(var(--pri-rgb), 0.05); border-color: rgba(var(--pri-rgb), 0.4); }
+.app-wunsch-day.is-blocked { background: rgba(var(--err-rgb), 0.04); border-color: rgba(var(--err-rgb), 0.3); }
+.app-wunsch-day--locked { background: var(--surface-1); border-style: dashed; }
+.app-wunsch-day--holiday { background: rgba(var(--warn-rgb), 0.07); border-color: rgba(var(--warn-rgb), 0.24); }
+.app-wunsch-day--vacation { background: rgba(var(--sec-rgb), 0.06); border-color: rgba(var(--sec-rgb), 0.2); }
+.app-wunsch-day--weekend { background: var(--surface-1); border-color: var(--outline-v); }
 .app-wunsch-day--empty { visibility: hidden; }
 .app-wunsch-day.is-busy { opacity: 0.72; pointer-events: none; }
 
@@ -1589,14 +1522,14 @@
 }
 
 .app-wunsch-day__date {
-    color: var(--text-color-strong);
+    color: var(--on-s);
     font-size: 1.2rem;
     font-weight: 800;
     line-height: 1;
 }
 
 .app-wunsch-day__weekday {
-    color: var(--text-color-muted);
+    color: var(--outline);
     font-size: 0.86rem;
     font-weight: 600;
 }
@@ -1605,9 +1538,9 @@
     display: inline-flex;
     align-items: center;
     padding: 0.28rem 0.55rem;
-    border-radius: 999px;
-    background: var(--text-color-strong);
-    color: var(--surface-bg);
+    border-radius: var(--r-full);
+    background: var(--on-s);
+    color: var(--surface-0);
     font-size: 0.72rem;
     font-weight: 700;
     letter-spacing: 0.02em;
@@ -1619,7 +1552,7 @@
     display: inline-flex;
     align-items: center;
     gap: 0.4rem;
-    color: var(--text-color-muted);
+    color: var(--outline);
     font-size: 0.82rem;
     font-weight: 600;
 }
@@ -1639,45 +1572,45 @@
     align-items: center;
     gap: 0.35rem;
     padding: 0.34rem 0.68rem;
-    border-radius: 999px;
+    border-radius: var(--r-full);
     font-size: 0.74rem;
     font-weight: 700;
     letter-spacing: 0.01em;
 }
 
 .app-wunsch-day__flag--holiday {
-    background: rgba(var(--warning-rgb), 0.14);
+    background: rgba(var(--warn-rgb), 0.1);
     color: var(--warning-color-strong);
-    border: 1px solid rgba(var(--warning-rgb), 0.2);
+    border: 1px solid rgba(var(--warn-rgb), 0.18);
 }
 
 .app-wunsch-day__flag--vacation {
-    background: rgba(14, 165, 164, 0.12);
-    color: #0f766e;
-    border: 1px solid rgba(14, 165, 164, 0.18);
+    background: rgba(var(--sec-rgb), 0.1);
+    color: var(--sec);
+    border: 1px solid rgba(var(--sec-rgb), 0.16);
 }
 
 .app-wunsch-day__flag--weekend {
-    background: var(--border-color);
-    color: var(--text-color);
-    border: 1px solid var(--border-color);
+    background: var(--outline-v);
+    color: var(--on-sv);
+    border: 1px solid var(--outline-v);
 }
 
 .app-wunsch-day__flag--locked {
-    background: var(--surface-bg-soft);
-    color: var(--text-color-muted);
-    border: 1px solid var(--border-color);
+    background: var(--surface-1);
+    color: var(--outline);
+    border: 1px solid var(--outline-v);
 }
 
 .app-wunsch-day__reason {
-    color: var(--text-color-strong);
+    color: var(--on-s);
     font-size: 0.9rem;
     font-weight: 700;
     line-height: 1.45;
 }
 
 .app-wunsch-day__subreason {
-    color: var(--text-color-muted);
+    color: var(--outline);
     font-size: 0.82rem;
     line-height: 1.45;
 }
@@ -1697,10 +1630,10 @@
 .app-wunsch-day__button {
     width: 100%;
     min-height: 44px;
-    border: 1px solid var(--border-color);
+    border: 1px solid var(--outline-v);
     border-radius: 12px;
-    background: var(--surface-bg);
-    color: var(--text-color-muted);
+    background: var(--surface-0);
+    color: var(--outline);
     font-size: 0.86rem;
     font-weight: 700;
     display: inline-flex;
@@ -1711,28 +1644,29 @@
 }
 
     .app-wunsch-day__button:hover {
-        transform: translateY(-1px);
+        border-color: var(--outline);
+        background: var(--surface-1);
     }
 
     .app-wunsch-day__button:disabled {
         opacity: 0.45;
         cursor: not-allowed;
         pointer-events: none;
-        background: var(--surface-bg-soft);
+        background: var(--surface-1);
     }
 
 .app-wunsch-day__button--wish.is-active {
-    background: var(--accent-color);
-    color: var(--surface-bg);
-    border-color: var(--accent-color);
-    box-shadow: 0 6px 16px rgba(var(--accent-rgb), 0.2);
+    background: var(--pri);
+    color: var(--on-pri);
+    border-color: var(--pri);
+    box-shadow: 0 6px 16px rgba(var(--pri-rgb), 0.2);
 }
 
 .app-wunsch-day__button--block.is-active {
-    background: var(--danger-color);
-    color: var(--surface-bg);
-    border-color: var(--danger-color);
-    box-shadow: 0 6px 16px rgba(var(--danger-rgb), 0.2);
+    background: var(--err);
+    color: var(--on-err);
+    border-color: var(--err);
+    box-shadow: 0 6px 16px rgba(var(--err-rgb), 0.2);
 }
 
 .app-wunsch-day__button-text {
@@ -1752,8 +1686,8 @@
             text-align: center;
             padding: 0.85rem 0.4rem;
             border-radius: 14px;
-            background: var(--surface-bg-soft);
-            color: var(--text-color-muted);
+            background: var(--surface-1);
+            color: var(--outline);
             font-size: 0.76rem;
             font-weight: 800;
             text-transform: uppercase;
@@ -1762,7 +1696,7 @@
 
         .app-wunsch-calendar__weekdays .is-weekend {
             color: var(--danger-color-strong);
-            background: rgba(var(--danger-rgb), 0.06);
+            background: rgba(var(--err-rgb), 0.06);
         }
 
     .app-wunsch-calendar__days {
@@ -1797,7 +1731,7 @@
     }
 }
 
-@media (max-width: 991.98px) {
+@media (max-width: 992px) {
     .app-wunsch-panel__header {
         flex-direction: column;
         align-items: flex-start;
@@ -1808,7 +1742,7 @@
     }
 }
 
-@media (max-width: 575.98px) {
+@media (max-width: 576px) {
     .app-wunsch-page {
         gap: 1.2rem;
     }
@@ -1857,7 +1791,7 @@
 .app-autoplan-field__label {
     display: block;
     margin-bottom: 0.35rem;
-    color: var(--text-color-muted);
+    color: var(--outline);
     font-size: 0.74rem;
     font-weight: 800;
     text-transform: uppercase;
@@ -1866,19 +1800,19 @@
 
 .app-autoplan-select {
     min-height: 46px;
-    border: 1px solid var(--border-color);
+    border: 1px solid var(--outline-v);
     border-radius: 14px;
-    background: var(--surface-bg-soft);
-    color: var(--text-color-strong);
+    background: var(--surface-1);
+    color: var(--on-s);
     font-size: 0.94rem;
     font-weight: 600;
     box-shadow: none;
 }
 
     .app-autoplan-select:focus {
-        border-color: rgba(var(--accent-rgb), 0.28);
-        box-shadow: 0 0 0 0.2rem rgba(var(--accent-rgb), 0.12);
-        background: var(--surface-bg);
+        border-color: rgba(var(--pri-rgb), 0.28);
+        box-shadow: 0 0 0 0.2rem rgba(var(--pri-rgb), 0.12);
+        background: var(--surface-0);
     }
 
 .app-autoplan-side-action {
@@ -1904,13 +1838,13 @@
     position: relative;
     z-index: 1;
     padding: 1.2rem 1.35rem 0.95rem;
-    border-bottom: 1px solid var(--surface-bg-soft);
-    background: var(--surface-bg);
+    border-bottom: 1px solid var(--surface-1);
+    background: var(--surface-0);
 }
 
 .app-autoplan-preview-panel__title {
     margin: 0 0 0.2rem 0;
-    color: var(--text-color-strong);
+    color: var(--on-s);
     font-size: 1.12rem;
     font-weight: 700;
     line-height: 1.3;
@@ -1918,13 +1852,13 @@
 
 .app-autoplan-preview-panel__text {
     margin: 0;
-    color: var(--text-color-muted);
+    color: var(--outline);
     font-size: 0.9rem;
     line-height: 1.5;
 }
 
 .app-autoplan-accordion .accordion-button:not(.collapsed) {
-    background-color: var(--surface-bg);
+    background-color: var(--surface-0);
 }
 
 .app-autoplan-accordion .accordion-button:focus {
@@ -1932,23 +1866,23 @@
 }
 
 .app-autoplan-day-body {
-    background: var(--surface-bg-soft);
+    background: var(--surface-1);
 }
 
 .app-autoplan-slot-card,
 .app-autoplan-conflict-card {
     min-height: 100%;
-    border: 1px solid var(--border-color);
+    border: 1px solid var(--outline-v);
     border-radius: 18px;
-    background: var(--surface-bg);
+    background: var(--surface-0);
     padding: 1rem;
 }
 
 .app-autoplan-ok-card {
     min-height: 100%;
     border-radius: 18px;
-    background: #f8fff9;
-    border: 1px solid #d1f2d6;
+    background: var(--on-ter-c);
+    border: 1px solid rgba(var(--ter-rgb), 0.25);
     padding: 1.1rem;
 }
 
@@ -1962,7 +1896,7 @@
     }
 }
 
-@media (max-width: 991.98px) {
+@media (max-width: 992px) {
     .app-autoplan-setup-grid {
         grid-template-columns: 1fr;
     }
@@ -1972,7 +1906,7 @@
     }
 }
 
-@media (max-width: 767.98px) {
+@media (max-width: 768px) {
     .app-autoplan-form {
         grid-template-columns: 1fr;
     }
@@ -1982,7 +1916,7 @@
     }
 }
 
-@media (max-width: 575.98px) {
+@media (max-width: 576px) {
     .app-autoplan-panel__body,
     .app-autoplan-preview-panel__header {
         padding-left: 1.05rem;

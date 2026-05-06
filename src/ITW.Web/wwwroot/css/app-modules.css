@@ -116,14 +116,14 @@
 }
 
 
-@media (max-width: 991.98px) {
+@media (max-width: 992px) {
     .app-dashboard-header {
         flex-direction: column;
         align-items: flex-start;
     }
 }
 
-@media (max-width: 575.98px) {
+@media (max-width: 576px) {
     .app-dashboard-page {
         gap: 1.35rem;
     }
@@ -332,7 +332,7 @@
     width: 4.2rem;
     height: 4.2rem;
     margin: 0 auto 1rem auto;
-    border-radius: 20px;
+    border-radius: var(--r-xl);
     background-color: rgba(var(--module-rgb), 0.1);
     color: var(--module-color);
     box-shadow: inset 0 0 0 1px rgba(var(--module-rgb), 0.08);
@@ -424,13 +424,13 @@
     font-size: 0.82rem;
 }
 
-@media (max-width: 991.98px) {
+@media (max-width: 992px) {
     .app-home-shell {
         padding-top: 2rem;
     }
 }
 
-@media (max-width: 575.98px) {
+@media (max-width: 576px) {
     .app-home-shell {
         padding: 1.35rem var(--sp-el) 1.2rem;
     }
@@ -454,7 +454,7 @@
     .app-home-module__icon {
         width: 3.7rem;
         height: 3.7rem;
-        border-radius: 18px;
+        border-radius: var(--r-lg);
     }
 
         .app-home-module__icon i {
@@ -584,7 +584,7 @@
     justify-content: center;
     width: 2.2rem;
     height: 2.2rem;
-    border-radius: 12px;
+    border-radius: var(--r-md);
     background-color: rgba(var(--pri-rgb), 0.12);
     color: var(--pri);
     flex-shrink: 0;
@@ -633,7 +633,7 @@
     margin-top: 0.25rem;
 }
 
-@media (max-width: 575.98px) {
+@media (max-width: 576px) {
     .app-auth-note {
         gap: 0.7rem;
         padding: 0.9rem;
@@ -642,7 +642,7 @@
     .app-auth-note__icon {
         width: 2rem;
         height: 2rem;
-        border-radius: 10px;
+        border-radius: var(--r-md);
     }
 }
 
@@ -742,7 +742,7 @@
     }
 }
 
-@media (max-width: 575.98px) {
+@media (max-width: 576px) {
     .app-auth-shell {
         padding: 1rem 0;
     }
@@ -869,7 +869,7 @@
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    border-radius: 20px;
+    border-radius: var(--r-xl);
     background: rgba(var(--pri-rgb), 0.1);
     color: var(--pri);
     font-size: 1.55rem;
@@ -1040,7 +1040,7 @@
     display: inline-flex;
 }
 
-@media (max-width: 991.98px) {
+@media (max-width: 992px) {
     .app-staff-hero {
         flex-direction: column;
         align-items: stretch;
@@ -1056,7 +1056,7 @@
     }
 }
 
-@media (max-width: 575.98px) {
+@media (max-width: 576px) {
     .app-staff-page {
         gap: 1.1rem;
     }

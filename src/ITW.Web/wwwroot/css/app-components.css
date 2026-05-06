@@ -1499,7 +1499,7 @@ textarea.form-control {
  * RESPONSIVE
  * ================================================================= */
 
-@media (max-width: 991.98px) {
+@media (max-width: 992px) {
     .app-page-header {
         flex-direction: column;
     }
@@ -1521,7 +1521,7 @@ textarea.form-control {
     }
 }
 
-@media (max-width: 767.98px) {
+@media (max-width: 768px) {
     .app-status {
         grid-template-columns: auto 1fr;
     }
@@ -1536,7 +1536,7 @@ textarea.form-control {
     }
 }
 
-@media (max-width: 575.98px) {
+@media (max-width: 576px) {
     .app-feature-card__body,
     .app-dashboard-card__body {
         padding: 1rem;

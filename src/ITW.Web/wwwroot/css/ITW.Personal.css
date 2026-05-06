@@ -31,10 +31,10 @@
     align-items: flex-start;
     gap: 1rem;
     padding: 1.6rem 1.75rem;
-    border-radius: 28px;
-    background: radial-gradient(circle at top right, rgba(var(--accent-rgb), 0.18), transparent 30%), linear-gradient(135deg, rgba(255, 255, 255, 0.98) 0%, rgba(var(--accent-rgb), 0.06) 100%);
-    border: 1px solid rgba(var(--accent-rgb), 0.14);
-    box-shadow: 0 24px 60px rgba(15, 23, 42, 0.08);
+    border-radius: var(--r-xl);
+    background: var(--surface-0);
+    border: 1px solid var(--outline-v);
+    box-shadow: var(--sh-card);
 }
 
 .app-personal-hero__content {
@@ -48,9 +48,9 @@
     gap: 0.55rem;
     width: fit-content;
     padding: 0.45rem 0.8rem;
-    border-radius: 999px;
-    background: rgba(var(--accent-rgb), 0.1);
-    color: var(--accent-color);
+    border-radius: var(--r-full);
+    background: rgba(var(--pri-rgb), 0.1);
+    color: var(--pri);
     font-size: 0.76rem;
     font-weight: 800;
     letter-spacing: 0.08em;
@@ -62,13 +62,13 @@
     font-size: clamp(1.8rem, 2.5vw, 2.45rem);
     line-height: 1.08;
     font-weight: 800;
-    color: var(--text-color-strong);
+    color: var(--on-s);
 }
 
 .app-personal-hero__text {
     margin: 0;
     max-width: 54rem;
-    color: var(--text-color-muted);
+    color: var(--outline);
     font-size: 0.98rem;
     line-height: 1.65;
 }
@@ -88,10 +88,10 @@
     text-align: center;
     gap: 0.8rem;
     padding: 3rem 1.5rem;
-    border-radius: 24px;
-    background: var(--surface-bg);
-    border: 1px solid rgba(15, 23, 42, 0.08);
-    box-shadow: 0 16px 36px rgba(15, 23, 42, 0.06);
+    border-radius: var(--r-xl);
+    background: var(--surface-0);
+    border: 1px solid var(--outline-v);
+    box-shadow: var(--sh-card);
 }
 
 .app-personal-empty__icon {
@@ -101,14 +101,14 @@
     align-items: center;
     justify-content: center;
     border-radius: 20px;
-    background: rgba(var(--accent-rgb), 0.1);
-    color: var(--accent-color);
+    background: rgba(var(--pri-rgb), 0.1);
+    color: var(--pri);
     font-size: 1.55rem;
 }
 
 .app-personal-empty__title {
     margin: 0;
-    color: var(--text-color-strong);
+    color: var(--on-s);
     font-size: 1.15rem;
     font-weight: 800;
 }
@@ -116,16 +116,16 @@
 .app-personal-empty__text {
     margin: 0;
     max-width: 44rem;
-    color: var(--text-color-muted);
+    color: var(--outline);
     font-size: 0.95rem;
     line-height: 1.65;
 }
 
 .app-personal-card {
-    border-radius: 24px;
-    background: var(--surface-bg);
-    border: 1px solid rgba(15, 23, 42, 0.08);
-    box-shadow: 0 18px 44px rgba(15, 23, 42, 0.06);
+    border-radius: var(--r-xl);
+    background: var(--surface-0);
+    border: 1px solid var(--outline-v);
+    box-shadow: var(--sh-card);
     overflow: hidden;
 }
 
@@ -142,19 +142,19 @@
     font-weight: 800;
     letter-spacing: 0.08em;
     text-transform: uppercase;
-    color: var(--accent-color);
+    color: var(--pri);
 }
 
 .app-personal-card__title {
     margin: 0.2rem 0 0;
     font-size: 1.18rem;
     font-weight: 800;
-    color: var(--text-color-strong);
+    color: var(--on-s);
 }
 
 .app-personal-card__text {
     margin: 0.35rem 0 0;
-    color: var(--text-color-muted);
+    color: var(--outline);
     font-size: 0.92rem;
     line-height: 1.6;
 }
@@ -165,9 +165,9 @@
     justify-content: center;
     min-width: 5rem;
     padding: 0.55rem 0.9rem;
-    border-radius: 999px;
-    background: rgba(var(--accent-rgb), 0.1);
-    color: var(--accent-color);
+    border-radius: var(--r-full);
+    background: rgba(var(--pri-rgb), 0.1);
+    color: var(--pri);
     font-weight: 800;
     font-size: 0.88rem;
     white-space: nowrap;
@@ -178,13 +178,13 @@
 }
 
 .app-personal-table thead th {
-    border-bottom: 1px solid rgba(148, 163, 184, 0.22);
-    background: var(--surface-bg-soft);
+    border-bottom: 1px solid var(--outline-v);
+    background: var(--surface-1);
     font-size: 0.72rem;
     font-weight: 800;
     letter-spacing: 0.08em;
     text-transform: uppercase;
-    color: var(--text-color-muted);
+    color: var(--outline);
     padding-top: 1rem;
     padding-bottom: 1rem;
     white-space: nowrap;
@@ -193,27 +193,27 @@
 .app-personal-table tbody td {
     padding-top: 1rem;
     padding-bottom: 1rem;
-    border-color: rgba(148, 163, 184, 0.16);
+    border-color: var(--outline-v);
     vertical-align: middle;
 }
 
 .app-personal-table tbody tr:hover {
-    background: rgba(var(--accent-rgb), 0.02);
+    background: rgba(var(--pri-rgb), 0.02);
 }
 
 .app-personal-table__name {
     font-weight: 800;
-    color: var(--text-color-strong);
+    color: var(--on-s);
 }
 
 .app-personal-table__qualification {
     font-weight: 700;
-    color: var(--text-color-strong);
+    color: var(--on-s);
 }
 
 .app-personal-table__subtext {
     font-size: 0.84rem;
-    color: var(--text-color-muted);
+    color: var(--outline);
 }
 
 .app-personal-table__subtext--spaced {
@@ -237,34 +237,34 @@
     display: inline-flex;
     align-items: center;
     padding: 0.42rem 0.75rem;
-    border-radius: 999px;
+    border-radius: var(--r-full);
     font-size: 0.82rem;
     font-weight: 700;
     border: 1px solid transparent;
 }
 
 .app-personal-chip--neutral {
-    background: var(--surface-bg-soft);
-    color: var(--text-color);
-    border-color: rgba(148, 163, 184, 0.22);
+    background: var(--surface-1);
+    color: var(--on-sv);
+    border-color: var(--outline-v);
 }
 
 .app-personal-chip--primary {
-    background: rgba(29, 78, 216, 0.08);
-    color: #1d4ed8;
-    border-color: rgba(29, 78, 216, 0.16);
+    background: rgba(var(--pri-rgb), 0.08);
+    color: var(--pri);
+    border-color: rgba(var(--pri-rgb), 0.16);
 }
 
 .app-personal-chip--info {
-    background: rgba(8, 145, 178, 0.08);
-    color: #0e7490;
-    border-color: rgba(8, 145, 178, 0.16);
+    background: rgba(var(--pri-rgb), 0.08);
+    color: var(--pri-c);
+    border-color: rgba(var(--pri-rgb), 0.16);
 }
 
 .app-personal-chip--danger {
-    background: rgba(180, 35, 24, 0.08);
+    background: rgba(var(--err-rgb), 0.08);
     color: var(--danger-color-strong);
-    border-color: rgba(180, 35, 24, 0.16);
+    border-color: rgba(var(--err-rgb), 0.16);
 }
 
 .app-personal-badge {
@@ -273,7 +273,7 @@
     justify-content: center;
     min-width: 8.5rem;
     padding: 0.42rem 0.8rem;
-    border-radius: 999px;
+    border-radius: var(--r-full);
     font-size: 0.8rem;
     font-weight: 800;
     border: 1px solid transparent;
@@ -281,18 +281,18 @@
 }
 
 .app-personal-badge--success {
-    background: rgba(21, 128, 61, 0.08);
+    background: rgba(var(--ter-rgb), 0.08);
     color: var(--success-color);
-    border-color: rgba(21, 128, 61, 0.16);
+    border-color: rgba(var(--ter-rgb), 0.16);
 }
 
 .app-personal-badge--warning {
-    background: rgba(180, 83, 9, 0.08);
+    background: rgba(var(--warn-rgb), 0.08);
     color: var(--warning-color-strong);
-    border-color: rgba(180, 83, 9, 0.16);
+    border-color: rgba(var(--warn-rgb), 0.16);
 }
 
-@media (max-width: 991.98px) {
+@media (max-width: 992px) {
     .app-personal-hero {
         flex-direction: column;
         align-items: stretch;
@@ -308,14 +308,14 @@
     }
 }
 
-@media (max-width: 575.98px) {
+@media (max-width: 576px) {
     .app-personal-page {
         gap: 1.1rem;
     }
 
     .app-personal-hero {
         padding: 1.2rem 1rem;
-        border-radius: 22px;
+        border-radius: var(--r-lg);
     }
 
     .app-personal-hero__title {
@@ -361,10 +361,10 @@
     align-items: flex-start;
     gap: 1rem;
     padding: 1.6rem 1.75rem;
-    border-radius: 28px;
-    background: radial-gradient(circle at top right, rgba(var(--accent-rgb), 0.18), transparent 30%), linear-gradient(135deg, rgba(255, 255, 255, 0.98) 0%, rgba(var(--accent-rgb), 0.06) 100%);
-    border: 1px solid rgba(var(--accent-rgb), 0.14);
-    box-shadow: 0 24px 60px rgba(15, 23, 42, 0.08);
+    border-radius: var(--r-xl);
+    background: var(--surface-0);
+    border: 1px solid var(--outline-v);
+    box-shadow: var(--sh-card);
 }
 
 .app-employee-detail-hero__content {
@@ -382,11 +382,11 @@
         font-weight: 800;
         letter-spacing: 0.08em;
         text-transform: uppercase;
-        color: var(--text-color-muted);
+        color: var(--outline);
     }
 
         .app-employee-detail-breadcrumb .breadcrumb-item.active {
-            color: var(--text-color-strong);
+            color: var(--on-s);
         }
 
 .app-employee-detail-hero__top {
@@ -407,9 +407,9 @@
     gap: 0.55rem;
     width: fit-content;
     padding: 0.45rem 0.8rem;
-    border-radius: 999px;
-    background: rgba(var(--accent-rgb), 0.1);
-    color: var(--accent-color);
+    border-radius: var(--r-full);
+    background: rgba(var(--pri-rgb), 0.1);
+    color: var(--pri);
     font-size: 0.76rem;
     font-weight: 800;
     letter-spacing: 0.08em;
@@ -421,12 +421,12 @@
     font-size: clamp(1.7rem, 2.4vw, 2.3rem);
     line-height: 1.08;
     font-weight: 800;
-    color: var(--text-color-strong);
+    color: var(--on-s);
 }
 
 .app-employee-detail-hero__text {
     margin: 0;
-    color: var(--text-color-muted);
+    color: var(--outline);
     font-size: 0.96rem;
     line-height: 1.6;
 }
@@ -443,7 +443,7 @@
     align-items: center;
     gap: 0.55rem;
     padding: 0.7rem 1rem;
-    border-radius: 999px;
+    border-radius: var(--r-full);
     font-size: 0.9rem;
     font-weight: 800;
     border: 1px solid transparent;
@@ -451,15 +451,15 @@
 }
 
 .app-employee-detail-status--success {
-    background: rgba(21, 128, 61, 0.08);
+    background: rgba(var(--ter-rgb), 0.08);
     color: var(--success-color);
-    border-color: rgba(21, 128, 61, 0.16);
+    border-color: rgba(var(--ter-rgb), 0.16);
 }
 
 .app-employee-detail-status--danger {
-    background: rgba(180, 35, 24, 0.08);
+    background: rgba(var(--err-rgb), 0.08);
     color: var(--danger-color-strong);
-    border-color: rgba(180, 35, 24, 0.16);
+    border-color: rgba(var(--err-rgb), 0.16);
 }
 
 .app-employee-detail-grid {
@@ -480,10 +480,10 @@
 }
 
 .app-employee-card {
-    border-radius: 24px;
-    background: var(--surface-bg);
-    border: 1px solid rgba(15, 23, 42, 0.08);
-    box-shadow: 0 18px 44px rgba(15, 23, 42, 0.06);
+    border-radius: var(--r-xl);
+    background: var(--surface-0);
+    border: 1px solid var(--outline-v);
+    box-shadow: var(--sh-card);
     overflow: hidden;
 }
 
@@ -507,16 +507,16 @@
     font-weight: 800;
     letter-spacing: 0.08em;
     text-transform: uppercase;
-    color: var(--text-color-strong);
+    color: var(--on-s);
 }
 
     .app-employee-card__title i {
-        color: var(--accent-color);
+        color: var(--pri);
     }
 
 .app-employee-card__text {
     margin: 0.45rem 0 0;
-    color: var(--text-color-muted);
+    color: var(--outline);
     font-size: 0.92rem;
     line-height: 1.6;
 }
@@ -537,12 +537,12 @@
 }
 
 .app-employee-card__body--soft {
-    background: #fcfcfd;
+    background: var(--surface-1);
 }
 
 .app-employee-card__footer {
     padding: 0 1.35rem 1rem;
-    color: var(--text-color-muted);
+    color: var(--outline);
     font-size: 0.78rem;
 }
 
@@ -572,62 +572,62 @@
     font-weight: 800;
     text-transform: uppercase;
     letter-spacing: 0.08em;
-    color: var(--text-color-subtle);
+    color: var(--outline-v);
 }
 
 .app-employee-detail-field__value {
     font-size: 0.95rem;
-    color: var(--text-color-strong);
+    color: var(--on-s);
     line-height: 1.55;
 }
 
 .app-employee-detail-field__value--accent {
-    color: var(--accent-color);
+    color: var(--pri);
     font-weight: 700;
 }
 
 .app-employee-detail-field__value--muted {
-    color: var(--text-color-muted);
+    color: var(--outline);
 }
 
 .app-employee-detail-highlight {
     font-size: 1.15rem;
     font-weight: 800;
-    color: var(--text-color-strong);
+    color: var(--on-s);
 }
 
 .app-employee-chip {
     display: inline-flex;
     align-items: center;
     padding: 0.42rem 0.75rem;
-    border-radius: 999px;
+    border-radius: var(--r-full);
     font-size: 0.82rem;
     font-weight: 700;
     border: 1px solid transparent;
 }
 
 .app-employee-chip--neutral {
-    background: var(--surface-bg-soft);
-    color: var(--text-color);
-    border-color: rgba(148, 163, 184, 0.22);
+    background: var(--surface-1);
+    color: var(--on-sv);
+    border-color: var(--outline-v);
 }
 
 .app-employee-chip--primary {
-    background: rgba(29, 78, 216, 0.08);
-    color: #1d4ed8;
-    border-color: rgba(29, 78, 216, 0.16);
+    background: rgba(var(--pri-rgb), 0.08);
+    color: var(--pri);
+    border-color: rgba(var(--pri-rgb), 0.16);
 }
 
 .app-employee-chip--info {
-    background: rgba(8, 145, 178, 0.08);
-    color: #0e7490;
-    border-color: rgba(8, 145, 178, 0.16);
+    background: rgba(var(--pri-rgb), 0.08);
+    color: var(--pri-c);
+    border-color: rgba(var(--pri-rgb), 0.16);
 }
 
 .app-employee-chip--danger {
-    background: rgba(180, 35, 24, 0.08);
+    background: rgba(var(--err-rgb), 0.08);
     color: var(--danger-color-strong);
-    border-color: rgba(180, 35, 24, 0.16);
+    border-color: rgba(var(--err-rgb), 0.16);
 }
 
 .app-employee-badge {
@@ -636,22 +636,22 @@
     justify-content: center;
     min-width: 7rem;
     padding: 0.42rem 0.8rem;
-    border-radius: 999px;
+    border-radius: var(--r-full);
     font-size: 0.8rem;
     font-weight: 800;
     border: 1px solid transparent;
 }
 
 .app-employee-badge--success {
-    background: rgba(21, 128, 61, 0.08);
+    background: rgba(var(--ter-rgb), 0.08);
     color: var(--success-color);
-    border-color: rgba(21, 128, 61, 0.16);
+    border-color: rgba(var(--ter-rgb), 0.16);
 }
 
 .app-employee-badge--warning {
-    background: rgba(180, 83, 9, 0.08);
+    background: rgba(var(--warn-rgb), 0.08);
     color: var(--warning-color-strong);
-    border-color: rgba(180, 83, 9, 0.16);
+    border-color: rgba(var(--warn-rgb), 0.16);
 }
 
 .app-employee-detail-duo-grid {
@@ -667,10 +667,10 @@
 }
 
 .app-employee-nav {
-    border-radius: 24px;
-    background: var(--surface-bg);
-    border: 1px solid rgba(15, 23, 42, 0.08);
-    box-shadow: 0 18px 44px rgba(15, 23, 42, 0.06);
+    border-radius: var(--r-xl);
+    background: var(--surface-0);
+    border: 1px solid var(--outline-v);
+    box-shadow: var(--sh-card);
     overflow: hidden;
 }
 
@@ -679,8 +679,8 @@
     align-items: center;
     gap: 0.9rem;
     padding: 1.25rem 1.2rem;
-    background: linear-gradient(180deg, rgba(var(--accent-rgb), 0.08) 0%, rgba(255, 255, 255, 0.98) 100%);
-    border-bottom: 1px solid rgba(148, 163, 184, 0.16);
+    background: rgba(var(--pri-rgb), 0.04);
+    border-bottom: 1px solid var(--outline-v);
 }
 
 .app-employee-nav__avatar {
@@ -691,9 +691,9 @@
     justify-content: center;
     flex-shrink: 0;
     border-radius: 18px;
-    background: var(--surface-bg);
-    color: var(--accent-color);
-    box-shadow: 0 14px 30px rgba(15, 23, 42, 0.08);
+    background: var(--surface-0);
+    color: var(--pri);
+    box-shadow: var(--sh-card);
     font-size: 1.35rem;
 }
 
@@ -704,7 +704,7 @@
 }
 
 .app-employee-nav__label {
-    color: var(--text-color-subtle);
+    color: var(--outline-v);
     font-size: 0.68rem;
     font-weight: 800;
     letter-spacing: 0.08em;
@@ -712,14 +712,14 @@
 }
 
 .app-employee-nav__name {
-    color: var(--text-color-strong);
+    color: var(--on-s);
     font-size: 0.98rem;
     font-weight: 800;
     line-height: 1.3;
 }
 
 .app-employee-nav__qualification {
-    color: var(--text-color-muted);
+    color: var(--outline);
     font-size: 0.83rem;
 }
 
@@ -737,7 +737,7 @@
     padding: 0.8rem 0.95rem;
     border-radius: 18px;
     text-decoration: none;
-    color: var(--text-color);
+    color: var(--on-sv);
     font-size: 0.94rem;
     font-weight: 700;
     transition: all 0.18s ease;
@@ -746,23 +746,23 @@
     .app-employee-nav__link i {
         width: 1.35rem;
         text-align: center;
-        color: var(--text-color-muted);
+        color: var(--outline);
     }
 
     .app-employee-nav__link:hover {
-        background: rgba(var(--accent-rgb), 0.06);
-        color: var(--accent-color);
+        background: rgba(var(--pri-rgb), 0.06);
+        color: var(--pri);
     }
 
         .app-employee-nav__link:hover i,
         .app-employee-nav__link--active i {
-            color: var(--accent-color);
+            color: var(--pri);
         }
 
 .app-employee-nav__link--active {
-    background: rgba(var(--accent-rgb), 0.08);
-    color: var(--accent-color);
-    box-shadow: inset 0 0 0 1px rgba(var(--accent-rgb), 0.14);
+    background: rgba(var(--pri-rgb), 0.08);
+    color: var(--pri);
+    box-shadow: inset 0 0 0 1px rgba(var(--pri-rgb), 0.14);
 }
 
 .app-employee-form-grid {
@@ -777,7 +777,7 @@
 
 .app-employee-form-note {
     margin-top: 0.45rem;
-    color: var(--text-color-muted);
+    color: var(--outline);
     font-size: 0.84rem;
     line-height: 1.6;
 }
@@ -786,7 +786,7 @@
     grid-column: 1 / -1;
     margin: 0.2rem 0;
     border: 0;
-    border-top: 1px solid rgba(148, 163, 184, 0.16);
+    border-top: 1px solid var(--outline-v);
 }
 
 .app-employee-documents-empty {
@@ -794,7 +794,7 @@
     justify-items: center;
     gap: 0.7rem;
     padding: 2.6rem 1rem;
-    color: var(--text-color-muted);
+    color: var(--outline);
     text-align: center;
 }
 
@@ -816,17 +816,16 @@
     gap: 0.7rem;
     padding: 1.15rem 1rem;
     text-align: center;
-    border-radius: 20px;
-    border: 1px solid rgba(148, 163, 184, 0.16);
-    background: var(--surface-bg);
-    box-shadow: 0 12px 28px rgba(15, 23, 42, 0.04);
-    transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease;
+    border-radius: var(--r-lg);
+    border: 1px solid var(--outline-v);
+    background: var(--surface-0);
+    box-shadow: var(--sh-card);
+    transition: box-shadow 0.18s ease, border-color 0.18s ease;
 }
 
     .app-employee-doc-card:hover {
-        transform: translateY(-2px);
-        border-color: rgba(var(--accent-rgb), 0.2);
-        box-shadow: 0 18px 34px rgba(15, 23, 42, 0.08);
+        border-color: rgba(var(--pri-rgb), 0.2);
+        box-shadow: var(--sh-hover);
     }
 
 .app-employee-doc-card__icon {
@@ -836,14 +835,14 @@
     align-items: center;
     justify-content: center;
     border-radius: 18px;
-    background: rgba(var(--accent-rgb), 0.08);
-    color: var(--accent-color);
+    background: rgba(var(--pri-rgb), 0.08);
+    color: var(--pri);
     font-size: 1.6rem;
 }
 
 .app-employee-doc-card__title {
     width: 100%;
-    color: var(--text-color-strong);
+    color: var(--on-s);
     font-size: 0.9rem;
     font-weight: 800;
     line-height: 1.35;
@@ -853,7 +852,7 @@
 }
 
 .app-employee-doc-card__meta {
-    color: var(--text-color-muted);
+    color: var(--outline);
     font-size: 0.75rem;
     line-height: 1.5;
 }
@@ -870,7 +869,7 @@
     }
 }
 
-@media (max-width: 991.98px) {
+@media (max-width: 992px) {
     .app-employee-detail-hero {
         flex-direction: column;
         align-items: stretch;
@@ -899,14 +898,14 @@
     }
 }
 
-@media (max-width: 575.98px) {
+@media (max-width: 576px) {
     .app-employee-detail-page {
         gap: 1.1rem;
     }
 
     .app-employee-detail-hero {
         padding: 1.2rem 1rem;
-        border-radius: 22px;
+        border-radius: var(--r-lg);
     }
 
     .app-employee-detail-hero__title {
@@ -957,10 +956,10 @@
     align-items: flex-start;
     gap: 1rem;
     padding: 1.6rem 1.75rem;
-    border-radius: 28px;
-    background: radial-gradient(circle at top right, rgba(var(--accent-rgb), 0.18), transparent 30%), linear-gradient(135deg, rgba(255, 255, 255, 0.98) 0%, rgba(var(--accent-rgb), 0.06) 100%);
-    border: 1px solid rgba(var(--accent-rgb), 0.14);
-    box-shadow: 0 24px 60px rgba(15, 23, 42, 0.08);
+    border-radius: var(--r-xl);
+    background: var(--surface-0);
+    border: 1px solid var(--outline-v);
+    box-shadow: var(--sh-card);
 }
 
 .app-vacation-hero__content {
@@ -974,9 +973,9 @@
     gap: 0.55rem;
     width: fit-content;
     padding: 0.45rem 0.8rem;
-    border-radius: 999px;
-    background: rgba(var(--accent-rgb), 0.1);
-    color: var(--accent-color);
+    border-radius: var(--r-full);
+    background: rgba(var(--pri-rgb), 0.1);
+    color: var(--pri);
     font-size: 0.76rem;
     font-weight: 800;
     letter-spacing: 0.08em;
@@ -988,13 +987,13 @@
     font-size: clamp(1.8rem, 2.5vw, 2.45rem);
     line-height: 1.08;
     font-weight: 800;
-    color: var(--text-color-strong);
+    color: var(--on-s);
 }
 
 .app-vacation-hero__text {
     margin: 0;
     max-width: 52rem;
-    color: var(--text-color-muted);
+    color: var(--outline);
     font-size: 0.98rem;
     line-height: 1.65;
 }
@@ -1007,10 +1006,10 @@
 }
 
 .app-vacation-filter {
-    border-radius: 24px;
-    background: var(--surface-bg);
-    border: 1px solid rgba(15, 23, 42, 0.08);
-    box-shadow: 0 16px 36px rgba(15, 23, 42, 0.06);
+    border-radius: var(--r-xl);
+    background: var(--surface-0);
+    border: 1px solid var(--outline-v);
+    box-shadow: var(--sh-card);
 }
 
 .app-vacation-filter__body {
@@ -1039,15 +1038,15 @@
     font-weight: 800;
     letter-spacing: 0.08em;
     text-transform: uppercase;
-    color: var(--text-color-muted);
+    color: var(--outline);
 }
 
 .app-vacation-input {
     display: flex;
     align-items: center;
-    border-radius: 18px;
-    border: 1px solid rgba(148, 163, 184, 0.28);
-    background: var(--surface-bg-soft);
+    border-radius: var(--r-lg);
+    border: 1px solid var(--outline-v);
+    background: var(--surface-1);
     overflow: hidden;
 }
 
@@ -1056,7 +1055,7 @@
     align-items: center;
     justify-content: center;
     width: 3rem;
-    color: var(--text-color-muted);
+    color: var(--outline);
     font-size: 0.95rem;
 }
 
@@ -1067,7 +1066,7 @@
     padding-left: 0;
     min-height: 3rem;
     font-weight: 700;
-    color: var(--text-color-strong);
+    color: var(--on-s);
 }
 
 .app-vacation-filter__actions {
@@ -1083,14 +1082,14 @@
 
 .app-vacation-kpi {
     padding: 1.15rem 1.15rem 1.05rem;
-    border-radius: 22px;
-    background: var(--surface-bg);
-    border: 1px solid rgba(15, 23, 42, 0.08);
-    box-shadow: 0 16px 36px rgba(15, 23, 42, 0.06);
+    border-radius: var(--r-xl);
+    background: var(--surface-0);
+    border: 1px solid var(--outline-v);
+    box-shadow: var(--sh-card);
 }
 
 .app-vacation-kpi--highlight {
-    border-left: 4px solid var(--accent-color);
+    border-left: 4px solid var(--pri);
 }
 
 .app-vacation-kpi__label {
@@ -1099,7 +1098,7 @@
     font-weight: 800;
     letter-spacing: 0.08em;
     text-transform: uppercase;
-    color: var(--text-color-muted);
+    color: var(--outline);
 }
 
 .app-vacation-kpi__value {
@@ -1107,21 +1106,21 @@
     font-size: 1.8rem;
     font-weight: 800;
     line-height: 1.1;
-    color: var(--text-color-strong);
+    color: var(--on-s);
 }
 
     .app-vacation-kpi__value span {
         font-size: 0.92rem;
         font-weight: 600;
-        color: var(--text-color-muted);
+        color: var(--outline);
     }
 
 .app-vacation-kpi__value--primary {
-    color: #1d4ed8;
+    color: var(--pri);
 }
 
 .app-vacation-kpi__value--neutral {
-    color: var(--text-color);
+    color: var(--on-sv);
 }
 
 .app-vacation-kpi__value--success {
@@ -1134,7 +1133,7 @@
 
 .app-vacation-kpi__text {
     margin-top: 0.45rem;
-    color: var(--text-color-muted);
+    color: var(--outline);
     font-size: 0.88rem;
     line-height: 1.5;
 }
@@ -1153,15 +1152,15 @@
 }
 
 .app-vacation-card {
-    border-radius: 24px;
-    background: var(--surface-bg);
-    border: 1px solid rgba(15, 23, 42, 0.08);
-    box-shadow: 0 18px 44px rgba(15, 23, 42, 0.06);
+    border-radius: var(--r-xl);
+    background: var(--surface-0);
+    border: 1px solid var(--outline-v);
+    box-shadow: var(--sh-card);
     overflow: hidden;
 }
 
 .app-vacation-card--soft {
-    background: linear-gradient(180deg, rgba(var(--accent-rgb), 0.04) 0%, var(--surface-bg) 100%);
+    background: var(--surface-1);
 }
 
 .app-vacation-card--fullheight {
@@ -1186,19 +1185,19 @@
     font-weight: 800;
     letter-spacing: 0.08em;
     text-transform: uppercase;
-    color: var(--accent-color);
+    color: var(--pri);
 }
 
 .app-vacation-card__title {
     margin: 0;
     font-size: 1.18rem;
     font-weight: 800;
-    color: var(--text-color-strong);
+    color: var(--on-s);
 }
 
 .app-vacation-card__text {
     margin: 0;
-    color: var(--text-color-muted);
+    color: var(--outline);
     font-size: 0.92rem;
     line-height: 1.6;
 }
@@ -1209,9 +1208,9 @@
     justify-content: center;
     min-width: 4.5rem;
     padding: 0.55rem 0.9rem;
-    border-radius: 999px;
-    background: rgba(var(--accent-rgb), 0.1);
-    color: var(--accent-color);
+    border-radius: var(--r-full);
+    background: rgba(var(--pri-rgb), 0.1);
+    color: var(--pri);
     font-weight: 800;
     font-size: 0.88rem;
 }
@@ -1241,11 +1240,11 @@
 .app-vacation-range-input,
 .app-vacation-text-input {
     min-height: 3rem;
-    border-radius: 16px;
-    border: 1px solid rgba(148, 163, 184, 0.28);
-    background: var(--surface-bg-soft);
+    border-radius: var(--r-lg);
+    border: 1px solid var(--outline-v);
+    background: var(--surface-1);
     box-shadow: none !important;
-    color: var(--text-color-strong);
+    color: var(--on-s);
     font-weight: 600;
 }
 
@@ -1255,7 +1254,7 @@
 
     .app-vacation-range-input.is-invalid {
         border-color: var(--danger-color-strong);
-        box-shadow: 0 0 0 0.2rem rgba(180, 35, 24, 0.12) !important;
+        box-shadow: 0 0 0 0.2rem rgba(var(--err-rgb), 0.12) !important;
     }
 
 .app-vacation-note {
@@ -1264,15 +1263,15 @@
     align-items: flex-start;
     margin-bottom: 1rem;
     padding: 0.85rem 0.95rem;
-    border-radius: 16px;
-    background: rgba(3, 105, 161, 0.06);
-    color: var(--text-color-strong);
+    border-radius: var(--r-lg);
+    background: rgba(var(--pri-rgb), 0.06);
+    color: var(--on-s);
     font-size: 0.9rem;
     line-height: 1.55;
 }
 
     .app-vacation-note i {
-        color: #0369a1;
+        color: var(--pri);
         margin-top: 0.08rem;
     }
 
@@ -1298,14 +1297,14 @@
     text-align: center;
     gap: 0.75rem;
     padding: 3rem 1.5rem;
-    color: var(--text-color-muted);
+    color: var(--outline);
 }
 
 .app-vacation-empty--standalone {
-    border-radius: 24px;
-    background: var(--surface-bg);
-    border: 1px solid rgba(15, 23, 42, 0.08);
-    box-shadow: 0 16px 36px rgba(15, 23, 42, 0.06);
+    border-radius: var(--r-xl);
+    background: var(--surface-0);
+    border: 1px solid var(--outline-v);
+    box-shadow: var(--sh-card);
 }
 
 .app-vacation-empty__icon {
@@ -1315,14 +1314,14 @@
     align-items: center;
     justify-content: center;
     border-radius: 20px;
-    background: rgba(var(--accent-rgb), 0.1);
-    color: var(--accent-color);
+    background: rgba(var(--pri-rgb), 0.1);
+    color: var(--pri);
     font-size: 1.55rem;
 }
 
 .app-vacation-empty__title {
     margin: 0;
-    color: var(--text-color-strong);
+    color: var(--on-s);
     font-size: 1.15rem;
     font-weight: 800;
 }
@@ -1335,13 +1334,13 @@
 }
 
 .app-vacation-table thead th {
-    border-bottom: 1px solid rgba(148, 163, 184, 0.22);
-    background: var(--surface-bg-soft);
+    border-bottom: 1px solid var(--outline-v);
+    background: var(--surface-1);
     font-size: 0.74rem;
     font-weight: 800;
     letter-spacing: 0.08em;
     text-transform: uppercase;
-    color: var(--text-color-muted);
+    color: var(--outline);
     padding-top: 1rem;
     padding-bottom: 1rem;
 }
@@ -1349,21 +1348,21 @@
 .app-vacation-table tbody td {
     padding-top: 1rem;
     padding-bottom: 1rem;
-    border-color: rgba(148, 163, 184, 0.16);
+    border-color: var(--outline-v);
 }
 
 .app-vacation-table__title {
     font-weight: 800;
-    color: var(--text-color-strong);
+    color: var(--on-s);
 }
 
 .app-vacation-table__subtext {
     font-size: 0.8rem;
-    color: var(--text-color-muted);
+    color: var(--outline);
 }
 
 .app-vacation-table__note {
-    color: var(--text-color-muted);
+    color: var(--outline);
     font-size: 0.92rem;
 }
 
@@ -1373,10 +1372,10 @@
     justify-content: center;
     min-width: 2.7rem;
     padding: 0.35rem 0.75rem;
-    border-radius: 999px;
-    background: var(--surface-bg-soft);
-    border: 1px solid rgba(148, 163, 184, 0.28);
-    color: var(--text-color-strong);
+    border-radius: var(--r-full);
+    background: var(--surface-1);
+    border: 1px solid var(--outline-v);
+    color: var(--on-s);
     font-weight: 800;
 }
 
@@ -1386,37 +1385,38 @@
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    border: 1px solid rgba(148, 163, 184, 0.28);
+    border: 1px solid var(--outline-v);
     border-radius: 14px;
-    background: var(--surface-bg);
+    background: var(--surface-0);
     color: var(--danger-color-strong);
-    transition: transform 0.18s ease, background-color 0.18s ease, border-color 0.18s ease;
+    transition: background-color 0.18s ease, border-color 0.18s ease;
 }
 
     .app-vacation-delete-button:hover,
     .app-vacation-delete-button:focus-visible {
-        background: rgba(180, 35, 24, 0.06);
-        border-color: rgba(180, 35, 24, 0.22);
-        transform: translateY(-1px);
+        background: rgba(var(--err-rgb), 0.06);
+        border-color: rgba(var(--err-rgb), 0.22);
         outline: none;
     }
 
 .flatpickr-calendar {
-    box-shadow: 0 14px 36px rgba(15, 23, 42, 0.16) !important;
+    box-shadow: var(--sh-drop) !important;
     border: 0 !important;
     border-radius: 18px !important;
 }
 
+/* stylelint-disable selector-class-pattern */
 .flatpickr-day.selected,
 .flatpickr-day.startRange,
 .flatpickr-day.endRange {
-    background: var(--accent-color) !important;
-    border-color: var(--accent-color) !important;
+    background: var(--pri) !important;
+    border-color: var(--pri) !important;
 }
 
 .flatpickr-day.inRange {
-    box-shadow: -5px 0 0 rgba(var(--accent-rgb), 0.12), 5px 0 0 rgba(var(--accent-rgb), 0.12);
+    box-shadow: -5px 0 0 rgba(var(--pri-rgb), 0.12), 5px 0 0 rgba(var(--pri-rgb), 0.12);
 }
+/* stylelint-enable selector-class-pattern */
 
 @media (max-width: 1199.98px) {
     .app-vacation-grid {
@@ -1424,7 +1424,7 @@
     }
 }
 
-@media (max-width: 991.98px) {
+@media (max-width: 992px) {
     .app-vacation-hero {
         flex-direction: column;
         align-items: stretch;
@@ -1447,14 +1447,14 @@
     }
 }
 
-@media (max-width: 575.98px) {
+@media (max-width: 576px) {
     .app-vacation-page {
         gap: 1.1rem;
     }
 
     .app-vacation-hero {
         padding: 1.2rem 1rem;
-        border-radius: 22px;
+        border-radius: var(--r-lg);
     }
 
     .app-vacation-hero__title {
