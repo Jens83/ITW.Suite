@@ -13,26 +13,23 @@
 
     var hatDienstplan = currentUser.HatModul(ModulCode.Dienstplan);
     var hatEinsatzverwaltung = currentUser.HatModul(ModulCode.Einsatzverwaltung);
-    var hatPersonal = currentUser.HatModul(ModulCode.Personal);   
+    var hatPersonal = currentUser.HatModul(ModulCode.Personal);
     var hatFahrzeugmanagement = currentUser.HatModul(ModulCode.Fahrzeugmanagement);
 
     var darfPersonaldatenSehen = istWachleiter && hatPersonal;
     var darfFahrzeugmanagementSehen = istWachleiter && hatFahrzeugmanagement;
 
     var hatMindestensEinModul =
-    hatDienstplan ||
-    hatEinsatzverwaltung ||
-    darfPersonaldatenSehen ||
-    darfFahrzeugmanagementSehen;
+        hatDienstplan ||
+        hatEinsatzverwaltung ||
+        darfPersonaldatenSehen ||
+        darfFahrzeugmanagementSehen;
 }
 
 <div class="app-dashboard-page">
     <div class="app-dashboard-header">
         <div class="app-dashboard-header__content">
             <h1 class="app-dashboard-header__title">Bereich Intensivtransport</h1>
-            <p class="app-dashboard-header__text">
-                Es werden nur die Module angezeigt, die der Geschäftsführer für Ihre Rolle im Bereich Intensivtransport freigegeben hat.
-            </p>
         </div>
 
         @if (istWachleiter)
@@ -51,38 +48,247 @@
         }
     </div>
 
-    @if (!hatMindestensEinModul)
+    @if (istWachleiter)
     {
-        <section class="app-surface">
-            <div class="app-surface__body">
-                <div class="app-form-note">
-                    Für Ihre Rolle sind im Bereich Intensivtransport aktuell keine Module freigeschaltet.
+        <div class="app-wl-grid">
+
+            @* Offene Aufgaben *@
+            <div class="app-surface">
+                <div class="app-card-hd">
+                    <span class="app-card-hd__label">
+                        <i class="bi bi-check2-square"></i>
+                        Offene Aufgaben
+                    </span>
+                    <span class="app-card-hd__meta">4 offen</span>
+                </div>
+
+                <div class="app-wl-tasks__group">Heute handeln</div>
+
+                <div class="app-wl-task">
+                    <div class="app-wl-task__prio app-wl-task__prio--high"></div>
+                    <div class="app-wl-task__body">
+                        <p class="app-wl-task__title">Dienstplan Juni 2026 — Wunschphase eröffnen</p>
+                        <div class="app-wl-task__meta">
+                            <span><i class="bi bi-clock"></i> Frist 15. Mai</span>
+                            <span><i class="bi bi-people"></i> 21 Mitarbeiter warten</span>
+                        </div>
+                    </div>
+                    @if (hatDienstplan)
+                    {
+                        <a asp-area="Intensivtransport"
+                           asp-controller="DienstplanWachleiter"
+                           asp-action="Index"
+                           class="app-btn app-btn-accent app-btn-sm"
+                           data-app-loading-link
+                           data-app-loading-text="Dienstplan wird geöffnet...">
+                            Öffnen
+                        </a>
+                    }
+                </div>
+
+                <div class="app-wl-task">
+                    <div class="app-wl-task__prio app-wl-task__prio--high"></div>
+                    <div class="app-wl-task__body">
+                        <p class="app-wl-task__title">ITW 1 — Hauptuntersuchung fällig</p>
+                        <div class="app-wl-task__meta">
+                            <span><i class="bi bi-calendar-x"></i> Fällig 16. Mai 2026</span>
+                            <span><i class="bi bi-truck-front"></i> MSE-ITW-1</span>
+                        </div>
+                    </div>
+                    <button type="button" class="app-btn app-btn-neutral app-btn-sm" disabled>
+                        Zur Akte
+                    </button>
+                </div>
+
+                <div class="app-wl-tasks__group">Diese Woche</div>
+
+                <div class="app-wl-task">
+                    <div class="app-wl-task__prio app-wl-task__prio--med"></div>
+                    <div class="app-wl-task__body">
+                        <p class="app-wl-task__title">Medizinischer Verbrauchsbericht Mai einreichen</p>
+                        <div class="app-wl-task__meta">
+                            <span><i class="bi bi-clipboard2-pulse"></i> Frist 10. Mai</span>
+                        </div>
+                    </div>
+                    <button type="button" class="app-btn app-btn-neutral app-btn-sm" disabled>
+                        Öffnen
+                    </button>
+                </div>
+
+                <div class="app-wl-task">
+                    <div class="app-wl-task__prio app-wl-task__prio--low"></div>
+                    <div class="app-wl-task__body">
+                        <p class="app-wl-task__title">Neue Intensivpflegekraft einweisen</p>
+                        <div class="app-wl-task__meta">
+                            <span><i class="bi bi-person-plus"></i> M. Fischer startet 12. Mai</span>
+                        </div>
+                    </div>
+                    <button type="button" class="app-btn app-btn-neutral app-btn-sm" disabled>
+                        Planen
+                    </button>
                 </div>
             </div>
-        </section>
+
+            @* Rechte Spalte *@
+            <div class="app-wl-col">
+
+                @* Letzte Aktivitäten *@
+                <div class="app-surface">
+                    <div class="app-card-hd">
+                        <span class="app-card-hd__label">
+                            <i class="bi bi-clock-history"></i>
+                            Letzte Aktivitäten
+                        </span>
+                    </div>
+
+                    <div class="app-wl-activity">
+                        <div class="app-wl-activity__icon app-wl-activity__icon--ok"><i class="bi bi-check2"></i></div>
+                        <div>
+                            <p class="app-wl-activity__text"><strong>S. Hoffmann</strong> hat Dienstwunsch Juni abgegeben</p>
+                            <span class="app-wl-activity__time">Heute, 07:48 Uhr</span>
+                        </div>
+                    </div>
+                    <div class="app-wl-activity">
+                        <div class="app-wl-activity__icon app-wl-activity__icon--ok"><i class="bi bi-check2"></i></div>
+                        <div>
+                            <p class="app-wl-activity__text"><strong>T. Berger</strong> hat Dienstwunsch Juni abgegeben</p>
+                            <span class="app-wl-activity__time">Heute, 07:15 Uhr</span>
+                        </div>
+                    </div>
+                    <div class="app-wl-activity">
+                        <div class="app-wl-activity__icon app-wl-activity__icon--warn"><i class="bi bi-tools"></i></div>
+                        <div>
+                            <p class="app-wl-activity__text"><strong>ITW 4</strong> zur Wartung abgegeben — Rückkehr 8. Mai</p>
+                            <span class="app-wl-activity__time">Gestern, 16:30 Uhr</span>
+                        </div>
+                    </div>
+                    <div class="app-wl-activity">
+                        <div class="app-wl-activity__icon app-wl-activity__icon--info"><i class="bi bi-file-earmark-medical"></i></div>
+                        <div>
+                            <p class="app-wl-activity__text">Einsatzbericht <strong>#2026-089</strong> abgeschlossen</p>
+                            <span class="app-wl-activity__time">Gestern, 14:10 Uhr</span>
+                        </div>
+                    </div>
+                    <div class="app-wl-activity">
+                        <div class="app-wl-activity__icon app-wl-activity__icon--ok"><i class="bi bi-calendar-check"></i></div>
+                        <div>
+                            <p class="app-wl-activity__text">Dienstplan Mai <strong>veröffentlicht</strong></p>
+                            <span class="app-wl-activity__time">02.05., 09:00 Uhr</span>
+                        </div>
+                    </div>
+                    <div class="app-wl-activity">
+                        <div class="app-wl-activity__icon app-wl-activity__icon--err"><i class="bi bi-exclamation-triangle"></i></div>
+                        <div>
+                            <p class="app-wl-activity__text">HU-Frist <strong>ITW 1</strong> läuft in 10 Tagen ab</p>
+                            <span class="app-wl-activity__time">02.05., 06:00 Uhr (System)</span>
+                        </div>
+                    </div>
+                </div>
+
+                @* Dienstwünsche Juni 2026 *@
+                <div class="app-surface">
+                    <div class="app-card-hd">
+                        <span class="app-card-hd__label">
+                            <i class="bi bi-calendar-range"></i>
+                            Dienstwünsche Juni 2026
+                        </span>
+                        <span class="app-card-hd__meta">8 / 21</span>
+                    </div>
+
+                    <div class="app-wl-progress-wrap">
+                        <div class="app-wl-progress">
+                            <div class="app-wl-progress__fill" style="width: 38%;"></div>
+                        </div>
+                        <div class="app-wl-progress-info">
+                            <span><strong>8</strong> eingegangen</span>
+                            <span class="app-wl-progress-info__warn">Frist: 15. Mai 2026</span>
+                        </div>
+                    </div>
+
+                    <div class="app-wl-wish-grid">
+                        <div class="app-wl-wish-person app-wl-wish-person--done">
+                            <div class="app-wl-wish-person__avatar">SH</div>
+                            <div>
+                                <div class="app-wl-wish-person__name">S. Hoffmann</div>
+                                <div class="app-wl-wish-person__role">IFK</div>
+                            </div>
+                        </div>
+                        <div class="app-wl-wish-person app-wl-wish-person--done">
+                            <div class="app-wl-wish-person__avatar">TB</div>
+                            <div>
+                                <div class="app-wl-wish-person__name">T. Berger</div>
+                                <div class="app-wl-wish-person__role">IFK</div>
+                            </div>
+                        </div>
+                        <div class="app-wl-wish-person app-wl-wish-person--done">
+                            <div class="app-wl-wish-person__avatar">DM</div>
+                            <div>
+                                <div class="app-wl-wish-person__name">Dr. Meier</div>
+                                <div class="app-wl-wish-person__role">NA</div>
+                            </div>
+                        </div>
+                        <div class="app-wl-wish-person">
+                            <div class="app-wl-wish-person__avatar">KB</div>
+                            <div>
+                                <div class="app-wl-wish-person__name">K. Braun</div>
+                                <div class="app-wl-wish-person__role">ausstehend</div>
+                            </div>
+                        </div>
+                        <div class="app-wl-wish-person">
+                            <div class="app-wl-wish-person__avatar">PW</div>
+                            <div>
+                                <div class="app-wl-wish-person__name">P. Weber</div>
+                                <div class="app-wl-wish-person__role">ausstehend</div>
+                            </div>
+                        </div>
+                        <div class="app-wl-wish-person">
+                            <div class="app-wl-wish-person__avatar">MK</div>
+                            <div>
+                                <div class="app-wl-wish-person__name">M. Klein</div>
+                                <div class="app-wl-wish-person__role">ausstehend</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="app-wl-wish-footer">
+                        <span>+ 13 weitere ausstehend</span>
+                        <button type="button" class="app-btn app-btn-neutral app-btn-sm">
+                            <i class="bi bi-envelope"></i>
+                            Alle erinnern
+                        </button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
     }
     else
     {
-        <div class="app-dashboard-grid">
-            @if (hatDienstplan && istMitarbeiter)
-            {
-                <article class="app-dashboard-card">
+        @if (!hatMindestensEinModul)
+        {
+            <section class="app-surface">
+                <div class="app-surface__body">
+                    <div class="app-form-note">
+                        Für Ihre Rolle sind im Bereich Intensivtransport aktuell keine Module freigeschaltet.
+                    </div>
+                </div>
+            </section>
+        }
+        else
+        {
+            <div class="app-dashboard-grid">
+                @if (hatDienstplan && istMitarbeiter)
+                {
+                    <article class="app-dashboard-card">
                         <div class="app-dashboard-card__body">
                             <div class="app-dashboard-card__meta">Dienstplan</div>
-
                             <div class="app-dashboard-card__top">
-                                <div class="app-dashboard-card__icon">
-                                    <i class="bi bi-calendar3"></i>
-                                </div>
-
+                                <div class="app-dashboard-card__icon"><i class="bi bi-calendar3"></i></div>
                                 <div>
                                     <h2 class="app-dashboard-card__title">Dienstwünsche</h2>
-                                    <p class="app-dashboard-card__text">
-                                        Wunschabgabe und persönliche Planung im Mitarbeiterbereich öffnen.
-                                    </p>
+                                    <p class="app-dashboard-card__text">Wunschabgabe und persönliche Planung im Mitarbeiterbereich öffnen.</p>
                                 </div>
                             </div>
-
                             <div class="app-dashboard-card__footer">
                                 <a asp-area="Intensivtransport"
                                    asp-controller="DienstplanMitarbeiter"
@@ -96,25 +302,18 @@
                                 </a>
                             </div>
                         </div>
-                </article>
+                    </article>
 
-                <article class="app-dashboard-card">
+                    <article class="app-dashboard-card">
                         <div class="app-dashboard-card__body">
                             <div class="app-dashboard-card__meta">Dienstplan</div>
-
                             <div class="app-dashboard-card__top">
-                                <div class="app-dashboard-card__icon">
-                                    <i class="bi bi-clipboard2-check"></i>
-                                </div>
-
+                                <div class="app-dashboard-card__icon"><i class="bi bi-clipboard2-check"></i></div>
                                 <div>
                                     <h2 class="app-dashboard-card__title">Veröffentlichter Plan</h2>
-                                    <p class="app-dashboard-card__text">
-                                        Den freigegebenen und für Mitarbeiter sichtbaren Dienstplan öffnen.
-                                    </p>
+                                    <p class="app-dashboard-card__text">Den freigegebenen und für Mitarbeiter sichtbaren Dienstplan öffnen.</p>
                                 </div>
                             </div>
-
                             <div class="app-dashboard-card__footer">
                                 <a asp-area="Intensivtransport"
                                    asp-controller="DienstplanMitarbeiter"
@@ -128,220 +327,32 @@
                                 </a>
                             </div>
                         </div>
-                </article>
-            }
+                    </article>
+                }
 
-            @if (hatDienstplan && istWachleiter)
-            {
-                <article class="app-dashboard-card">
-                        <div class="app-dashboard-card__body">
-                            <div class="app-dashboard-card__meta">Planung</div>
-
-                            <div class="app-dashboard-card__top">
-                                <div class="app-dashboard-card__icon">
-                                    <i class="bi bi-calendar3"></i>
-                                </div>
-
-                                <div>
-                                    <h2 class="app-dashboard-card__title">Dienstplan</h2>
-                                    <p class="app-dashboard-card__text">
-                                        Wunschlage, Tagesplanung, Monatsauswertung und Steuerung des Dienstplans öffnen.
-                                    </p>
-                                </div>
-                            </div>
-
-                            <div class="app-dashboard-card__footer">
-                                <a asp-area="Intensivtransport"
-                                   asp-controller="DienstplanWachleiter"
-                                   asp-action="Index"
-                                   class="app-btn app-btn-outline-accent app-dashboard-action"
-                                   data-app-loading-link
-                                   data-app-loading-text="Dienstplan wird geöffnet...">
-                                    <i class="bi bi-box-arrow-in-right"></i>
-                                    Dienstplan öffnen
-                                    <i class="bi bi-arrow-right"></i>
-                                </a>
-                            </div>
-                        </div>
-                </article>
-
-                <article class="app-dashboard-card">
-                        <div class="app-dashboard-card__body">
-                            <div class="app-dashboard-card__meta">Planung</div>
-
-                            <div class="app-dashboard-card__top">
-                                <div class="app-dashboard-card__icon">
-                                    <i class="bi bi-clipboard2-check"></i>
-                                </div>
-
-                                <div>
-                                    <h2 class="app-dashboard-card__title">Veröffentlichter Plan</h2>
-                                    <p class="app-dashboard-card__text">
-                                        Den freigegebenen Plan aus Mitarbeitersicht öffnen und prüfen.
-                                    </p>
-                                </div>
-                            </div>
-
-                            <div class="app-dashboard-card__footer">
-                                <a asp-area="Intensivtransport"
-                                   asp-controller="DienstplanMitarbeiter"
-                                   asp-action="Plan"
-                                   class="app-btn app-btn-outline-accent app-dashboard-action"
-                                   data-app-loading-link
-                                   data-app-loading-text="Veröffentlichter Plan wird geöffnet...">
-                                    <i class="bi bi-box-arrow-in-right"></i>
-                                    Plan öffnen
-                                    <i class="bi bi-arrow-right"></i>
-                                </a>
-                            </div>
-                        </div>
-                </article>
-
-                <article class="app-dashboard-card">
-                        <div class="app-dashboard-card__body">
-                            <div class="app-dashboard-card__meta">Automatisierung</div>
-
-                            <div class="app-dashboard-card__top">
-                                <div class="app-dashboard-card__icon">
-                                    <i class="bi bi-magic"></i>
-                                </div>
-
-                                <div>
-                                    <h2 class="app-dashboard-card__title">Autoplan</h2>
-                                    <p class="app-dashboard-card__text">
-                                        Planungsvorschläge, Konflikte und automatische Besetzung öffnen.
-                                    </p>
-                                </div>
-                            </div>
-
-                            <div class="app-dashboard-card__footer">
-                                <a asp-area="Intensivtransport"
-                                   asp-controller="Autoplan"
-                                   asp-action="Index"
-                                   class="app-btn app-btn-outline-accent app-dashboard-action"
-                                   data-app-loading-link
-                                   data-app-loading-text="Autoplan wird geöffnet...">
-                                    <i class="bi bi-box-arrow-in-right"></i>
-                                    Autoplan öffnen
-                                    <i class="bi bi-arrow-right"></i>
-                                </a>
-                            </div>
-                        </div>
-                </article>
-            }
-
-            @if (hatEinsatzverwaltung)
-            {
-                <article class="app-dashboard-card">
+                @if (hatEinsatzverwaltung)
+                {
+                    <article class="app-dashboard-card">
                         <div class="app-dashboard-card__body">
                             <div class="app-dashboard-card__meta">Operativ</div>
-
                             <div class="app-dashboard-card__top">
-                                <div class="app-dashboard-card__icon">
-                                    <i class="bi bi-clipboard2-pulse"></i>
-                                </div>
-
+                                <div class="app-dashboard-card__icon"><i class="bi bi-clipboard2-pulse"></i></div>
                                 <div>
                                     <h2 class="app-dashboard-card__title">Einsatz</h2>
-                                    <p class="app-dashboard-card__text">
-                                        Einsatzübersicht, Dokumentation und laufende Bearbeitung öffnen.
-                                    </p>
+                                    <p class="app-dashboard-card__text">Einsatzübersicht, Dokumentation und laufende Bearbeitung öffnen.</p>
                                 </div>
                             </div>
-
                             <div class="app-dashboard-card__footer">
-                                <button type="button"
-                                        class="app-btn app-btn-neutral app-dashboard-action"
-                                        disabled>
+                                <button type="button" class="app-btn app-btn-neutral app-dashboard-action" disabled>
                                     <i class="bi bi-hourglass-split"></i>
                                     In Vorbereitung
                                     <i class="bi bi-arrow-right"></i>
                                 </button>
                             </div>
                         </div>
-                </article>
-            }
-            @if (darfFahrzeugmanagementSehen)
-            {
-                <article class="app-dashboard-card">
-                        <div class="app-dashboard-card__body">
-                            <div class="app-dashboard-card__meta">Fahrzeugmanagement</div>
-
-                            <div class="app-dashboard-card__top">
-                                <div class="app-dashboard-card__icon">
-                                    <i class="bi bi-tablet-landscape"></i>
-                                </div>
-
-                                <div>
-                                    <h2 class="app-dashboard-card__title">Tablet-Tracking</h2>
-                                    <p class="app-dashboard-card__text">
-                                        Tracking-Tablets verwalten und den aktuellen Live-Standort des Einsatz-Tablets öffnen.
-                                    </p>
-                                </div>
-                            </div>
-
-                            <div class="app-dashboard-card__footer">
-                                <div class="d-flex flex-wrap gap-2">
-                                    <a asp-area="Intensivtransport"
-                                       asp-controller="TrackingGeraete"
-                                       asp-action="Index"
-                                       class="app-btn app-btn-outline-accent app-dashboard-action"
-                                       data-app-loading-link
-                                       data-app-loading-text="Tablet-Verwaltung wird geöffnet...">
-                                        <i class="bi bi-tablet-landscape"></i>
-                                        Tablets
-                                        <i class="bi bi-arrow-right"></i>
-                                    </a>
-
-                                    <a asp-area="Intensivtransport"
-                                       asp-controller="TabletLiveStandort"
-                                       asp-action="Index"
-                                       class="app-btn app-btn-outline-accent app-dashboard-action"
-                                       data-app-loading-link
-                                       data-app-loading-text="Live-Standort wird geöffnet...">
-                                        <i class="bi bi-geo-alt-fill"></i>
-                                        Live-Standort
-                                        <i class="bi bi-arrow-right"></i>
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
-                </article>
-            }
-            @if (darfPersonaldatenSehen)
-            {
-                <article class="app-dashboard-card">
-                        <div class="app-dashboard-card__body">
-                            <div class="app-dashboard-card__meta">Verwaltung</div>
-
-                            <div class="app-dashboard-card__top">
-                                <div class="app-dashboard-card__icon">
-                                    <i class="bi bi-people"></i>
-                                </div>
-
-                                <div>
-                                    <h2 class="app-dashboard-card__title">Personal</h2>
-                                    <p class="app-dashboard-card__text">
-                                        Mitarbeiter, fachliche Profile und Qualifikationen verwalten.
-                                    </p>
-                                </div>
-                            </div>
-
-                            <div class="app-dashboard-card__footer">
-                                <a asp-area="Intensivtransport"
-                                   asp-controller="Personal"
-                                   asp-action="Index"
-                                   class="app-btn app-btn-outline-accent app-dashboard-action"
-                                   data-app-loading-link
-                                   data-app-loading-text="Personal wird geöffnet...">
-                                    <i class="bi bi-person-badge"></i>
-                                    Personal öffnen
-                                    <i class="bi bi-arrow-right"></i>
-                                </a>
-                            </div>
-                        </div>
-                </article>
-            }
-        </div>
+                    </article>
+                }
+            </div>
+        }
     }
 </div>
