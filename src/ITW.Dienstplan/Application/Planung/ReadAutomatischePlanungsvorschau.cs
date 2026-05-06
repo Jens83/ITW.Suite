@@ -290,6 +290,10 @@ public sealed class ReadAutomatischePlanungsvorschauService
             ? null
             : new ReadAutoplanTeamkombinationsScoreService(_autoplanLernereignisRepository);
 
+        var slotPraeferenzService = _autoplanLernereignisRepository is null
+            ? null
+            : new ReadAutoplanSlotPraeferenzService(_autoplanLernereignisRepository);
+
         foreach (var datum in planbareTage)
         {
             var tag = tage[datum];
@@ -317,6 +321,7 @@ public sealed class ReadAutomatischePlanungsvorschauService
                 kandidaten.Values,
                 datum,
                 teamkombinationsScoreService,
+                slotPraeferenzService,
                 cancellationToken);
 
             await FuelleNotfallsanitaeterSlots(
@@ -325,6 +330,7 @@ public sealed class ReadAutomatischePlanungsvorschauService
                 kandidaten.Values,
                 datum,
                 teamkombinationsScoreService,
+                slotPraeferenzService,
                 cancellationToken);
 
             if (tag.FreieArztSlots > 0 || tag.FreieNotfallsanitaeterSlots > 0)
@@ -629,6 +635,7 @@ public sealed class ReadAutomatischePlanungsvorschauService
      IEnumerable<KandidatState> kandidaten,
      DateOnly datum,
      ReadAutoplanTeamkombinationsScoreService? teamkombinationsScoreService,
+     ReadAutoplanSlotPraeferenzService? slotPraeferenzService,
      CancellationToken cancellationToken)
     {
         while (tag.FreieArztSlots > 0)
@@ -640,6 +647,7 @@ public sealed class ReadAutomatischePlanungsvorschauService
                 SlotTyp.Arzt,
                 datum,
                 teamkombinationsScoreService,
+                slotPraeferenzService,
                 cancellationToken);
 
             if (entscheidung is null)
@@ -662,6 +670,7 @@ public sealed class ReadAutomatischePlanungsvorschauService
     IEnumerable<KandidatState> kandidaten,
     DateOnly datum,
     ReadAutoplanTeamkombinationsScoreService? teamkombinationsScoreService,
+    ReadAutoplanSlotPraeferenzService? slotPraeferenzService,
     CancellationToken cancellationToken)
     {
         while (tag.FreieNotfallsanitaeterSlots > 0)
@@ -673,6 +682,7 @@ public sealed class ReadAutomatischePlanungsvorschauService
                 SlotTyp.Notfallsanitaeter,
                 datum,
                 teamkombinationsScoreService,
+                slotPraeferenzService,
                 cancellationToken);
 
             if (entscheidung is null)
@@ -706,6 +716,7 @@ public sealed class ReadAutomatischePlanungsvorschauService
     SlotTyp slotTyp,
     DateOnly datum,
     ReadAutoplanTeamkombinationsScoreService? teamkombinationsScoreService,
+    ReadAutoplanSlotPraeferenzService? slotPraeferenzService,
     CancellationToken cancellationToken)
     {
         var aktuelleTageskritikalitaet = ErmittleTageskritikalitaet(
@@ -726,6 +737,13 @@ public sealed class ReadAutomatischePlanungsvorschauService
             teamkombinationsScoreService,
             cancellationToken);
 
+        var slotPraeferenzBonusLookup = await ErmittleSlotPraeferenzBonusLookupAsync(
+            zulassigeKandidaten,
+            tag,
+            slotTyp,
+            slotPraeferenzService,
+            cancellationToken);
+
         var entscheidung = zulassigeKandidaten
             .Select(x =>
             {
@@ -735,6 +753,7 @@ public sealed class ReadAutomatischePlanungsvorschauService
                 var blockBonus = ErmittleBlockBonus(x, datum);
 
                 teamLernbonusLookup.TryGetValue(x.Mitarbeiter.UserId, out var teamLernBonus);
+                slotPraeferenzBonusLookup.TryGetValue(x.Mitarbeiter.UserId, out var slotPraeferenzBonus);
 
                 return new
                 {
@@ -744,6 +763,7 @@ public sealed class ReadAutomatischePlanungsvorschauService
                     AlternativenVorteil = alternativenVorteil,
                     BlockBonus = blockBonus,
                     TeamLernBonus = teamLernBonus,
+                    SlotPraeferenzBonus = slotPraeferenzBonus,
                     GesamtZuweisungen = x.GesamtZuweisungen,
                     AnzeigeName = x.Mitarbeiter.AnzeigeName,
                     Entscheidung = BaueAuswahlentscheidung(
@@ -752,7 +772,8 @@ public sealed class ReadAutomatischePlanungsvorschauService
                         aktuelleTageskritikalitaet,
                         alternativenVorteil,
                         blockBonus,
-                        teamLernBonus)
+                        teamLernBonus,
+                        slotPraeferenzBonus)
                 };
             })
             .OrderBy(x => x.BasisPrioritaet)
@@ -760,6 +781,7 @@ public sealed class ReadAutomatischePlanungsvorschauService
             .ThenBy(x => x.AlternativenVorteil)
             .ThenByDescending(x => x.BlockBonus)
             .ThenByDescending(x => x.TeamLernBonus)
+            .ThenByDescending(x => x.SlotPraeferenzBonus)
             .ThenBy(x => x.GesamtZuweisungen)
             .ThenBy(x => x.AnzeigeName, StringComparer.OrdinalIgnoreCase)
             .FirstOrDefault();
@@ -773,7 +795,8 @@ public sealed class ReadAutomatischePlanungsvorschauService
     int aktuelleTageskritikalitaet,
     int alternativenVorteil,
     int blockBonus,
-    decimal teamLernBonus)
+    decimal teamLernBonus,
+    decimal slotPraeferenzBonus)
     {
         if (kandidat.IstFreelancer)
         {
@@ -784,7 +807,7 @@ public sealed class ReadAutomatischePlanungsvorschauService
             return new Auswahlentscheidung(
                 kandidat,
                 AutomatischePlanungZuweisungsArt.FreelancerNachTageskritik,
-                ErweitereBegruendungMitTeamLernbonus(begruendung, teamLernBonus));
+                ErweitereBegruendungMitLernboni(begruendung, teamLernBonus, slotPraeferenzBonus));
         }
 
         if (kandidat.IstHonorarkraft)
@@ -792,9 +815,10 @@ public sealed class ReadAutomatischePlanungsvorschauService
             return new Auswahlentscheidung(
                 kandidat,
                 AutomatischePlanungZuweisungsArt.HonorarkraftWunsch,
-                ErweitereBegruendungMitTeamLernbonus(
+                ErweitereBegruendungMitLernboni(
                     "Wunsch der Honorarkraft wurde berücksichtigt.",
-                    teamLernBonus));
+                    teamLernBonus,
+                    slotPraeferenzBonus));
         }
 
         if (kandidat.IstFestangestellt && kandidat.HatWunschAm(datum))
@@ -806,25 +830,28 @@ public sealed class ReadAutomatischePlanungsvorschauService
                 return new Auswahlentscheidung(
                     kandidat,
                     AutomatischePlanungZuweisungsArt.MitarbeiterWunschblock,
-                    ErweitereBegruendungMitTeamLernbonus(
+                    ErweitereBegruendungMitLernboni(
                         $"Zusammenhängender Wunschblock wurde bevorzugt berücksichtigt. Blocklänge: {blockLaenge} Tage.",
-                        teamLernBonus));
+                        teamLernBonus,
+                        slotPraeferenzBonus));
             }
 
             return new Auswahlentscheidung(
                 kandidat,
                 AutomatischePlanungZuweisungsArt.MitarbeiterWunsch,
-                ErweitereBegruendungMitTeamLernbonus(
+                ErweitereBegruendungMitLernboni(
                     "Mitarbeiterwunsch wurde berücksichtigt.",
-                    teamLernBonus));
+                    teamLernBonus,
+                    slotPraeferenzBonus));
         }
 
         return new Auswahlentscheidung(
             kandidat,
             AutomatischePlanungZuweisungsArt.MitarbeiterLueckenfueller,
-            ErweitereBegruendungMitTeamLernbonus(
+            ErweitereBegruendungMitLernboni(
                 "Als Lückenfüller gesetzt, weil kein höher priorisierter Wunschkandidat verfügbar war.",
-                teamLernBonus));
+                teamLernBonus,
+                slotPraeferenzBonus));
     }
 
     private async Task<Dictionary<string, decimal>> ErmittleTeamLernbonusLookupAsync(
@@ -907,21 +934,82 @@ public sealed class ReadAutomatischePlanungsvorschauService
             : DienstbesetzungsSlotCode.Notfallsanitaeter2;
     }
 
-    private static string ErweitereBegruendungMitTeamLernbonus(
-    string begruendung,
-    decimal teamLernBonus)
+    private async Task<Dictionary<string, decimal>> ErmittleSlotPraeferenzBonusLookupAsync(
+    IReadOnlyCollection<KandidatState> kandidaten,
+    PlanungstagBuilder tag,
+    SlotTyp slotTyp,
+    ReadAutoplanSlotPraeferenzService? slotPraeferenzService,
+    CancellationToken cancellationToken)
     {
-        if (teamLernBonus == 0m)
+        if (slotPraeferenzService is null || kandidaten.Count == 0)
         {
-            return begruendung;
+            return new Dictionary<string, decimal>(StringComparer.OrdinalIgnoreCase);
         }
+
+        // Nur aktiv wenn noch kein Team-Kontext vorhanden ist.
+        // Sobald mindestens ein Slot besetzt ist, übernimmt der TeamLernBonus die Führung.
+        if (HatRelevantenTeamkontext(tag, slotTyp))
+        {
+            return new Dictionary<string, decimal>(StringComparer.OrdinalIgnoreCase);
+        }
+
+        var kandidatenUserIds = kandidaten
+            .Select(x => x.Mitarbeiter.UserId)
+            .Where(x => !string.IsNullOrWhiteSpace(x))
+            .Distinct(StringComparer.OrdinalIgnoreCase)
+            .ToArray();
+
+        if (kandidatenUserIds.Length == 0)
+        {
+            return new Dictionary<string, decimal>(StringComparer.OrdinalIgnoreCase);
+        }
+
+        var besetzungsSlotCode = ErmittleBesetzungsSlotCodeFuerAktuelleAuswahl(tag, slotTyp);
+
+        var scoreResult = await slotPraeferenzService.ExecuteAsync(
+            new ReadAutoplanSlotPraeferenzQuery(
+                BesetzungsSlotCode: besetzungsSlotCode,
+                KandidatenUserIds: kandidatenUserIds,
+                BewertungsDatum: tag.Datum),
+            cancellationToken);
+
+        if (!scoreResult.IsSuccess)
+        {
+            return new Dictionary<string, decimal>(StringComparer.OrdinalIgnoreCase);
+        }
+
+        return scoreResult.Eintraege
+            .Where(x => x.PraeferenzBonus > 0m)
+            .ToDictionary(
+                x => x.KandidatUserId,
+                x => x.PraeferenzBonus,
+                StringComparer.OrdinalIgnoreCase);
+    }
+
+    private static string ErweitereBegruendungMitLernboni(
+    string begruendung,
+    decimal teamLernBonus,
+    decimal slotPraeferenzBonus)
+    {
+        var teile = new List<string>();
 
         if (teamLernBonus > 0m)
         {
-            return $"{begruendung} Lernbonus aus ähnlicher manuell bestätigter Teamkonstellation: {teamLernBonus:0.##}.";
+            teile.Add($"Lernbonus aus ähnlicher manuell bestätigter Teamkonstellation: {teamLernBonus:0.##}");
+        }
+        else if (teamLernBonus < 0m)
+        {
+            teile.Add($"Lernmalus aus ähnlicher manuell korrigierter Teamkonstellation: {Math.Abs(teamLernBonus):0.##}");
         }
 
-        return $"{begruendung} Lernmalus aus ähnlicher manuell korrigierter Teamkonstellation: {Math.Abs(teamLernBonus):0.##}.";
+        if (slotPraeferenzBonus > 0m)
+        {
+            teile.Add($"Slotpräferenz aus historischer Planung: {slotPraeferenzBonus:0.##}");
+        }
+
+        return teile.Count == 0
+            ? begruendung
+            : $"{begruendung} {string.Join(". ", teile)}.";
     }
 
 
