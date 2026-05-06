@@ -1,5 +1,6 @@
 ﻿using ITW.Application.Abstractions.DateTime;
 using ITW.Application.Aktivitaet;
+using ITW.Application.Aufgaben;
 using ITW.Application.Abstractions.Identity;
 using ITW.Application.Abstractions.Persistence;
 using ITW.Application.Organisation.Contracts;
@@ -59,12 +60,15 @@ public static class InfrastructureServiceCollectionExtensions
         services.AddScoped<IFahrzeugPruefungRepository, FahrzeugPruefungRepository>();
 
         services.AddScoped<IAktivitaetsLogRepository, AktivitaetsLogRepository>();
+        services.AddScoped<IAufgabeRepository, AufgabeRepository>();
 
         services.AddScoped<OrganisationSchemaBootstrapper>();
         services.AddScoped<DienstplanSchemaBootstrapper>();
         services.AddScoped<PersonnelSchemaBootstrapper>();
         services.AddScoped<PersonnelUrlaubSchemaBootstrapper>();
         services.AddScoped<FahrzeugmanagementSchemaBootstrapper>();
+        services.AddScoped<AktivitaetsLogSchemaBootstrapper>();
+        services.AddScoped<AufgabenSchemaBootstrapper>();
 
         services.AddSingleton<IMitarbeiterDokumentDateiSpeicher, MitarbeiterDokumentDateiSpeicher>();
         services.AddSingleton<IDateTimeProvider, SystemDateTimeProvider>();

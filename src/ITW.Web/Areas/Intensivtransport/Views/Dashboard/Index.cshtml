@@ -30,18 +30,85 @@
     {
         <div class="app-wl-grid">
 
-            @* Offene Aufgaben — Phase B (Platzhalter) *@
+            @* Offene Aufgaben *@
             <div class="app-surface">
                 <div class="app-card-hd">
                     <span class="app-card-hd__label">
                         <i class="bi bi-check2-square"></i>
                         Offene Aufgaben
                     </span>
-                    <span class="app-card-hd__meta">demnächst</span>
+                    @if (Model.OffeneAufgaben.Count > 0)
+                    {
+                        <span class="app-card-hd__meta">@Model.OffeneAufgaben.Count offen</span>
+                    }
                 </div>
-                <div style="padding: var(--sp-pad); color: var(--outline); font-size: var(--type-body-sm-size); text-align: center;">
-                    <i class="bi bi-hourglass-split" style="font-size: 1.5rem; display: block; margin-bottom: .5rem;"></i>
-                    Aufgabenverwaltung wird in Phase B aktiviert.
+
+                @if (Model.OffeneAufgaben.Count == 0)
+                {
+                    <div style="padding: var(--sp-pad); color: var(--outline); font-size: var(--type-body-sm-size); text-align: center;">
+                        <i class="bi bi-check2-all" style="font-size: 1.5rem; display: block; margin-bottom: .5rem;"></i>
+                        Keine offenen Aufgaben.
+                    </div>
+                }
+                else
+                {
+                    <ul class="app-task-list">
+                        @foreach (var aufgabe in Model.OffeneAufgaben)
+                        {
+                            <li class="app-task-item @(aufgabe.IstUeberfaellig ? "app-task-item--ueberfaellig" : "")">
+                                <form asp-action="AufgabeErledigen" asp-controller="Dashboard" asp-area="Intensivtransport"
+                                      method="post" class="app-task-item__check-form">
+                                    <input type="hidden" name="aufgabeId" value="@aufgabe.Id" />
+                                    <button type="submit" class="app-task-item__check" title="Als erledigt markieren"
+                                            aria-label="Aufgabe erledigen">
+                                        <i class="bi bi-circle"></i>
+                                    </button>
+                                </form>
+                                <div class="app-task-item__body">
+                                    <span class="app-task-item__titel">@aufgabe.Titel</span>
+                                    <div class="app-task-item__meta">
+                                        @if (aufgabe.FaelligkeitAnzeige is not null)
+                                        {
+                                            <span class="app-task-item__faelligkeit @(aufgabe.IstUeberfaellig ? "app-task-item__faelligkeit--warn" : "")">
+                                                <i class="bi bi-clock"></i>
+                                                @aufgabe.FaelligkeitAnzeige
+                                            </span>
+                                        }
+                                        @if (aufgabe.IstSystem)
+                                        {
+                                            <span class="app-task-item__badge">System</span>
+                                        }
+                                        @if (aufgabe.PrioritaetKlasse != "normal")
+                                        {
+                                            <span class="app-task-item__prio app-task-item__prio--@aufgabe.PrioritaetKlasse">
+                                                @(aufgabe.PrioritaetKlasse == "dringend" ? "Dringend" : "Hoch")
+                                            </span>
+                                        }
+                                    </div>
+                                </div>
+                            </li>
+                        }
+                    </ul>
+                }
+
+                @* Neue Aufgabe erstellen *@
+                <div class="app-task-new">
+                    <form asp-action="AufgabeErstellen" asp-controller="Dashboard" asp-area="Intensivtransport"
+                          method="post" class="app-task-new__form" id="task-new-form">
+                        <input type="text" name="titel" class="app-task-new__input"
+                               placeholder="Neue Aufgabe hinzufügen…"
+                               maxlength="200"
+                               autocomplete="off" />
+                        <select name="prioritaet" class="app-task-new__prio" title="Priorität">
+                            <option value="0">Normal</option>
+                            <option value="1">Hoch</option>
+                            <option value="2">Dringend</option>
+                        </select>
+                        <input type="date" name="faelligkeitsdatum" class="app-task-new__date" title="Fälligkeitsdatum (optional)" />
+                        <button type="submit" class="app-btn app-btn-primary app-btn-sm">
+                            <i class="bi bi-plus-lg"></i>
+                        </button>
+                    </form>
                 </div>
             </div>
 

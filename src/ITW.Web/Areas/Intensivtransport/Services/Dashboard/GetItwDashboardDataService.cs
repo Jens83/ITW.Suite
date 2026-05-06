@@ -1,5 +1,6 @@
 using ITW.Application.Abstractions.Persistence;
 using ITW.Application.Aktivitaet;
+using ITW.Application.Aufgaben;
 using ITW.Application.Organisation.Contracts;
 using ITW.Dienstplan.Application.Contracts;
 using ITW.Domain.Organisation.Enums;
@@ -14,37 +15,44 @@ public sealed class GetItwDashboardDataService
     private readonly IDienstwunschRepository _wuensche;
     private readonly IBenutzerBereichszuordnungRepository _zuordnungen;
     private readonly IAllgemeinesMitarbeiterprofilRepository _profile;
+    private readonly IAufgabeRepository _aufgaben;
 
     public GetItwDashboardDataService(
         IAktivitaetsLogRepository aktivitaetsLog,
         IDienstplanPeriodeRepository perioden,
         IDienstwunschRepository wuensche,
         IBenutzerBereichszuordnungRepository zuordnungen,
-        IAllgemeinesMitarbeiterprofilRepository profile)
+        IAllgemeinesMitarbeiterprofilRepository profile,
+        IAufgabeRepository aufgaben)
     {
         ArgumentNullException.ThrowIfNull(aktivitaetsLog);
         ArgumentNullException.ThrowIfNull(perioden);
         ArgumentNullException.ThrowIfNull(wuensche);
         ArgumentNullException.ThrowIfNull(zuordnungen);
         ArgumentNullException.ThrowIfNull(profile);
+        ArgumentNullException.ThrowIfNull(aufgaben);
 
         _aktivitaetsLog = aktivitaetsLog;
         _perioden       = perioden;
         _wuensche       = wuensche;
         _zuordnungen    = zuordnungen;
         _profile        = profile;
+        _aufgaben       = aufgaben;
     }
 
     public async Task<ItwDashboardDataResult> ExecuteAsync(CancellationToken cancellationToken = default)
     {
         var aktivitaetTask = _aktivitaetsLog.GetByBereichAsync(
             OrganisationsbereichCode.Intensivtransport, 6, cancellationToken);
-        var periodeTask = _perioden.GetAktuelleOffeneAsync(cancellationToken);
+        var periodeTask  = _perioden.GetAktuelleOffeneAsync(cancellationToken);
+        var aufgabenTask = _aufgaben.GetOffeneByBereichAsync(
+            OrganisationsbereichCode.Intensivtransport, cancellationToken);
 
-        await Task.WhenAll(aktivitaetTask, periodeTask);
+        await Task.WhenAll(aktivitaetTask, periodeTask, aufgabenTask);
 
         var aktivitaeten  = await aktivitaetTask;
         var aktivePeriode = await periodeTask;
+        var offeneAufgaben = await aufgabenTask;
 
         ItwWunschphaseSummaryViewModel? wunschphase = null;
 
@@ -119,7 +127,20 @@ public sealed class GetItwDashboardDataService
             })
             .ToArray();
 
-        return new ItwDashboardDataResult(aktivitaetVms, wunschphase);
+        var heute = DateOnly.FromDateTime(DateTime.Today);
+        var aufgabeVms = offeneAufgaben
+            .Select(a => new ItwAufgabeViewModel
+            {
+                Id                 = a.Id,
+                Titel              = a.Titel,
+                PrioritaetKlasse   = PrioritaetZuKlasse(a.Prioritaet),
+                IstSystem          = a.Quelle == AufgabeQuelle.System,
+                FaelligkeitAnzeige = FormatFaelligkeit(a.Faelligkeitsdatum),
+                IstUeberfaellig    = a.Faelligkeitsdatum.HasValue && a.Faelligkeitsdatum.Value < heute,
+            })
+            .ToArray();
+
+        return new ItwDashboardDataResult(aktivitaetVms, wunschphase, aufgabeVms);
     }
 
     private static string BuildKurzname(string vorname, string nachname)
@@ -139,6 +160,28 @@ public sealed class GetItwDashboardDataService
         if (v.Length == 0) return n.Length >= 2 ? n[..2].ToUpperInvariant() : n.ToUpperInvariant();
         if (n.Length == 0) return v.Length >= 2 ? v[..2].ToUpperInvariant() : v.ToUpperInvariant();
         return $"{char.ToUpperInvariant(v[0])}{char.ToUpperInvariant(n[0])}";
+    }
+
+    private static string PrioritaetZuKlasse(AufgabePrioritaet p) => p switch
+    {
+        AufgabePrioritaet.Hoch     => "hoch",
+        AufgabePrioritaet.Dringend => "dringend",
+        _                          => "normal"
+    };
+
+    private static string? FormatFaelligkeit(DateOnly? datum)
+    {
+        if (datum is null) return null;
+        var heute = DateOnly.FromDateTime(DateTime.Today);
+        var diff  = datum.Value.DayNumber - heute.DayNumber;
+        return diff switch
+        {
+            < 0  => $"seit {Math.Abs(diff)} Tag{(Math.Abs(diff) == 1 ? "" : "en")}",
+            0    => "heute",
+            1    => "morgen",
+            <= 7 => $"in {diff} Tagen",
+            _    => datum.Value.ToString("dd.MM.yyyy")
+        };
     }
 
     private static string KategorieZuCssKlasse(AktivitaetsKategorie k) => k switch
@@ -168,4 +211,5 @@ public sealed class GetItwDashboardDataService
 
 public sealed record ItwDashboardDataResult(
     IReadOnlyList<ItwAktivitaetViewModel> LetzteAktivitaeten,
-    ItwWunschphaseSummaryViewModel? AktuelleWunschphase);
+    ItwWunschphaseSummaryViewModel? AktuelleWunschphase,
+    IReadOnlyList<ItwAufgabeViewModel> OffeneAufgaben);

@@ -18,6 +18,9 @@ public sealed class ItwDashboardViewModel
         = Array.Empty<ItwAktivitaetViewModel>();
 
     public ItwWunschphaseSummaryViewModel? AktuelleWunschphase { get; init; }
+
+    public IReadOnlyList<ItwAufgabeViewModel> OffeneAufgaben { get; init; }
+        = Array.Empty<ItwAufgabeViewModel>();
 }
 
 public sealed class ItwAktivitaetViewModel
@@ -41,6 +44,16 @@ public sealed class ItwWunschphaseSummaryViewModel
 
     public IReadOnlyList<ItwWunschPersonViewModel> AngezeigtePersonen { get; init; }
         = Array.Empty<ItwWunschPersonViewModel>();
+}
+
+public sealed class ItwAufgabeViewModel
+{
+    public Guid   Id                 { get; init; }
+    public string Titel              { get; init; } = "";
+    public string PrioritaetKlasse   { get; init; } = "";   // "normal" | "hoch" | "dringend"
+    public bool   IstSystem          { get; init; }
+    public string? FaelligkeitAnzeige { get; init; }
+    public bool   IstUeberfaellig    { get; init; }
 }
 
 public sealed class ItwWunschPersonViewModel

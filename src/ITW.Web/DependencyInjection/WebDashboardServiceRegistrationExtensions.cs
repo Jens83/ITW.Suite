@@ -8,6 +8,9 @@ public static class WebDashboardServiceRegistrationExtensions
     public static IServiceCollection AddWebDashboardServices(this IServiceCollection services)
     {
         services.AddScoped<GetItwDashboardDataService>();
+        services.AddScoped<SystemAufgabeGeneratorService>();
+        services.AddScoped<AufgabeErledigenService>();
+        services.AddScoped<AufgabeErstellenService>();
 
         return services;
     }

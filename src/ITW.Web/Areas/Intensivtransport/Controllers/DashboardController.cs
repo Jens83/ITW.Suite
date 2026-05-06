@@ -1,3 +1,4 @@
+using ITW.Application.Aufgaben;
 using ITW.Application.Organisation.Contracts;
 using ITW.Web.Areas.Intensivtransport.Services.Dashboard;
 using ITW.Web.Areas.Intensivtransport.ViewModels;
@@ -11,14 +12,27 @@ namespace ITW.Web.Areas.Intensivtransport.Controllers;
 public sealed class DashboardController : BereichsDashboardControllerBase
 {
     private readonly GetItwDashboardDataService _dashboardDataService;
+    private readonly SystemAufgabeGeneratorService _aufgabeGenerator;
+    private readonly AufgabeErledigenService _aufgabeErledigen;
+    private readonly AufgabeErstellenService _aufgabeErstellen;
 
     public DashboardController(
         ICurrentUserContextAccessor currentUserContextAccessor,
-        GetItwDashboardDataService dashboardDataService)
+        GetItwDashboardDataService dashboardDataService,
+        SystemAufgabeGeneratorService aufgabeGenerator,
+        AufgabeErledigenService aufgabeErledigen,
+        AufgabeErstellenService aufgabeErstellen)
         : base(currentUserContextAccessor)
     {
         ArgumentNullException.ThrowIfNull(dashboardDataService);
+        ArgumentNullException.ThrowIfNull(aufgabeGenerator);
+        ArgumentNullException.ThrowIfNull(aufgabeErledigen);
+        ArgumentNullException.ThrowIfNull(aufgabeErstellen);
+
         _dashboardDataService = dashboardDataService;
+        _aufgabeGenerator     = aufgabeGenerator;
+        _aufgabeErledigen     = aufgabeErledigen;
+        _aufgabeErstellen     = aufgabeErstellen;
     }
 
     protected override OrganisationsbereichCode Bereich => OrganisationsbereichCode.Intensivtransport;
@@ -44,7 +58,10 @@ public sealed class DashboardController : BereichsDashboardControllerBase
 
         ItwDashboardDataResult? dashboardData = null;
         if (istWachleiter)
+        {
+            await _aufgabeGenerator.AktualisierenAsync(cancellationToken);
             dashboardData = await _dashboardDataService.ExecuteAsync(cancellationToken);
+        }
 
         var viewModel = new ItwDashboardViewModel
         {
@@ -58,9 +75,58 @@ public sealed class DashboardController : BereichsDashboardControllerBase
                                           || darfPersonaldatenSehen || darfFahrzeugmgmtSehen,
             LetzteAktivitaeten          = dashboardData?.LetzteAktivitaeten
                                           ?? Array.Empty<ItwAktivitaetViewModel>(),
-            AktuelleWunschphase         = dashboardData?.AktuelleWunschphase
+            AktuelleWunschphase         = dashboardData?.AktuelleWunschphase,
+            OffeneAufgaben              = dashboardData?.OffeneAufgaben
+                                          ?? Array.Empty<ItwAufgabeViewModel>(),
         };
 
         return View(viewModel);
+    }
+
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> AufgabeErledigen(
+        Guid aufgabeId,
+        CancellationToken cancellationToken)
+    {
+        var redirectResult = await PruefeBereichszugriffAsync(cancellationToken);
+        if (redirectResult is not null)
+            return redirectResult;
+
+        await _aufgabeErledigen.ExecuteAsync(
+            aufgabeId,
+            OrganisationsbereichCode.Intensivtransport,
+            cancellationToken);
+
+        return RedirectToAction(nameof(Index));
+    }
+
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> AufgabeErstellen(
+        string titel,
+        AufgabePrioritaet prioritaet,
+        string? faelligkeitsdatum,
+        CancellationToken cancellationToken)
+    {
+        var redirectResult = await PruefeBereichszugriffAsync(cancellationToken);
+        if (redirectResult is not null)
+            return redirectResult;
+
+        DateOnly? faelligkeit = null;
+        if (!string.IsNullOrWhiteSpace(faelligkeitsdatum) &&
+            DateOnly.TryParseExact(faelligkeitsdatum, "yyyy-MM-dd",
+                System.Globalization.CultureInfo.InvariantCulture,
+                System.Globalization.DateTimeStyles.None, out var parsed))
+        {
+            faelligkeit = parsed;
+        }
+
+        await _aufgabeErstellen.ExecuteAsync(
+            new AufgabeErstellenCommand(titel, prioritaet, faelligkeit),
+            OrganisationsbereichCode.Intensivtransport,
+            cancellationToken);
+
+        return RedirectToAction(nameof(Index));
     }
 }
