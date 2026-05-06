@@ -17,11 +17,556 @@
 .app-plan-page,
 .app-report-page,
 .app-wunsch-page,
-.app-autoplan-page {
+.app-autoplan-page,
+.app-pm-page {
     display: flex;
     flex-direction: column;
     gap: 1.35rem;
     padding-top: 0.25rem;
+}
+
+
+/* ==========================================================================
+   03.01a Perioden-Management (WachleiterIndex – redesigned)
+   ========================================================================== */
+
+/* Header ------------------------------------------------------------------ */
+
+.app-pm-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 1.5rem;
+    flex-wrap: wrap;
+}
+
+.app-pm-header__eyebrow {
+    margin: 0 0 0.35rem;
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.07em;
+    text-transform: uppercase;
+    color: var(--outline);
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+}
+
+.app-pm-header__title {
+    margin: 0 0 0.3rem;
+    font-size: 1.6rem;
+    font-weight: 800;
+    color: var(--on-s);
+    line-height: 1.2;
+}
+
+.app-pm-header__desc {
+    margin: 0;
+    font-size: 0.92rem;
+    color: var(--outline);
+    line-height: 1.5;
+}
+
+.app-pm-header__actions {
+    display: flex;
+    gap: 0.625rem;
+    flex-shrink: 0;
+    align-items: center;
+    padding-top: 0.25rem;
+}
+
+/* Stats bar --------------------------------------------------------------- */
+
+.app-pm-stats {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    padding: 0.875rem 1.25rem;
+    background: var(--surface-0);
+    border: 1px solid var(--outline-v);
+    border-radius: var(--r-lg);
+    box-shadow: var(--sh-card);
+}
+
+.app-pm-stat {
+    display: flex;
+    flex-direction: column;
+    gap: 0.15rem;
+}
+
+.app-pm-stat__val {
+    font-size: 1.35rem;
+    font-weight: 800;
+    color: var(--on-s);
+    line-height: 1;
+}
+
+.app-pm-stat__val--active { color: var(--pri); }
+.app-pm-stat__val--done   { color: var(--ter); }
+
+.app-pm-stat__lbl {
+    font-size: 0.72rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--outline);
+}
+
+.app-pm-stat__sep {
+    width: 1px;
+    height: 2rem;
+    background: var(--outline-v);
+    flex-shrink: 0;
+}
+
+/* Period list ------------------------------------------------------------- */
+
+.app-pm-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.app-pm-card {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto auto;
+    align-items: center;
+    gap: 1.5rem;
+    padding: 1.25rem 1.5rem;
+    background: var(--surface-0);
+    border: 1px solid var(--outline-v);
+    border-left: 3px solid var(--outline-v);
+    border-radius: var(--r-xl);
+    box-shadow: var(--sh-card);
+    transition: box-shadow var(--transition-base), border-color var(--transition-base);
+}
+
+.app-pm-card:hover {
+    box-shadow: var(--sh-hover);
+}
+
+.app-pm-card--active {
+    border-left-color: var(--pri);
+    background: color-mix(in srgb, var(--pri) 3%, var(--surface-0));
+}
+
+.app-pm-card--released {
+    border-left-color: var(--ter);
+    background: color-mix(in srgb, var(--ter) 3%, var(--surface-0));
+}
+
+.app-pm-card__left {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    min-width: 0;
+}
+
+/* Date tile */
+.app-pm-tile {
+    flex-shrink: 0;
+    width: 56px;
+    height: 56px;
+    border-radius: var(--r-lg);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.1rem;
+    background: var(--surface-2);
+    border: 1px solid var(--outline-v);
+    color: var(--outline);
+}
+
+.app-pm-tile--active {
+    background: var(--pri);
+    border-color: transparent;
+    color: var(--on-pri);
+    box-shadow: 0 4px 12px color-mix(in srgb, var(--pri) 35%, transparent);
+}
+
+.app-pm-tile--released {
+    background: var(--ter);
+    border-color: transparent;
+    color: var(--on-ter);
+    box-shadow: 0 4px 12px color-mix(in srgb, var(--ter) 35%, transparent);
+}
+
+.app-pm-tile__month {
+    font-size: 0.65rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    line-height: 1;
+}
+
+.app-pm-tile__year {
+    font-size: 1rem;
+    font-weight: 800;
+    line-height: 1;
+}
+
+.app-pm-card__id {
+    min-width: 0;
+}
+
+.app-pm-card__name {
+    margin: 0 0 0.2rem;
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--on-s);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.app-pm-card__since {
+    margin: 0;
+    font-size: 0.8rem;
+    color: var(--outline);
+}
+
+.app-pm-card__since-sep { margin: 0 0.3em; }
+
+/* Workflow steps ---------------------------------------------------------- */
+
+.app-pm-workflow {
+    display: flex;
+    align-items: center;
+    gap: 0;
+    flex-shrink: 0;
+}
+
+.app-pm-step {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.35rem;
+    width: 6rem;
+}
+
+.app-pm-step__dot {
+    width: 0.75rem;
+    height: 0.75rem;
+    border-radius: 50%;
+    border: 2px solid var(--outline-v);
+    background: var(--surface-1);
+    transition: background var(--transition-fast), border-color var(--transition-fast);
+}
+
+.app-pm-step--current .app-pm-step__dot {
+    border-color: var(--pri);
+    background: var(--pri);
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--pri) 20%, transparent);
+}
+
+.app-pm-step--done .app-pm-step__dot {
+    border-color: var(--ter);
+    background: var(--ter);
+}
+
+.app-pm-step__label {
+    font-size: 0.68rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--outline);
+    text-align: center;
+    line-height: 1.2;
+    white-space: nowrap;
+}
+
+.app-pm-step--current .app-pm-step__label { color: var(--pri); font-weight: 700; }
+.app-pm-step--done    .app-pm-step__label { color: var(--ter); }
+
+.app-pm-step__line {
+    width: 2.5rem;
+    height: 2px;
+    background: var(--outline-v);
+    flex-shrink: 0;
+    margin-bottom: 1.05rem; /* align with dot center */
+}
+
+.app-pm-card__cta {
+    flex-shrink: 0;
+}
+
+/* Empty state ------------------------------------------------------------- */
+
+.app-pm-empty {
+    padding: 3rem 2rem;
+    text-align: center;
+    background: var(--surface-0);
+    border: 1px solid var(--outline-v);
+    border-radius: var(--r-xl);
+    box-shadow: var(--sh-card);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.app-pm-empty__icon {
+    width: 4rem;
+    height: 4rem;
+    border-radius: var(--r-xl);
+    background: color-mix(in srgb, var(--pri) 10%, transparent);
+    color: var(--pri);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.75rem;
+    margin-bottom: 0.25rem;
+}
+
+.app-pm-empty__title {
+    margin: 0;
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: var(--on-s);
+}
+
+.app-pm-empty__text {
+    margin: 0;
+    max-width: 36rem;
+    font-size: 0.9rem;
+    color: var(--outline);
+    line-height: 1.6;
+}
+
+/* Modal ------------------------------------------------------------------- */
+
+.app-pm-modal-dialog {
+    max-width: 460px;
+}
+
+.app-pm-modal {
+    border: 1px solid var(--outline-v);
+    border-radius: var(--r-xl) !important;
+    background: var(--surface-0);
+    box-shadow: var(--sh-drop);
+    overflow: hidden;
+}
+
+.app-pm-modal__header {
+    display: flex;
+    align-items: flex-start;
+    gap: 1rem;
+    padding: 1.5rem 1.5rem 1.25rem;
+    border-bottom: 1px solid var(--outline-v);
+}
+
+.app-pm-modal__icon {
+    flex-shrink: 0;
+    width: 2.75rem;
+    height: 2.75rem;
+    border-radius: var(--r-lg);
+    background: color-mix(in srgb, var(--pri) 12%, transparent);
+    color: var(--pri);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.1rem;
+}
+
+.app-pm-modal__eyebrow {
+    margin: 0 0 0.1rem;
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--outline);
+}
+
+.app-pm-modal__title {
+    margin: 0;
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--on-s);
+    line-height: 1.3;
+}
+
+.app-pm-modal__close {
+    all: unset;
+    cursor: pointer;
+    margin-left: auto;
+    flex-shrink: 0;
+    width: 2rem;
+    height: 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: var(--r-md);
+    color: var(--outline);
+    font-size: 0.875rem;
+    transition: color var(--transition-fast), background var(--transition-fast);
+}
+
+.app-pm-modal__close:hover { color: var(--on-s); background: var(--surface-2); }
+.app-pm-modal__close:focus-visible { outline: 2px solid var(--pri); outline-offset: 1px; }
+
+.app-pm-modal__body {
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+}
+
+.app-pm-modal__fields {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+}
+
+.app-pm-field {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+}
+
+.app-pm-field__label {
+    font-size: 0.72rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    color: var(--outline);
+}
+
+.app-pm-field__select {
+    height: 2.625rem;
+    padding: 0 0.875rem;
+    border: 1px solid var(--outline-v);
+    border-radius: var(--r-md);
+    background: var(--surface-1);
+    color: var(--on-s);
+    font-size: 0.92rem;
+    font-weight: 600;
+    cursor: pointer;
+    outline: none;
+    appearance: auto;
+    transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
+}
+
+.app-pm-field__select:focus {
+    border-color: var(--pri);
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--pri) 15%, transparent);
+}
+
+/* Toggle switch */
+.app-pm-toggle {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.875rem;
+    padding: 1rem 1.1rem;
+    border-radius: var(--r-lg);
+    background: color-mix(in srgb, var(--pri) 6%, var(--surface-1));
+    border: 1px solid color-mix(in srgb, var(--pri) 15%, var(--outline-v));
+    cursor: pointer;
+}
+
+.app-pm-toggle__track {
+    position: relative;
+    flex-shrink: 0;
+    margin-top: 0.15rem;
+}
+
+.app-pm-toggle__input {
+    position: absolute;
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.app-pm-toggle__thumb {
+    display: block;
+    width: 2.5rem;
+    height: 1.4rem;
+    border-radius: var(--r-full);
+    background: var(--surface-3);
+    border: 1px solid var(--outline-v);
+    position: relative;
+    transition: background var(--transition-fast), border-color var(--transition-fast);
+}
+
+.app-pm-toggle__thumb::after {
+    content: '';
+    position: absolute;
+    top: 2px;
+    left: 2px;
+    width: 1rem;
+    height: 1rem;
+    border-radius: 50%;
+    background: #fff;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+    transition: transform var(--transition-fast);
+}
+
+.app-pm-toggle__input:checked ~ .app-pm-toggle__thumb {
+    background: var(--pri);
+    border-color: transparent;
+}
+
+.app-pm-toggle__input:checked ~ .app-pm-toggle__thumb::after {
+    transform: translateX(1.1rem);
+}
+
+.app-pm-toggle__input:focus-visible ~ .app-pm-toggle__thumb {
+    outline: 2px solid var(--pri);
+    outline-offset: 2px;
+}
+
+.app-pm-toggle__body {
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+}
+
+.app-pm-toggle__label {
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: var(--on-s);
+}
+
+.app-pm-toggle__hint {
+    font-size: 0.82rem;
+    color: var(--outline);
+    line-height: 1.45;
+}
+
+.app-pm-modal__footer {
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.625rem;
+    padding: 1rem 1.5rem 1.5rem;
+    border-top: 1px solid var(--outline-v);
+}
+
+/* Responsive -------------------------------------------------------------- */
+
+@media (max-width: 768px) {
+    .app-pm-card {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+    }
+
+    .app-pm-workflow {
+        display: none;
+    }
+
+    .app-pm-card__cta .app-btn {
+        width: 100%;
+        justify-content: center;
+    }
+
+    .app-pm-header {
+        flex-direction: column;
+    }
+
+    .app-pm-header__actions {
+        padding-top: 0;
+        width: 100%;
+        justify-content: flex-start;
+    }
 }
 
 
