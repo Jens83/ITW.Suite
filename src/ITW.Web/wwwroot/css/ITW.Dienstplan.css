@@ -58,7 +58,7 @@
 
 .app-period-card--active {
     border-color: rgba(var(--ter-rgb), 0.3);
-    box-shadow: 0 4px 20px rgba(var(--ter-rgb), 0.1), 0 1px 3px rgba(0, 0, 0, 0.03);
+    box-shadow: 0 4px 20px rgba(var(--ter-rgb), 0.1), 0 1px 3px rgba(var(--overlay-rgb), 0.03);
 }
 
 .app-period-card__body {
@@ -82,7 +82,7 @@
 .app-period-date {
     width: 62px;
     height: 62px;
-    border-radius: 16px;
+    border-radius: var(--r-lg);
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -184,7 +184,7 @@
     width: 4rem;
     height: 4rem;
     margin-bottom: 1rem;
-    border-radius: 20px;
+    border-radius: var(--r-xl);
     background: rgba(var(--pri-rgb), 0.08);
     color: var(--pri);
     box-shadow: inset 0 0 0 1px rgba(var(--pri-rgb), 0.08);
@@ -257,7 +257,7 @@
 .app-period-field__control {
     min-height: 46px;
     border: 1px solid var(--outline-v);
-    border-radius: 14px;
+    border-radius: var(--r-md);
     background: var(--surface-1);
     color: var(--on-s);
     font-size: 0.92rem;
@@ -276,7 +276,7 @@
     align-items: center;
     gap: 0.8rem;
     padding: 1rem;
-    border-radius: 18px;
+    border-radius: var(--r-lg);
     background: rgba(var(--pri-rgb), 0.06);
     border: 1px solid rgba(var(--pri-rgb), 0.14);
 }
@@ -287,7 +287,7 @@
     justify-content: center;
     width: 2.5rem;
     height: 2.5rem;
-    border-radius: 14px;
+    border-radius: var(--r-md);
     background: rgba(var(--pri-rgb), 0.12);
     color: var(--pri);
     flex-shrink: 0;
@@ -388,7 +388,7 @@
     min-width: 170px;
     min-height: 48px;
     padding: 0.8rem 1rem;
-    border-radius: 16px;
+    border-radius: var(--r-lg);
     font-size: 0.9rem;
     font-weight: 700;
     letter-spacing: -0.01em;
@@ -481,7 +481,7 @@
 
 .app-plan-day {
     border: 1px solid var(--outline-v);
-    border-radius: 18px;
+    border-radius: var(--r-lg);
     background: var(--surface-0);
     transition: box-shadow 0.18s ease, border-color 0.18s ease;
 }
@@ -629,7 +629,7 @@
 
 .app-plan-slot {
     border: 1px solid var(--outline-v);
-    border-radius: 14px;
+    border-radius: var(--r-md);
     padding: 0.52rem 0.6rem;
     background: var(--surface-1);
 }
@@ -675,7 +675,7 @@
         .app-plan-calendar__weekdays div {
             text-align: center;
             padding: 0.75rem 0.35rem;
-            border-radius: 14px;
+            border-radius: var(--r-md);
             background: var(--surface-1);
             color: var(--outline);
             font-size: 0.72rem;
@@ -729,7 +729,7 @@
         width: 100%;
         min-width: 0;
         min-height: 46px;
-        border-radius: 14px;
+        border-radius: var(--r-md);
     }
 
     .app-plan-day__top {
@@ -804,7 +804,7 @@
 .app-report-select {
     min-height: 46px;
     border: 1px solid var(--outline-v);
-    border-radius: 14px;
+    border-radius: var(--r-md);
     background: var(--surface-1);
     color: var(--on-s);
     font-size: 0.94rem;
@@ -1169,7 +1169,7 @@
 .wl-page .kalender-tag {
     background: var(--surface-0);
     border: 1px solid var(--outline-v);
-    border-radius: 12px;
+    border-radius: var(--r-md);
     min-height: 190px;
     padding: 12px;
     display: flex;
@@ -1199,7 +1199,7 @@
     font-size: 0.65rem;
     font-weight: 800;
     padding: 2px 8px;
-    border-radius: 99px;
+    border-radius: var(--r-full);
 }
 
 .wl-page .staff-combined-badge {
@@ -1207,7 +1207,7 @@
     align-items: center;
     justify-content: space-around;
     padding: 6px;
-    border-radius: 8px;
+    border-radius: var(--r);
     font-size: 0.7rem;
     background: var(--surface-0);
     border: 1px solid var(--outline-v);
@@ -1224,7 +1224,7 @@
     font-weight: 700;
     text-align: center;
     padding: 8px;
-    border-radius: 8px;
+    border-radius: var(--r);
 }
 
     .wl-page .hinweis-badge.feiertag {
@@ -1269,13 +1269,13 @@
 .wl-page .tag-status.status-vollstaendig,
 .wl-page .staff-combined-badge.status-vollstaendig {
     background-color: var(--on-ter-c);
-    color: var(--success-color);
+    color: var(--ter);
 }
 
 .wl-modal .wl-qualification-tag {
     display: inline-block;
     padding: 2px 8px;
-    border-radius: 4px;
+    border-radius: var(--r-sm);
     font-size: 0.6rem;
     font-weight: 800;
     text-transform: uppercase;
@@ -1310,7 +1310,7 @@
 .wl-pulse-dot {
     width: 7px;
     height: 7px;
-    background: var(--success-color);
+    background: var(--ter);
     border-radius: 50%;
     animation: wl-pulse 2s infinite;
 }
@@ -1479,7 +1479,7 @@
 
 .app-wunsch-day {
     border: 1px solid var(--outline-v);
-    border-radius: 20px;
+    border-radius: var(--r-xl);
     background: var(--surface-0);
     transition: box-shadow 0.18s ease, border-color 0.18s ease, opacity 0.18s ease;
 }
@@ -1631,7 +1631,7 @@
     width: 100%;
     min-height: 44px;
     border: 1px solid var(--outline-v);
-    border-radius: 12px;
+    border-radius: var(--r-md);
     background: var(--surface-0);
     color: var(--outline);
     font-size: 0.86rem;
@@ -1685,7 +1685,7 @@
         .app-wunsch-calendar__weekdays div {
             text-align: center;
             padding: 0.85rem 0.4rem;
-            border-radius: 14px;
+            border-radius: var(--r-md);
             background: var(--surface-1);
             color: var(--outline);
             font-size: 0.76rem;
@@ -1801,7 +1801,7 @@
 .app-autoplan-select {
     min-height: 46px;
     border: 1px solid var(--outline-v);
-    border-radius: 14px;
+    border-radius: var(--r-md);
     background: var(--surface-1);
     color: var(--on-s);
     font-size: 0.94rem;
@@ -1873,14 +1873,14 @@
 .app-autoplan-conflict-card {
     min-height: 100%;
     border: 1px solid var(--outline-v);
-    border-radius: 18px;
+    border-radius: var(--r-lg);
     background: var(--surface-0);
     padding: 1rem;
 }
 
 .app-autoplan-ok-card {
     min-height: 100%;
-    border-radius: 18px;
+    border-radius: var(--r-lg);
     background: var(--on-ter-c);
     border: 1px solid rgba(var(--ter-rgb), 0.25);
     padding: 1.1rem;

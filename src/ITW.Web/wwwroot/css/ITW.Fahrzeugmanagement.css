@@ -441,7 +441,7 @@
     flex: 0 0 auto;
     width: 46px;
     height: 46px;
-    border-radius: 18px;
+    border-radius: var(--r-lg);
     color: var(--pri);
     background: rgba(var(--pri-rgb), .12);
     font-size: 1.35rem;
@@ -539,7 +539,7 @@
     flex: 0 0 auto;
     width: 58px;
     height: 58px;
-    border-radius: 22px;
+    border-radius: var(--r-xl);
     color: var(--pri);
     background: rgba(var(--pri-rgb), .12);
     font-size: 1.65rem;
@@ -593,7 +593,7 @@
     display: block;
     color: var(--outline);
     font-size: .76rem;
-    font-weight: 850;
+    font-weight: 800;
     letter-spacing: .04em;
     text-transform: uppercase;
 }
@@ -641,7 +641,7 @@
         flex: 0 0 auto;
         width: 42px;
         height: 42px;
-        border-radius: 16px;
+        border-radius: var(--r-lg);
         color: var(--pri);
         background: rgba(var(--pri-rgb), .1);
         font-size: 1.2rem;
