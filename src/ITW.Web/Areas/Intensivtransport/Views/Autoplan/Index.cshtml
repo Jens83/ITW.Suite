@@ -53,22 +53,9 @@
         </div>
     </header>
 
-    @if (TempData[FlashKeys.Success] is string successMessage)
+    @if (!Model.IsSuccess)
     {
-        <div class="app-autoplan-alert app-autoplan-alert--success">
-            <div class="app-autoplan-alert__icon">
-                <i class="bi bi-check-circle-fill"></i>
-            </div>
-            <div>
-                <div class="app-autoplan-alert__title">Erfolgreich gespeichert</div>
-                <p class="app-autoplan-alert__text">@successMessage</p>
-            </div>
-        </div>
-    }
-
-    @if (TempData[FlashKeys.Error] != null || !Model.IsSuccess)
-    {
-        var finalError = TempData[FlashKeys.Error]?.ToString() ?? Model.ErrorMessage ?? "Ein Systemfehler ist aufgetreten.";
+        var finalError = Model.ErrorMessage ?? "Ein Systemfehler ist aufgetreten.";
 
         <div class="app-autoplan-alert app-autoplan-alert--danger">
             <div class="app-autoplan-alert__icon">

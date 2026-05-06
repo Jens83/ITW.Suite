@@ -13,13 +13,9 @@
     var offenePeriode = sortiertePerioden.FirstOrDefault(x => x.WunschphaseIstOffen);
     var auswertungsPeriodeId = offenePeriode?.Id ?? sortiertePerioden.FirstOrDefault()?.Id;
 
-    var successMessage = TempData[FlashKeys.Success]?.ToString();
-
-    var finalError = TempData[FlashKeys.Error]?.ToString();
-    if (string.IsNullOrWhiteSpace(finalError) && !Model.IsSuccess)
-    {
-        finalError = Model.ErrorMessage ?? "Ein Systemfehler ist aufgetreten.";
-    }
+    var finalError = !Model.IsSuccess
+        ? (Model.ErrorMessage ?? "Ein Systemfehler ist aufgetreten.")
+        : null;
 }
 
 <div class="app-period-page">
@@ -66,36 +62,17 @@
         </div>
     </header>
 
-    @if (!string.IsNullOrWhiteSpace(successMessage) || !string.IsNullOrWhiteSpace(finalError))
+    @if (!string.IsNullOrWhiteSpace(finalError))
     {
-        <div class="app-status-stack">
-            @if (!string.IsNullOrWhiteSpace(successMessage))
-            {
-                @await Html.PartialAsync(
-                "~/Views/Shared/Komponenten/_AppStatusMessage.cshtml",
-                successMessage,
-                new ViewDataDictionary(ViewData)
-                {
-                    ["Variant"] = "success",
-                    ["Title"] = "Erfolgreich gespeichert",
-                    ["AutoHide"] = true,
-                    ["AutoHideMilliseconds"] = 3000
-                })
-                }
-
-            @if (!string.IsNullOrWhiteSpace(finalError))
-            {
-                @await Html.PartialAsync(
-                "~/Views/Shared/Komponenten/_AppStatusMessage.cshtml",
-                finalError,
-                new ViewDataDictionary(ViewData)
-                {
-                    ["Variant"] = "danger",
-                    ["Title"] = "System-Hinweis",
-                    ["AutoHide"] = false
-                })
-                }
-        </div>
+        @await Html.PartialAsync(
+        "~/Views/Shared/Komponenten/_AppStatusMessage.cshtml",
+        finalError,
+        new ViewDataDictionary(ViewData)
+        {
+            ["Variant"] = "danger",
+            ["Title"] = "System-Hinweis",
+            ["AutoHide"] = false
+        })
     }
 
     @if (sortiertePerioden.Length > 0)

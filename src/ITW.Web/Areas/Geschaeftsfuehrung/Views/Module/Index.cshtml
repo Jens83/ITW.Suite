@@ -4,9 +4,6 @@
 @{
     ViewData["Title"] = "Module";
 
-    var tempSuccessMessage = TempData[FlashKeys.Success] as string;
-    var tempErrorMessage = TempData[FlashKeys.Error] as string;
-
     var headerModel = new AppPageHeaderViewModel
     {
         Eyebrow = "Systemsteuerung",
@@ -29,38 +26,6 @@
     <div class="app-page-header">
         <partial name="~/Views/Shared/Komponenten/_AppPageHeader.cshtml" model="headerModel" />
     </div>
-
-    @if (!string.IsNullOrWhiteSpace(tempSuccessMessage) || !string.IsNullOrWhiteSpace(tempErrorMessage))
-    {
-        <div class="app-status-stack">
-            @if (!string.IsNullOrWhiteSpace(tempSuccessMessage))
-            {
-                @await Html.PartialAsync(
-                "~/Views/Shared/Komponenten/_AppStatusMessage.cshtml",
-                tempSuccessMessage,
-                new ViewDataDictionary(ViewData)
-                {
-                    ["Variant"] = "success",
-                    ["Title"] = "Änderung gespeichert",
-                    ["AutoHide"] = true,
-                    ["AutoHideMilliseconds"] = 3000
-                })
-                }
-
-            @if (!string.IsNullOrWhiteSpace(tempErrorMessage))
-            {
-                @await Html.PartialAsync(
-                "~/Views/Shared/Komponenten/_AppStatusMessage.cshtml",
-                tempErrorMessage,
-                new ViewDataDictionary(ViewData)
-                {
-                    ["Variant"] = "danger",
-                    ["Title"] = "System-Hinweis",
-                    ["AutoHide"] = false
-                })
-                }
-        </div>
-    }
 
     @if (!Model.IsSuccess)
     {

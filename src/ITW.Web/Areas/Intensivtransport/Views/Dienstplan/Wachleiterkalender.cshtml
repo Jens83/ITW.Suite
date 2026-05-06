@@ -13,15 +13,13 @@
 
     var modalReturnUrl = Model.PlanungsModal?.ReturnUrl ?? returnUrl;
 
-    var successMessage = TempData[FlashKeys.Success] as string;
-    var errorMessage = TempData[FlashKeys.Error] as string;
+    // TempData.Error im Modal-Kontext anzeigen (Layout zeigt es ggf. auch global)
+    var modalFehler = Model.PlanungsModalAutomatischOeffnen
+        ? TempData[FlashKeys.Error] as string
+        : null;
 
-    var zeigeSeitenErfolg = !Model.PlanungsModalAutomatischOeffnen && !string.IsNullOrWhiteSpace(successMessage);
-    var zeigeSeitenFehler = !Model.PlanungsModalAutomatischOeffnen && !string.IsNullOrWhiteSpace(errorMessage);
-    var zeigeModalFehler = Model.PlanungsModalAutomatischOeffnen && !string.IsNullOrWhiteSpace(errorMessage);
-
-    var finalSeitenFehler = zeigeSeitenFehler || !Model.IsSuccess
-        ? errorMessage ?? Model.ErrorMessage ?? "Ein Fehler ist aufgetreten."
+    var finalSeitenFehler = !Model.IsSuccess
+        ? (Model.ErrorMessage ?? "Ein Fehler ist aufgetreten.")
         : null;
 }
 
@@ -45,36 +43,17 @@
         </a>
     </div>
 
-    @if (zeigeSeitenErfolg || !string.IsNullOrWhiteSpace(finalSeitenFehler))
+    @if (!string.IsNullOrWhiteSpace(finalSeitenFehler))
     {
-        <div class="app-status-stack mb-4">
-            @if (zeigeSeitenErfolg)
-            {
-                @await Html.PartialAsync(
-                "~/Views/Shared/Komponenten/_AppStatusMessage.cshtml",
-                successMessage,
-                new ViewDataDictionary(ViewData)
-                {
-                    ["Variant"] = "success",
-                    ["Title"] = "Erfolgreich gespeichert",
-                    ["AutoHide"] = true,
-                    ["AutoHideMilliseconds"] = 3000
-                })
-                }
-
-            @if (!string.IsNullOrWhiteSpace(finalSeitenFehler))
-            {
-                @await Html.PartialAsync(
-                "~/Views/Shared/Komponenten/_AppStatusMessage.cshtml",
-                finalSeitenFehler,
-                new ViewDataDictionary(ViewData)
-                {
-                    ["Variant"] = "danger",
-                    ["Title"] = "System-Hinweis",
-                    ["AutoHide"] = false
-                })
-                }
-        </div>
+        @await Html.PartialAsync(
+        "~/Views/Shared/Komponenten/_AppStatusMessage.cshtml",
+        finalSeitenFehler,
+        new ViewDataDictionary(ViewData)
+        {
+            ["Variant"] = "danger",
+            ["Title"] = "System-Hinweis",
+            ["AutoHide"] = false
+        })
     }
 
     @if (Model.AusgewaehltePeriodeId.HasValue)
@@ -258,8 +237,8 @@
     var nfs1Slot = modal.PlanungsSlots.FirstOrDefault(x => x.SlotCode == DienstbesetzungsSlotCode.Notfallsanitaeter1);
     var nfs2Slot = modal.PlanungsSlots.FirstOrDefault(x => x.SlotCode == DienstbesetzungsSlotCode.Notfallsanitaeter2);
 
-    var finalModalFehler = zeigeModalFehler
-        ? errorMessage
+    var finalModalFehler = !string.IsNullOrWhiteSpace(modalFehler)
+        ? modalFehler
         : !modal.IsSuccess
             ? modal.ErrorMessage ?? "Die Daten für die Tagesplanung konnten nicht geladen werden."
             : null;

@@ -8,13 +8,9 @@
         ? "Hier sehen Sie den freigegebenen Dienstplan Ihrer Periode. Eigene Dienste und Vertretungen werden direkt im Kalender markiert."
         : Model.Beschreibung;
 
-    var successMessage = TempData[FlashKeys.Success]?.ToString();
-
-    var finalError = TempData[FlashKeys.Error]?.ToString();
-    if (string.IsNullOrWhiteSpace(finalError) && !Model.IsSuccess)
-    {
-        finalError = Model.ErrorMessage ?? "Der veröffentlichte Dienstplan konnte nicht geladen werden.";
-    }
+    var finalError = !Model.IsSuccess
+        ? (Model.ErrorMessage ?? "Der veröffentlichte Dienstplan konnte nicht geladen werden.")
+        : null;
 }
 
 <div class="app-plan-page">
@@ -28,36 +24,17 @@
         <p class="app-plan-hero__text">@beschreibung</p>
     </header>
 
-    @if (!string.IsNullOrWhiteSpace(successMessage) || !string.IsNullOrWhiteSpace(finalError))
+    @if (!string.IsNullOrWhiteSpace(finalError))
     {
-        <div class="app-status-stack">
-            @if (!string.IsNullOrWhiteSpace(successMessage))
+        @await Html.PartialAsync(
+            "~/Views/Shared/Komponenten/_AppStatusMessage.cshtml",
+            finalError,
+            new ViewDataDictionary(ViewData)
             {
-                @await Html.PartialAsync(
-                    "~/Views/Shared/Komponenten/_AppStatusMessage.cshtml",
-                    successMessage,
-                    new ViewDataDictionary(ViewData)
-                    {
-                        ["Variant"] = "success",
-                        ["Title"] = "Erfolgreich gespeichert",
-                        ["AutoHide"] = true,
-                        ["AutoHideMilliseconds"] = 3000
-                    })
-            }
-
-            @if (!string.IsNullOrWhiteSpace(finalError))
-            {
-                @await Html.PartialAsync(
-                    "~/Views/Shared/Komponenten/_AppStatusMessage.cshtml",
-                    finalError,
-                    new ViewDataDictionary(ViewData)
-                    {
-                        ["Variant"] = "danger",
-                        ["Title"] = "System-Hinweis",
-                        ["AutoHide"] = false
-                    })
-            }
-        </div>
+                ["Variant"] = "danger",
+                ["Title"] = "System-Hinweis",
+                ["AutoHide"] = false
+            })
     }
 
     @if (!Model.HatFreigegebenePlaene)

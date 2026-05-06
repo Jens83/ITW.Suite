@@ -4,13 +4,9 @@
     Layout = ViewData["AreaLayoutPath"]?.ToString();
     ViewData["Title"] = "Dienstplan";
 
-    var finalError = TempData[FlashKeys.Error] as string;
-    if (string.IsNullOrEmpty(finalError) && Model != null && !Model.IsSuccess)
-    {
-        finalError = Model.ErrorMessage ?? "Die Dienstplandaten konnten nicht geladen werden.";
-    }
-
-    var successMessage = TempData[FlashKeys.Success] as string;
+    var finalError = (Model != null && !Model.IsSuccess)
+        ? (Model.ErrorMessage ?? "Die Dienstplandaten konnten nicht geladen werden.")
+        : null;
     var hatModel = Model != null;
     var hatAktivePeriode = hatModel && Model!.AktivePeriodeId.HasValue && Model.HatOffeneWunschphase;
 
@@ -36,36 +32,17 @@
         <p class="app-wunsch-hero__text">@heroText</p>
     </header>
 
-    @if (!string.IsNullOrWhiteSpace(successMessage) || !string.IsNullOrWhiteSpace(finalError))
+    @if (!string.IsNullOrWhiteSpace(finalError))
     {
-        <div class="app-status-stack">
-            @if (!string.IsNullOrWhiteSpace(successMessage))
-            {
-                @await Html.PartialAsync(
-                "~/Views/Shared/Komponenten/_AppStatusMessage.cshtml",
-                successMessage,
-                new ViewDataDictionary(ViewData)
-                {
-                    ["Variant"] = "success",
-                    ["Title"] = "Erfolgreich gespeichert",
-                    ["AutoHide"] = true,
-                    ["AutoHideMilliseconds"] = 3000
-                })
-                }
-
-            @if (!string.IsNullOrWhiteSpace(finalError))
-            {
-                @await Html.PartialAsync(
-                "~/Views/Shared/Komponenten/_AppStatusMessage.cshtml",
-                finalError,
-                new ViewDataDictionary(ViewData)
-                {
-                    ["Variant"] = "danger",
-                    ["Title"] = "System-Hinweis",
-                    ["AutoHide"] = false
-                })
-                }
-        </div>
+        @await Html.PartialAsync(
+        "~/Views/Shared/Komponenten/_AppStatusMessage.cshtml",
+        finalError,
+        new ViewDataDictionary(ViewData)
+        {
+            ["Variant"] = "danger",
+            ["Title"] = "System-Hinweis",
+            ["AutoHide"] = false
+        })
     }
 
     @if (hatModel && !hatAktivePeriode)
