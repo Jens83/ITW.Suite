@@ -23,7 +23,7 @@
         : null;
 }
 
-<div class="wl-page">
+<div class="app-pm-page">
 
     @* ── Header ── *@
     <div class="app-pm-header">
@@ -152,7 +152,7 @@
             </div>
 
             <div class="app-wlk-cal__body">
-                <div class="dienstplan-kalender-head">
+                <div class="app-wlk-cal__head">
                     <div>Mo</div>
                     <div>Di</div>
                     <div>Mi</div>
@@ -162,7 +162,7 @@
                     <div class="wl-we">So</div>
                 </div>
 
-                <div class="dienstplan-kalender-grid">
+                <div class="app-wlk-cal__grid">
                     @foreach (var woche in Model.KalenderWochen)
                     {
                         foreach (var tag in woche.Tage)
@@ -172,42 +172,42 @@
                                 ? tag.WachleiterStatusCssClass
                                 : string.Empty;
 
-                            <div class="kalender-tag @(isInactive ? "leer" : "aktiv") @(tag.IstHeute ? "heute" : "") @(tag.IstWochenende ? "wochenende" : "") @statusCss">
-                                <div class="tag-header">
-                                    <span class="tag-number">@tag.Datum.Day</span>
+                            <div class="app-wlk-day @(isInactive ? "app-wlk-day--empty" : "") @(tag.IstHeute ? "app-wlk-day--today" : "") @(tag.IstWochenende ? "app-wlk-day--weekend" : "") @statusCss">
+                                <div class="app-wlk-day__header">
+                                    <span class="app-wlk-day__num">@tag.Datum.Day</span>
                                     @if (!isInactive && !tag.IstFeiertag && !tag.IstWochenende)
                                     {
-                                        <span class="tag-status @tag.WachleiterStatusCssClass">@tag.WachleiterStatusText</span>
+                                        <span class="app-wlk-day__day-status">@tag.WachleiterStatusText</span>
                                     }
                                 </div>
 
                                 @if (!isInactive)
                                 {
-                                    <div class="tag-content">
+                                    <div class="app-wlk-day__body">
                                         @if (tag.IstFeiertag)
                                         {
-                                            <div class="hinweis-badge feiertag">
+                                            <div class="app-wlk-day__hint app-wlk-day__hint--holiday">
                                                 <i class="bi bi-stars"></i>
                                                 @tag.FeiertagsName
                                             </div>
                                         }
                                         else if (tag.IstWochenende)
                                         {
-                                            <div class="hinweis-badge wochenende">Wochenende</div>
+                                            <div class="app-wlk-day__hint app-wlk-day__hint--weekend">Wochenende</div>
                                         }
                                         else
                                         {
-                                            <div class="staff-combined-badge @tag.WachleiterStatusCssClass">
-                                                <span class="segment">W <strong>@tag.AnzahlWuenscheGesamt</strong></span>
-                                                <span class="divider"></span>
-                                                <span class="segment">NFS <strong>@tag.AnzahlGeplanteNotfallsanitaeter</strong></span>
-                                                <span class="divider"></span>
-                                                <span class="segment">A <strong>@tag.AnzahlGeplanteAerzte</strong></span>
+                                            <div class="app-wlk-day__summary">
+                                                <span>W <strong>@tag.AnzahlWuenscheGesamt</strong></span>
+                                                <span class="app-wlk-day__summary-sep"></span>
+                                                <span>NFS <strong>@tag.AnzahlGeplanteNotfallsanitaeter</strong></span>
+                                                <span class="app-wlk-day__summary-sep"></span>
+                                                <span>A <strong>@tag.AnzahlGeplanteAerzte</strong></span>
                                             </div>
                                         }
                                     </div>
 
-                                    <div class="tag-footer">
+                                    <div class="app-wlk-day__footer">
                                         <a asp-action="Wachleiterkalender"
                                            asp-controller="DienstplanWachleiter"
                                            asp-area="Intensivtransport"
@@ -245,7 +245,7 @@
             ? modal.ErrorMessage ?? "Die Daten für die Tagesplanung konnten nicht geladen werden."
             : null;
 
-    <div class="modal fade wl-modal"
+    <div class="modal fade"
          id="tagesplanungModal"
          tabindex="-1"
          aria-hidden="true"
