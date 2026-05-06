@@ -36,13 +36,17 @@ public sealed class ItwWunschphaseSummaryViewModel
     public string Bezeichnung { get; init; } = "";
     public int GesamtMitarbeiter { get; init; }
     public int EingegangeneWuensche { get; init; }
-    public int WeitereAusstehend { get; init; }
+
+    public int WeitereAusstehend => WeiterePersonen.Count(p => !p.HatWunschAbgegeben);
 
     public int ProzentEingegangen => GesamtMitarbeiter > 0
         ? (int)Math.Round((double)EingegangeneWuensche / GesamtMitarbeiter * 100)
         : 0;
 
     public IReadOnlyList<ItwWunschPersonViewModel> AngezeigtePersonen { get; init; }
+        = Array.Empty<ItwWunschPersonViewModel>();
+
+    public IReadOnlyList<ItwWunschPersonViewModel> WeiterePersonen { get; init; }
         = Array.Empty<ItwWunschPersonViewModel>();
 }
 

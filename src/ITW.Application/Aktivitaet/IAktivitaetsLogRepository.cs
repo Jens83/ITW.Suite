@@ -9,6 +9,12 @@ public interface IAktivitaetsLogRepository
         int maxAnzahl = 10,
         CancellationToken cancellationToken = default);
 
+    Task<bool> ExistiertAktivitaetAsync(
+        OrganisationsbereichCode bereich,
+        string text,
+        DateTimeOffset seit,
+        CancellationToken cancellationToken = default);
+
     Task AddAsync(
         AktivitaetsEintrag eintrag,
         CancellationToken cancellationToken = default);

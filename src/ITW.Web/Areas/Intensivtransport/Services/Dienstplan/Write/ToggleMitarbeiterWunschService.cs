@@ -175,6 +175,17 @@ public sealed class ToggleMitarbeiterWunschService
 
         var text = $"<strong>{profil.AnzeigeName}</strong> hat Dienstwünsche abgegeben.";
 
+        // Nur einen Eintrag pro Person pro Monat – keinen Duplikat anlegen
+        var seit = DateTimeOffset.UtcNow.AddDays(-35);
+        var existiert = await _aktivitaetsLogRepository.ExistiertAktivitaetAsync(
+            OrganisationsbereichCode.Intensivtransport,
+            text,
+            seit,
+            cancellationToken);
+
+        if (existiert)
+            return;
+
         var eintrag = new AktivitaetsEintrag(
             Guid.NewGuid(),
             OrganisationsbereichCode.Intensivtransport,

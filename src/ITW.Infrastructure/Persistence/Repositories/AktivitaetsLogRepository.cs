@@ -28,6 +28,20 @@ public sealed class AktivitaetsLogRepository : IAktivitaetsLogRepository
             .ToListAsync(cancellationToken);
     }
 
+    public async Task<bool> ExistiertAktivitaetAsync(
+        OrganisationsbereichCode bereich,
+        string text,
+        DateTimeOffset seit,
+        CancellationToken cancellationToken = default)
+    {
+        return await _dbContext.AktivitaetsLog
+            .AnyAsync(x =>
+                x.Bereich == bereich &&
+                x.Text == text &&
+                x.Zeitpunkt >= seit,
+                cancellationToken);
+    }
+
     public async Task AddAsync(
         AktivitaetsEintrag eintrag,
         CancellationToken cancellationToken = default)

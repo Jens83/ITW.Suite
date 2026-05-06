@@ -100,10 +100,8 @@ public sealed class GetItwDashboardDataService
                 .ToList();
 
             const int maxAngezeigt = 6;
-            var angezeigt        = personen.Take(maxAngezeigt).ToList();
-            var gezeigtNichtAbg  = angezeigt.Count(p => !p.HatWunschAbgegeben);
-            var gesamtNichtAbg   = personen.Count(p => !p.HatWunschAbgegeben);
-            var weitereAusstehend = Math.Max(0, gesamtNichtAbg - gezeigtNichtAbg);
+            var angezeigt  = personen.Take(maxAngezeigt).ToList();
+            var weitere    = personen.Skip(maxAngezeigt).ToList();
 
             // Eingegangene Wünsche nur für Pflichtmitarbeiter zählen
             var relevanteUserIds = relevantePflichtZuordnungen
@@ -117,7 +115,7 @@ public sealed class GetItwDashboardDataService
                 GesamtMitarbeiter    = relevantePflichtZuordnungen.Count,
                 EingegangeneWuensche = eingegangeneWuensche,
                 AngezeigtePersonen   = angezeigt,
-                WeitereAusstehend    = weitereAusstehend
+                WeiterePersonen      = weitere,
             };
         }
 

@@ -194,15 +194,39 @@
                             </div>
                         }
 
+                        @if (wp.WeiterePersonen.Count > 0)
+                        {
+                            <details class="app-wl-wish-mehr">
+                                <summary class="app-wl-wish-mehr__toggle">
+                                    <i class="bi bi-chevron-down app-wl-wish-mehr__icon"></i>
+                                    <span class="app-wl-wish-mehr__label-closed">
+                                        + @wp.WeiterePersonen.Count weitere
+                                        @if (wp.WeitereAusstehend > 0)
+                                        {
+                                            <span class="app-wl-progress-info__warn">(@wp.WeitereAusstehend ausstehend)</span>
+                                        }
+                                    </span>
+                                    <span class="app-wl-wish-mehr__label-open">weniger anzeigen</span>
+                                </summary>
+                                <div class="app-wl-wish-grid app-wl-wish-grid--mehr">
+                                    @foreach (var p in wp.WeiterePersonen)
+                                    {
+                                        <div class="app-wl-wish-person @(p.HatWunschAbgegeben ? "app-wl-wish-person--done" : "")">
+                                            <div class="app-wl-wish-person__avatar">@p.Kuerzel</div>
+                                            <div>
+                                                <div class="app-wl-wish-person__name">@p.Kurzname</div>
+                                                <div class="app-wl-wish-person__role">
+                                                    @(p.HatWunschAbgegeben ? "abgegeben" : "ausstehend")
+                                                </div>
+                                            </div>
+                                        </div>
+                                    }
+                                </div>
+                            </details>
+                        }
+
                         <div class="app-wl-wish-footer">
-                            @if (wp.WeitereAusstehend > 0)
-                            {
-                                <span>+ @wp.WeitereAusstehend weitere ausstehend</span>
-                            }
-                            else
-                            {
-                                <span>&nbsp;</span>
-                            }
+                            <span>&nbsp;</span>
                             @if (Model.HatDienstplan)
                             {
                                 <a asp-area="Intensivtransport"

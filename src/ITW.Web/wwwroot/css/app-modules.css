@@ -381,6 +381,47 @@
     line-height: 1;
 }
 
+.app-wl-wish-mehr {
+    border-top: 1px solid var(--surface-3);
+}
+
+.app-wl-wish-mehr__toggle {
+    display: flex;
+    align-items: center;
+    gap: 0.375rem;
+    padding: 0.625rem var(--sp-pad);
+    font-size: var(--type-body-sm-size);
+    color: var(--outline);
+    cursor: pointer;
+    list-style: none;
+    user-select: none;
+    transition: color var(--transition-fast);
+}
+
+.app-wl-wish-mehr__toggle::-webkit-details-marker { display: none; }
+.app-wl-wish-mehr__toggle::marker { display: none; }
+
+.app-wl-wish-mehr__toggle:hover {
+    color: var(--on-s);
+}
+
+.app-wl-wish-mehr__icon {
+    font-size: 0.75rem;
+    transition: transform var(--transition-fast);
+}
+
+.app-wl-wish-mehr[open] .app-wl-wish-mehr__icon {
+    transform: rotate(180deg);
+}
+
+.app-wl-wish-mehr__label-open { display: none; }
+.app-wl-wish-mehr[open] .app-wl-wish-mehr__label-closed { display: none; }
+.app-wl-wish-mehr[open] .app-wl-wish-mehr__label-open   { display: inline; }
+
+.app-wl-wish-grid--mehr {
+    padding-top: 0;
+}
+
 .app-wl-wish-footer {
     display: flex;
     align-items: center;
