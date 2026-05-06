@@ -1090,3 +1090,41 @@
         gap: 0.45rem;
     }
 }
+
+
+/* ==========================================================================
+   Dark Mode — explizite Overrides
+   Token-Werte werden via app-theme.css propagiert; dieser Block behandelt
+   Elemente, die direkt auf semantische Alias-Tokens angewiesen sind und
+   im Dark Mode sichtbar angepasst werden müssen.
+   ========================================================================== */
+
+@media (prefers-color-scheme: dark) {
+
+    /* Home-Status: Erfolg — helles Grün auf dunklem Hintergrund */
+    .app-home-status--success {
+        background-color: rgba(var(--ter-rgb), 0.12);
+        color: var(--ter);
+        border-color: rgba(var(--ter-rgb), 0.22);
+    }
+
+    /* Staff-Badge Erfolg — direkter Token statt Alias */
+    .app-staff-badge--success {
+        color: var(--ter);
+        background: rgba(var(--ter-rgb), 0.1);
+        border-color: rgba(var(--ter-rgb), 0.2);
+    }
+
+    /* Auth-Alert (Erfolgshinweis) */
+    .app-auth-alert {
+        color: var(--ter);
+        background: rgba(var(--ter-rgb), 0.08);
+        border-color: rgba(var(--ter-rgb), 0.18);
+    }
+
+    /* Auth-Note Warning */
+    .app-auth-note--warning .app-auth-note__title,
+    .app-auth-note--warning .app-auth-note__text {
+        color: var(--warn);
+    }
+}

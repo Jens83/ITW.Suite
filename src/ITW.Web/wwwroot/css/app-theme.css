@@ -1,126 +1,373 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
-
 /* =================================================================
  * app-theme.css — Single Source of Truth für Design-Tokens
  *
- * Regel: Außerhalb dieser Datei werden KEINE Hex-/RGB-Farbwerte
- * verwendet, sondern ausschließlich var(--token).
- * Stylelint (Phase 7) erzwingt diese Regel automatisch.
+ * Quelle: DESIGN.md (High-Tech Corporate Admin / Material Design 3)
  *
- * Token-Vorlage entspricht Frontend-Audit Anhang A (Soll-Stand).
+ * REGEL: Außerhalb dieser Datei werden KEINE Hex-/RGB-Farbwerte
+ * verwendet — ausschließlich var(--token).
+ * Stylelint erzwingt diese Regel automatisch.
+ *
+ * MIGRATION: Abschnitte mit "→ ALIAS" werden entfernt, sobald die
+ * jeweilige CSS-Datei auf DESIGN.md-Token-Namen migriert wurde.
+ * ================================================================= */
+
+/* =================================================================
+ * DESIGN.md — Primäre Token
+ * Font: Plus Jakarta Sans — via <link> in _AppHeadResources.cshtml geladen
  * ================================================================= */
 
 :root {
-    /* === Brand & Akzent ============================================ */
-    --accent-color:         #0F6CBD;
-    --accent-rgb:           15, 108, 189;
-    --accent-color-hover:   color-mix(in srgb, var(--accent-color), #000 14%);
 
-    /* === Status =================================================== */
-    --success-color:        #15803D;
-    --success-rgb:          21, 128, 61;
-    --warning-color:        #B7791F;
-    --warning-rgb:          183, 121, 31;
-    --danger-color:         #C2414B;
-    --danger-rgb:           194, 65, 75;
-    --info-color:           var(--accent-color); /* Alias, bewusst */
-    --info-rgb:             var(--accent-rgb);
+    /* --- Typografie ------------------------------------------------ */
+    --font-family-base: 'Plus Jakarta Sans', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
 
-    /* Status-Strong: dunklere Schattierungen für Text-auf-hellem-Hintergrund.
-       Werden separat zu *-color geführt, weil Status-Hintergrundfarben hell
-       sind und Text-Kontraste stärker sein müssen. */
-    --success-color-strong: #166534;
-    --danger-color-strong:  #B42318;
-    --warning-color-strong: #9A6700;
+    /* Typen-Skala (DESIGN.md exakt) */
+    --type-h1-size:      1.75rem;   /* 28px */
+    --type-h1-weight:    700;
+    --type-h1-ls:        -0.02em;
+    --type-h2-size:      1.375rem;  /* 22px */
+    --type-h2-weight:    700;
+    --type-body-md-size: 0.875rem;  /* 14px */
+    --type-body-md-wt:   500;
+    --type-body-sm-size: 0.75rem;   /* 12px */
+    --type-body-sm-wt:   400;
+    --type-label-size:   0.6875rem; /* 11px */
+    --type-label-wt:     600;
+    --type-label-ls:     0.05em;
+    --type-stat-size:    1.5rem;    /* 24px */
+    --type-stat-wt:      700;
 
-    /* === Flächen ================================================== */
-    --page-bg:              #F4F7FB;
-    --surface-bg:           #FFFFFF;
-    --surface-bg-soft:      #F8FBFD;
-    --surface-bg-muted:     #F1F5F9;
+    /* --- Flächen -------------------------------------------------- */
+    --bg:            #ffffff;   /* Page background */
+    --surface-0:     #ffffff;   /* Cards, Navbar */
+    --surface-1:     #f9fafb;   /* Hover, alternating rows */
+    --surface-2:     #f3f4f6;   /* Pressed, input bg */
+    --surface-3:     #e5e7eb;   /* Dividers inside cards */
+    --surface-4:     #d1d5db;   /* Strong borders */
 
-    /* === Text ===================================================== */
-    --text-color:           #334155;
-    --text-color-strong:    #0F172A;
-    --text-color-muted:     #64748B;
-    --text-color-subtle:    #94A3B8; /* NEU – ersetzt verstreute #94A3B8 */
+    /* --- Text ----------------------------------------------------- */
+    --on-s:          #262626;   /* Primary text */
+    --on-sv:         #374151;   /* Secondary text */
+    --outline:       #6b7280;   /* Labels, placeholders, icons */
+    --outline-v:     #e5e7eb;   /* Subtle borders, dividers */
 
-    /* === Linien =================================================== */
-    --border-color:         #DBE4EE;
-    --border-color-strong:  #C5D2DF;
+    /* --- Primary — Amber ------------------------------------------ */
+    --pri:           #f59e0b;
+    --pri-c:         #d97706;
+    --pri-fixed:     #fffbeb;
+    --on-pri:        #1c1917;   /* dunkle Schrift auf Amber */
+    --on-pri-c:      #fffbeb;
 
-    /* === Schatten ================================================= */
-    --shadow-xs:            0 1px 2px rgba(15, 23, 42, 0.04);
-    --shadow-sm:            0 8px 22px rgba(15, 23, 42, 0.05);
-    --shadow-md:            0 16px 38px rgba(15, 23, 42, 0.08);
-    --shadow-lg:            0 28px 54px rgba(15, 23, 42, 0.12);
+    /* --- Tertiary — Grün (Success / OK) --------------------------- */
+    --ter:           #16a34a;
+    --ter-c:         #15803d;
+    --on-ter:        #ffffff;
+    --on-ter-c:      #f0fdf4;
+    --ter-fixed-d:   #4ade80;
 
-    /* === Radien =================================================== */
-    --radius-xs:            10px;
-    --radius-sm:            14px;
-    --radius-md:            18px;
-    --radius-lg:            24px;
-    --radius-xl:            30px;
-    --radius-pill:          999px;
+    /* --- Error — Rot ---------------------------------------------- */
+    --err:           #ef4444;
+    --err-c:         #fee2e2;
+    --on-err-c:      #b91c1c;
 
-    /* === Spacing  (NEU) =========================================== */
-    --space-1:              4px;
-    --space-2:              8px;
-    --space-3:              12px;
-    --space-4:              16px;
-    --space-5:              20px;
-    --space-6:              24px;
-    --space-7:              32px;
-    --space-8:              48px;
+    /* --- Warning — Orange (dunkler als Primary, visuell trennbar) - */
+    --warn:          #ea580c;
+    --warn-c:        #fff7ed;
+    --warn-brd:      #fed7aa;
 
-    /* === Typografie =============================================== */
-    --font-family-base:     'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-    --font-size-100:        0.75rem;
-    --font-size-200:        0.84rem;
-    --font-size-300:        0.94rem;
-    --font-size-400:        1.05rem;
-    --page-title-size:      clamp(1.7rem, 2.15vw, 2.4rem);
-    --surface-title-size:   1.16rem;
+    /* --- Secondary — Violett -------------------------------------- */
+    --sec:           #7c3aed;
+    --sec-fixed:     #ede9fe;
+    --on-sec-c:      #f5f3ff;
 
-    /* === Form-Elemente ============================================ */
-    --btn-height:           44px;
-    --btn-height-sm:        36px;
-    --btn-height-lg:        50px;
-    --btn-radius:           14px;
-    --btn-font-size:        var(--font-size-300);
-    --btn-font-size-sm:     var(--font-size-200);
-    --btn-font-size-lg:     var(--font-size-400);
-    --btn-font-weight:      700;
-    --input-height:         48px;
-    --input-radius:         16px;
+    /* --- RGB-Komponentenwerte (für rgba() in Components) ----------- */
+    --pri-rgb:   245, 158, 11;
+    --ter-rgb:   22, 163, 74;
+    --err-rgb:   239, 68, 68;
+    --warn-rgb:  234, 88, 12;
+    --sec-rgb:   124, 58, 237;
+    --on-sv-rgb: 55, 65, 81;   /* #374151 */
 
-    /* === Layout =================================================== */
-    --navbar-height:        68px;
-    --menu-width:           320px;
-    --content-max-width:    1240px; /* NEU */
+    /* --- Semantische RGB-Aliases (Module CSS) ---------------------- */
+    --success-rgb:  var(--ter-rgb);
+    --danger-rgb:   var(--err-rgb);
+    --warning-rgb:  var(--warn-rgb);
+
+    /* --- Bereichsfarbe (überschrieben per .theme-* Klasse) --------- */
+    --area-color:    var(--pri);
+
+    /* --- Overlay (immer dunkel, ändert sich NICHT im Dark Mode) --- */
+    --overlay-rgb: 0, 0, 0;
+
+    /* --- Schatten (ambient, amber getönt) -------------------------- */
+    --sh-card: 0 2px 20px rgba(245, 158, 11, 0.08), 0 1px 3px rgba(0, 0, 0, 0.04);
+    --sh-hover:0 4px 28px rgba(245, 158, 11, 0.13), 0 2px 6px rgba(0, 0, 0, 0.05);
+    --sh-drop: 0 8px 32px rgba(245, 158, 11, 0.15), 0 2px 8px rgba(0, 0, 0, 0.07);
+
+    /* --- Radien (DESIGN.md) --------------------------------------- */
+    --r-sm:   0.25rem;  /*  4px — Tags, small chips */
+    --r:      0.5rem;   /*  8px — Dropdown items, small cards */
+    --r-md:   0.75rem;  /* 12px — Buttons, inputs */
+    --r-lg:   1rem;     /* 16px — Cards (DESIGN.md primary) */
+    --r-xl:   1.5rem;   /* 24px — Large surfaces */
+    --r-full: 9999px;   /* Pill shape — chips, badges */
+
+    /* --- Spacing (8px Basis) -------------------------------------- */
+    --sp-cont: 2rem;    /* 32px — page container padding */
+    --sp-gap:  1.5rem;  /* 24px — card gap */
+    --sp-pad:  1.25rem; /* 20px — card body padding */
+    --sp-el:   0.75rem; /* 12px — element margin */
+
+    /* --- Layout --------------------------------------------------- */
+    --navbar-height:     56px;
+    --menu-width:        288px;
+    --content-max-width: 1240px;
+
+    /* --- Form-Elemente -------------------------------------------- */
+    --btn-height:      36px;
+    --btn-height-sm:   30px;
+    --btn-height-lg:   44px;
+    --btn-radius:      var(--r-md);
+    --btn-font-size:   var(--type-body-md-size);
+    --btn-font-weight: 600;
+    --input-height:    44px;
+    --input-radius:    var(--r-md);
+
+    /* =================================================================
+     * MIGRATIONS-ALIASES — werden entfernt wenn jeweilige CSS-Datei
+     * auf DESIGN.md-Token-Namen umgestellt wurde.
+     * ================================================================= */
+
+    /* → app-shell.css */
+    --accent-color:           var(--pri);
+    --accent-rgb:             245, 158, 11;
+    --accent-color-hover:     var(--pri-c);
+
+    /* → app-components.css */
+    --success-color:          var(--ter);
+    --success-color-strong:   #14532d;
+    --warning-color:          var(--warn);
+    --warning-color-strong:   #9a3412;
+    --danger-color:           var(--err);
+    --danger-color-strong:    #991b1b;
+    --info-color:             var(--pri);
+    --info-rgb:               245, 158, 11;
+
+    /* → app-shell.css, app-modules.css */
+    --page-bg:                var(--bg);
+    --surface-bg:             var(--surface-0);
+    --surface-bg-soft:        var(--surface-1);
+    --surface-bg-muted:       var(--surface-2);
+
+    /* → app-components.css, app-modules.css */
+    --text-color:             var(--on-sv);
+    --text-color-strong:      var(--on-s);
+    --text-color-muted:       var(--outline);
+    --text-color-subtle:      var(--outline-v);
+    --border-color:           var(--outline-v);
+    --border-color-strong:    var(--outline);
+
+    /* → app-shell.css, app-components.css */
+    --shadow-xs:              var(--sh-card);
+    --shadow-sm:              var(--sh-card);
+    --shadow-md:              var(--sh-hover);
+    --shadow-lg:              var(--sh-drop);
+
+    /* → app-components.css */
+    --radius-xs:              var(--r-sm);
+    --radius-sm:              var(--r-md);
+    --radius-md:              var(--r-md);
+    --radius-lg:              var(--r-lg);
+    --radius-xl:              var(--r-xl);
+    --radius-pill:            var(--r-full);
+
+    /* → app-components.css, app-modules.css */
+    --space-1: 0.25rem;
+    --space-2: 0.5rem;
+    --space-3: 0.75rem;
+    --space-4: 1rem;
+    --space-5: 1.25rem;
+    --space-6: 1.5rem;
+    --space-7: 2rem;
+    --space-8: 3rem;
+
+    /* → app-components.css */
+    --font-size-100:       var(--type-body-sm-size);
+    --font-size-200:       0.8125rem;
+    --font-size-300:       var(--type-body-md-size);
+    --font-size-400:       1rem;
+    --page-title-size:     var(--type-h1-size);
+    --surface-title-size:  1.125rem;
+    --btn-font-size-sm:    var(--type-body-sm-size);
+    --btn-font-size-lg:    1rem;
 }
 
 /* =================================================================
- * Themes – tauschen ausschließlich den Akzent aus.
+ * Bereichsfarben (DESIGN.md-Palette)
+ * --area-color wird im Brand-Namen als Textfarbe genutzt.
  * ================================================================= */
 
 .theme-itw {
-    --accent-color: #0F6CBD;
-    --accent-rgb:   15, 108, 189;
+    --area-color: var(--pri);   /* Amber */
+}
+
+.theme-dienstplan {
+    --area-color: var(--ter); /* Tertiary-Grün */
+}
+
+.theme-fahrzeug {
+    --area-color: var(--sec); /* Secondary-Lila */
 }
 
 .theme-admin {
-    --accent-color: #475569;
-    --accent-rgb:   71, 85, 105;
+    --area-color: var(--outline); /* Neutral */
 }
 
 .theme-gf {
-    --accent-color: #8B2332;
-    --accent-rgb:   139, 35, 50;
+    --area-color: var(--err); /* Error-Rot (DRK-Kontext) */
 }
 
 /* =================================================================
- * Globale Basis-Styles (Layout-übergreifend)
+ * DARK MODE — system-preference based (prefers-color-scheme: dark)
+ * Alle App-CSS-Dateien nutzen ausschließlich var(--token),
+ * daher reicht es, die Token-Werte hier zu überschreiben.
+ * ================================================================= */
+
+@media (prefers-color-scheme: dark) {
+    :root {
+        /* Flächen — warm-dunkel (Tailwind Stone-Palette) */
+        --bg:        #0c0a09;
+        --surface-0: #1c1917;
+        --surface-1: #292524;
+        --surface-2: #3c3836;
+        --surface-3: #44403c;
+        --surface-4: #57534e;
+
+        /* Text */
+        --on-s:    #fafaf9;
+        --on-sv:   #e7e5e4;
+        --outline: #a8a29e;
+        --outline-v: #44403c;
+
+        /* Primary — helleres Amber für dunklen Hintergrund */
+        --pri:       #fbbf24;
+        --pri-c:     #f59e0b;
+        --pri-fixed: rgba(251, 191, 36, 0.12);
+        --on-pri:    #1c1917;
+        --on-pri-c:  #fbbf24;
+
+        /* Success — helles Grün */
+        --ter:        #4ade80;
+        --ter-c:      #166534;
+        --on-ter:     #14532d;
+        --on-ter-c:   rgba(74, 222, 128, 0.12);
+        --ter-fixed-d: #4ade80;
+
+        /* Error — helles Rot */
+        --err:     #f87171;
+        --err-c:   rgba(248, 113, 113, 0.15);
+        --on-err-c: #f87171;
+
+        /* Warning — Orange (trennbar von Amber-Primary) */
+        --warn:    #fb923c;
+        --warn-c:  rgba(251, 146, 60, 0.12);
+        --warn-brd: #92400e;
+
+        /* Secondary */
+        --sec-fixed: rgba(167, 139, 250, 0.15);
+
+        /* RGB-Werte für rgba()-Calls */
+        --pri-rgb:   251, 191, 36;
+        --ter-rgb:   74, 222, 128;
+        --err-rgb:   248, 113, 113;
+        --warn-rgb:  251, 146, 60;
+        --on-sv-rgb: 231, 229, 228;
+
+        /* Schatten — neutral-dunkel */
+        --sh-card:  0 2px 20px rgba(0, 0, 0, 0.35);
+        --sh-hover: 0 4px 28px rgba(0, 0, 0, 0.48);
+        --sh-drop:  0 8px 32px rgba(0, 0, 0, 0.58);
+
+        /* Aliases aktualisieren */
+        --accent-rgb:           251, 191, 36;
+        --success-color-strong: #86efac;   /* grün, lesbar auf dunklen Flächen */
+        --warning-color-strong: #fed7aa;   /* orange, lesbar auf dunklen Flächen */
+        --danger-color-strong:  #f87171;
+        --info-rgb:             251, 191, 36;
+    }
+}
+
+/* =================================================================
+ * CSS-Reset (ersetzt Bootstrap Reboot)
+ * ================================================================= */
+
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
+
+/* Formular-Elemente erben die Body-Schrift (Browser-Default: System-UI) */
+input,
+button,
+select,
+textarea,
+optgroup {
+    font-family: inherit;
+    font-size: inherit;
+    line-height: inherit;
+    margin: 0;
+}
+
+button,
+[type="button"],
+[type="reset"],
+[type="submit"] {
+    cursor: pointer;
+    -webkit-appearance: button;
+    background-color: transparent;
+    border: none;
+}
+
+/* Input-/Textarea-Darstellung normalisieren */
+textarea {
+    resize: vertical;
+}
+
+input[type="search"]::-webkit-search-decoration {
+    -webkit-appearance: none;
+}
+
+/* Bilder fließend skalieren */
+img,
+svg {
+    max-width: 100%;
+    height: auto;
+    vertical-align: middle;
+}
+
+/* Tabellen ohne doppelte Ränder */
+table {
+    border-collapse: collapse;
+    border-spacing: 0;
+}
+
+/* Listen-Reset nur wenn strukturell — nicht pauschal */
+/* (Views können Listen-Klassen setzen, keine globale Entfernung) */
+
+/* Heading-Margin-Reset */
+h1, h2, h3, h4, h5, h6 {
+    margin-top: 0;
+    margin-bottom: 0.5rem;
+}
+
+p {
+    margin-top: 0;
+    margin-bottom: 1rem;
+}
+
+/* =================================================================
+ * Globale Basis-Styles
  * ================================================================= */
 
 html {
@@ -128,61 +375,59 @@ html {
 }
 
 body {
-    background: radial-gradient(circle at top right, rgba(var(--accent-rgb), 0.07), transparent 28%),
-                linear-gradient(180deg, #F8FBFE 0%, var(--page-bg) 100%);
-    color: var(--text-color);
+    background-color: var(--bg);
+    color: var(--on-s);
     font-family: var(--font-family-base);
+    font-size: var(--type-body-md-size);
+    font-weight: var(--type-body-md-wt);
+    line-height: 1.6;
     overflow-x: hidden;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
 }
 
 a {
-    color: var(--accent-color);
+    color: var(--pri);
 }
 
 a:hover {
-    color: var(--accent-color-hover);
+    color: var(--pri-c);
 }
 
+/* stylelint-disable-next-line selector-max-specificity */
 #app {
     min-height: 100vh;
 }
 
-main.container-fluid,
-main.container {
-    padding-top: 1.5rem;
-    padding-bottom: 1.5rem;
-}
+/* =================================================================
+ * Utility-Klassen (appweit genutzt, bleiben)
+ * ================================================================= */
 
 .text-accent {
-    color: var(--accent-color) !important;
+    color: var(--pri);
 }
 
 .text-muted-ui {
-    color: var(--text-color-muted) !important;
+    color: var(--outline);
 }
 
+/* Marken-Typografie — genutzt in _AppShell.cshtml */
 .app-brand-name {
     display: inline-flex;
     align-items: center;
-    gap: 0.25rem;
-    flex-wrap: wrap;
+    gap: 0.5rem;
     line-height: 1.2;
 }
 
 .app-brand-name__primary {
-    color: var(--text-color-strong);
+    color: var(--on-s);
     font-weight: 700;
+    font-size: 0.9375rem;
+    letter-spacing: -0.01em;
 }
 
 .app-brand-name__accent {
-    color: var(--accent-color);
-    font-weight: 800;
-}
-
-.breadcrumb-separator {
-    color: var(--accent-color);
-    font-weight: 900;
-    opacity: 0.8;
+    color: var(--area-color);
+    font-weight: 600;
+    font-size: 0.9375rem;
 }
