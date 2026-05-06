@@ -42,30 +42,19 @@ public sealed class GetItwDashboardDataService
 
     public async Task<ItwDashboardDataResult> ExecuteAsync(CancellationToken cancellationToken = default)
     {
-        var aktivitaetTask = _aktivitaetsLog.GetByBereichAsync(
+        var aktivitaeten   = await _aktivitaetsLog.GetByBereichAsync(
             OrganisationsbereichCode.Intensivtransport, 6, cancellationToken);
-        var periodeTask  = _perioden.GetAktuelleOffeneAsync(cancellationToken);
-        var aufgabenTask = _aufgaben.GetOffeneByBereichAsync(
+        var aktivePeriode  = await _perioden.GetAktuelleOffeneAsync(cancellationToken);
+        var offeneAufgaben = await _aufgaben.GetOffeneByBereichAsync(
             OrganisationsbereichCode.Intensivtransport, cancellationToken);
-
-        await Task.WhenAll(aktivitaetTask, periodeTask, aufgabenTask);
-
-        var aktivitaeten  = await aktivitaetTask;
-        var aktivePeriode = await periodeTask;
-        var offeneAufgaben = await aufgabenTask;
 
         ItwWunschphaseSummaryViewModel? wunschphase = null;
 
         if (aktivePeriode is not null)
         {
-            var wuenscheTask    = _wuensche.GetAlleFuerPeriodeAsync(aktivePeriode.Id, cancellationToken);
-            var zuordnungenTask = _zuordnungen.GetAktivePrimaereZuordnungenByBereichAsync(
+            var alleWuensche    = await _wuensche.GetAlleFuerPeriodeAsync(aktivePeriode.Id, cancellationToken);
+            var alleZuordnungen = await _zuordnungen.GetAktivePrimaereZuordnungenByBereichAsync(
                 Organisationsbereich.Intensivtransport, cancellationToken);
-
-            await Task.WhenAll(wuenscheTask, zuordnungenTask);
-
-            var alleWuensche    = await wuenscheTask;
-            var alleZuordnungen = await zuordnungenTask;
 
             var userIdsWithWunsch = alleWuensche
                 .Select(w => w.UserId)

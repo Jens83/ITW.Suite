@@ -170,12 +170,8 @@ public sealed class ToggleMitarbeiterWunschService
         bool istJetztGesetzt,
         CancellationToken cancellationToken)
     {
-        var profilTask  = ErmittleMitarbeiterprofilAsync(command.UserId, cancellationToken);
-        var periodeTask = _dienstplanPeriodeRepository.GetByIdAsync(command.PeriodeId, cancellationToken);
-        await Task.WhenAll(profilTask, periodeTask);
-
-        var profil  = profilTask.Result;
-        var periode = periodeTask.Result;
+        var profil  = await ErmittleMitarbeiterprofilAsync(command.UserId, cancellationToken);
+        var periode = await _dienstplanPeriodeRepository.GetByIdAsync(command.PeriodeId, cancellationToken);
 
         if (profil is null || periode is null)
             return;
