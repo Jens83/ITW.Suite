@@ -726,6 +726,8 @@ body.modal-open {
     position: fixed;
     inset: 0;
     z-index: 1055;
+    width: 100%;
+    height: 100%;      /* explicit so children resolve % correctly */
     overflow-x: hidden;
     overflow-y: auto;
     outline: 0;
@@ -746,7 +748,7 @@ body.modal-open {
 .modal-dialog-centered {
     display: flex;
     align-items: center;
-    min-height: calc(100% - 3.5rem);
+    min-height: calc(100svh - 3.5rem); /* svh avoids % resolution ambiguity */
 }
 
 .modal-content {
