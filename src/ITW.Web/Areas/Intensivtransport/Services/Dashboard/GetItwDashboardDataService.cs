@@ -69,7 +69,16 @@ public sealed class GetItwDashboardDataService
                 p => p,
                 StringComparer.OrdinalIgnoreCase);
 
-            var personen = alleZuordnungen
+            // Honorarkräfte brauchen keine Wünsche abzugeben → aus Übersicht ausblenden
+            var relevantePflichtZuordnungen = alleZuordnungen
+                .Where(z =>
+                {
+                    profilByUserId.TryGetValue(z.UserId, out var p);
+                    return p?.Beschaeftigungsart != Domain.Personnel.Enums.MitarbeiterBeschaeftigungsart.Honorarkraft;
+                })
+                .ToList();
+
+            var personen = relevantePflichtZuordnungen
                 .Select(z =>
                 {
                     profilByUserId.TryGetValue(z.UserId, out var profil);
@@ -86,7 +95,7 @@ public sealed class GetItwDashboardDataService
                         HatWunschAbgegeben = userIdsWithWunsch.Contains(z.UserId)
                     };
                 })
-                .OrderBy(p => p.HatWunschAbgegeben)   // Ausstehende zuerst
+                .OrderBy(p => p.HatWunschAbgegeben)
                 .ThenBy(p => p.Kurzname)
                 .ToList();
 
@@ -96,11 +105,17 @@ public sealed class GetItwDashboardDataService
             var gesamtNichtAbg   = personen.Count(p => !p.HatWunschAbgegeben);
             var weitereAusstehend = Math.Max(0, gesamtNichtAbg - gezeigtNichtAbg);
 
+            // Eingegangene Wünsche nur für Pflichtmitarbeiter zählen
+            var relevanteUserIds = relevantePflichtZuordnungen
+                .Select(z => z.UserId)
+                .ToHashSet(StringComparer.OrdinalIgnoreCase);
+            var eingegangeneWuensche = userIdsWithWunsch.Count(id => relevanteUserIds.Contains(id));
+
             wunschphase = new ItwWunschphaseSummaryViewModel
             {
                 Bezeichnung          = aktivePeriode.Bezeichnung,
-                GesamtMitarbeiter    = alleZuordnungen.Count,
-                EingegangeneWuensche = userIdsWithWunsch.Count,
+                GesamtMitarbeiter    = relevantePflichtZuordnungen.Count,
+                EingegangeneWuensche = eingegangeneWuensche,
                 AngezeigtePersonen   = angezeigt,
                 WeitereAusstehend    = weitereAusstehend
             };

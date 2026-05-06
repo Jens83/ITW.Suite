@@ -44,7 +44,6 @@ public sealed class ToggleMitarbeiterWunschService
     private readonly ReadItwMitarbeiterprofileService _readItwMitarbeiterprofileService;
     private readonly IFreelancerMonatswunschRepository _freelancerMonatswunschRepository;
     private readonly ToggleDienstwunschService _toggleDienstwunschService;
-    private readonly IDienstplanPeriodeRepository _dienstplanPeriodeRepository;
     private readonly IAktivitaetsLogRepository _aktivitaetsLogRepository;
 
     public ToggleMitarbeiterWunschService(
@@ -52,7 +51,6 @@ public sealed class ToggleMitarbeiterWunschService
         ReadItwMitarbeiterprofileService readItwMitarbeiterprofileService,
         IFreelancerMonatswunschRepository freelancerMonatswunschRepository,
         ToggleDienstwunschService toggleDienstwunschService,
-        IDienstplanPeriodeRepository dienstplanPeriodeRepository,
         IAktivitaetsLogRepository aktivitaetsLogRepository)
     {
         ArgumentNullException.ThrowIfNull(mitarbeiterUrlaubszeitraumRepository);
@@ -66,9 +64,6 @@ public sealed class ToggleMitarbeiterWunschService
 
         ArgumentNullException.ThrowIfNull(toggleDienstwunschService);
         _toggleDienstwunschService = toggleDienstwunschService;
-
-        ArgumentNullException.ThrowIfNull(dienstplanPeriodeRepository);
-        _dienstplanPeriodeRepository = dienstplanPeriodeRepository;
 
         ArgumentNullException.ThrowIfNull(aktivitaetsLogRepository);
         _aktivitaetsLogRepository = aktivitaetsLogRepository;
@@ -170,23 +165,22 @@ public sealed class ToggleMitarbeiterWunschService
         bool istJetztGesetzt,
         CancellationToken cancellationToken)
     {
-        var profil  = await ErmittleMitarbeiterprofilAsync(command.UserId, cancellationToken);
-        var periode = await _dienstplanPeriodeRepository.GetByIdAsync(command.PeriodeId, cancellationToken);
-
-        if (profil is null || periode is null)
+        if (!istJetztGesetzt)
             return;
 
-        var datumText = command.Datum.ToString("dd.MM.yyyy", DeutscheKultur);
-        var aktion = istJetztGesetzt ? "abgegeben" : "entfernt";
-        var icon = istJetztGesetzt ? "bi bi-calendar2-check" : "bi bi-calendar2-x";
-        var text = $"<strong>{profil.AnzeigeName}</strong> hat Dienstwunsch für den <strong>{datumText}</strong> {aktion}.";
+        var profil = await ErmittleMitarbeiterprofilAsync(command.UserId, cancellationToken);
+
+        if (profil is null)
+            return;
+
+        var text = $"<strong>{profil.AnzeigeName}</strong> hat Dienstwünsche abgegeben.";
 
         var eintrag = new AktivitaetsEintrag(
             Guid.NewGuid(),
             OrganisationsbereichCode.Intensivtransport,
             text,
-            AktivitaetsKategorie.Info,
-            icon,
+            AktivitaetsKategorie.Erfolg,
+            "bi bi-check2-circle",
             DateTimeOffset.UtcNow);
 
         await _aktivitaetsLogRepository.AddAsync(eintrag, cancellationToken);
