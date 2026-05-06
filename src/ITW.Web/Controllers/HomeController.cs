@@ -23,25 +23,22 @@ public sealed class HomeController : Controller
 
     public async Task<IActionResult> Index(CancellationToken cancellationToken)
     {
-        OrganisationsbereichCode? aktuellerBereich = null;
-        string? aktuellerBereichName = null;
-
         if (User.Identity?.IsAuthenticated == true)
         {
             var result = await _currentUserContextAccessor.GetCurrentAsync(cancellationToken);
 
             if (result.IsSuccess && result.CurrentUser is not null)
             {
-                aktuellerBereich = result.CurrentUser.Bereich;
-                aktuellerBereichName = BereichsRoutingHelper.GetBereichsname(result.CurrentUser.Bereich);
+                var areaName = BereichsRoutingHelper.GetAreaName(result.CurrentUser.Bereich);
+                if (!string.IsNullOrWhiteSpace(areaName))
+                    return RedirectToAction("Index", "Dashboard", new { area = areaName });
             }
         }
 
         var viewModel = new HomeIndexViewModel
         {
             IstAngemeldet = User.Identity?.IsAuthenticated == true,
-            AktuellerBereichName = aktuellerBereichName,
-            Bereiche = ErzeugeBereiche(aktuellerBereich)
+            Bereiche = ErzeugeBereiche(null)
         };
 
         return View(viewModel);
