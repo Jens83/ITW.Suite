@@ -12,7 +12,8 @@ public static class WebServiceRegistrationExtensions
             .AddWebDienstplanServices()
             .AddWebOrganisationModuleServices()
             .AddWebCoreServices()
-            .AddWebFahrzeugmanagementServices();
+            .AddWebFahrzeugmanagementServices()
+            .AddWebDashboardServices();
 
         return services;
     }

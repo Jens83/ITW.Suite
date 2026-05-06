@@ -1,4 +1,5 @@
-﻿using ITW.Dienstplan.Domain.Entities;
+﻿using ITW.Application.Aktivitaet;
+using ITW.Dienstplan.Domain.Entities;
 using ITW.Fahrzeugmanagement.Domain.Entities;
 using ITW.Domain.Organisation.Entities;
 using ITW.Domain.Personnel.Entities;
@@ -60,6 +61,8 @@ public sealed class PlatformDbContext : IdentityDbContext<ApplicationUser>
     public DbSet<TrackingGeraetEinrichtungscode> TrackingGeraetEinrichtungscodes => Set<TrackingGeraetEinrichtungscode>();
 
     public DbSet<FahrzeugPruefung> FahrzeugPruefungen => Set<FahrzeugPruefung>();
+
+    public DbSet<AktivitaetsEintrag> AktivitaetsLog => Set<AktivitaetsEintrag>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
