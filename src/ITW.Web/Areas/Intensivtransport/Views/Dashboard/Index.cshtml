@@ -29,11 +29,6 @@
 <div class="app-dashboard-page">
     <div class="app-dashboard-header">
         <div class="app-dashboard-header__content">
-            <div class="app-dashboard-header__label">
-                <i class="bi bi-grid-1x2-fill"></i>
-                Startseite
-            </div>
-
             <h1 class="app-dashboard-header__title">Bereich Intensivtransport</h1>
             <p class="app-dashboard-header__text">
                 Es werden nur die Module angezeigt, die der Geschäftsführer für Ihre Rolle im Bereich Intensivtransport freigegeben hat.
@@ -68,11 +63,10 @@
     }
     else
     {
-        <div class="row app-dashboard-grid">
+        <div class="app-dashboard-grid">
             @if (hatDienstplan && istMitarbeiter)
             {
-                <div class="col-12 col-md-6 col-xl-4">
-                    <article class="app-dashboard-card">
+                <article class="app-dashboard-card">
                         <div class="app-dashboard-card__body">
                             <div class="app-dashboard-card__meta">Dienstplan</div>
 
@@ -102,11 +96,9 @@
                                 </a>
                             </div>
                         </div>
-                    </article>
-                </div>
+                </article>
 
-                <div class="col-12 col-md-6 col-xl-4">
-                    <article class="app-dashboard-card">
+                <article class="app-dashboard-card">
                         <div class="app-dashboard-card__body">
                             <div class="app-dashboard-card__meta">Dienstplan</div>
 
@@ -136,14 +128,12 @@
                                 </a>
                             </div>
                         </div>
-                    </article>
-                </div>
+                </article>
             }
 
             @if (hatDienstplan && istWachleiter)
             {
-                <div class="col-12 col-md-6 col-xl-4">
-                    <article class="app-dashboard-card">
+                <article class="app-dashboard-card">
                         <div class="app-dashboard-card__body">
                             <div class="app-dashboard-card__meta">Planung</div>
 
@@ -173,11 +163,9 @@
                                 </a>
                             </div>
                         </div>
-                    </article>
-                </div>
+                </article>
 
-                <div class="col-12 col-md-6 col-xl-4">
-                    <article class="app-dashboard-card">
+                <article class="app-dashboard-card">
                         <div class="app-dashboard-card__body">
                             <div class="app-dashboard-card__meta">Planung</div>
 
@@ -207,11 +195,9 @@
                                 </a>
                             </div>
                         </div>
-                    </article>
-                </div>
+                </article>
 
-                <div class="col-12 col-md-6 col-xl-4">
-                    <article class="app-dashboard-card">
+                <article class="app-dashboard-card">
                         <div class="app-dashboard-card__body">
                             <div class="app-dashboard-card__meta">Automatisierung</div>
 
@@ -241,14 +227,12 @@
                                 </a>
                             </div>
                         </div>
-                    </article>
-                </div>
+                </article>
             }
 
             @if (hatEinsatzverwaltung)
             {
-                <div class="col-12 col-md-6 col-xl-4">
-                    <article class="app-dashboard-card">
+                <article class="app-dashboard-card">
                         <div class="app-dashboard-card__body">
                             <div class="app-dashboard-card__meta">Operativ</div>
 
@@ -275,13 +259,11 @@
                                 </button>
                             </div>
                         </div>
-                    </article>
-                </div>
+                </article>
             }
             @if (darfFahrzeugmanagementSehen)
             {
-                <div class="col-12 col-md-6 col-xl-4">
-                    <article class="app-dashboard-card">
+                <article class="app-dashboard-card">
                         <div class="app-dashboard-card__body">
                             <div class="app-dashboard-card__meta">Fahrzeugmanagement</div>
 
@@ -324,13 +306,11 @@
                                 </div>
                             </div>
                         </div>
-                    </article>
-                </div>
+                </article>
             }
             @if (darfPersonaldatenSehen)
             {
-                <div class="col-12 col-md-6 col-xl-4">
-                    <article class="app-dashboard-card">
+                <article class="app-dashboard-card">
                         <div class="app-dashboard-card__body">
                             <div class="app-dashboard-card__meta">Verwaltung</div>
 
@@ -360,8 +340,7 @@
                                 </a>
                             </div>
                         </div>
-                    </article>
-                </div>
+                </article>
             }
         </div>
     }

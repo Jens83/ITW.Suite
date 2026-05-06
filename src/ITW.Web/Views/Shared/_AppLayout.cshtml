@@ -55,7 +55,7 @@
     <div id="app">
         <partial name="~/Views/Shared/Komponenten/_AppShell.cshtml" model="appShellModel" />
 
-        <main class="container-fluid p-4">
+        <main class="itw-main">
             @if (!string.IsNullOrWhiteSpace(flashSuccess))
             {
                 @await Html.PartialAsync(

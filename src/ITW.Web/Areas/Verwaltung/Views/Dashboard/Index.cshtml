@@ -21,11 +21,6 @@
 <div class="app-dashboard-page">
     <div class="app-dashboard-header">
         <div class="app-dashboard-header__content">
-            <div class="app-dashboard-header__label">
-                <i class="bi bi-building-gear"></i>
-                Verwaltung
-            </div>
-
             <h1 class="app-dashboard-header__title">Verwaltungszentrum</h1>
             <p class="app-dashboard-header__text">
                 Es werden nur die Module angezeigt, die der Geschäftsführer Ihrer Rolle in der Verwaltung zugewiesen hat.
@@ -50,11 +45,10 @@
     }
     else
     {
-        <div class="row app-dashboard-grid">
+        <div class="app-dashboard-grid">
             @if (hatAbrechnung)
             {
-                <div class="col-12 col-md-6 col-xl-4">
-                    <article class="app-dashboard-card">
+                <article class="app-dashboard-card">
                         <div class="app-dashboard-card__body">
                             <div class="app-dashboard-card__meta">Kaufmännisch</div>
 
@@ -81,14 +75,12 @@
                                 </button>
                             </div>
                         </div>
-                    </article>
-                </div>
+                </article>
             }
 
             @if (hatBuchhaltung)
             {
-                <div class="col-12 col-md-6 col-xl-4">
-                    <article class="app-dashboard-card">
+                <article class="app-dashboard-card">
                         <div class="app-dashboard-card__body">
                             <div class="app-dashboard-card__meta">Finanzen</div>
 
@@ -115,14 +107,12 @@
                                 </button>
                             </div>
                         </div>
-                    </article>
-                </div>
+                </article>
             }
 
             @if (hatPersonal)
             {
-                <div class="col-12 col-md-6 col-xl-4">
-                    <article class="app-dashboard-card">
+                <article class="app-dashboard-card">
                         <div class="app-dashboard-card__body">
                             <div class="app-dashboard-card__meta">Personal</div>
 
@@ -143,7 +133,7 @@
                                 <a asp-area="Verwaltung"
                                    asp-controller="Benutzer"
                                    asp-action="Index"
-                                   class="btn-outline-accent app-dashboard-action"
+                                   class="app-btn app-btn-outline-accent app-dashboard-action"
                                    data-app-loading-link
                                    data-app-loading-text="Personalwesen wird geöffnet...">
                                     <i class="bi bi-person-lines-fill"></i>
@@ -152,8 +142,7 @@
                                 </a>
                             </div>
                         </div>
-                    </article>
-                </div>
+                </article>
             }
         </div>
     }

@@ -5,11 +5,6 @@
 <div class="app-dashboard-page">
     <div class="app-dashboard-header">
         <div class="app-dashboard-header__content">
-            <div class="app-dashboard-header__label">
-                <i class="bi bi-graph-up-arrow"></i>
-                Geschäftsführung
-            </div>
-
             <h1 class="app-dashboard-header__title">Management Dashboard</h1>
             <p class="app-dashboard-header__text">
                 Strategische Steuerung, Personalübersicht und zentrale Zuweisung der Module an Bereiche und Rollen.
@@ -22,9 +17,8 @@
         </div>
     </div>
 
-    <div class="row app-dashboard-grid">
-        <div class="col-12 col-md-6 col-xl-4">
-            <article class="app-dashboard-card">
+    <div class="app-dashboard-grid">
+        <article class="app-dashboard-card">
                 <div class="app-dashboard-card__body">
                     <div class="app-dashboard-card__meta">Systemsteuerung</div>
 
@@ -45,7 +39,7 @@
                         <a asp-area="Geschaeftsfuehrung"
                            asp-controller="Module"
                            asp-action="Index"
-                           class="btn-outline-accent app-dashboard-action"
+                           class="app-btn app-btn-outline-accent app-dashboard-action"
                            data-app-loading-link
                            data-app-loading-text="Modulverwaltung wird geöffnet...">
                             <i class="bi bi-sliders"></i>
@@ -55,10 +49,8 @@
                     </div>
                 </div>
             </article>
-        </div>
 
-        <div class="col-12 col-md-6 col-xl-4">
-            <article class="app-dashboard-card">
+        <article class="app-dashboard-card">
                 <div class="app-dashboard-card__body">
                     <div class="app-dashboard-card__meta">Organisation</div>
 
@@ -79,7 +71,7 @@
                         <a asp-area="Geschaeftsfuehrung"
                            asp-controller="Benutzer"
                            asp-action="Index"
-                           class="btn-outline-accent app-dashboard-action"
+                           class="app-btn app-btn-outline-accent app-dashboard-action"
                            data-app-loading-link
                            data-app-loading-text="Personalübersicht wird geöffnet...">
                             <i class="bi bi-person-lines-fill"></i>
@@ -89,6 +81,5 @@
                     </div>
                 </div>
             </article>
-        </div>
     </div>
 </div>

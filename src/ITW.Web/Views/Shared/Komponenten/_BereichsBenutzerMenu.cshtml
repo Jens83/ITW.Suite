@@ -1,4 +1,4 @@
-﻿@model ITW.Web.ViewModels.Layout.BereichsBenutzerMenuViewModel
+@model ITW.Web.ViewModels.Layout.BereichsBenutzerMenuViewModel
 
 @{
     var aktuellerBenutzername = User.Identity?.Name;
@@ -37,41 +37,36 @@
     var avatarName = Uri.EscapeDataString(avatarSeed);
 }
 
-<div class="dropdown app-user-menu">
+<div class="itw-user-menu dropdown">
     <a href="#"
-       class="app-user-menu__toggle"
+       class="itw-user-menu__toggle"
        data-bs-toggle="dropdown"
-       aria-expanded="false">
+       aria-expanded="false"
+       aria-haspopup="true">
         <img src="https://ui-avatars.com/api/?name=@avatarName&background=@Model.AvatarBackgroundColor&color=fff&bold=true"
-             width="38"
-             height="38"
-             class="app-user-menu__avatar"
-             alt="Benutzer" />
+             width="32"
+             height="32"
+             class="itw-user-menu__avatar"
+             alt="@anzeigeName" />
 
-        <span class="app-user-menu__meta d-none d-md-flex">
-            <span class="app-user-menu__name">@anzeigeName</span>
-            <span class="app-user-menu__area">@Model.Bereichsanzeige</span>
-        </span>
-
-        <i class="bi bi-chevron-down app-user-menu__chevron d-none d-md-inline-flex"></i>
+        <span class="itw-user-menu__name">@anzeigeName</span>
+        <i class="bi bi-chevron-down itw-user-menu__chevron" aria-hidden="true"></i>
     </a>
 
-    <ul class="dropdown-menu dropdown-menu-end app-user-menu__dropdown">
-        <li class="app-user-menu__dropdown-header">
-            <div class="app-user-menu__dropdown-name">@anzeigeName</div>
-            <div class="app-user-menu__dropdown-area">Angemeldet im Bereich @Model.Bereichsanzeige</div>
-        </li>
+    <div class="itw-user-menu__dropdown dropdown-menu dropdown-menu-end">
+        <div class="itw-user-menu__header">
+            <div class="itw-user-menu__display-name">@anzeigeName</div>
+            <div class="itw-user-menu__display-area">@Model.Bereichsanzeige</div>
+        </div>
 
-        <li><hr class="dropdown-divider app-user-menu__divider"></li>
+        <hr class="itw-user-menu__divider" />
 
-        <li>
-            <form asp-area="" asp-controller="Account" asp-action="Logout" method="post" class="m-0">
-                @Html.AntiForgeryToken()
-                <button type="submit" class="app-user-menu__action app-user-menu__action--danger">
-                    <i class="bi bi-box-arrow-right"></i>
-                    Abmelden
-                </button>
-            </form>
-        </li>
-    </ul>
+        <form asp-area="" asp-controller="Account" asp-action="Logout" method="post" class="m-0">
+            @Html.AntiForgeryToken()
+            <button type="submit" class="itw-user-menu__action itw-user-menu__action--danger">
+                <i class="bi bi-box-arrow-right"></i>
+                Abmelden
+            </button>
+        </form>
+    </div>
 </div>

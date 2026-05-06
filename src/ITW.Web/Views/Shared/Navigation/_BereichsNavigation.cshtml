@@ -1,4 +1,4 @@
-﻿@using ITW.Application.Organisation.Contracts
+@using ITW.Application.Organisation.Contracts
 @using ITW.Application.Users.CountOffenePasswortResetAnfragen
 @using ITW.Dienstplan.Application.Contracts
 @using ITW.Web.Security.PasswordReset
@@ -26,14 +26,10 @@
             aktuellerBereich))
     {
         zeigePasswortResetEintrag = true;
-
         var countResult = await CountOffenePasswortResetAnfragenService.ExecuteAsync(
             new CountOffenePasswortResetAnfragenQuery(aktuellerBereich));
-
         if (countResult.IsSuccess)
-        {
             offenePasswortResetAnfragen = countResult.Anzahl;
-        }
     }
 
     var zeigeDienstplanBadge = false;
@@ -52,68 +48,65 @@
     var istPasswortResetAktiv =
         string.Equals(aktuellerController, "PasswortReset", StringComparison.OrdinalIgnoreCase) &&
         string.Equals(aktuelleAction, "Index", StringComparison.OrdinalIgnoreCase);
+
+    var sektionen = Model.Sektionen.Where(x => x.Eintraege.Any()).ToList();
 }
 
-@foreach (var sektion in Model.Sektionen.Where(x => x.Eintraege.Any()))
+@for (int si = 0; si < sektionen.Count; si++)
 {
-    <div class="menu-section">@sektion.Titel</div>
+    var sektion = sektionen[si];
+    var sektionId = $"itw-dg-{si}";
+    var hatAktiven = sektion.Eintraege.Any(e => e.IstAktiv);
+    var ersterEintrag = sektion.Eintraege.First();
 
-    <nav class="nav flex-column">
-        @foreach (var eintrag in sektion.Eintraege)
-        {
-            var istDienstplanEintrag =
-            zeigeDienstplanBadge &&
-            string.Equals(eintrag.Controller, "Dienstplan", StringComparison.OrdinalIgnoreCase) &&
-            string.Equals(eintrag.Action, "Index", StringComparison.OrdinalIgnoreCase);
+    <div class="itw-dg">
+        <button type="button"
+                class="itw-dg-hd @(hatAktiven ? "active" : "collapsed")"
+                data-drawer-toggle="@sektionId"
+                aria-expanded="@(hatAktiven ? "true" : "false")">
+            <i class="@ersterEintrag.IconCssClass itw-dg-hi" aria-hidden="true"></i>
+            <span class="itw-dg-lbl">@sektion.Titel</span>
+            <i class="bi bi-chevron-down itw-dg-chev" aria-hidden="true"></i>
+        </button>
+        <div class="itw-dg-body @(hatAktiven ? "" : "collapsed")" id="@sektionId">
+            @foreach (var eintrag in sektion.Eintraege)
+            {
+                var istDienstplanEintrag =
+                    zeigeDienstplanBadge &&
+                    string.Equals(eintrag.Controller, "Dienstplan", StringComparison.OrdinalIgnoreCase) &&
+                    string.Equals(eintrag.Action, "Index", StringComparison.OrdinalIgnoreCase);
 
-            <a class="menu-link @(eintrag.IstAktiv ? "active" : "")"
-               asp-area="@eintrag.Area"
-               asp-controller="@eintrag.Controller"
-               asp-action="@eintrag.Action">
-
-                <span class="menu-link__main">
-                    <span class="menu-link__icon">
-                        <i class="@eintrag.IconCssClass"></i>
-                    </span>
-                    <span class="menu-link__text">@eintrag.Text</span>
-                </span>
-
-                @if (istDienstplanEintrag && offeneDienstplanPerioden > 0)
-                {
-                    <span class="menu-link__badge menu-link__badge--success">
-                        @offeneDienstplanPerioden
-                    </span>
-                }
-            </a>
-        }
-    </nav>
+                <a class="itw-dg-item @(eintrag.IstAktiv ? "active" : "")"
+                   asp-area="@eintrag.Area"
+                   asp-controller="@eintrag.Controller"
+                   asp-action="@eintrag.Action">
+                    <i class="@eintrag.IconCssClass" aria-hidden="true"></i>
+                    @eintrag.Text
+                    @if (istDienstplanEintrag && offeneDienstplanPerioden > 0)
+                    {
+                        <span class="itw-dg-badge">@offeneDienstplanPerioden</span>
+                    }
+                </a>
+            }
+        </div>
+    </div>
 }
 
 @if (zeigePasswortResetEintrag && !string.IsNullOrWhiteSpace(areaName))
 {
-    <div class="menu-section">Kontosicherheit</div>
+    <div class="itw-dg-sep"></div>
 
-    <nav class="nav flex-column">
-        <a class="menu-link @(istPasswortResetAktiv ? "active" : "")"
-           asp-area="@areaName"
-           asp-controller="PasswortReset"
-           asp-action="Index">
-
-            <span class="menu-link__main">
-                <span class="menu-link__icon">
-                    <i class="bi bi-key"></i>
-                </span>
-                <span class="menu-link__text">Passwort-Resets</span>
-            </span>
-
-            @if (offenePasswortResetAnfragen > 0)
-            {
-                <span class="menu-link__badge menu-link__badge--danger">
-                    @offenePasswortResetAnfragen
-                </span>
-            }
-        </a>
-    </nav>
+    <a class="itw-dg-item @(istPasswortResetAktiv ? "active" : "")"
+       asp-area="@areaName"
+       asp-controller="PasswortReset"
+       asp-action="Index">
+        <i class="bi bi-key" aria-hidden="true"></i>
+        Passwort-Resets
+        @if (offenePasswortResetAnfragen > 0)
+        {
+            <span class="itw-dg-badge itw-dg-badge--err">@offenePasswortResetAnfragen</span>
+        }
+    </a>
 }
 
 @functions {

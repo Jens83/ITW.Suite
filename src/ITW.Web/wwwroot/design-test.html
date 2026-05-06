@@ -1,0 +1,891 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>ITW Neubrandenburg — Design-Prototype</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+<style>
+/* ============================================================
+   DESIGN SYSTEM — per DESIGN.md
+   Quelle: High-Tech Corporate Admin / Material Design 3
+   ============================================================ */
+:root {
+  --font:'Plus Jakarta Sans',system-ui,sans-serif;
+
+  /* Surfaces (MD3) */
+  --bg:          #f9f9ff;
+  --surface-0:   #ffffff;
+  --surface-1:   #f2f3fc;
+  --surface-2:   #ecedf6;
+  --surface-3:   #e7e8f1;
+  --surface-4:   #e1e2eb;
+
+  /* Text */
+  --on-s:        #191c22;
+  --on-sv:       #424753;
+  --outline:     #727784;
+  --outline-v:   #c2c6d5;
+
+  /* Primary (Blue) */
+  --pri:         #0059ba;
+  --pri-c:       #3072d7;
+  --pri-fixed:   #d7e2ff;
+  --on-pri:      #ffffff;
+  --on-pri-c:    #fefcff;
+
+  /* Tertiary (Green = Success) */
+  --ter:         #006b2d;
+  --ter-c:       #00873b;
+  --on-ter:      #ffffff;
+  --on-ter-c:    #f7fff3;
+  --ter-fixed-d: #5fdf7e;
+
+  /* Error (Red) */
+  --err:         #ba1a1a;
+  --err-c:       #ffdad6;
+  --on-err-c:    #93000a;
+
+  /* Warning (Amber — ITW-Erweiterung) */
+  --warn:        #b45309;
+  --warn-c:      #fff7ed;
+  --warn-brd:    #fed7aa;
+
+  /* Secondary (Purple) */
+  --sec:         #7300e0;
+  --sec-fixed:   #eddcff;
+  --on-sec-c:    #f7ecff;
+
+  /* DRK-Brand */
+  --drk:         #cc0000;
+
+  /* Spacing (DESIGN.md) */
+  --sp-cont:     2rem;
+  --sp-gap:      1.5rem;
+  --sp-pad:      1.25rem;
+  --sp-el:       0.75rem;
+
+  /* Radius (DESIGN.md) */
+  --r-sm:  0.25rem;
+  --r:     0.5rem;
+  --r-md:  0.75rem;
+  --r-lg:  1rem;
+  --r-xl:  1.5rem;
+  --r-full:9999px;
+
+  /* Shadows — Ambient, blau getönt (DESIGN.md: Blur 20px, Opacity 4-6%) */
+  --sh-card:   0 2px 20px rgba(0,89,186,.06),0 1px 3px rgba(0,0,0,.03);
+  --sh-hover:  0 4px 28px rgba(0,89,186,.10),0 2px 6px rgba(0,0,0,.04);
+  --sh-drop:   0 8px 32px rgba(0,89,186,.12),0 2px 8px rgba(0,0,0,.06);
+
+  /* Bereichsfarben (frei aus DESIGN.md) */
+  --area-nb: #3072d7;   /* Neubrandenburg — Primary-Container, kühl-blau */
+
+  --navbar-h:56px;
+}
+
+@media(prefers-color-scheme:dark){
+  :root{
+    --bg:#111318;--surface-0:#1d1f27;--surface-1:#22242d;
+    --surface-2:#262830;--surface-3:#2a2c36;--surface-4:#2f3140;
+    --on-s:#e3e2f0;--on-sv:#c5c4d4;--outline:#8f909f;--outline-v:#44464f;
+    --pri:#acc7ff;--pri-c:#2a4e8a;--pri-fixed:rgba(172,199,255,.15);
+    --on-pri:#002c71;--on-pri-c:#acc7ff;
+    --ter:#5fdf7e;--ter-c:#003817;--on-ter-c:rgba(95,223,126,.12);--ter-fixed-d:#5fdf7e;
+    --err:#ffb4ab;--err-c:rgba(186,26,26,.18);--on-err-c:#ffb4ab;
+    --warn:#fbbf24;--warn-c:rgba(180,83,9,.15);--warn-brd:#78350f;
+    --sec-fixed:rgba(219,186,255,.12);
+    --sh-card:0 2px 20px rgba(0,0,0,.28);
+    --sh-hover:0 4px 28px rgba(0,0,0,.38);
+    --sh-drop:0 8px 32px rgba(0,0,0,.45);
+  }
+  .navbar{background:var(--surface-0);border-color:var(--outline-v);}
+  .nb-trig{color:var(--on-sv);}
+  .nb-trig:hover{background:var(--surface-2);color:var(--on-s);}
+  .nb-trig.active{background:rgba(172,199,255,.1);color:var(--pri);}
+  .nb-trig.active .nb-il{color:var(--pri);}
+  .nb-brand-name{color:var(--on-s);}
+  .nb-area{color:#acc7ff;}
+  .nb-drop{background:var(--surface-1);border-color:var(--outline-v);}
+  .nb-di{color:var(--on-s);}
+  .nb-di:hover{background:rgba(172,199,255,.08);color:var(--pri);}
+  .nb-di:hover .nb-ic{color:var(--pri);}
+  .nb-dlbl{color:var(--outline);}
+  .nb-dsep{background:var(--outline-v);}
+  .nb-ric{border-color:var(--outline-v);color:var(--on-sv);}
+  .nb-dot-top{border-color:var(--surface-0);}
+  .nb-uc{border-color:var(--outline-v);}
+  .nb-uname{color:var(--on-sv);}
+  .nb-uav{background:var(--pri-c);}
+}
+
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{font-size:14px;-webkit-font-smoothing:antialiased;}
+body{font-family:var(--font);background:var(--bg);color:var(--on-s);line-height:1.6;}
+button{font-family:var(--font);cursor:pointer;}
+
+/* ============================================================
+   NAVBAR — DESIGN.md: active = light blue bg tint + primary icon
+   ============================================================ */
+.navbar{
+  height:var(--navbar-h);background:var(--surface-0);
+  border-bottom:1px solid var(--outline-v);
+  display:flex;align-items:center;
+  padding:0 var(--sp-cont);gap:2px;
+  position:sticky;top:0;z-index:200;
+}
+.nb-brand{display:flex;align-items:center;padding-right:var(--sp-gap);margin-right:4px;border-right:1px solid var(--outline-v);flex-shrink:0;}
+.nb-brand-name{font-size:15px;font-weight:700;color:var(--on-s);letter-spacing:-.01em;display:flex;align-items:center;gap:8px;}
+.nb-area{color:var(--area-nb);font-weight:600;}
+.nb-brand-sub{font-size:11px;font-weight:500;color:var(--outline);line-height:1.2;}
+
+.nb-menu{display:flex;align-items:center;gap:1px;flex:1;}
+.nb-item{position:relative;}
+
+.nb-trig{
+  display:flex;align-items:center;gap:6px;padding:7px 11px;
+  border-radius:var(--r-md);border:none;background:transparent;
+  color:var(--on-sv);font-size:14px;font-weight:500;
+  cursor:pointer;white-space:nowrap;
+  transition:background .12s,color .12s;font-family:var(--font);
+}
+.nb-trig:hover{background:var(--surface-1);color:var(--on-s);}
+.nb-trig.active{background:rgba(0,89,186,.07);color:var(--pri);font-weight:600;}
+.nb-trig.active .nb-il{color:var(--pri);}
+.nb-trig.open .nb-chev{transform:rotate(180deg);}
+.nb-il{font-size:15px;color:var(--outline);transition:color .12s;}
+.nb-trig:hover .nb-il{color:var(--on-s);}
+.nb-chev{font-size:11px;color:var(--outline-v);transition:transform .15s;flex-shrink:0;}
+.nb-trig.active .nb-chev{color:var(--pri-c);}
+.nb-pill{background:var(--err-c);color:var(--on-err-c);font-size:10px;font-weight:700;padding:1px 6px;border-radius:var(--r-full);line-height:1.6;}
+.nb-sdot{width:7px;height:7px;border-radius:50%;border:1.5px solid var(--surface-0);flex-shrink:0;}
+.nb-sdot.warn{background:var(--warn);}
+.nb-sdot.ok{background:var(--ter);}
+
+.nb-drop{
+  display:none;position:absolute;top:calc(100% + 8px);left:0;
+  min-width:224px;background:var(--surface-0);
+  border:1px solid var(--outline-v);border-radius:var(--r-lg);
+  box-shadow:var(--sh-drop);padding:6px;z-index:300;
+  animation:ddIn .12s ease;
+}
+@keyframes ddIn{from{opacity:0;transform:translateY(-4px);}to{opacity:1;transform:translateY(0);}}
+.nb-drop.open{display:block;}
+
+.nb-di{
+  display:flex;align-items:center;gap:10px;
+  padding:9px 10px;border-radius:var(--r);
+  border:none;background:transparent;color:var(--on-s);
+  font-size:14px;font-weight:500;cursor:pointer;
+  width:100%;text-align:left;
+  transition:background .1s,color .1s;font-family:var(--font);
+}
+.nb-di:hover{background:rgba(0,89,186,.06);color:var(--pri);}
+.nb-ic{color:var(--outline);font-size:15px;width:18px;text-align:center;flex-shrink:0;transition:color .1s;}
+.nb-di:hover .nb-ic{color:var(--pri);}
+.nb-dtxt{flex:1;}
+.nb-dbadge{font-size:10px;font-weight:700;padding:2px 6px;border-radius:var(--r-full);background:var(--err-c);color:var(--on-err-c);}
+.nb-dbadge.warn{background:var(--warn-c);color:var(--warn);}
+.nb-dsep{height:1px;background:var(--surface-3);margin:4px 2px;}
+.nb-dlbl{padding:8px 10px 4px;font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.05em;color:var(--outline);line-height:1;}
+
+.nb-right{display:flex;align-items:center;gap:8px;flex-shrink:0;margin-left:auto;}
+.nb-ric{width:34px;height:34px;border-radius:var(--r-md);border:1px solid var(--outline-v);background:transparent;display:flex;align-items:center;justify-content:center;color:var(--on-sv);font-size:15px;cursor:pointer;position:relative;transition:background .1s;}
+.nb-ric:hover{background:var(--surface-1);}
+.nb-dot-top{position:absolute;top:7px;right:7px;width:6px;height:6px;border-radius:50%;background:var(--drk);border:1.5px solid var(--surface-0);}
+.nb-uc{display:flex;align-items:center;gap:8px;padding:5px 12px 5px 6px;border:1px solid var(--outline-v);border-radius:var(--r-full);cursor:pointer;transition:background .1s;}
+.nb-uc:hover{background:var(--surface-1);}
+.nb-uav{width:26px;height:26px;border-radius:50%;background:var(--pri);color:#fff;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;}
+.nb-uname{font-size:13px;font-weight:500;color:var(--on-s);}
+
+/* ============================================================
+   CONTENT
+   ============================================================ */
+.content{padding:var(--sp-cont);height:calc(100vh - var(--navbar-h));overflow-y:auto;}
+
+/* TYPOGRAPHY (DESIGN.md exakt) */
+.page-hd{display:flex;align-items:flex-start;justify-content:space-between;gap:1rem;margin-bottom:var(--sp-gap);flex-wrap:wrap;}
+.ph-eyebrow{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.05em;color:var(--outline);display:flex;align-items:center;gap:5px;margin-bottom:.5rem;}
+.ph-title{font-size:28px;font-weight:700;line-height:1.2;letter-spacing:-.02em;color:var(--on-s);}
+.ph-sub{font-size:14px;font-weight:500;color:var(--on-sv);margin-top:.25rem;}
+.ph-actions{display:flex;gap:.75rem;align-items:center;flex-shrink:0;}
+
+/* BUTTONS (DESIGN.md: Primary solid blue, r-md=0.75rem) */
+.btn{display:inline-flex;align-items:center;gap:6px;padding:0 1rem;height:36px;border-radius:var(--r-md);font-size:14px;font-weight:600;border:1px solid transparent;white-space:nowrap;cursor:pointer;transition:background .12s,box-shadow .12s;font-family:var(--font);}
+.btn-pri{background:var(--pri);color:var(--on-pri);border-color:var(--pri);}
+.btn-pri:hover{background:var(--pri-c);box-shadow:0 2px 10px rgba(0,89,186,.3);}
+.btn-sec{background:transparent;color:var(--on-s);border-color:var(--outline-v);}
+.btn-sec:hover{background:var(--surface-1);}
+.btn-ghost{background:transparent;color:var(--on-sv);border-color:transparent;}
+.btn-ghost:hover{background:var(--surface-1);color:var(--on-s);}
+.btn-tint{background:rgba(0,89,186,.08);color:var(--pri);border-color:transparent;}
+.btn-tint:hover{background:rgba(0,89,186,.13);}
+.btn-sm{height:30px;padding:0 .75rem;font-size:13px;}
+.btn-xs{height:26px;padding:0 .625rem;font-size:12px;}
+
+/* CHIPS/BADGES (DESIGN.md: rounded, high contrast on low-opacity bg) */
+.chip{display:inline-flex;align-items:center;gap:4px;padding:3px 9px;border-radius:var(--r-full);font-size:12px;font-weight:600;line-height:1.5;white-space:nowrap;}
+.c-ok    {background:var(--on-ter-c); color:var(--ter);}
+.c-warn  {background:var(--warn-c);   color:var(--warn);}
+.c-err   {background:var(--err-c);    color:var(--on-err-c);}
+.c-info  {background:var(--pri-fixed);color:var(--pri);}
+.c-neu   {background:var(--surface-3);color:var(--on-sv);}
+.c-drk   {background:#fff0f0;         color:var(--drk);}
+.c-purple{background:var(--sec-fixed);color:var(--sec);}
+
+.sdot{display:inline-flex;align-items:center;gap:6px;font-size:13px;font-weight:500;color:var(--on-sv);}
+.sdot::before{content:'';width:8px;height:8px;border-radius:50%;flex-shrink:0;}
+.d-ok::before  {background:var(--ter);}
+.d-warn::before{background:var(--warn);}
+.d-err::before {background:var(--err);}
+.d-off::before {background:var(--outline-v);}
+
+/* CARDS (DESIGN.md: white, 16px radius, ambient shadow) */
+.card{background:var(--surface-0);border-radius:var(--r-lg);box-shadow:var(--sh-card);overflow:hidden;transition:box-shadow .15s;}
+.card:hover{box-shadow:var(--sh-hover);}
+.card-hd{display:flex;align-items:center;justify-content:space-between;padding:var(--sp-pad);border-bottom:1px solid var(--surface-3);}
+.ch-label{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.05em;color:var(--outline);display:flex;align-items:center;gap:7px;}
+.ch-meta{font-size:13px;font-weight:500;color:var(--on-sv);}
+.ch-action{font-size:13px;font-weight:600;color:var(--pri);cursor:pointer;}
+.ch-action:hover{opacity:.8;}
+.card-body{padding:var(--sp-pad);}
+
+/* KPI CARDS (stat-lg: 24px 700) */
+.kpi-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:var(--sp-gap);margin-bottom:var(--sp-gap);}
+@media(max-width:960px){.kpi-grid{grid-template-columns:repeat(2,1fr);}}
+@media(max-width:540px){.kpi-grid{grid-template-columns:1fr 1fr;}}
+
+.kc{background:var(--surface-0);border-radius:var(--r-lg);box-shadow:var(--sh-card);padding:var(--sp-pad);display:flex;flex-direction:column;gap:3px;transition:box-shadow .15s;}
+.kc:hover{box-shadow:var(--sh-hover);}
+.kc-icon{width:38px;height:38px;border-radius:var(--r-md);display:flex;align-items:center;justify-content:center;font-size:17px;margin-bottom:.625rem;}
+.kc-val{font-size:24px;font-weight:700;line-height:1.1;color:var(--on-s);}
+.kc-lbl{font-size:14px;font-weight:500;color:var(--on-sv);margin-top:2px;}
+.kc-sub{font-size:12px;font-weight:400;color:var(--outline);margin-top:2px;display:flex;align-items:center;gap:4px;}
+
+.kc.ok   .kc-icon{background:var(--on-ter-c); color:var(--ter);}
+.kc.ok   .kc-val {color:var(--ter);}
+.kc.warn .kc-icon{background:var(--warn-c);   color:var(--warn);}
+.kc.warn .kc-val {color:var(--warn);}
+.kc.err  .kc-icon{background:var(--err-c);    color:var(--on-err-c);}
+.kc.err  .kc-val {color:var(--err);}
+.kc.info .kc-icon{background:var(--pri-fixed); color:var(--pri);}
+.kc.info .kc-val {color:var(--pri);}
+
+/* FLEET CARDS */
+.fleet-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:var(--sp-gap);}
+.fc{background:var(--surface-0);border-radius:var(--r-lg);box-shadow:var(--sh-card);padding:var(--sp-pad);transition:box-shadow .15s;border-left:3px solid transparent;}
+.fc:hover{box-shadow:var(--sh-hover);}
+.fc.ok  {border-left-color:var(--ter);}
+.fc.warn{border-left-color:var(--warn);}
+.fc.off {border-left-color:var(--outline-v);opacity:.72;}
+.fc-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:.75rem;}
+.fc-id{font-size:16px;font-weight:700;color:var(--on-s);letter-spacing:-.02em;}
+.fc-kz{font-size:11.5px;font-family:monospace;color:var(--on-sv);margin-bottom:.5rem;font-weight:600;}
+.fc-crew{display:flex;flex-direction:column;gap:3px;font-size:12px;color:var(--on-sv);}
+.fc-row{display:flex;align-items:center;gap:5px;}
+.fc-row i{font-size:11px;color:var(--outline);width:12px;}
+.fc-foot{margin-top:.75rem;padding-top:.75rem;border-top:1px solid var(--surface-3);font-size:12px;color:var(--outline);display:flex;justify-content:space-between;align-items:center;}
+
+/* TASKS */
+.task-lbl{padding:.5rem var(--sp-pad) .375rem;font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.05em;color:var(--outline);background:var(--surface-1);border-bottom:1px solid var(--surface-3);}
+.task-row{display:flex;align-items:center;gap:1rem;padding:.875rem var(--sp-pad);border-bottom:1px solid var(--surface-3);transition:background .1s;}
+.task-row:last-child{border-bottom:none;}
+.task-row:hover{background:var(--surface-1);}
+.t-prio{width:3px;flex-shrink:0;border-radius:2px;align-self:stretch;min-height:18px;}
+.ph{background:var(--err);}
+.pm{background:var(--warn);}
+.pl{background:var(--outline-v);}
+.t-body{flex:1;min-width:0;}
+.t-title{font-size:14px;font-weight:500;color:var(--on-s);line-height:1.4;}
+.t-meta{display:flex;flex-wrap:wrap;gap:.75rem;margin-top:.25rem;}
+.t-mi{font-size:12px;color:var(--on-sv);display:flex;align-items:center;gap:3px;}
+.t-mi i{font-size:11px;color:var(--outline);}
+.t-act{flex-shrink:0;}
+
+/* ACTIVITY */
+.act-row{display:flex;gap:.875rem;padding:.875rem var(--sp-pad);border-bottom:1px solid var(--surface-3);}
+.act-row:last-child{border-bottom:none;}
+.a-icon{width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;flex-shrink:0;margin-top:1px;}
+.a-icon.ok   {background:var(--on-ter-c); color:var(--ter);}
+.a-icon.warn {background:var(--warn-c);   color:var(--warn);}
+.a-icon.info {background:var(--pri-fixed); color:var(--pri);}
+.a-icon.err  {background:var(--err-c);    color:var(--on-err-c);}
+.a-text{font-size:14px;font-weight:500;color:var(--on-s);line-height:1.5;}
+.a-text strong{font-weight:700;}
+.a-time{font-size:12px;color:var(--outline);margin-top:2px;}
+
+/* WISH GRID */
+.wish-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(148px,1fr));gap:.75rem;padding:var(--sp-pad);}
+.wp{display:flex;align-items:center;gap:8px;padding:9px 11px;border-radius:var(--r-md);border:1px solid var(--outline-v);background:var(--surface-1);font-size:13px;}
+.wp.done{border-color:var(--ter-fixed-d);background:var(--on-ter-c);}
+.wp.open{border-color:var(--warn-brd);background:var(--warn-c);}
+.w-av{width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;flex-shrink:0;}
+.wp.done .w-av{background:var(--ter);color:#fff;}
+.wp.open .w-av{background:var(--warn);color:#fff;}
+.w-name{font-size:12px;font-weight:600;color:var(--on-s);line-height:1.2;}
+.w-sub{font-size:11px;color:var(--on-sv);}
+
+/* PROGRESS */
+.prog{height:6px;background:var(--surface-3);border-radius:var(--r-full);overflow:hidden;margin-bottom:6px;}
+.prog-fill{height:100%;border-radius:var(--r-full);background:var(--ter);}
+
+/* TABLE */
+.tbl{width:100%;border-collapse:collapse;}
+.tbl th{padding:.625rem var(--sp-pad);text-align:left;font-size:11px;font-weight:600;color:var(--outline);text-transform:uppercase;letter-spacing:.05em;border-bottom:1px solid var(--surface-3);background:var(--surface-1);}
+.tbl td{padding:.875rem var(--sp-pad);font-size:14px;font-weight:500;color:var(--on-s);border-bottom:1px solid var(--surface-3);vertical-align:middle;}
+.tbl tr:last-child td{border-bottom:none;}
+.tbl tbody tr:hover td{background:var(--surface-1);}
+
+/* LAYOUT */
+.two-col{display:grid;grid-template-columns:1fr 340px;gap:var(--sp-gap);align-items:start;}
+@media(max-width:960px){.two-col{grid-template-columns:1fr;}}
+
+.kpi-bar{display:flex;flex-wrap:wrap;gap:.75rem;margin-bottom:var(--sp-gap);}
+.kpi-bi{display:flex;align-items:center;gap:8px;padding:7px 12px;background:var(--surface-0);border-radius:var(--r-md);box-shadow:var(--sh-card);font-size:13px;font-weight:500;}
+.kpi-bv{font-weight:700;font-size:15px;color:var(--on-s);}
+.kpi-bl{color:var(--on-sv);}
+.kpi-bs{color:var(--outline-v);}
+
+.panel-row{display:flex;align-items:center;justify-content:space-between;padding:.625rem 0;border-bottom:1px solid var(--surface-3);gap:.5rem;}
+.panel-row:last-child{border-bottom:none;}
+.pr-lbl{font-size:13px;font-weight:500;color:var(--on-sv);}
+.pr-val{font-size:13px;font-weight:600;color:var(--on-s);}
+
+.page{display:none;}.page.on{display:block;}
+
+/* ============================================================
+   RESPONSIVE
+   ============================================================ */
+
+/* Hamburger (nur mobile) */
+.nb-ham{
+  display:none;width:36px;height:36px;
+  border-radius:var(--r-md);border:1px solid var(--outline-v);
+  background:transparent;
+  align-items:center;justify-content:center;
+  color:var(--on-sv);font-size:18px;cursor:pointer;
+  flex-shrink:0;transition:background .1s;
+}
+.nb-ham:hover{background:var(--surface-1);}
+
+/* Overlay */
+.nb-ov{
+  display:none;position:fixed;inset:0;
+  background:rgba(25,28,34,.45);
+  z-index:800;backdrop-filter:blur(2px);
+  -webkit-backdrop-filter:blur(2px);
+}
+.nb-ov.open{display:block;}
+
+/* Drawer */
+.nb-dr{
+  position:fixed;top:0;left:0;bottom:0;width:288px;
+  background:var(--surface-0);
+  border-right:1px solid var(--outline-v);
+  box-shadow:var(--sh-drop);
+  z-index:900;display:flex;flex-direction:column;
+  transform:translateX(-100%);
+  transition:transform .22s cubic-bezier(.4,0,.2,1);
+}
+.nb-dr.open{transform:translateX(0);}
+
+.nb-dr-hd{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:1rem var(--sp-pad);
+  border-bottom:1px solid var(--surface-3);
+  flex-shrink:0;
+}
+.nb-dr-close{
+  width:32px;height:32px;border-radius:var(--r);
+  border:none;background:transparent;
+  display:flex;align-items:center;justify-content:center;
+  color:var(--outline);font-size:16px;cursor:pointer;
+  transition:background .1s,color .1s;
+}
+.nb-dr-close:hover{background:var(--surface-1);color:var(--on-s);}
+
+.nb-dr-nav{flex:1;overflow-y:auto;padding:.5rem 0;scrollbar-width:none;}
+.nb-dr-nav::-webkit-scrollbar{display:none;}
+
+/* Drawer Gruppe */
+.nb-dg{margin-bottom:2px;}
+.nb-dg-hd{
+  display:flex;align-items:center;gap:10px;
+  padding:10px var(--sp-pad);width:100%;
+  border:none;background:transparent;
+  color:var(--on-sv);font-size:14px;font-weight:600;
+  cursor:pointer;text-align:left;font-family:var(--font);
+  transition:background .1s,color .1s;
+}
+.nb-dg-hd:hover{background:var(--surface-1);color:var(--on-s);}
+.nb-dg-hd.active{color:var(--pri);}
+.nb-dg-hd.active .nb-dg-hi{color:var(--pri);}
+.nb-dg-hi{font-size:15px;color:var(--outline);width:18px;text-align:center;flex-shrink:0;transition:color .1s;}
+.nb-dg-lbl{flex:1;}
+.nb-dg-chev{font-size:11px;color:var(--outline-v);transition:transform .15s;flex-shrink:0;}
+.nb-dg-hd.collapsed .nb-dg-chev{transform:rotate(-90deg);}
+
+/* Drawer Sub-Items */
+.nb-dg-body{overflow:hidden;}
+.nb-dg-body.collapsed{display:none;}
+.nb-dg-item{
+  display:flex;align-items:center;gap:10px;
+  padding:9px var(--sp-pad) 9px 3rem;
+  width:100%;border:none;background:transparent;
+  color:var(--on-sv);font-size:13px;font-weight:500;
+  cursor:pointer;text-align:left;font-family:var(--font);
+  transition:background .1s,color .1s;
+}
+.nb-dg-item:hover{background:rgba(0,89,186,.05);color:var(--pri);}
+.nb-dg-item i{font-size:13px;color:var(--outline);width:16px;text-align:center;flex-shrink:0;}
+.nb-dg-item:hover i{color:var(--pri);}
+.nb-dg-sep{height:1px;background:var(--surface-3);margin:.5rem var(--sp-pad);}
+
+.nb-dr-foot{
+  padding:.75rem var(--sp-pad);
+  border-top:1px solid var(--surface-3);
+  flex-shrink:0;
+}
+.nb-dr-user{
+  display:flex;align-items:center;gap:10px;
+  padding:.625rem .75rem;border-radius:var(--r-md);
+  background:var(--surface-1);
+}
+.nb-dr-user-av{
+  width:30px;height:30px;border-radius:50%;
+  background:var(--pri);color:#fff;
+  display:flex;align-items:center;justify-content:center;
+  font-size:11px;font-weight:700;flex-shrink:0;
+}
+.nb-dr-user-name{font-size:13px;font-weight:600;color:var(--on-s);}
+.nb-dr-user-role{font-size:11px;font-weight:500;color:var(--outline);}
+
+/* === Responsive Breakpoints === */
+@media(max-width:768px){
+  .nb-ham{display:flex;}
+  .nb-menu{display:none;}
+  .nb-ric{display:none;}
+  .content{padding:1rem;}
+  .ph-title{font-size:22px;}
+  .kpi-grid{grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1rem;}
+  .fleet-grid{grid-template-columns:1fr 1fr;}
+  .two-col{grid-template-columns:1fr;}
+  .card{overflow-x:auto;}
+  .tbl{min-width:560px;}
+  .kpi-bar{gap:.5rem;}
+  .wish-grid{grid-template-columns:1fr 1fr;}
+  .page-hd{margin-bottom:1rem;}
+}
+
+@media(max-width:480px){
+  .kpi-grid{grid-template-columns:1fr;}
+  .fleet-grid{grid-template-columns:1fr;}
+  .nb-brand-name{font-size:14px;}
+  .content{padding:.75rem;}
+}
+
+/* Dark mode drawer */
+@media(prefers-color-scheme:dark){
+  .nb-dr{background:var(--surface-0);border-color:var(--outline-v);}
+  .nb-dg-hd{color:var(--on-sv);}
+  .nb-dg-hd:hover{background:var(--surface-2);color:var(--on-s);}
+  .nb-dg-item{color:var(--on-sv);}
+  .nb-dg-item:hover{background:rgba(172,199,255,.08);color:var(--pri);}
+}
+</style>
+</head>
+<body>
+
+<nav class="navbar">
+  <div class="nb-brand">
+    <div class="nb-brand-name">
+      Intensivtransport
+      <span class="nb-area">Neubrandenburg</span>
+    </div>
+  </div>
+
+  <div class="nb-menu">
+    <div class="nb-item" id="mi-start">
+      <button class="nb-trig active" onclick="nbt('mi-start')">
+        <i class="bi bi-house nb-il"></i>Start<i class="bi bi-chevron-down nb-chev"></i>
+      </button>
+      <div class="nb-drop">
+        <div class="nb-dlbl">Wachleiter</div>
+        <button class="nb-di" onclick="gp('p-start');sa('mi-start');cm()"><i class="bi bi-grid-1x2 nb-ic"></i><span class="nb-dtxt">Übersicht</span></button>
+        <button class="nb-di" onclick="gp('p-start');sa('mi-start');cm()"><i class="bi bi-check2-square nb-ic"></i><span class="nb-dtxt">Offene Aufgaben</span><span class="nb-dbadge">2</span></button>
+        <button class="nb-di" onclick="gp('p-start');sa('mi-start');cm()"><i class="bi bi-clock-history nb-ic"></i><span class="nb-dtxt">Aktivitäten</span></button>
+      </div>
+    </div>
+
+    <div class="nb-item" id="mi-plan">
+      <button class="nb-trig" onclick="nbt('mi-plan')">
+        <i class="bi bi-calendar-week nb-il"></i>Dienstplan<span class="nb-pill">1</span><i class="bi bi-chevron-down nb-chev"></i>
+      </button>
+      <div class="nb-drop">
+        <div class="nb-dlbl">Planung</div>
+        <button class="nb-di" onclick="gp('p-plan');sa('mi-plan');cm()"><i class="bi bi-list-ul nb-ic"></i><span class="nb-dtxt">Perioden verwalten</span></button>
+        <button class="nb-di" onclick="gp('p-plan');sa('mi-plan');cm()"><i class="bi bi-pencil-square nb-ic"></i><span class="nb-dtxt">Wunschphase öffnen</span></button>
+        <div class="nb-dsep"></div>
+        <button class="nb-di" onclick="gp('p-plan');sa('mi-plan');cm()"><i class="bi bi-bar-chart-line nb-ic"></i><span class="nb-dtxt">Auswertung</span></button>
+      </div>
+    </div>
+
+    <div class="nb-item" id="mi-itw">
+      <button class="nb-trig" onclick="nbt('mi-itw')">
+        <i class="bi bi-truck-front nb-il"></i>Fahrzeuge<span class="nb-sdot warn"></span><i class="bi bi-chevron-down nb-chev"></i>
+      </button>
+      <div class="nb-drop">
+        <div class="nb-dlbl">Flotte</div>
+        <button class="nb-di" onclick="gp('p-itw');sa('mi-itw');cm()"><i class="bi bi-speedometer2 nb-ic"></i><span class="nb-dtxt">Flottenstatus</span></button>
+        <button class="nb-di" onclick="gp('p-itw');sa('mi-itw');cm()"><i class="bi bi-journal-text nb-ic"></i><span class="nb-dtxt">Fahrtenbücher</span></button>
+        <div class="nb-dsep"></div>
+        <div class="nb-dlbl">Verwaltung</div>
+        <button class="nb-di" onclick="gp('p-itw');sa('mi-itw');cm()"><i class="bi bi-shield-check nb-ic"></i><span class="nb-dtxt">Prüffristen</span><span class="nb-dbadge">1</span></button>
+        <button class="nb-di" onclick="gp('p-itw');sa('mi-itw');cm()"><i class="bi bi-file-earmark-text nb-ic"></i><span class="nb-dtxt">Dokumente</span></button>
+      </div>
+    </div>
+
+    <div class="nb-item" id="mi-team">
+      <button class="nb-trig" onclick="nbt('mi-team')">
+        <i class="bi bi-people nb-il"></i>Team & Dienste<i class="bi bi-chevron-down nb-chev"></i>
+      </button>
+      <div class="nb-drop">
+        <div class="nb-dlbl">Personal</div>
+        <button class="nb-di" onclick="gp('p-team');sa('mi-team');cm()"><i class="bi bi-person-check nb-ic"></i><span class="nb-dtxt">Heutige Besetzung</span></button>
+        <button class="nb-di" onclick="gp('p-team');sa('mi-team');cm()"><i class="bi bi-calendar-range nb-ic"></i><span class="nb-dtxt">Dienstwünsche Juni</span><span class="nb-dbadge warn">13</span></button>
+        <div class="nb-dsep"></div>
+        <button class="nb-di" onclick="cm()"><i class="bi bi-person-plus nb-ic"></i><span class="nb-dtxt">Mitarbeiter</span></button>
+      </div>
+    </div>
+  </div>
+
+  <div class="nb-right">
+    <button class="nb-ham" onclick="openDrawer()" aria-label="Menü öffnen"><i class="bi bi-list"></i></button>
+    <button class="nb-ric"><i class="bi bi-bell"></i><span class="nb-dot-top"></span></button>
+    <div class="nb-uc">
+      <div class="nb-uav">JC</div>
+      <span class="nb-uname">Jens C.</span>
+      <i class="bi bi-chevron-down" style="font-size:11px;color:var(--outline);"></i>
+    </div>
+  </div>
+</nav>
+
+<!-- MOBILE OVERLAY + DRAWER -->
+<div class="nb-ov" id="nb-ov" onclick="closeDrawer()"></div>
+<div class="nb-dr" id="nb-dr">
+  <div class="nb-dr-hd">
+    <div class="nb-brand-name" style="font-size:14px;">
+      Intensivtransport <span class="nb-area">Neubrandenburg</span>
+    </div>
+    <button class="nb-dr-close" onclick="closeDrawer()"><i class="bi bi-x-lg"></i></button>
+  </div>
+
+  <div class="nb-dr-nav">
+
+    <div class="nb-dg">
+      <button class="nb-dg-hd active" onclick="dtgl('dg-start',this)">
+        <i class="bi bi-house nb-dg-hi"></i><span class="nb-dg-lbl">Start</span>
+        <i class="bi bi-chevron-down nb-dg-chev"></i>
+      </button>
+      <div class="nb-dg-body" id="dg-start">
+        <button class="nb-dg-item" onclick="gp('p-start');sa('mi-start');closeDrawer()"><i class="bi bi-grid-1x2"></i>Übersicht</button>
+        <button class="nb-dg-item" onclick="gp('p-start');sa('mi-start');closeDrawer()"><i class="bi bi-check2-square"></i>Offene Aufgaben</button>
+        <button class="nb-dg-item" onclick="gp('p-start');sa('mi-start');closeDrawer()"><i class="bi bi-clock-history"></i>Aktivitäten</button>
+      </div>
+    </div>
+
+    <div class="nb-dg">
+      <button class="nb-dg-hd collapsed" onclick="dtgl('dg-plan',this)">
+        <i class="bi bi-calendar-week nb-dg-hi"></i><span class="nb-dg-lbl">Dienstplan</span>
+        <i class="bi bi-chevron-down nb-dg-chev"></i>
+      </button>
+      <div class="nb-dg-body collapsed" id="dg-plan">
+        <button class="nb-dg-item" onclick="gp('p-plan');sa('mi-plan');closeDrawer()"><i class="bi bi-list-ul"></i>Perioden verwalten</button>
+        <button class="nb-dg-item" onclick="gp('p-plan');sa('mi-plan');closeDrawer()"><i class="bi bi-pencil-square"></i>Wunschphase öffnen</button>
+        <div class="nb-dg-sep"></div>
+        <button class="nb-dg-item" onclick="gp('p-plan');sa('mi-plan');closeDrawer()"><i class="bi bi-bar-chart-line"></i>Auswertung</button>
+      </div>
+    </div>
+
+    <div class="nb-dg">
+      <button class="nb-dg-hd collapsed" onclick="dtgl('dg-itw',this)">
+        <i class="bi bi-truck-front nb-dg-hi"></i><span class="nb-dg-lbl">Fahrzeuge</span>
+        <i class="bi bi-chevron-down nb-dg-chev"></i>
+      </button>
+      <div class="nb-dg-body collapsed" id="dg-itw">
+        <button class="nb-dg-item" onclick="gp('p-itw');sa('mi-itw');closeDrawer()"><i class="bi bi-speedometer2"></i>Flottenstatus</button>
+        <button class="nb-dg-item" onclick="gp('p-itw');sa('mi-itw');closeDrawer()"><i class="bi bi-journal-text"></i>Fahrtenbücher</button>
+        <div class="nb-dg-sep"></div>
+        <button class="nb-dg-item" onclick="gp('p-itw');sa('mi-itw');closeDrawer()"><i class="bi bi-shield-check"></i>Prüffristen</button>
+        <button class="nb-dg-item" onclick="gp('p-itw');sa('mi-itw');closeDrawer()"><i class="bi bi-file-earmark-text"></i>Dokumente</button>
+      </div>
+    </div>
+
+    <div class="nb-dg">
+      <button class="nb-dg-hd collapsed" onclick="dtgl('dg-team',this)">
+        <i class="bi bi-people nb-dg-hi"></i><span class="nb-dg-lbl">Team & Dienste</span>
+        <i class="bi bi-chevron-down nb-dg-chev"></i>
+      </button>
+      <div class="nb-dg-body collapsed" id="dg-team">
+        <button class="nb-dg-item" onclick="gp('p-team');sa('mi-team');closeDrawer()"><i class="bi bi-person-check"></i>Heutige Besetzung</button>
+        <button class="nb-dg-item" onclick="gp('p-team');sa('mi-team');closeDrawer()"><i class="bi bi-calendar-range"></i>Dienstwünsche Juni</button>
+        <div class="nb-dg-sep"></div>
+        <button class="nb-dg-item" onclick="closeDrawer()"><i class="bi bi-person-plus"></i>Mitarbeiter</button>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="nb-dr-foot">
+    <div class="nb-dr-user">
+      <div class="nb-dr-user-av">JC</div>
+      <div>
+        <div class="nb-dr-user-name">Jens Czepluch</div>
+        <div class="nb-dr-user-role">Wachleiter</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="content">
+
+<!-- START -->
+<div class="page on" id="p-start">
+  <div class="page-hd">
+    <div>
+      <div class="ph-eyebrow"><i class="bi bi-house"></i>Wachleiter · Start</div>
+      <div class="ph-title">Guten Morgen, Jens.</div>
+      <div class="ph-sub">Dienstag, 6. Mai 2026 &nbsp;·&nbsp; KW 19</div>
+    </div>
+  </div>
+
+  <div class="kpi-grid">
+    <div class="kc ok">
+      <div class="kc-icon"><i class="bi bi-truck-front"></i></div>
+      <div class="kc-val">3</div>
+      <div class="kc-lbl">Einsatzbereite Fahrzeuge</div>
+      <div class="kc-sub"><i class="bi bi-dash-circle" style="font-size:10px;color:var(--warn);"></i>1 in Wartung · von 4</div>
+    </div>
+    <div class="kc info">
+      <div class="kc-icon"><i class="bi bi-people"></i></div>
+      <div class="kc-val">6</div>
+      <div class="kc-lbl">Heute im Dienst</div>
+      <div class="kc-sub"><i class="bi bi-circle-fill" style="font-size:5px;color:var(--ter);"></i>3 Notärzte · 3 IFK</div>
+    </div>
+    <div class="kc err">
+      <div class="kc-icon"><i class="bi bi-check2-square"></i></div>
+      <div class="kc-val">2</div>
+      <div class="kc-lbl">Aufgaben — heute handeln</div>
+      <div class="kc-sub"><i class="bi bi-clock" style="font-size:10px;"></i>+ 2 fällig diese Woche</div>
+    </div>
+    <div class="kc warn">
+      <div class="kc-icon"><i class="bi bi-calendar-range"></i></div>
+      <div class="kc-val">13</div>
+      <div class="kc-lbl">Fehlende Dienstwünsche</div>
+      <div class="kc-sub"><i class="bi bi-clock" style="font-size:10px;"></i>Frist 15. Mai 2026</div>
+    </div>
+  </div>
+
+  <div class="card" style="margin-bottom:var(--sp-gap);">
+    <div class="card-hd">
+      <span class="ch-label"><i class="bi bi-truck-front"></i>Fahrzeuge · heutiger Stand</span>
+      <button class="btn btn-ghost btn-sm" onclick="gp('p-itw');sa('mi-itw')">Alle anzeigen</button>
+    </div>
+    <div style="padding:var(--sp-pad);">
+      <div class="fleet-grid">
+        <div class="fc ok">
+          <div class="fc-top"><span class="fc-id">ITW 1</span><span class="chip c-ok">Einsatzbereit</span></div>
+          <div class="fc-kz">MSE-ITW-1</div>
+          <div class="fc-crew"><div class="fc-row"><i class="bi bi-person-badge"></i>Dr. Meier (NA)</div><div class="fc-row"><i class="bi bi-heart-pulse"></i>S. Hoffmann (IFK)</div></div>
+          <div class="fc-foot"><span>142.340 km</span><span class="chip c-ok">Bereit</span></div>
+        </div>
+        <div class="fc ok">
+          <div class="fc-top"><span class="fc-id">ITW 2</span><span class="chip c-ok">Einsatzbereit</span></div>
+          <div class="fc-kz">MSE-ITW-2</div>
+          <div class="fc-crew"><div class="fc-row"><i class="bi bi-person-badge"></i>Dr. Schulz (NA)</div><div class="fc-row"><i class="bi bi-heart-pulse"></i>T. Berger (IFK)</div></div>
+          <div class="fc-foot"><span>98.750 km</span><span class="chip c-ok">Bereit</span></div>
+        </div>
+        <div class="fc ok">
+          <div class="fc-top"><span class="fc-id">ITW 3</span><span class="chip c-ok">Einsatzbereit</span></div>
+          <div class="fc-kz">MSE-ITW-3</div>
+          <div class="fc-crew"><div class="fc-row"><i class="bi bi-person-badge"></i>Dr. Wagner (NA)</div><div class="fc-row"><i class="bi bi-heart-pulse"></i>K. Braun (IFK)</div></div>
+          <div class="fc-foot"><span>210.100 km</span><span class="chip c-ok">Bereit</span></div>
+        </div>
+        <div class="fc warn">
+          <div class="fc-top"><span class="fc-id">ITW 4</span><span class="chip c-warn">Wartung</span></div>
+          <div class="fc-kz">MSE-ITW-4</div>
+          <div class="fc-crew"><div class="fc-row" style="color:var(--outline);"><i class="bi bi-tools"></i>In der Werkstatt</div></div>
+          <div class="fc-foot"><span>64.220 km</span><span class="chip c-warn">Wartung</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="two-col">
+    <div class="card">
+      <div class="card-hd"><span class="ch-label"><i class="bi bi-check2-square"></i>Offene Aufgaben</span><span class="ch-meta">4 offen</span></div>
+      <div class="task-lbl">Heute handeln</div>
+      <div class="task-row"><div class="t-prio ph"></div><div class="t-body"><div class="t-title">Dienstplan Juni 2026 — Wunschphase eröffnen</div><div class="t-meta"><span class="t-mi"><i class="bi bi-clock"></i>Frist 15. Mai</span><span class="t-mi"><i class="bi bi-people"></i>21 Mitarbeiter warten</span></div></div><div class="t-act"><button class="btn btn-pri btn-sm" onclick="gp('p-plan');sa('mi-plan')">Öffnen</button></div></div>
+      <div class="task-row"><div class="t-prio ph"></div><div class="t-body"><div class="t-title">ITW 1 — Hauptuntersuchung fällig</div><div class="t-meta"><span class="t-mi"><i class="bi bi-calendar-x"></i>Fällig 16. Mai 2026</span><span class="t-mi"><i class="bi bi-truck-front"></i>MSE-ITW-1</span></div></div><div class="t-act"><button class="btn btn-sec btn-sm" onclick="gp('p-itw');sa('mi-itw')">Zur Akte</button></div></div>
+      <div class="task-lbl">Diese Woche</div>
+      <div class="task-row"><div class="t-prio pm"></div><div class="t-body"><div class="t-title">Medizinischer Verbrauchsbericht Mai einreichen</div><div class="t-meta"><span class="t-mi"><i class="bi bi-clipboard2-pulse"></i>Frist 10. Mai</span></div></div><div class="t-act"><button class="btn btn-ghost btn-sm">Öffnen</button></div></div>
+      <div class="task-row"><div class="t-prio pl"></div><div class="t-body"><div class="t-title">Neue Intensivpflegekraft einweisen</div><div class="t-meta"><span class="t-mi"><i class="bi bi-person-plus"></i>M. Fischer startet 12. Mai</span></div></div><div class="t-act"><button class="btn btn-ghost btn-sm">Planen</button></div></div>
+    </div>
+
+    <div style="display:grid;gap:var(--sp-gap);">
+      <div class="card">
+        <div class="card-hd"><span class="ch-label"><i class="bi bi-clock-history"></i>Letzte Aktivitäten</span></div>
+        <div class="act-row"><div class="a-icon ok"><i class="bi bi-check2"></i></div><div><div class="a-text"><strong>S. Hoffmann</strong> hat Dienstwunsch Juni abgegeben</div><div class="a-time">Heute, 07:48 Uhr</div></div></div>
+        <div class="act-row"><div class="a-icon ok"><i class="bi bi-check2"></i></div><div><div class="a-text"><strong>T. Berger</strong> hat Dienstwunsch Juni abgegeben</div><div class="a-time">Heute, 07:15 Uhr</div></div></div>
+        <div class="act-row"><div class="a-icon warn"><i class="bi bi-tools"></i></div><div><div class="a-text"><strong>ITW 4</strong> zur Wartung abgegeben — Rückkehr 8. Mai</div><div class="a-time">Gestern, 16:30 Uhr</div></div></div>
+        <div class="act-row"><div class="a-icon info"><i class="bi bi-file-earmark-medical"></i></div><div><div class="a-text">Einsatzbericht <strong>#2026-089</strong> abgeschlossen</div><div class="a-time">Gestern, 14:10 Uhr</div></div></div>
+        <div class="act-row"><div class="a-icon ok"><i class="bi bi-calendar-check"></i></div><div><div class="a-text">Dienstplan Mai <strong>veröffentlicht</strong></div><div class="a-time">02.05., 09:00 Uhr</div></div></div>
+        <div class="act-row"><div class="a-icon err"><i class="bi bi-exclamation-triangle"></i></div><div><div class="a-text">HU-Frist <strong>ITW 1</strong> läuft in 10 Tagen ab</div><div class="a-time">02.05., 06:00 Uhr (System)</div></div></div>
+      </div>
+      <div class="card">
+        <div class="card-hd"><span class="ch-label"><i class="bi bi-calendar-range"></i>Dienstwünsche Juni</span><span class="ch-meta">8 / 21</span></div>
+        <div style="padding:var(--sp-pad) var(--sp-pad) 0;">
+          <div class="prog"><div class="prog-fill" style="width:38%;"></div></div>
+          <div style="display:flex;justify-content:space-between;font-size:12px;font-weight:500;color:var(--on-sv);margin-bottom:.75rem;"><span><strong style="color:var(--on-s);">8</strong> eingegangen</span><span>Frist: 15. Mai</span></div>
+        </div>
+        <div class="wish-grid" style="padding-top:0;">
+          <div class="wp done"><div class="w-av">SH</div><div><div class="w-name">S. Hoffmann</div><div class="w-sub">IFK</div></div></div>
+          <div class="wp done"><div class="w-av">TB</div><div><div class="w-name">T. Berger</div><div class="w-sub">IFK</div></div></div>
+          <div class="wp done"><div class="w-av">DM</div><div><div class="w-name">Dr. Meier</div><div class="w-sub">NA</div></div></div>
+          <div class="wp open"><div class="w-av">KB</div><div><div class="w-name">K. Braun</div><div class="w-sub">ausstehend</div></div></div>
+          <div class="wp open"><div class="w-av">PW</div><div><div class="w-name">P. Weber</div><div class="w-sub">ausstehend</div></div></div>
+          <div class="wp open"><div class="w-av">MK</div><div><div class="w-name">M. Klein</div><div class="w-sub">ausstehend</div></div></div>
+        </div>
+        <div style="padding:.75rem var(--sp-pad);border-top:1px solid var(--surface-3);display:flex;justify-content:space-between;align-items:center;">
+          <span style="font-size:12px;font-weight:500;color:var(--outline);">+ 13 weitere ausstehend</span>
+          <button class="btn btn-sec btn-sm"><i class="bi bi-envelope"></i>Alle erinnern</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- DIENSTPLAN -->
+<div class="page" id="p-plan">
+  <div class="page-hd">
+    <div><div class="ph-eyebrow"><i class="bi bi-calendar-week"></i>Dienstplan</div><div class="ph-title">Dienstplanperioden</div><div class="ph-sub">Perioden verwalten · Wunschphasen koordinieren</div></div>
+    <div class="ph-actions"><button class="btn btn-sec"><i class="bi bi-bar-chart-line"></i>Auswertung</button><button class="btn btn-pri"><i class="bi bi-plus"></i>Neue Periode</button></div>
+  </div>
+  <div class="kpi-bar">
+    <div class="kpi-bi"><span class="sdot d-ok">Wunschphase offen</span><span class="kpi-bs">·</span><span class="kpi-bv">Juni 2026</span></div>
+    <div class="kpi-bi"><span class="kpi-bl">Wünsche:</span><span class="kpi-bv">8</span><span class="kpi-bs">/</span><span class="kpi-bl">21</span></div>
+    <div class="kpi-bi"><span class="kpi-bl">Frist:</span><span class="kpi-bv">15. Mai 2026</span></div>
+  </div>
+  <div class="card">
+    <div class="card-hd"><span class="ch-label"><i class="bi bi-list-ul"></i>Alle Perioden</span><span class="ch-action">Archiv anzeigen</span></div>
+    <table class="tbl">
+      <thead><tr><th>Periode</th><th>Status</th><th>Dienste</th><th>Wünsche</th><th>Frist</th><th></th></tr></thead>
+      <tbody>
+        <tr><td><div style="font-weight:700;">Juni 2026</div><div style="font-size:12px;color:var(--outline);">KW 23–26</div></td><td><span class="chip c-ok"><i class="bi bi-circle-fill" style="font-size:5px;"></i>Wunschphase offen</span></td><td><span style="color:var(--outline);">—</span></td><td><strong>8</strong><span style="color:var(--outline);font-size:13px;"> / 21</span></td><td>15.05.2026</td><td style="text-align:right;"><button class="btn btn-pri btn-sm">Planung öffnen</button></td></tr>
+        <tr><td><div style="font-weight:700;">Mai 2026</div><div style="font-size:12px;color:var(--outline);">KW 18–22</div></td><td><span class="chip c-info">Veröffentlicht</span></td><td><strong>63</strong></td><td><strong>21</strong><span style="color:var(--outline);font-size:13px;"> / 21</span></td><td>01.05.2026</td><td style="text-align:right;"><button class="btn btn-ghost btn-sm">Anzeigen</button></td></tr>
+        <tr><td><div style="font-weight:700;">April 2026</div><div style="font-size:12px;color:var(--outline);">KW 14–17</div></td><td><span class="chip c-neu">Abgeschlossen</span></td><td><strong>61</strong></td><td><strong>21</strong><span style="color:var(--outline);font-size:13px;"> / 21</span></td><td>01.04.2026</td><td style="text-align:right;"><button class="btn btn-ghost btn-sm">Anzeigen</button></td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- FAHRZEUGE -->
+<div class="page" id="p-itw">
+  <div class="page-hd">
+    <div><div class="ph-eyebrow"><i class="bi bi-truck-front"></i>Fahrzeugmanagement</div><div class="ph-title">Intensivtransportwagen</div><div class="ph-sub">Flotte · Fahrtenbuch · Prüffristen · Dokumente</div></div>
+    <div class="ph-actions"><button class="btn btn-sec"><i class="bi bi-filter"></i>Filter</button><button class="btn btn-pri"><i class="bi bi-plus"></i>Fahrzeug anlegen</button></div>
+  </div>
+  <div class="kpi-bar">
+    <div class="kpi-bi"><span class="sdot d-ok">Einsatzbereit</span><span class="kpi-bv" style="color:var(--ter);">3</span></div>
+    <div class="kpi-bi"><span class="sdot d-warn">In Wartung</span><span class="kpi-bv" style="color:var(--warn);">1</span></div>
+    <div class="kpi-bi"><span class="kpi-bl">Gesamt:</span><span class="kpi-bv">4</span></div>
+    <div style="margin-left:auto;"><span class="chip c-err"><i class="bi bi-exclamation-triangle"></i>1 Prüfung fällig</span></div>
+  </div>
+  <div class="card">
+    <table class="tbl">
+      <thead><tr><th>Fahrzeug</th><th>Besatzung heute</th><th>Status</th><th>KM-Stand</th><th>Nächste Prüfung</th><th></th></tr></thead>
+      <tbody>
+        <tr><td><div style="font-weight:700;">ITW 1</div><div style="font-size:11px;font-family:monospace;color:var(--outline);">MSE-ITW-1 · Mercedes Sprinter 519 CDI</div></td><td><div>Dr. Meier (NA)</div><div style="color:var(--on-sv);font-size:13px;">S. Hoffmann (IFK)</div></td><td><span class="chip c-ok">Einsatzbereit</span></td><td style="font-family:monospace;">142.340 km</td><td><span style="color:var(--err);font-weight:700;"><i class="bi bi-exclamation-triangle"></i> 16.05.2026</span></td><td style="text-align:right;white-space:nowrap;"><button class="btn btn-ghost btn-sm">Akte</button> <button class="btn btn-ghost btn-sm">Fahrtenbuch</button></td></tr>
+        <tr><td><div style="font-weight:700;">ITW 2</div><div style="font-size:11px;font-family:monospace;color:var(--outline);">MSE-ITW-2 · Mercedes Sprinter 519 CDI</div></td><td><div>Dr. Schulz (NA)</div><div style="color:var(--on-sv);font-size:13px;">T. Berger (IFK)</div></td><td><span class="chip c-ok">Einsatzbereit</span></td><td style="font-family:monospace;">98.750 km</td><td>12.08.2026</td><td style="text-align:right;white-space:nowrap;"><button class="btn btn-ghost btn-sm">Akte</button> <button class="btn btn-ghost btn-sm">Fahrtenbuch</button></td></tr>
+        <tr><td><div style="font-weight:700;">ITW 3</div><div style="font-size:11px;font-family:monospace;color:var(--outline);">MSE-ITW-3 · Mercedes Sprinter 519 CDI</div></td><td><div>Dr. Wagner (NA)</div><div style="color:var(--on-sv);font-size:13px;">K. Braun (IFK)</div></td><td><span class="chip c-ok">Einsatzbereit</span></td><td style="font-family:monospace;">210.100 km</td><td>20.06.2026</td><td style="text-align:right;white-space:nowrap;"><button class="btn btn-ghost btn-sm">Akte</button> <button class="btn btn-ghost btn-sm">Fahrtenbuch</button></td></tr>
+        <tr style="opacity:.65;"><td><div style="font-weight:700;">ITW 4</div><div style="font-size:11px;font-family:monospace;color:var(--outline);">MSE-ITW-4 · Mercedes Sprinter 519 CDI</div></td><td style="color:var(--outline);">— In Werkstatt</td><td><span class="chip c-warn">In Wartung</span></td><td style="font-family:monospace;color:var(--outline);">64.220 km</td><td style="color:var(--outline);">03.11.2026</td><td style="text-align:right;"><button class="btn btn-ghost btn-sm">Akte</button></td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- TEAM -->
+<div class="page" id="p-team">
+  <div class="page-hd">
+    <div><div class="ph-eyebrow"><i class="bi bi-people"></i>Team & Dienste</div><div class="ph-title">Heutige Besetzung</div><div class="ph-sub">Dienstag, 6. Mai 2026</div></div>
+  </div>
+  <div class="two-col">
+    <div class="card">
+      <div class="card-hd"><span class="ch-label"><i class="bi bi-person-check"></i>Heute im Dienst</span><span class="ch-meta">6 Personen</span></div>
+      <table class="tbl">
+        <thead><tr><th>Name</th><th>Funktion</th><th>Fahrzeug</th><th>Schicht</th><th>Status</th></tr></thead>
+        <tbody>
+          <tr><td style="font-weight:700;">Dr. Meier</td><td><span class="chip c-drk">Notarzt</span></td><td>ITW 1</td><td>06:00–18:00</td><td><span class="chip c-ok">Im Dienst</span></td></tr>
+          <tr><td style="font-weight:700;">S. Hoffmann</td><td><span class="chip c-info">IFK</span></td><td>ITW 1</td><td>06:00–18:00</td><td><span class="chip c-ok">Im Dienst</span></td></tr>
+          <tr><td style="font-weight:700;">Dr. Schulz</td><td><span class="chip c-drk">Notarzt</span></td><td>ITW 2</td><td>06:00–18:00</td><td><span class="chip c-ok">Im Dienst</span></td></tr>
+          <tr><td style="font-weight:700;">T. Berger</td><td><span class="chip c-info">IFK</span></td><td>ITW 2</td><td>06:00–18:00</td><td><span class="chip c-ok">Im Dienst</span></td></tr>
+          <tr><td style="font-weight:700;">Dr. Wagner</td><td><span class="chip c-drk">Notarzt</span></td><td>ITW 3</td><td>18:00–06:00</td><td><span class="chip c-neu">Ab 18:00</span></td></tr>
+          <tr><td style="font-weight:700;">K. Braun</td><td><span class="chip c-info">IFK</span></td><td>ITW 3</td><td>18:00–06:00</td><td><span class="chip c-neu">Ab 18:00</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="card">
+      <div class="card-hd"><span class="ch-label"><i class="bi bi-calendar-range"></i>Wünsche Juni 2026</span></div>
+      <div style="padding:var(--sp-pad) var(--sp-pad) .5rem;">
+        <div class="prog"><div class="prog-fill" style="width:38%;"></div></div>
+        <div style="display:flex;justify-content:space-between;font-size:12px;font-weight:500;color:var(--on-sv);margin-bottom:.875rem;">
+          <span><strong style="color:var(--on-s);">8 von 21</strong> abgegeben</span>
+          <span style="color:var(--warn);font-weight:600;">13 ausstehend</span>
+        </div>
+      </div>
+      <div class="task-row" style="padding:.625rem var(--sp-pad);"><div class="t-prio pm"></div><div class="t-body"><div class="t-title" style="font-size:13px;">K. Braun — kein Wunsch</div></div><button class="btn btn-ghost btn-xs">Erinnern</button></div>
+      <div class="task-row" style="padding:.625rem var(--sp-pad);"><div class="t-prio pm"></div><div class="t-body"><div class="t-title" style="font-size:13px;">P. Weber — kein Wunsch</div></div><button class="btn btn-ghost btn-xs">Erinnern</button></div>
+      <div class="task-row" style="padding:.625rem var(--sp-pad);"><div class="t-prio pm"></div><div class="t-body"><div class="t-title" style="font-size:13px;">M. Klein — kein Wunsch</div></div><button class="btn btn-ghost btn-xs">Erinnern</button></div>
+      <div style="padding:.75rem var(--sp-pad);border-top:1px solid var(--surface-3);display:flex;justify-content:space-between;align-items:center;">
+        <span style="font-size:12px;font-weight:500;color:var(--outline);">+ 10 weitere ausstehend</span>
+        <button class="btn btn-sec btn-sm"><i class="bi bi-envelope"></i>Alle erinnern</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+</div>
+<script>
+function nbt(id){const i=document.getElementById(id),d=i.querySelector('.nb-drop'),t=i.querySelector('.nb-trig'),o=d.classList.contains('open');cm();if(!o){d.classList.add('open');t.classList.add('open');}}
+function cm(){document.querySelectorAll('.nb-drop').forEach(d=>d.classList.remove('open'));document.querySelectorAll('.nb-trig').forEach(t=>t.classList.remove('open'));}
+function sa(id){document.querySelectorAll('.nb-trig').forEach(t=>t.classList.remove('active'));document.getElementById(id).querySelector('.nb-trig').classList.add('active');}
+function gp(id){document.querySelectorAll('.page').forEach(p=>p.classList.remove('on'));document.getElementById(id)?.classList.add('on');}
+document.addEventListener('click',e=>{if(!e.target.closest('.nb-item'))cm();});
+
+function openDrawer(){
+  document.getElementById('nb-dr').classList.add('open');
+  document.getElementById('nb-ov').classList.add('open');
+  document.body.style.overflow='hidden';
+}
+function closeDrawer(){
+  document.getElementById('nb-dr').classList.remove('open');
+  document.getElementById('nb-ov').classList.remove('open');
+  document.body.style.overflow='';
+}
+function dtgl(id,btn){
+  const body=document.getElementById(id);
+  const isCollapsed=body.classList.contains('collapsed');
+  if(isCollapsed){
+    body.classList.remove('collapsed');
+    btn.classList.remove('collapsed');
+  } else {
+    body.classList.add('collapsed');
+    btn.classList.add('collapsed');
+  }
+}
+</script>
+</body>
+</html>

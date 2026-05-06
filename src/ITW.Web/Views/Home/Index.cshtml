@@ -17,15 +17,8 @@
 <body class="theme-itw app-home-body app-loading-boot">
     <partial name="~/Views/Shared/Komponenten/_AppLoadingOverlay.cshtml" />
 
-    <div class="container app-home-shell">
-        <div class="row justify-content-center">
-            <div class="col-12 col-xl-10">
-                <header class="app-home-hero">
-                    <div class="app-home-hero__label">
-                        <i class="bi bi-grid-1x2-fill"></i>
-                        Startseite
-                    </div>
-
+    <div class="app-home-shell">
+        <header class="app-home-hero">
                     <h1 class="app-home-hero__title">
                         <span class="app-home-hero__brand-primary">Intensivtransport</span>
                         <span class="app-home-hero__brand-accent">Neubrandenburg</span>
@@ -35,11 +28,11 @@
                         Wählen Sie den Bereich aus, in dem Sie arbeiten möchten.
                         Die Bereiche sind farblich klar getrennt und führen direkt in die jeweilige Arbeitsumgebung.
                     </p>
-                </header>
+        </header>
 
-                <div class="row app-home-grid justify-content-center">
-                    @foreach (var bereich in Model.Bereiche)
-                    {
+        <div class="app-home-grid">
+            @foreach (var bereich in Model.Bereiche)
+            {
                         var isInactive = Model.IstAngemeldet && !bereich.IstMeinBereich;
 
                         var moduleCssClass = bereich.Titel switch
@@ -64,8 +57,7 @@
                             actionStyleClass = "app-home-module__action--muted";
                         }
 
-                        <div class="col-12 col-md-6 col-xl-4">
-                            <article class="app-home-module @moduleCssClass">
+                <article class="app-home-module @moduleCssClass">
                                 <div class="app-home-module__card @cardStateClass">
                                     <div class="app-home-module__body">
                                         <div class="app-home-module__status">
@@ -105,15 +97,12 @@
                                         </div>
                                     </div>
                                 </div>
-                            </article>
-                        </div>
-                    }
-                </div>
+                </article>
+            }
+        </div>
 
-                <div class="app-home-footer">
-                    Zentrales Managementsystem &bull; Intensivtransport Neubrandenburg &bull; &copy; 2026
-                </div>
-            </div>
+        <div class="app-home-footer">
+            Zentrales Managementsystem &bull; Intensivtransport Neubrandenburg &bull; &copy; 2026
         </div>
     </div>
 
