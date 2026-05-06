@@ -20,5 +20,7 @@ public interface IAufgabeRepository
         Aufgabe aufgabe,
         CancellationToken cancellationToken = default);
 
+    void Remove(Aufgabe aufgabe);
+
     Task SaveChangesAsync(CancellationToken cancellationToken = default);
 }

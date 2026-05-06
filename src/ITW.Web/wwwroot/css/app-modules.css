@@ -563,6 +563,49 @@
     background: color-mix(in srgb, var(--err) 12%, transparent);
 }
 
+.app-task-item__actions {
+    display: flex;
+    align-items: center;
+    gap: 0.125rem;
+    flex-shrink: 0;
+    opacity: 0;
+    transition: opacity var(--transition-fast);
+}
+
+.app-task-item:hover .app-task-item__actions,
+.app-task-item:focus-within .app-task-item__actions {
+    opacity: 1;
+}
+
+.app-task-item__action-btn {
+    all: unset;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 1.75rem;
+    height: 1.75rem;
+    border-radius: var(--radius-sm);
+    color: var(--outline);
+    font-size: 0.875rem;
+    transition: color var(--transition-fast), background var(--transition-fast);
+}
+
+.app-task-item__action-btn:hover {
+    color: var(--on-s);
+    background: var(--surface-3);
+}
+
+.app-task-item__action-btn--del:hover {
+    color: var(--err);
+    background: color-mix(in srgb, var(--err) 10%, transparent);
+}
+
+.app-task-item__action-btn:focus-visible {
+    outline: 2px solid var(--pri);
+    outline-offset: 1px;
+}
+
 .app-task-new {
     padding: 0.625rem var(--sp-pad);
     border-top: 1px solid var(--surface-3);

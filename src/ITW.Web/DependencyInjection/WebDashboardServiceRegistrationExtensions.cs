@@ -11,6 +11,8 @@ public static class WebDashboardServiceRegistrationExtensions
         services.AddScoped<SystemAufgabeGeneratorService>();
         services.AddScoped<AufgabeErledigenService>();
         services.AddScoped<AufgabeErstellenService>();
+        services.AddScoped<AufgabeAufschiebenService>();
+        services.AddScoped<AufgabeLoeschenService>();
 
         return services;
     }

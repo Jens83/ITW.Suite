@@ -54,4 +54,9 @@ public sealed class Aufgabe
         Status     = AufgabeStatus.Offen;
         ErledigtAm = null;
     }
+
+    public void AktualisiereFaelligkeitsdatum(DateOnly? datum)
+    {
+        Faelligkeitsdatum = datum;
+    }
 }

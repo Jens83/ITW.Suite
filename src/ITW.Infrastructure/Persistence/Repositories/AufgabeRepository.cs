@@ -54,6 +54,12 @@ public sealed class AufgabeRepository : IAufgabeRepository
         await _dbContext.Aufgaben.AddAsync(aufgabe, cancellationToken);
     }
 
+    public void Remove(Aufgabe aufgabe)
+    {
+        ArgumentNullException.ThrowIfNull(aufgabe);
+        _dbContext.Aufgaben.Remove(aufgabe);
+    }
+
     public Task SaveChangesAsync(CancellationToken cancellationToken = default)
         => _dbContext.SaveChangesAsync(cancellationToken);
 }

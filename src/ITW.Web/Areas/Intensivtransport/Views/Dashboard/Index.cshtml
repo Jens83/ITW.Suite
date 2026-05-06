@@ -94,6 +94,20 @@
                                             }
                                         </div>
                                     </div>
+                                    <div class="app-task-item__actions">
+                                        <form asp-action="AufgabeAufschieben" asp-controller="Dashboard" asp-area="Intensivtransport" method="post">
+                                            <input type="hidden" name="aufgabeId" value="@aufgabe.Id" />
+                                            <button type="submit" class="app-task-item__action-btn" title="Um 7 Tage aufschieben" aria-label="Aufschieben">
+                                                <i class="bi bi-arrow-clockwise"></i>
+                                            </button>
+                                        </form>
+                                        <form asp-action="AufgabeLoeschen" asp-controller="Dashboard" asp-area="Intensivtransport" method="post">
+                                            <input type="hidden" name="aufgabeId" value="@aufgabe.Id" />
+                                            <button type="submit" class="app-task-item__action-btn app-task-item__action-btn--del" title="Löschen" aria-label="Aufgabe löschen">
+                                                <i class="bi bi-trash"></i>
+                                            </button>
+                                        </form>
+                                    </div>
                                 </li>
                             }
                         }

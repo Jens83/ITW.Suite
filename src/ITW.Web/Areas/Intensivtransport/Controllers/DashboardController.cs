@@ -15,24 +15,32 @@ public sealed class DashboardController : BereichsDashboardControllerBase
     private readonly SystemAufgabeGeneratorService _aufgabeGenerator;
     private readonly AufgabeErledigenService _aufgabeErledigen;
     private readonly AufgabeErstellenService _aufgabeErstellen;
+    private readonly AufgabeAufschiebenService _aufgabeAufschieben;
+    private readonly AufgabeLoeschenService _aufgabeLoeschen;
 
     public DashboardController(
         ICurrentUserContextAccessor currentUserContextAccessor,
         GetItwDashboardDataService dashboardDataService,
         SystemAufgabeGeneratorService aufgabeGenerator,
         AufgabeErledigenService aufgabeErledigen,
-        AufgabeErstellenService aufgabeErstellen)
+        AufgabeErstellenService aufgabeErstellen,
+        AufgabeAufschiebenService aufgabeAufschieben,
+        AufgabeLoeschenService aufgabeLoeschen)
         : base(currentUserContextAccessor)
     {
         ArgumentNullException.ThrowIfNull(dashboardDataService);
         ArgumentNullException.ThrowIfNull(aufgabeGenerator);
         ArgumentNullException.ThrowIfNull(aufgabeErledigen);
         ArgumentNullException.ThrowIfNull(aufgabeErstellen);
+        ArgumentNullException.ThrowIfNull(aufgabeAufschieben);
+        ArgumentNullException.ThrowIfNull(aufgabeLoeschen);
 
         _dashboardDataService = dashboardDataService;
         _aufgabeGenerator     = aufgabeGenerator;
         _aufgabeErledigen     = aufgabeErledigen;
         _aufgabeErstellen     = aufgabeErstellen;
+        _aufgabeAufschieben   = aufgabeAufschieben;
+        _aufgabeLoeschen      = aufgabeLoeschen;
     }
 
     protected override OrganisationsbereichCode Bereich => OrganisationsbereichCode.Intensivtransport;
@@ -124,6 +132,42 @@ public sealed class DashboardController : BereichsDashboardControllerBase
 
         await _aufgabeErstellen.ExecuteAsync(
             new AufgabeErstellenCommand(titel, prioritaet, faelligkeit),
+            OrganisationsbereichCode.Intensivtransport,
+            cancellationToken);
+
+        return RedirectToAction(nameof(Index));
+    }
+
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> AufgabeAufschieben(
+        Guid aufgabeId,
+        CancellationToken cancellationToken)
+    {
+        var redirectResult = await PruefeBereichszugriffAsync(cancellationToken);
+        if (redirectResult is not null)
+            return redirectResult;
+
+        await _aufgabeAufschieben.ExecuteAsync(
+            aufgabeId,
+            OrganisationsbereichCode.Intensivtransport,
+            cancellationToken);
+
+        return RedirectToAction(nameof(Index));
+    }
+
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> AufgabeLoeschen(
+        Guid aufgabeId,
+        CancellationToken cancellationToken)
+    {
+        var redirectResult = await PruefeBereichszugriffAsync(cancellationToken);
+        if (redirectResult is not null)
+            return redirectResult;
+
+        await _aufgabeLoeschen.ExecuteAsync(
+            aufgabeId,
             OrganisationsbereichCode.Intensivtransport,
             cancellationToken);
 
