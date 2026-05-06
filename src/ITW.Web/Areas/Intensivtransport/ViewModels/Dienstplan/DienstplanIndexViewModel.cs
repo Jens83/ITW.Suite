@@ -141,6 +141,11 @@ public sealed class DienstplanKalenderTagViewModel
 
     public string AutomatikKonfliktText { get; set; } = string.Empty;
 
+    public bool HatSondereinsatz =>
+        (IstFeiertag || IstWochenende) &&
+        IstImAktivenMonat &&
+        (AnzahlGeplanteAerzte > 0 || AnzahlGeplanteNotfallsanitaeter > 0);
+
     public bool HatVollstaendigeBesatzung =>
         !IstFeiertag &&
         !IstWochenende &&

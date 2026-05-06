@@ -11,7 +11,7 @@ using System.Globalization;
 
 namespace ITW.Web.Areas.Intensivtransport.Services.Dienstplan.Read;
 
-public sealed record ReadSichtbarerDienstplanViewModelQuery(string AktuellerUserId);
+public sealed record ReadSichtbarerDienstplanViewModelQuery(string AktuellerUserId, bool IstWachleiter = false);
 
 public sealed class ReadSichtbarerDienstplanViewModelService
 {
@@ -94,6 +94,7 @@ public sealed class ReadSichtbarerDienstplanViewModelService
                 "Aktueller Plan",
                 aktuellerPlan,
                 query.AktuellerUserId,
+                query.IstWachleiter,
                 profilLookup,
                 cancellationToken));
         }
@@ -105,6 +106,7 @@ public sealed class ReadSichtbarerDienstplanViewModelService
                 "Neuer Plan",
                 neuerPlan,
                 query.AktuellerUserId,
+                query.IstWachleiter,
                 profilLookup,
                 cancellationToken));
         }
@@ -124,6 +126,7 @@ public sealed class ReadSichtbarerDienstplanViewModelService
         string ueberschrift,
         DienstplanPeriodeListenEintrag periode,
         string aktuellerUserId,
+        bool istWachleiter,
         IReadOnlyDictionary<string, ItwMitarbeiterprofilUebersichtDto> profilLookup,
         CancellationToken cancellationToken)
     {
@@ -154,6 +157,9 @@ public sealed class ReadSichtbarerDienstplanViewModelService
                 ausfallLookup.TryGetValue(datum, out var tagesAusfaelle);
                 tagesAusfaelle ??= Array.Empty<GeplanterDienstTagAusfall>();
 
+                var istFeiertag = feiertage.TryGetValue(datum, out var feiertagsName);
+                var istWochenende = datum.DayOfWeek is DayOfWeek.Saturday or DayOfWeek.Sunday;
+
                 var slots = planung is null
                     ? Array.Empty<SichtbarerPlanSlotViewModel>()
                     : BaueSichtbarePlanSlots(
@@ -161,14 +167,26 @@ public sealed class ReadSichtbarerDienstplanViewModelService
                         tagesAusfaelle,
                         profilLookup);
 
+                // Sondereinsätze an Wochenenden/Feiertagen sind nur für Wachleiter
+                // und direkt betroffene Mitarbeiter sichtbar.
+                if ((istWochenende || istFeiertag) && !istWachleiter && planung is not null)
+                {
+                    var aktuellerUserIstBetroffen =
+                        string.Equals(planung.ArztUserId, aktuellerUserId, StringComparison.OrdinalIgnoreCase) ||
+                        string.Equals(planung.Notfallsanitaeter1UserId, aktuellerUserId, StringComparison.OrdinalIgnoreCase) ||
+                        string.Equals(planung.Notfallsanitaeter2UserId, aktuellerUserId, StringComparison.OrdinalIgnoreCase);
+
+                    if (!aktuellerUserIstBetroffen)
+                    {
+                        slots = Array.Empty<SichtbarerPlanSlotViewModel>();
+                    }
+                }
+
                 var eigeneSlots = slots
                     .Where(x =>
                         !string.IsNullOrWhiteSpace(x.UserId) &&
                         string.Equals(x.UserId, aktuellerUserId, StringComparison.OrdinalIgnoreCase))
                     .ToArray();
-
-                var istFeiertag = feiertage.TryGetValue(datum, out var feiertagsName);
-                var istWochenende = datum.DayOfWeek is DayOfWeek.Saturday or DayOfWeek.Sunday;
 
                 return new SichtbarerPlanTagViewModel
                 {

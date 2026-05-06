@@ -90,18 +90,6 @@ public sealed class SaveGeplanterDienstTagService
             return SaveGeplanterDienstTagResult.Fehler("Der ausgewählte Tag gehört nicht zur ausgewählten Dienstplanperiode.");
         }
 
-        if (command.DienstDatum.DayOfWeek is DayOfWeek.Saturday or DayOfWeek.Sunday)
-        {
-            return SaveGeplanterDienstTagResult.Fehler(
-                $"Für den {command.DienstDatum:dd.MM.yyyy} kann keine Besatzung gespeichert werden, da es sich um ein Wochenende handelt.");
-        }
-
-        if (MecklenburgVorpommernFeiertage.TryGetFeiertagsname(command.DienstDatum, out var feiertagsname))
-        {
-            return SaveGeplanterDienstTagResult.Fehler(
-                $"Für den {command.DienstDatum:dd.MM.yyyy} kann keine Besatzung gespeichert werden, da es sich um einen Feiertag handelt ({feiertagsname}).");
-        }
-
         var bearbeitetAm = DateTimeOffset.UtcNow;
 
         var vorhandenerEintrag = await _geplanterDienstTagRepository.GetAsync(

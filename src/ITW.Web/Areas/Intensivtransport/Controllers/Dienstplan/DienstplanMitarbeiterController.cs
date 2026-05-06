@@ -90,7 +90,9 @@ public sealed class DienstplanMitarbeiterController : IntensivtransportDienstpla
         }
 
         var viewModel = await _readSichtbarerDienstplanViewModelService.ExecuteAsync(
-            new ReadSichtbarerDienstplanViewModelQuery(zugriff.CurrentUser!.UserId),
+            new ReadSichtbarerDienstplanViewModelQuery(
+                zugriff.CurrentUser!.UserId,
+                zugriff.CurrentUser!.Rolle == BereichsrolleCode.Wachleiter),
             cancellationToken);
 
         return BereichsView("Plan", viewModel);

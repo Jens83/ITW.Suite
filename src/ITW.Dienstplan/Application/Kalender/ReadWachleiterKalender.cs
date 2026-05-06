@@ -219,6 +219,8 @@ public sealed class ReadWachleiterKalenderService
             automatikKonfliktLookup?.TryGetValue(datum, out automatikKonfliktText);
 
             var zeigeTageswerte = istImAktivenMonat && !istFeiertag && !istWochenende;
+            // Planungsdaten auch für Sondereinsätze an Wochenenden/Feiertagen anzeigen
+            var zeigePlanungsDaten = istImAktivenMonat;
 
             aktuelleWoche.Add(new WachleiterKalenderTagEintrag
             {
@@ -234,8 +236,8 @@ public sealed class ReadWachleiterKalenderService
                 AnzahlWuenscheGesamt = zeigeTageswerte ? statistik?.AnzahlWuenscheGesamt ?? 0 : 0,
                 AnzahlAerzte = zeigeTageswerte ? statistik?.AnzahlAerzte ?? 0 : 0,
                 AnzahlNotfallsanitaeter = zeigeTageswerte ? statistik?.AnzahlNotfallsanitaeter ?? 0 : 0,
-                AnzahlGeplanteAerzte = zeigeTageswerte && !string.IsNullOrWhiteSpace(planung?.ArztUserId) ? 1 : 0,
-                AnzahlGeplanteNotfallsanitaeter = zeigeTageswerte
+                AnzahlGeplanteAerzte = zeigePlanungsDaten && !string.IsNullOrWhiteSpace(planung?.ArztUserId) ? 1 : 0,
+                AnzahlGeplanteNotfallsanitaeter = zeigePlanungsDaten
                     ? new[] { planung?.Notfallsanitaeter1UserId, planung?.Notfallsanitaeter2UserId }
                         .Count(x => !string.IsNullOrWhiteSpace(x))
                     : 0,

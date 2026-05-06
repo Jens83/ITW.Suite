@@ -172,7 +172,7 @@
                                 ? tag.WachleiterStatusCssClass
                                 : string.Empty;
 
-                            <div class="app-wlk-day @(isInactive ? "app-wlk-day--empty" : "") @(tag.IstHeute ? "app-wlk-day--today" : "") @(tag.IstWochenende ? "app-wlk-day--weekend" : "") @statusCss">
+                            <div class="app-wlk-day @(isInactive ? "app-wlk-day--empty" : "") @(tag.IstHeute ? "app-wlk-day--today" : "") @(tag.IstWochenende ? "app-wlk-day--weekend" : "") @statusCss @(tag.HatSondereinsatz ? "app-wlk-day--sondereinsatz" : "")">
                                 <div class="app-wlk-day__header">
                                     <span class="app-wlk-day__num">@tag.Datum.Day</span>
                                     @if (!isInactive && !tag.IstFeiertag && !tag.IstWochenende)
@@ -184,7 +184,18 @@
                                 @if (!isInactive)
                                 {
                                     <div class="app-wlk-day__body">
-                                        @if (tag.IstFeiertag)
+                                        @if (tag.HatSondereinsatz)
+                                        {
+                                            <div class="app-wlk-day__hint" style="background:color-mix(in srgb,var(--pri) 10%,transparent);border:1px solid color-mix(in srgb,var(--pri) 25%,transparent);color:var(--on-s);">
+                                                <i class="bi bi-star-fill"></i> Sondereinsatz
+                                            </div>
+                                            <div class="app-wlk-day__summary">
+                                                <span>NFS <strong>@tag.AnzahlGeplanteNotfallsanitaeter</strong></span>
+                                                <span class="app-wlk-day__summary-sep"></span>
+                                                <span>A <strong>@tag.AnzahlGeplanteAerzte</strong></span>
+                                            </div>
+                                        }
+                                        else if (tag.IstFeiertag)
                                         {
                                             <div class="app-wlk-day__hint app-wlk-day__hint--holiday">
                                                 <i class="bi bi-stars"></i>
@@ -303,29 +314,30 @@
                     {
                         @await Html.PartialAsync(
                         "~/Views/Shared/Komponenten/_AppStatusMessage.cshtml",
-                        modal.Tag.FeiertagsName,
+                        $"Sondereinsatz am Feiertag: {modal.Tag.FeiertagsName}",
                         new ViewDataDictionary(ViewData)
                         {
-                            ["Variant"] = "warning",
-                            ["Title"] = "Keine Tagesplanung möglich",
+                            ["Variant"] = "info",
+                            ["Title"] = "Sondereinsatz",
                             ["AutoHide"] = false,
-                            ["IconClass"] = "bi bi-stars"
+                            ["IconClass"] = "bi bi-star-fill"
                         })
                     }
                     else if (modal.IsSuccess && modal.Tag.IstWochenende)
                     {
                         @await Html.PartialAsync(
                         "~/Views/Shared/Komponenten/_AppStatusMessage.cshtml",
-                        "Wochenende",
+                        "Dieser Sondereinsatz liegt an einem Wochenende und ist nur für Wachleiter und betroffene Mitarbeiter sichtbar.",
                         new ViewDataDictionary(ViewData)
                         {
-                            ["Variant"] = "warning",
-                            ["Title"] = "Keine Tagesplanung möglich",
+                            ["Variant"] = "info",
+                            ["Title"] = "Sondereinsatz – Wochenende",
                             ["AutoHide"] = false,
-                            ["IconClass"] = "bi bi-calendar-week"
+                            ["IconClass"] = "bi bi-star-fill"
                         })
                     }
-                    else if (modal.IsSuccess)
+
+                    @if (modal.IsSuccess)
                     {
                         <div class="app-wlk-modal__cols">
 
@@ -567,7 +579,7 @@
                 </div>
 
                 @* ── Modal footer: Besetzung speichern ── *@
-                @if (modal.IsSuccess && !modal.Tag.IstFeiertag && !modal.Tag.IstWochenende)
+                @if (modal.IsSuccess)
                 {
                     <div class="modal-footer app-wlk-modal__footer">
                         <button type="submit" form="besetzungForm" class="app-btn app-btn-primary">
