@@ -442,6 +442,21 @@
     padding: 0;
 }
 
+.app-task-group-header {
+    list-style: none;
+    padding: 0.5rem var(--sp-pad) 0.25rem;
+    font-size: 0.675rem;
+    font-weight: 700;
+    letter-spacing: 0.07em;
+    text-transform: uppercase;
+    color: var(--outline);
+    border-bottom: 1px solid var(--surface-3);
+}
+
+.app-task-group-header:not(:first-child) {
+    margin-top: 0.25rem;
+}
+
 .app-task-item {
     display: flex;
     align-items: flex-start;

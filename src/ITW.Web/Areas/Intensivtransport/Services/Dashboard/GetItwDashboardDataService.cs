@@ -129,7 +129,11 @@ public sealed class GetItwDashboardDataService
             })
             .ToArray();
 
-        var heute = DateOnly.FromDateTime(DateTime.Today);
+        var heute         = DateOnly.FromDateTime(DateTime.Today);
+        var wochenstart   = heute.AddDays(-(((int)heute.DayOfWeek + 6) % 7)); // Montag
+        var dieseWocheEnd = wochenstart.AddDays(6);
+        var naechsteEnd   = wochenstart.AddDays(13);
+
         var aufgabeVms = offeneAufgaben
             .Select(a => new ItwAufgabeViewModel
             {
@@ -139,6 +143,7 @@ public sealed class GetItwDashboardDataService
                 IstSystem          = a.Quelle == AufgabeQuelle.System,
                 FaelligkeitAnzeige = FormatFaelligkeit(a.Faelligkeitsdatum),
                 IstUeberfaellig    = a.Faelligkeitsdatum.HasValue && a.Faelligkeitsdatum.Value < heute,
+                Gruppe             = ErmittleGruppe(a.Faelligkeitsdatum, heute, dieseWocheEnd, naechsteEnd),
             })
             .ToArray();
 
@@ -162,6 +167,17 @@ public sealed class GetItwDashboardDataService
         if (v.Length == 0) return n.Length >= 2 ? n[..2].ToUpperInvariant() : n.ToUpperInvariant();
         if (n.Length == 0) return v.Length >= 2 ? v[..2].ToUpperInvariant() : v.ToUpperInvariant();
         return $"{char.ToUpperInvariant(v[0])}{char.ToUpperInvariant(n[0])}";
+    }
+
+    private static string ErmittleGruppe(
+        DateOnly? datum,
+        DateOnly heute,
+        DateOnly dieseWocheEnd,
+        DateOnly naechsteEnd)
+    {
+        if (datum is null || datum.Value > naechsteEnd) return "Später";
+        if (datum.Value <= dieseWocheEnd)               return "Diese Woche";
+        return "Nächste Woche";
     }
 
     private static string PrioritaetZuKlasse(AufgabePrioritaet p) => p switch

@@ -52,41 +52,50 @@
                 }
                 else
                 {
+                    var gruppenReihenfolge = new[] { "Diese Woche", "Nächste Woche", "Später" };
                     <ul class="app-task-list">
-                        @foreach (var aufgabe in Model.OffeneAufgaben)
+                        @foreach (var gruppe in gruppenReihenfolge)
                         {
-                            <li class="app-task-item @(aufgabe.IstUeberfaellig ? "app-task-item--ueberfaellig" : "")">
-                                <form asp-action="AufgabeErledigen" asp-controller="Dashboard" asp-area="Intensivtransport"
-                                      method="post" class="app-task-item__check-form">
-                                    <input type="hidden" name="aufgabeId" value="@aufgabe.Id" />
-                                    <button type="submit" class="app-task-item__check" title="Als erledigt markieren"
-                                            aria-label="Aufgabe erledigen">
-                                        <i class="bi bi-circle"></i>
-                                    </button>
-                                </form>
-                                <div class="app-task-item__body">
-                                    <span class="app-task-item__titel">@aufgabe.Titel</span>
-                                    <div class="app-task-item__meta">
-                                        @if (aufgabe.FaelligkeitAnzeige is not null)
-                                        {
-                                            <span class="app-task-item__faelligkeit @(aufgabe.IstUeberfaellig ? "app-task-item__faelligkeit--warn" : "")">
-                                                <i class="bi bi-clock"></i>
-                                                @aufgabe.FaelligkeitAnzeige
-                                            </span>
-                                        }
-                                        @if (aufgabe.IstSystem)
-                                        {
-                                            <span class="app-task-item__badge">System</span>
-                                        }
-                                        @if (aufgabe.PrioritaetKlasse != "normal")
-                                        {
-                                            <span class="app-task-item__prio app-task-item__prio--@aufgabe.PrioritaetKlasse">
-                                                @(aufgabe.PrioritaetKlasse == "dringend" ? "Dringend" : "Hoch")
-                                            </span>
-                                        }
+                            var aufgabenInGruppe = Model.OffeneAufgaben.Where(a => a.Gruppe == gruppe).ToList();
+                            if (aufgabenInGruppe.Count == 0) { continue; }
+
+                            <li class="app-task-group-header">@gruppe</li>
+
+                            @foreach (var aufgabe in aufgabenInGruppe)
+                            {
+                                <li class="app-task-item @(aufgabe.IstUeberfaellig ? "app-task-item--ueberfaellig" : "")">
+                                    <form asp-action="AufgabeErledigen" asp-controller="Dashboard" asp-area="Intensivtransport"
+                                          method="post" class="app-task-item__check-form">
+                                        <input type="hidden" name="aufgabeId" value="@aufgabe.Id" />
+                                        <button type="submit" class="app-task-item__check" title="Als erledigt markieren"
+                                                aria-label="Aufgabe erledigen">
+                                            <i class="bi bi-circle"></i>
+                                        </button>
+                                    </form>
+                                    <div class="app-task-item__body">
+                                        <span class="app-task-item__titel">@aufgabe.Titel</span>
+                                        <div class="app-task-item__meta">
+                                            @if (aufgabe.FaelligkeitAnzeige is not null)
+                                            {
+                                                <span class="app-task-item__faelligkeit @(aufgabe.IstUeberfaellig ? "app-task-item__faelligkeit--warn" : "")">
+                                                    <i class="bi bi-clock"></i>
+                                                    @aufgabe.FaelligkeitAnzeige
+                                                </span>
+                                            }
+                                            @if (aufgabe.IstSystem)
+                                            {
+                                                <span class="app-task-item__badge">System</span>
+                                            }
+                                            @if (aufgabe.PrioritaetKlasse != "normal")
+                                            {
+                                                <span class="app-task-item__prio app-task-item__prio--@aufgabe.PrioritaetKlasse">
+                                                    @(aufgabe.PrioritaetKlasse == "dringend" ? "Dringend" : "Hoch")
+                                                </span>
+                                            }
+                                        </div>
                                     </div>
-                                </div>
-                            </li>
+                                </li>
+                            }
                         }
                     </ul>
                 }

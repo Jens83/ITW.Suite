@@ -52,12 +52,13 @@ public sealed class ItwWunschphaseSummaryViewModel
 
 public sealed class ItwAufgabeViewModel
 {
-    public Guid   Id                 { get; init; }
-    public string Titel              { get; init; } = "";
-    public string PrioritaetKlasse   { get; init; } = "";   // "normal" | "hoch" | "dringend"
-    public bool   IstSystem          { get; init; }
+    public Guid    Id                 { get; init; }
+    public string  Titel              { get; init; } = "";
+    public string  PrioritaetKlasse   { get; init; } = "";   // "normal" | "hoch" | "dringend"
+    public bool    IstSystem          { get; init; }
     public string? FaelligkeitAnzeige { get; init; }
-    public bool   IstUeberfaellig    { get; init; }
+    public bool    IstUeberfaellig    { get; init; }
+    public string  Gruppe             { get; init; } = "Später"; // "Diese Woche" | "Nächste Woche" | "Später"
 }
 
 public sealed class ItwWunschPersonViewModel
