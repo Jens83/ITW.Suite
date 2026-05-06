@@ -120,20 +120,20 @@ public sealed class FahrzeugPruefstatusItemViewModel
         {
             if (!FaelligAm.HasValue)
             {
-                return "bg-secondary";
+                return "app-pill--neutral";
             }
 
             if (IstUeberfaellig)
             {
-                return "bg-danger";
+                return "app-pill--danger";
             }
 
             if (WirdBaldFaellig)
             {
-                return "bg-warning text-dark";
+                return "app-pill--warning";
             }
 
-            return "bg-success";
+            return "app-pill--success";
         }
     }
 

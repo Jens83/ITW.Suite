@@ -106,7 +106,7 @@ public sealed class AccountController : Controller
                     profil.Nachname,
                     cancellationToken);
 
-                await _signInManager.RefreshSignInAsync(user);
+                await _signInManager.SignInAsync(user, viewModel.AngemeldetBleiben);
             }
 
             if (await MussPasswortAendernAsync(user))

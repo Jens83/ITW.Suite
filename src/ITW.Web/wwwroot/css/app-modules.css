@@ -1652,3 +1652,52 @@
         color: var(--warn);
     }
 }
+
+
+/* ==========================================================================
+   SystemLog
+   ========================================================================== */
+
+.log-filter-bar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-bottom: 1.25rem;
+}
+
+/* Level-Pills */
+.log-pill--information { background: rgba(var(--pri-rgb), 0.1); color: var(--on-s); border-color: rgba(var(--pri-rgb), 0.2); }
+.log-pill--warning     { background: var(--warn-c); color: var(--on-s); border-color: var(--warn-brd); }
+.log-pill--error       { background: var(--err-c); color: var(--on-s); border-color: rgba(var(--err-rgb), 0.2); }
+.log-pill--fatal       { background: rgba(124,58,237,.1); color: var(--on-s); border-color: rgba(124,58,237,.2); }
+.log-pill--debug,
+.log-pill--verbose     { background: var(--surface-2); color: var(--on-sv); border-color: var(--outline-v); }
+
+/* Row highlights */
+.log-row--error td,
+.log-row--fatal td    { background-color: rgba(var(--err-rgb), 0.04); }
+.log-row--warning td  { background-color: rgba(var(--warn-rgb), 0.04); }
+
+/* Exception details */
+.log-exception {
+    margin-top: 0.4rem;
+}
+
+.log-exception__toggle {
+    cursor: pointer;
+    font-size: var(--type-body-sm-size);
+    color: var(--outline);
+}
+
+.log-exception__pre {
+    margin-top: 0.4rem;
+    font-size: var(--type-body-sm-size);
+    background: var(--surface-1);
+    border: 1px solid var(--outline-v);
+    border-radius: var(--r);
+    padding: 0.75rem;
+    overflow-x: auto;
+    max-height: 200px;
+    white-space: pre-wrap;
+    word-break: break-all;
+}

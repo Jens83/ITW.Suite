@@ -79,11 +79,11 @@ public sealed class FahrzeugIndexItemViewModel
 
     public string StatusBadgeCssClass => Status switch
     {
-        FahrzeugStatus.Aktiv => "bg-success",
-        FahrzeugStatus.InWartung => "bg-warning text-dark",
-        FahrzeugStatus.AusserBetrieb => "bg-danger",
-        FahrzeugStatus.Reserviert => "bg-primary",
-        FahrzeugStatus.Archiviert => "bg-secondary",
-        _ => "bg-secondary"
+        FahrzeugStatus.Aktiv => "app-pill--success",
+        FahrzeugStatus.InWartung => "app-pill--warning",
+        FahrzeugStatus.AusserBetrieb => "app-pill--danger",
+        FahrzeugStatus.Reserviert => "app-pill--accent",
+        FahrzeugStatus.Archiviert => "app-pill--neutral",
+        _ => "app-pill--neutral"
     };
 }

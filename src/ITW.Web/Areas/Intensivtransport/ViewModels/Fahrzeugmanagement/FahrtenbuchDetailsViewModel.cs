@@ -108,11 +108,11 @@ public sealed class FahrtenbuchDetailsViewModel
 
     public string StatusBadgeCssClass => Status switch
     {
-        FahrtenbuchStatus.Offen => "bg-warning text-dark",
-        FahrtenbuchStatus.Abgeschlossen => "bg-success",
-        FahrtenbuchStatus.Korrigiert => "bg-primary",
-        FahrtenbuchStatus.Storniert => "bg-secondary",
-        _ => "bg-secondary"
+        FahrtenbuchStatus.Offen => "app-pill--warning",
+        FahrtenbuchStatus.Abgeschlossen => "app-pill--success",
+        FahrtenbuchStatus.Korrigiert => "app-pill--accent",
+        FahrtenbuchStatus.Storniert => "app-pill--neutral",
+        _ => "app-pill--neutral"
     };
 
     public string AutomatischVorbelegtText => IstAutomatischVorbelegt

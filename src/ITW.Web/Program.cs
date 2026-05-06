@@ -29,7 +29,9 @@ builder.Host.UseSerilog((ctx, cfg) =>
             shared: true);
 });
 
-builder.Services.AddControllersWithViews();
+var mvcBuilder = builder.Services.AddControllersWithViews();
+if (builder.Environment.IsDevelopment())
+    mvcBuilder.AddRazorRuntimeCompilation();
 builder.Services.AddHttpContextAccessor();
 
 // PWA: .webmanifest ist im Standard-MIME-Mapping nicht enthalten.

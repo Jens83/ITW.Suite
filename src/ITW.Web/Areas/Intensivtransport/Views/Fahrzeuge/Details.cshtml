@@ -34,12 +34,12 @@
 
     var pruefstatusBadgeCss =
         ueberfaelligePruefungen > 0
-            ? "bg-danger"
+            ? "app-pill--danger"
             : baldFaelligePruefungen > 0
-                ? "bg-warning text-dark"
+                ? "app-pill--warning"
                 : nichtHinterlegtePruefungen == pruefungen.Count
-                    ? "bg-secondary"
-                    : "bg-success";
+                    ? "app-pill--neutral"
+                    : "app-pill--success";
 }
 
 <div class="app-page itw-vehicle-detail-page">
@@ -116,11 +116,11 @@
                 </div>
 
                 <div class="itw-vehicle-detail-hero__badges">
-                    <span class="badge @Model.StatusBadgeCssClass">
+                    <span class="app-pill @Model.StatusBadgeCssClass">
                         @Model.StatusText
                     </span>
 
-                    <span class="badge @pruefstatusBadgeCss">
+                    <span class="app-pill @pruefstatusBadgeCss">
                         Prüfstatus: @pruefstatusText
                     </span>
                 </div>
@@ -212,7 +212,7 @@
                         </p>
                     </div>
 
-                    <span class="badge @Model.StatusBadgeCssClass">
+                    <span class="app-pill @Model.StatusBadgeCssClass">
                         @Model.StatusText
                     </span>
                 </header>
@@ -329,7 +329,7 @@
                                             <td>@pruefung.FaelligAmText</td>
                                             <td>@pruefung.LetzteErledigungAmText</td>
                                             <td>
-                                                <span class="badge @pruefung.AmpelCssClass">
+                                                <span class="app-pill @pruefung.AmpelCssClass">
                                                     @pruefung.StatusText
                                                 </span>
                                             </td>

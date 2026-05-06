@@ -146,20 +146,20 @@ public sealed class FahrzeugDokumentItemViewModel
         {
             if (!GueltigBis.HasValue)
             {
-                return "bg-secondary";
+                return "app-pill--neutral";
             }
 
             if (IstAbgelaufen)
             {
-                return "bg-danger";
+                return "app-pill--danger";
             }
 
             if (LaeuftBaldAb)
             {
-                return "bg-warning text-dark";
+                return "app-pill--warning";
             }
 
-            return "bg-success";
+            return "app-pill--success";
         }
     }
 

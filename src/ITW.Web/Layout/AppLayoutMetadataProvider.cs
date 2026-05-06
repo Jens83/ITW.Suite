@@ -10,7 +10,8 @@ public sealed class AppLayoutMetadataProvider : IAppLayoutMetadataProvider
             ["Intensivtransport"] = new(
                 OrganisationsbereichCode.Intensivtransport,
                 Bereichsanzeige: "Intensivtransport",
-                AvatarBackgroundColor: "0d6efd",
+                AvatarBackgroundColor: "f59e0b",
+                AvatarTextColor: "1c1917",
                 ThemeCssClass: "theme-itw",
                 MenuBrandAccentText: "Neubrandenburg",
                 MenuBrandIconCssClass: "bi bi-car-front-fill",
@@ -19,7 +20,8 @@ public sealed class AppLayoutMetadataProvider : IAppLayoutMetadataProvider
             ["Verwaltung"] = new(
                 OrganisationsbereichCode.Verwaltung,
                 Bereichsanzeige: "Verwaltung",
-                AvatarBackgroundColor: "212529",
+                AvatarBackgroundColor: "6b7280",
+                AvatarTextColor: "ffffff",
                 ThemeCssClass: "theme-admin",
                 MenuBrandAccentText: "Verwaltung",
                 MenuBrandIconCssClass: "bi bi-building-gear",
@@ -28,7 +30,8 @@ public sealed class AppLayoutMetadataProvider : IAppLayoutMetadataProvider
             ["Geschaeftsfuehrung"] = new(
                 OrganisationsbereichCode.Vorstand,
                 Bereichsanzeige: "Geschäftsführung",
-                AvatarBackgroundColor: "dc3545",
+                AvatarBackgroundColor: "ef4444",
+                AvatarTextColor: "ffffff",
                 ThemeCssClass: "theme-gf",
                 MenuBrandAccentText: "Geschäftsführung",
                 MenuBrandIconCssClass: "bi bi-graph-up-arrow",

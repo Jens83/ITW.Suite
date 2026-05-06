@@ -2,83 +2,34 @@
 
 @{
     Layout = ViewData["AreaLayoutPath"]?.ToString();
-    ViewData["Title"] = "Mitarbeiterdetails";
+    ViewData["Title"] = $"{Model.Vorname} {Model.Nachname}";
 
     var kontoRuecksprungUrl = Url.Action("Details", "Personal", new { area = "Intensivtransport", userId = Model.UserId }) ?? string.Empty;
-
-    var successMessage = TempData[FlashKeys.Success]?.ToString();
-    var finalError = TempData[FlashKeys.Error]?.ToString();
 }
 
-<div class="app-employee-detail-page">
-    <header class="app-employee-detail-hero">
-        <div class="app-employee-detail-hero__content">
-            <nav aria-label="breadcrumb">
-                <ol class="breadcrumb app-employee-detail-breadcrumb mb-0">
-                    <li class="breadcrumb-item">Personalverwaltung</li>
-                    <li class="breadcrumb-item active" aria-current="page">Profil</li>
-                </ol>
-            </nav>
-
-            <div class="app-employee-detail-hero__top">
-                <a asp-action="Index"
-                   class="app-btn app-btn-neutral app-btn-icon"
-                   data-app-loading-link
-                   data-app-loading-text="Personalübersicht wird geöffnet...">
-                    <i class="bi bi-arrow-left"></i>
-                </a>
-
-                <div class="app-employee-detail-hero__identity">
-                    <div class="app-employee-detail-hero__label">
-                        <i class="bi bi-person-badge"></i>
-                        Mitarbeiterprofil
-                    </div>
-
-                    <h1 class="app-employee-detail-hero__title">@Model.Vorname @Model.Nachname</h1>
-                    <p class="app-employee-detail-hero__text">@Model.Hauptqualifikation · @Model.BeschaeftigungsartText</p>
-                </div>
-            </div>
+<div class="app-page">
+    <header class="app-page-header">
+        <div class="app-page-heading">
+            <p class="app-overline">Personalverwaltung</p>
+            <h1 class="app-page-heading__title">@Model.Vorname @Model.Nachname</h1>
+            <p class="app-page-heading__text">@Model.Hauptqualifikation · @Model.BeschaeftigungsartText</p>
         </div>
 
-        <div class="app-employee-detail-hero__status">
-            <span class="app-employee-detail-status @(Model.IstGesperrt ? "app-employee-detail-status--danger" : "app-employee-detail-status--success")">
+        <div class="app-page-actions">
+            <a asp-action="Index"
+               class="app-btn app-btn-outline-accent"
+               data-app-loading-link
+               data-app-loading-text="Personalübersicht wird geöffnet...">
+                <i class="bi bi-arrow-left"></i>
+                Übersicht
+            </a>
+
+            <span class="app-page-meta @(Model.IstGesperrt ? "app-page-meta--danger" : "app-page-meta--success")">
                 <i class="bi @(Model.IstGesperrt ? "bi-lock-fill" : "bi-check-circle-fill")"></i>
                 @(Model.IstGesperrt ? "Konto gesperrt" : "Konto aktiv")
             </span>
         </div>
     </header>
-
-    @if (!string.IsNullOrWhiteSpace(successMessage) || !string.IsNullOrWhiteSpace(finalError))
-    {
-        <div class="app-status-stack">
-            @if (!string.IsNullOrWhiteSpace(successMessage))
-            {
-                @await Html.PartialAsync(
-                "~/Views/Shared/Komponenten/_AppStatusMessage.cshtml",
-                successMessage,
-                new ViewDataDictionary(ViewData)
-                {
-                    ["Variant"] = "success",
-                    ["Title"] = "Erfolgreich gespeichert",
-                    ["AutoHide"] = true,
-                    ["AutoHideMilliseconds"] = 3000
-                })
-                }
-
-            @if (!string.IsNullOrWhiteSpace(finalError))
-            {
-                @await Html.PartialAsync(
-                "~/Views/Shared/Komponenten/_AppStatusMessage.cshtml",
-                finalError,
-                new ViewDataDictionary(ViewData)
-                {
-                    ["Variant"] = "danger",
-                    ["Title"] = "System-Hinweis",
-                    ["AutoHide"] = false
-                })
-                }
-        </div>
-    }
 
     <div class="app-employee-detail-grid">
         <aside class="app-employee-detail-sidebar">
@@ -86,14 +37,16 @@
         </aside>
 
         <div class="app-employee-detail-content">
-            <section class="app-employee-card">
-                <header class="app-employee-card__header app-employee-card__header--row">
-                    <h2 class="app-employee-card__title">
-                        <i class="bi bi-shield-lock"></i>
-                        System & Zugriff
-                    </h2>
 
-                    <div class="app-employee-card__actions">
+            <section class="app-surface">
+                <div class="app-surface__header">
+                    <div class="app-surface__heading">
+                        <p class="app-surface__eyebrow">
+                            <i class="bi bi-shield-lock"></i>
+                            System &amp; Zugriff
+                        </p>
+                    </div>
+                    <div class="app-page-actions">
                         <a asp-area="Intensivtransport"
                            asp-controller="Benutzer"
                            asp-action="RolleAendern"
@@ -109,43 +62,37 @@
                               asp-controller="Benutzer"
                               asp-action="@(Model.IstGesperrt ? "Aktivieren" : "Sperren")"
                               method="post"
-                              class="app-employee-card__form"
+                              class="d-inline-flex"
                               data-app-loading-form
                               data-app-loading-text="Kontostatus wird aktualisiert...">
                             @Html.AntiForgeryToken()
                             <input type="hidden" name="userId" value="@Model.UserId" />
                             <input type="hidden" name="returnUrl" value="@kontoRuecksprungUrl" />
-
-                            <button type="submit"
-                                    class="app-btn app-btn-sm @(Model.IstGesperrt ? "app-btn-success" : "app-btn-danger")">
+                            <button type="submit" class="app-btn app-btn-sm @(Model.IstGesperrt ? "app-btn-success" : "app-btn-danger")">
                                 @(Model.IstGesperrt ? "Aktivieren" : "Sperren")
                             </button>
                         </form>
                     </div>
-                </header>
+                </div>
 
-                <div class="app-employee-card__body app-employee-card__body--soft">
+                <div class="app-surface__body">
                     <div class="app-employee-detail-data-grid">
                         <div class="app-employee-detail-field">
                             <label class="app-employee-detail-field__label">Benutzername</label>
                             <div class="app-employee-detail-field__value">@Model.Benutzername</div>
                         </div>
-
                         <div class="app-employee-detail-field">
                             <label class="app-employee-detail-field__label">Bereichsrolle</label>
-                            <div class="app-employee-detail-field__value app-employee-detail-field__value--accent">@Model.Rolle</div>
+                            <div class="app-employee-detail-field__value">@Model.Rolle</div>
                         </div>
-
                         <div class="app-employee-detail-field">
                             <label class="app-employee-detail-field__label">Funktion</label>
                             <div class="app-employee-detail-field__value">@Model.Fuehrungsverantwortung</div>
                         </div>
-
                         <div class="app-employee-detail-field">
                             <label class="app-employee-detail-field__label">E-Mail (Login)</label>
                             <div class="app-employee-detail-field__value">@(string.IsNullOrWhiteSpace(Model.Email) ? "—" : Model.Email)</div>
                         </div>
-
                         <div class="app-employee-detail-field app-employee-detail-field--wide">
                             <label class="app-employee-detail-field__label">System-Zuordnung seit</label>
                             <div class="app-employee-detail-field__value app-employee-detail-field__value--muted">
@@ -156,13 +103,14 @@
                 </div>
             </section>
 
-            <section class="app-employee-card">
-                <header class="app-employee-card__header app-employee-card__header--row">
-                    <h2 class="app-employee-card__title">
-                        <i class="bi bi-person-vcard"></i>
-                        Stammdaten
-                    </h2>
-
+            <section class="app-surface">
+                <div class="app-surface__header">
+                    <div class="app-surface__heading">
+                        <p class="app-surface__eyebrow">
+                            <i class="bi bi-person-vcard"></i>
+                            Stammdaten
+                        </p>
+                    </div>
                     <a asp-action="Stammdaten"
                        asp-route-userId="@Model.UserId"
                        class="app-btn app-btn-sm app-btn-outline-accent"
@@ -171,43 +119,38 @@
                         <i class="bi bi-pencil"></i>
                         Bearbeiten
                     </a>
-                </header>
+                </div>
 
-                <div class="app-employee-card__body">
+                <div class="app-surface__body">
                     <div class="app-employee-detail-data-grid">
                         <div class="app-employee-detail-field">
                             <label class="app-employee-detail-field__label">Vorname</label>
                             <div class="app-employee-detail-field__value">@Model.Vorname</div>
                         </div>
-
                         <div class="app-employee-detail-field">
                             <label class="app-employee-detail-field__label">Nachname</label>
                             <div class="app-employee-detail-field__value">@Model.Nachname</div>
                         </div>
-
                         <div class="app-employee-detail-field">
                             <label class="app-employee-detail-field__label">Beschäftigung</label>
                             <div class="app-employee-detail-field__value">
-                                <span class="app-employee-chip @(Model.BeschaeftigungsartText == "Freelancer" ? "app-employee-chip--info" : "app-employee-chip--primary")">
+                                <span class="app-pill @(Model.BeschaeftigungsartText == "Freelancer" ? "app-pill--neutral" : "app-pill--accent")">
                                     @Model.BeschaeftigungsartText
                                 </span>
                             </div>
                         </div>
-
                         <div class="app-employee-detail-field">
                             <label class="app-employee-detail-field__label">Profilstatus</label>
                             <div class="app-employee-detail-field__value">
-                                <span class="app-employee-badge @(Model.HatStammdatenprofil ? "app-employee-badge--success" : "app-employee-badge--warning")">
+                                <span class="app-pill @(Model.HatStammdatenprofil ? "app-pill--success" : "app-pill--warning")">
                                     @(Model.HatStammdatenprofil ? "Vollständig" : "Unvollständig")
                                 </span>
                             </div>
                         </div>
-
                         <div class="app-employee-detail-field">
                             <label class="app-employee-detail-field__label">Telefon</label>
                             <div class="app-employee-detail-field__value">@(string.IsNullOrWhiteSpace(Model.Telefonnummer) ? "—" : Model.Telefonnummer)</div>
                         </div>
-
                         <div class="app-employee-detail-field">
                             <label class="app-employee-detail-field__label">Anschrift</label>
                             <div class="app-employee-detail-field__value app-employee-detail-field__value--muted">@Model.AnschriftKurz</div>
@@ -215,19 +158,20 @@
                     </div>
                 </div>
 
-                <footer class="app-employee-card__footer">
+                <footer class="app-surface__footer">
                     Zuletzt aktualisiert: @(Model.StammdatenAktualisiertAm?.ToLocalTime().ToString("dd.MM.yyyy") ?? "—")
                 </footer>
             </section>
 
             <div class="app-employee-detail-duo-grid">
-                <section class="app-employee-card">
-                    <header class="app-employee-card__header app-employee-card__header--row">
-                        <h2 class="app-employee-card__title">
-                            <i class="bi bi-award"></i>
-                            Qualifikationen
-                        </h2>
-
+                <section class="app-surface">
+                    <div class="app-surface__header">
+                        <div class="app-surface__heading">
+                            <p class="app-surface__eyebrow">
+                                <i class="bi bi-award"></i>
+                                Qualifikationen
+                            </p>
+                        </div>
                         <a asp-action="Bearbeiten"
                            asp-route-userId="@Model.UserId"
                            class="app-btn app-btn-sm app-btn-outline-accent"
@@ -235,9 +179,9 @@
                            data-app-loading-text="Qualifikationen werden geöffnet...">
                             Bearbeiten
                         </a>
-                    </header>
+                    </div>
 
-                    <div class="app-employee-card__body">
+                    <div class="app-surface__body">
                         <div class="app-employee-detail-field">
                             <label class="app-employee-detail-field__label">Hauptqualifikation</label>
                             <div class="app-employee-detail-highlight">@Model.Hauptqualifikation</div>
@@ -245,33 +189,31 @@
 
                         <div class="app-employee-detail-field app-employee-detail-field--spaced">
                             <label class="app-employee-detail-field__label">Zusatzqualifikationen</label>
-
                             @if (Model.Zusatzqualifikationen.Any())
                             {
                                 <div class="app-employee-tags">
                                     @foreach (var zusatz in Model.Zusatzqualifikationen)
                                     {
-                                        <span class="app-employee-chip app-employee-chip--neutral">@zusatz</span>
+                                        <span class="app-pill app-pill--neutral">@zusatz</span>
                                     }
                                 </div>
                             }
                             else
                             {
-                                <div class="app-employee-detail-field__value app-employee-detail-field__value--muted">
-                                    Keine hinterlegt
-                                </div>
+                                <div class="app-employee-detail-field__value app-employee-detail-field__value--muted">Keine hinterlegt</div>
                             }
                         </div>
                     </div>
                 </section>
 
-                <section class="app-employee-card">
-                    <header class="app-employee-card__header app-employee-card__header--row">
-                        <h2 class="app-employee-card__title">
-                            <i class="bi bi-file-earmark-text"></i>
-                            Dokumente
-                        </h2>
-
+                <section class="app-surface">
+                    <div class="app-surface__header">
+                        <div class="app-surface__heading">
+                            <p class="app-surface__eyebrow">
+                                <i class="bi bi-file-earmark-text"></i>
+                                Dokumente
+                            </p>
+                        </div>
                         <a asp-action="Dokumente"
                            asp-route-userId="@Model.UserId"
                            class="app-btn app-btn-sm app-btn-outline-accent"
@@ -279,58 +221,74 @@
                            data-app-loading-text="Dokumente werden geöffnet...">
                             Verwalten
                         </a>
-                    </header>
+                    </div>
 
-                    <div class="app-employee-card__body">
+                    <div class="app-surface__body">
                         @if (!Model.Dokumente.Any())
                         {
-                            <div class="app-employee-documents-empty">
-                                <i class="bi bi-file-earmark-x"></i>
-                                <span>Keine Dokumente vorhanden</span>
+                            <div class="app-empty-state">
+                                <div class="app-empty-state__icon">
+                                    <i class="bi bi-file-earmark-x"></i>
+                                </div>
+                                <div class="app-empty-state__body">
+                                    <p class="app-empty-state__text">Keine Dokumente vorhanden</p>
+                                </div>
                             </div>
                         }
                         else
                         {
-                            <div class="app-employee-documents-list">
+                            <div class="app-employee-doc-grid">
                                 @foreach (var dokument in Model.Dokumente.Take(3))
                                 {
-                                    <div class="app-employee-document-row">
-                                        <div class="app-employee-document-row__icon">
-                                            <i class="bi bi-file-earmark-text"></i>
+                                    <article class="app-employee-doc-card">
+                                        <div class="app-employee-doc-card__icon">
+                                            <i class="bi bi-file-earmark-pdf"></i>
                                         </div>
-
-                                        <div class="app-employee-document-row__content">
-                                            <div class="app-employee-document-row__title">@dokument.Kategorie</div>
+                                        <div class="app-employee-doc-card__title" title="@dokument.Kategorie">
+                                            @dokument.Kategorie
                                         </div>
-
-                                        <a asp-action="DokumentHerunterladen"
-                                           asp-route-userId="@Model.UserId"
-                                           asp-route-dokumentId="@dokument.DokumentId"
-                                           class="app-btn app-btn-sm app-btn-neutral"
-                                           data-app-loading-link
-                                           data-app-loading-download="true"
-                                           data-app-loading-text="Dokument wird geladen...">
-                                            <i class="bi bi-download"></i>
-                                        </a>
-                                    </div>
+                                        <div class="app-employee-doc-card__actions">
+                                            <a asp-action="DokumentHerunterladen"
+                                               asp-route-userId="@Model.UserId"
+                                               asp-route-dokumentId="@dokument.DokumentId"
+                                               class="app-btn app-btn-sm app-btn-outline-accent justify-content-center"
+                                               data-app-loading-link
+                                               data-app-loading-download="true"
+                                               data-app-loading-text="Dokument wird geladen...">
+                                                <i class="bi bi-download"></i>
+                                                Herunterladen
+                                            </a>
+                                        </div>
+                                    </article>
                                 }
 
                                 @if (Model.Dokumente.Count > 3)
                                 {
-                                    <div class="app-employee-documents-more">
-                                        <a asp-action="Dokumente"
-                                           asp-route-userId="@Model.UserId"
-                                           data-app-loading-link
-                                           data-app-loading-text="Dokumente werden geöffnet...">
-                                            + @(Model.Dokumente.Count - 3) weitere
-                                        </a>
-                                    </div>
+                                    <article class="app-employee-doc-card">
+                                        <div class="app-employee-doc-card__icon">
+                                            <i class="bi bi-folder2-open"></i>
+                                        </div>
+                                        <div class="app-employee-doc-card__title">Weitere Dokumente</div>
+                                        <div class="app-employee-doc-card__meta">
+                                            @(Model.Dokumente.Count - 3) weitere vorhanden
+                                        </div>
+                                        <div class="app-employee-doc-card__actions">
+                                            <a asp-action="Dokumente"
+                                               asp-route-userId="@Model.UserId"
+                                               class="app-btn app-btn-sm app-btn-accent justify-content-center"
+                                               data-app-loading-link
+                                               data-app-loading-text="Dokumente werden geöffnet...">
+                                                Alle anzeigen
+                                            </a>
+                                        </div>
+                                    </article>
                                 }
                             </div>
                         }
                     </div>
                 </section>
             </div>
+
         </div>
     </div>
 </div>
