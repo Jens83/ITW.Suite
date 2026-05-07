@@ -1,4 +1,4 @@
-﻿using ITW.Domain.Personnel.Entities;
+using ITW.Domain.Personnel.Entities;
 
 namespace ITW.Application.Personnel.Urlaub.Contracts;
 
@@ -15,6 +15,9 @@ public interface IMitarbeiterUrlaubszeitraumRepository
     Task<IReadOnlyList<MitarbeiterUrlaubszeitraum>> GetAlleFuerBenutzerUndJahrAsync(
         string userId,
         int jahr,
+        CancellationToken cancellationToken = default);
+
+    Task<IReadOnlyList<MitarbeiterUrlaubszeitraum>> GetAllAusstehendAsync(
         CancellationToken cancellationToken = default);
 
     Task<IReadOnlyList<string>> GetAktiveUserIdsFuerDatumAsync(
@@ -34,5 +37,8 @@ public interface IMitarbeiterUrlaubszeitraumRepository
 
     Task DeleteAsync(
         Guid id,
+        CancellationToken cancellationToken = default);
+
+    Task SaveChangesAsync(
         CancellationToken cancellationToken = default);
 }

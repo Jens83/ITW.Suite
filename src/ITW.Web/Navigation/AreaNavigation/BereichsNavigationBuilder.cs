@@ -195,6 +195,30 @@ public static class BereichsNavigationBuilder
                 Action = "Index",
                 IstAktiv = IstAktiv(aktuellerController, aktuelleAction, "Autoplan", "Index")
             });
+
+            eintraege.Add(new BereichsNavigationItemViewModel
+            {
+                Text = "Urlaubsplaner",
+                IconCssClass = "bi bi-calendar-heart",
+                Area = areaName,
+                Controller = "Urlaubsplaner",
+                Action = "Index",
+                IstAktiv =
+                    string.Equals(aktuellerController, "Urlaubsplaner", StringComparison.OrdinalIgnoreCase)
+            });
+        }
+        else
+        {
+            // Mitarbeiter: eigene Urlaubsanträge stellen und Status einsehen
+            eintraege.Add(new BereichsNavigationItemViewModel
+            {
+                Text = "Mein Urlaub",
+                IconCssClass = "bi bi-calendar-heart",
+                Area = areaName,
+                Controller = "MitarbeiterUrlaub",
+                Action = "Index",
+                IstAktiv = IstAktiv(aktuellerController, aktuelleAction, "MitarbeiterUrlaub", "Index")
+            });
         }
 
         return new BereichsNavigationSectionViewModel

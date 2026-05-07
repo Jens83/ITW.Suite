@@ -2,6 +2,8 @@ using ITW.Application.Personnel.Urlaub.Contracts;
 using ITW.Domain.Personnel.Enums;
 using Microsoft.Extensions.Logging;
 
+// UrlaubszeitraumStatus is in ITW.Domain.Personnel.Enums
+
 namespace ITW.Application.Personnel.Urlaub;
 
 public sealed class ReadMitarbeiterUrlaubsplanerQuery
@@ -15,15 +17,15 @@ public sealed class ReadMitarbeiterUrlaubsplanerQuery
 
 public sealed class ReadMitarbeiterUrlaubsplanerZeitraumDto
 {
-    public Guid Id { get; init; }
+    public Guid   Id          { get; init; }
+    public DateOnly Von       { get; init; }
+    public DateOnly Bis       { get; init; }
+    public int    Urlaubstage { get; init; }
+    public string? Notiz      { get; init; }
 
-    public DateOnly Von { get; init; }
-
-    public DateOnly Bis { get; init; }
-
-    public int Urlaubstage { get; init; }
-
-    public string? Notiz { get; init; }
+    public UrlaubszeitraumStatus Status      { get; init; }
+    public string?               Begruendung { get; init; }
+    public string?               Loesung     { get; init; }
 }
 
 public sealed class ReadMitarbeiterUrlaubsplanerResult
@@ -168,15 +170,21 @@ public sealed class ReadMitarbeiterUrlaubsplanerService
             .ThenBy(x => x.Bis)
             .Select(x => new ReadMitarbeiterUrlaubsplanerZeitraumDto
             {
-                Id = x.Id,
-                Von = x.Von,
-                Bis = x.Bis,
+                Id          = x.Id,
+                Von         = x.Von,
+                Bis         = x.Bis,
                 Urlaubstage = ZaehleUrlaubstage(x.Von, x.Bis, query.Jahr),
-                Notiz = x.Notiz
+                Notiz       = x.Notiz,
+                Status      = x.Status,
+                Begruendung = x.Begruendung,
+                Loesung     = x.Loesung
             })
             .ToArray();
 
-        var genommeneUrlaubstage = zeitraumDtos.Sum(x => x.Urlaubstage);
+        // Nur genehmigte Zeiträume zählen als "genommene" Urlaubstage
+        var genommeneUrlaubstage = zeitraumDtos
+            .Where(x => x.Status == UrlaubszeitraumStatus.Genehmigt)
+            .Sum(x => x.Urlaubstage);
 
         return ReadMitarbeiterUrlaubsplanerResult.Erfolg(
             query.UserId,

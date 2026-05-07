@@ -1,5 +1,6 @@
 using ITW.Application.Personnel.Urlaub.Contracts;
 using ITW.Domain.Personnel.Entities;
+using ITW.Domain.Personnel.Enums;
 using ITW.Infrastructure.Persistence.DbContexts;
 using Microsoft.EntityFrameworkCore;
 using System.Data;
@@ -32,14 +33,8 @@ public sealed class MitarbeiterUrlaubszeitraumRepository : IMitarbeiterUrlaubsze
         await using var command = connection.CreateCommand();
         command.CommandText = """
             SELECT TOP (1)
-                Id,
-                UserId,
-                Von,
-                Bis,
-                Notiz,
-                IstAktiv,
-                ErstelltAmUtc,
-                AktualisiertAmUtc
+                Id, UserId, Von, Bis, Notiz, IstAktiv, ErstelltAmUtc, AktualisiertAmUtc,
+                Status, EingereichtVonUserId, Begruendung, Loesung, EntschiedenAm, EntschiedenVonUserId
             FROM [Personnel].[MitarbeiterUrlaubszeitraum]
             WHERE Id = @Id;
             """;
@@ -71,14 +66,8 @@ public sealed class MitarbeiterUrlaubszeitraumRepository : IMitarbeiterUrlaubsze
         await using var command = connection.CreateCommand();
         command.CommandText = """
             SELECT
-                Id,
-                UserId,
-                Von,
-                Bis,
-                Notiz,
-                IstAktiv,
-                ErstelltAmUtc,
-                AktualisiertAmUtc
+                Id, UserId, Von, Bis, Notiz, IstAktiv, ErstelltAmUtc, AktualisiertAmUtc,
+                Status, EingereichtVonUserId, Begruendung, Loesung, EntschiedenAm, EntschiedenVonUserId
             FROM [Personnel].[MitarbeiterUrlaubszeitraum]
             WHERE UserId = @UserId
               AND IstAktiv = 1
@@ -87,16 +76,7 @@ public sealed class MitarbeiterUrlaubszeitraumRepository : IMitarbeiterUrlaubsze
 
         AddParameter(command, "@UserId", userId.Trim());
 
-        var result = new List<MitarbeiterUrlaubszeitraum>();
-
-        await using var reader = await command.ExecuteReaderAsync(cancellationToken);
-
-        while (await reader.ReadAsync(cancellationToken))
-        {
-            result.Add(Map(reader));
-        }
-
-        return result;
+        return await ReadListAsync(command, cancellationToken);
     }
 
     public async Task<IReadOnlyList<MitarbeiterUrlaubszeitraum>> GetAlleFuerBenutzerUndJahrAsync(
@@ -110,7 +90,7 @@ public sealed class MitarbeiterUrlaubszeitraumRepository : IMitarbeiterUrlaubsze
         }
 
         var start = new DateOnly(jahr, 1, 1).ToDateTime(TimeOnly.MinValue);
-        var ende = new DateOnly(jahr, 12, 31).ToDateTime(TimeOnly.MinValue);
+        var ende  = new DateOnly(jahr, 12, 31).ToDateTime(TimeOnly.MinValue);
 
         var connection = _dbContext.Database.GetDbConnection();
         await EnsureOpenAsync(connection, cancellationToken);
@@ -118,17 +98,12 @@ public sealed class MitarbeiterUrlaubszeitraumRepository : IMitarbeiterUrlaubsze
         await using var command = connection.CreateCommand();
         command.CommandText = """
             SELECT
-                Id,
-                UserId,
-                Von,
-                Bis,
-                Notiz,
-                IstAktiv,
-                ErstelltAmUtc,
-                AktualisiertAmUtc
+                Id, UserId, Von, Bis, Notiz, IstAktiv, ErstelltAmUtc, AktualisiertAmUtc,
+                Status, EingereichtVonUserId, Begruendung, Loesung, EntschiedenAm, EntschiedenVonUserId
             FROM [Personnel].[MitarbeiterUrlaubszeitraum]
             WHERE UserId = @UserId
               AND IstAktiv = 1
+              AND Status IN (0, 1)
               AND Von <= @JahresEnde
               AND Bis >= @JahresStart
             ORDER BY Von, Bis;
@@ -138,16 +113,27 @@ public sealed class MitarbeiterUrlaubszeitraumRepository : IMitarbeiterUrlaubsze
         AddParameter(command, "@JahresStart", start);
         AddParameter(command, "@JahresEnde", ende);
 
-        var result = new List<MitarbeiterUrlaubszeitraum>();
+        return await ReadListAsync(command, cancellationToken);
+    }
 
-        await using var reader = await command.ExecuteReaderAsync(cancellationToken);
+    public async Task<IReadOnlyList<MitarbeiterUrlaubszeitraum>> GetAllAusstehendAsync(
+        CancellationToken cancellationToken = default)
+    {
+        var connection = _dbContext.Database.GetDbConnection();
+        await EnsureOpenAsync(connection, cancellationToken);
 
-        while (await reader.ReadAsync(cancellationToken))
-        {
-            result.Add(Map(reader));
-        }
+        await using var command = connection.CreateCommand();
+        command.CommandText = """
+            SELECT
+                Id, UserId, Von, Bis, Notiz, IstAktiv, ErstelltAmUtc, AktualisiertAmUtc,
+                Status, EingereichtVonUserId, Begruendung, Loesung, EntschiedenAm, EntschiedenVonUserId
+            FROM [Personnel].[MitarbeiterUrlaubszeitraum]
+            WHERE IstAktiv = 1
+              AND Status = 1
+            ORDER BY Von, UserId;
+            """;
 
-        return result;
+        return await ReadListAsync(command, cancellationToken);
     }
 
     public async Task<IReadOnlyList<string>> GetAktiveUserIdsFuerDatumAsync(
@@ -162,6 +148,7 @@ public sealed class MitarbeiterUrlaubszeitraumRepository : IMitarbeiterUrlaubsze
             SELECT DISTINCT UserId
             FROM [Personnel].[MitarbeiterUrlaubszeitraum]
             WHERE IstAktiv = 1
+              AND Status IN (0, 1)
               AND Von <= @Datum
               AND Bis >= @Datum;
             """;
@@ -199,6 +186,7 @@ public sealed class MitarbeiterUrlaubszeitraumRepository : IMitarbeiterUrlaubsze
             FROM [Personnel].[MitarbeiterUrlaubszeitraum]
             WHERE UserId = @UserId
               AND IstAktiv = 1
+              AND Status IN (0, 1)
               AND Von <= @Bis
               AND Bis >= @Von
               AND (@AusnahmeId IS NULL OR Id <> @AusnahmeId);
@@ -214,8 +202,8 @@ public sealed class MitarbeiterUrlaubszeitraumRepository : IMitarbeiterUrlaubsze
     }
 
     public async Task AddOrUpdateAsync(
-     MitarbeiterUrlaubszeitraum zeitraum,
-     CancellationToken cancellationToken = default)
+        MitarbeiterUrlaubszeitraum zeitraum,
+        CancellationToken cancellationToken = default)
     {
         ArgumentNullException.ThrowIfNull(zeitraum);
 
@@ -224,56 +212,52 @@ public sealed class MitarbeiterUrlaubszeitraumRepository : IMitarbeiterUrlaubsze
 
         await using var command = connection.CreateCommand();
         command.CommandText = """
-        IF EXISTS (
-            SELECT 1
-            FROM [Personnel].[MitarbeiterUrlaubszeitraum]
-            WHERE Id = @Id
-        )
-        BEGIN
-            UPDATE [Personnel].[MitarbeiterUrlaubszeitraum]
-            SET UserId = @UserId,
-                Von = @Von,
-                Bis = @Bis,
-                Notiz = @Notiz,
-                IstAktiv = @IstAktiv,
-                AktualisiertAmUtc = @AktualisiertAmUtc
-            WHERE Id = @Id;
-        END
-        ELSE
-        BEGIN
-            INSERT INTO [Personnel].[MitarbeiterUrlaubszeitraum]
-            (
-                Id,
-                UserId,
-                Von,
-                Bis,
-                Notiz,
-                IstAktiv,
-                ErstelltAmUtc,
-                AktualisiertAmUtc
-            )
-            VALUES
-            (
-                @Id,
-                @UserId,
-                @Von,
-                @Bis,
-                @Notiz,
-                @IstAktiv,
-                @ErstelltAmUtc,
-                @AktualisiertAmUtc
-            );
-        END
-        """;
+            IF EXISTS (SELECT 1 FROM [Personnel].[MitarbeiterUrlaubszeitraum] WHERE Id = @Id)
+            BEGIN
+                UPDATE [Personnel].[MitarbeiterUrlaubszeitraum]
+                SET UserId                = @UserId,
+                    Von                   = @Von,
+                    Bis                   = @Bis,
+                    Notiz                 = @Notiz,
+                    IstAktiv              = @IstAktiv,
+                    AktualisiertAmUtc     = @AktualisiertAmUtc,
+                    Status                = @Status,
+                    EingereichtVonUserId  = @EingereichtVonUserId,
+                    Begruendung           = @Begruendung,
+                    Loesung               = @Loesung,
+                    EntschiedenAm         = @EntschiedenAm,
+                    EntschiedenVonUserId  = @EntschiedenVonUserId
+                WHERE Id = @Id;
+            END
+            ELSE
+            BEGIN
+                INSERT INTO [Personnel].[MitarbeiterUrlaubszeitraum]
+                (
+                    Id, UserId, Von, Bis, Notiz, IstAktiv, ErstelltAmUtc, AktualisiertAmUtc,
+                    Status, EingereichtVonUserId, Begruendung, Loesung, EntschiedenAm, EntschiedenVonUserId
+                )
+                VALUES
+                (
+                    @Id, @UserId, @Von, @Bis, @Notiz, @IstAktiv, @ErstelltAmUtc, @AktualisiertAmUtc,
+                    @Status, @EingereichtVonUserId, @Begruendung, @Loesung, @EntschiedenAm, @EntschiedenVonUserId
+                );
+            END
+            """;
 
-        AddParameter(command, "@Id", zeitraum.Id);
-        AddParameter(command, "@UserId", zeitraum.UserId);
-        AddParameter(command, "@Von", zeitraum.Von.ToDateTime(TimeOnly.MinValue));
-        AddParameter(command, "@Bis", zeitraum.Bis.ToDateTime(TimeOnly.MinValue));
-        AddParameter(command, "@Notiz", zeitraum.Notiz);
-        AddParameter(command, "@IstAktiv", zeitraum.IstAktiv);
-        AddParameter(command, "@ErstelltAmUtc", zeitraum.ErstelltAmUtc);
-        AddParameter(command, "@AktualisiertAmUtc", zeitraum.AktualisiertAmUtc);
+        AddParameter(command, "@Id",                   zeitraum.Id);
+        AddParameter(command, "@UserId",               zeitraum.UserId);
+        AddParameter(command, "@Von",                  zeitraum.Von.ToDateTime(TimeOnly.MinValue));
+        AddParameter(command, "@Bis",                  zeitraum.Bis.ToDateTime(TimeOnly.MinValue));
+        AddParameter(command, "@Notiz",                zeitraum.Notiz);
+        AddParameter(command, "@IstAktiv",             zeitraum.IstAktiv);
+        AddParameter(command, "@ErstelltAmUtc",        zeitraum.ErstelltAmUtc);
+        AddParameter(command, "@AktualisiertAmUtc",    zeitraum.AktualisiertAmUtc);
+        AddParameter(command, "@Status",               (int)zeitraum.Status);
+        AddParameter(command, "@EingereichtVonUserId", zeitraum.EingereichtVonUserId);
+        AddParameter(command, "@Begruendung",          zeitraum.Begruendung);
+        AddParameter(command, "@Loesung",              zeitraum.Loesung);
+        AddParameter(command, "@EntschiedenAm",        zeitraum.EntschiedenAm.HasValue ? zeitraum.EntschiedenAm.Value : DBNull.Value);
+        AddParameter(command, "@EntschiedenVonUserId", zeitraum.EntschiedenVonUserId);
 
         await command.ExecuteNonQueryAsync(cancellationToken);
     }
@@ -296,18 +280,43 @@ public sealed class MitarbeiterUrlaubszeitraumRepository : IMitarbeiterUrlaubsze
             cancellationToken);
     }
 
+    public Task SaveChangesAsync(CancellationToken cancellationToken = default)
+        => _dbContext.SaveChangesAsync(cancellationToken);
+
+    private static async Task<List<MitarbeiterUrlaubszeitraum>> ReadListAsync(
+        DbCommand command,
+        CancellationToken cancellationToken)
+    {
+        var result = new List<MitarbeiterUrlaubszeitraum>();
+
+        await using var reader = await command.ExecuteReaderAsync(cancellationToken);
+
+        while (await reader.ReadAsync(cancellationToken))
+        {
+            result.Add(Map(reader));
+        }
+
+        return result;
+    }
+
     private static MitarbeiterUrlaubszeitraum Map(DbDataReader reader)
     {
         return new MitarbeiterUrlaubszeitraum
         {
-            Id = reader.GetGuid(0),
-            UserId = reader.GetString(1),
-            Von = DateOnly.FromDateTime(reader.GetDateTime(2)),
-            Bis = DateOnly.FromDateTime(reader.GetDateTime(3)),
-            Notiz = reader.IsDBNull(4) ? null : reader.GetString(4),
-            IstAktiv = reader.GetBoolean(5),
-            ErstelltAmUtc = reader.GetFieldValue<DateTimeOffset>(6),
-            AktualisiertAmUtc = reader.GetFieldValue<DateTimeOffset>(7)
+            Id                   = reader.GetGuid(0),
+            UserId               = reader.GetString(1),
+            Von                  = DateOnly.FromDateTime(reader.GetDateTime(2)),
+            Bis                  = DateOnly.FromDateTime(reader.GetDateTime(3)),
+            Notiz                = reader.IsDBNull(4)  ? null : reader.GetString(4),
+            IstAktiv             = reader.GetBoolean(5),
+            ErstelltAmUtc        = reader.GetFieldValue<DateTimeOffset>(6),
+            AktualisiertAmUtc    = reader.GetFieldValue<DateTimeOffset>(7),
+            Status               = (UrlaubszeitraumStatus)reader.GetInt32(8),
+            EingereichtVonUserId = reader.IsDBNull(9)  ? null : reader.GetString(9),
+            Begruendung          = reader.IsDBNull(10) ? null : reader.GetString(10),
+            Loesung              = reader.IsDBNull(11) ? null : reader.GetString(11),
+            EntschiedenAm        = reader.IsDBNull(12) ? null : reader.GetFieldValue<DateTimeOffset>(12),
+            EntschiedenVonUserId = reader.IsDBNull(13) ? null : reader.GetString(13)
         };
     }
 

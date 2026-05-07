@@ -51,12 +51,36 @@ public sealed class PersonnelUrlaubSchemaBootstrapper
                     [Notiz] NVARCHAR(1000) NULL,
                     [IstAktiv] BIT NOT NULL,
                     [ErstelltAmUtc] DATETIMEOFFSET NOT NULL,
-                    [AktualisiertAmUtc] DATETIMEOFFSET NOT NULL
+                    [AktualisiertAmUtc] DATETIMEOFFSET NOT NULL,
+                    [Status] INT NOT NULL DEFAULT 0,
+                    [EingereichtVonUserId] NVARCHAR(256) NULL,
+                    [Begruendung] NVARCHAR(1000) NULL,
+                    [Loesung] NVARCHAR(500) NULL,
+                    [EntschiedenAm] DATETIMEOFFSET NULL,
+                    [EntschiedenVonUserId] NVARCHAR(256) NULL
                 );
 
                 CREATE INDEX [IX_MitarbeiterUrlaubszeitraum_UserId_Von_Bis]
                     ON [Personnel].[MitarbeiterUrlaubszeitraum] ([UserId], [Von], [Bis]);
             END
+
+            IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id = OBJECT_ID(N'[Personnel].[MitarbeiterUrlaubszeitraum]') AND name = N'Status')
+                ALTER TABLE [Personnel].[MitarbeiterUrlaubszeitraum] ADD [Status] INT NOT NULL DEFAULT 0;
+
+            IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id = OBJECT_ID(N'[Personnel].[MitarbeiterUrlaubszeitraum]') AND name = N'EingereichtVonUserId')
+                ALTER TABLE [Personnel].[MitarbeiterUrlaubszeitraum] ADD [EingereichtVonUserId] NVARCHAR(256) NULL;
+
+            IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id = OBJECT_ID(N'[Personnel].[MitarbeiterUrlaubszeitraum]') AND name = N'Begruendung')
+                ALTER TABLE [Personnel].[MitarbeiterUrlaubszeitraum] ADD [Begruendung] NVARCHAR(1000) NULL;
+
+            IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id = OBJECT_ID(N'[Personnel].[MitarbeiterUrlaubszeitraum]') AND name = N'Loesung')
+                ALTER TABLE [Personnel].[MitarbeiterUrlaubszeitraum] ADD [Loesung] NVARCHAR(500) NULL;
+
+            IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id = OBJECT_ID(N'[Personnel].[MitarbeiterUrlaubszeitraum]') AND name = N'EntschiedenAm')
+                ALTER TABLE [Personnel].[MitarbeiterUrlaubszeitraum] ADD [EntschiedenAm] DATETIMEOFFSET NULL;
+
+            IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id = OBJECT_ID(N'[Personnel].[MitarbeiterUrlaubszeitraum]') AND name = N'EntschiedenVonUserId')
+                ALTER TABLE [Personnel].[MitarbeiterUrlaubszeitraum] ADD [EntschiedenVonUserId] NVARCHAR(256) NULL;
             """,
             cancellationToken);
     }

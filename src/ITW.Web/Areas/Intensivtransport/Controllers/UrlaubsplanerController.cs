@@ -32,6 +32,8 @@ public sealed class UrlaubsplanerController : BereichsControllerBase
     private readonly SaveMitarbeiterUrlaubszeitraumService _saveZeitraumService;
     private readonly DeleteMitarbeiterUrlaubszeitraumService _deleteZeitraumService;
     private readonly ReadMitarbeiterUrlaubsplanerService _readUrlaubsplanerService;
+    private readonly ReadWachleiterUrlaubsUebersichtService _readUebersichtService;
+    private readonly EntscheidenUrlaubsAntragService _entscheidenService;
     private readonly IDateTimeProvider _dateTimeProvider;
 
     public UrlaubsplanerController(
@@ -44,6 +46,8 @@ public sealed class UrlaubsplanerController : BereichsControllerBase
         SaveMitarbeiterUrlaubszeitraumService saveZeitraumService,
         DeleteMitarbeiterUrlaubszeitraumService deleteZeitraumService,
         ReadMitarbeiterUrlaubsplanerService readUrlaubsplanerService,
+        ReadWachleiterUrlaubsUebersichtService readUebersichtService,
+        EntscheidenUrlaubsAntragService entscheidenService,
         IDateTimeProvider dateTimeProvider,
         ICurrentUserContextAccessor currentUserContextAccessor)
         : base(currentUserContextAccessor)
@@ -66,6 +70,10 @@ public sealed class UrlaubsplanerController : BereichsControllerBase
         _deleteZeitraumService = deleteZeitraumService;
         ArgumentNullException.ThrowIfNull(readUrlaubsplanerService);
         _readUrlaubsplanerService = readUrlaubsplanerService;
+        ArgumentNullException.ThrowIfNull(readUebersichtService);
+        _readUebersichtService = readUebersichtService;
+        ArgumentNullException.ThrowIfNull(entscheidenService);
+        _entscheidenService = entscheidenService;
 
         ArgumentNullException.ThrowIfNull(dateTimeProvider);
         _dateTimeProvider = dateTimeProvider;
@@ -423,6 +431,112 @@ public sealed class UrlaubsplanerController : BereichsControllerBase
             !x.IstGesperrt &&
             x.HatProfil &&
             x.Beschaeftigungsart == ITW.Domain.Personnel.Enums.MitarbeiterBeschaeftigungsart.Festangestellt);
+    }
+
+    [HttpGet]
+    public async Task<IActionResult> Antraege(CancellationToken cancellationToken)
+    {
+        var zugriff = await PruefeUrlaubsplanerZugriffAsync(cancellationToken);
+        if (zugriff.EarlyResult is not null)
+        {
+            return zugriff.EarlyResult;
+        }
+
+        var result = await _readUebersichtService.ExecuteAsync(cancellationToken);
+
+        var viewModel = new WachleiterUrlaubsUebersichtViewModel
+        {
+            Antraege = result.Antraege
+                .Select(a => new WachleiterUrlaubsAntragViewModel
+                {
+                    ZeitraumId        = a.ZeitraumId,
+                    MitarbeiterName   = a.MitarbeiterName,
+                    VonAnzeige        = a.Von.ToString("dd.MM.yyyy"),
+                    BisAnzeige        = a.Bis.ToString("dd.MM.yyyy"),
+                    Urlaubstage       = BerechneArbeitstage(a.Von, a.Bis),
+                    Notiz             = a.Notiz,
+                    HatUeberschneidung = a.HatUeberschneidung
+                })
+                .ToList()
+        };
+
+        return BereichsView("Antraege", viewModel);
+    }
+
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> Entscheiden(
+        Guid zeitraumId,
+        bool genehmigt,
+        string? begruendung,
+        string? loesung,
+        CancellationToken cancellationToken)
+    {
+        var zugriff = await PruefeUrlaubsplanerZugriffAsync(cancellationToken);
+        if (zugriff.EarlyResult is not null)
+        {
+            return zugriff.EarlyResult;
+        }
+
+        var mitarbeiterResult = await _readItwMitarbeiterprofileService.ExecuteAsync(cancellationToken);
+        var zeitraum = await _urlaubszeitraumRepository.GetByIdAsync(zeitraumId, cancellationToken);
+
+        var mitarbeiterName = zeitraum is not null
+            ? mitarbeiterResult.Profile
+                .FirstOrDefault(p => string.Equals(p.UserId, zeitraum.UserId, StringComparison.OrdinalIgnoreCase))
+                ?.AnzeigeName ?? zeitraum.UserId
+            : string.Empty;
+
+        var wachleiterName = mitarbeiterResult.Profile
+            .FirstOrDefault(p => string.Equals(p.UserId, zugriff.CurrentUser!.UserId, StringComparison.OrdinalIgnoreCase))
+            ?.AnzeigeName ?? zugriff.CurrentUser!.UserId;
+
+        var result = await _entscheidenService.ExecuteAsync(
+            new EntscheidenUrlaubsAntragCommand(
+                zeitraumId,
+                genehmigt,
+                begruendung,
+                loesung,
+                zugriff.CurrentUser!.UserId,
+                wachleiterName,
+                mitarbeiterName),
+            cancellationToken);
+
+        if (!result.IsSuccess)
+        {
+            TempData[FlashKeys.Error] = result.ErrorMessage ?? "Der Urlaubsantrag konnte nicht bearbeitet werden.";
+        }
+        else
+        {
+            if (genehmigt && result.MitarbeiterUserId is not null)
+            {
+                // Dienstwünsche im genehmigten Zeitraum entfernen (Web-Layer hat Dienstplan-Zugriff)
+                await BereinigeOffeneDienstwuenscheImUrlaubszeitraumAsync(
+                    result.MitarbeiterUserId,
+                    result.GenehmigterVon,
+                    result.GenehmigterBis,
+                    cancellationToken);
+            }
+
+            TempData[FlashKeys.Success] = genehmigt
+                ? $"Urlaub von {mitarbeiterName} wurde genehmigt."
+                : $"Urlaub von {mitarbeiterName} wurde abgelehnt.";
+        }
+
+        return RedirectToAction(nameof(Antraege));
+    }
+
+    private static int BerechneArbeitstage(DateOnly von, DateOnly bis)
+    {
+        var tage = 0;
+        for (var datum = von; datum <= bis; datum = datum.AddDays(1))
+        {
+            if (datum.DayOfWeek is DayOfWeek.Saturday or DayOfWeek.Sunday)
+                continue;
+            tage++;
+        }
+
+        return tage;
     }
 
     private async Task<UrlaubsplanerZugriffResult> PruefeUrlaubsplanerZugriffAsync(

@@ -83,6 +83,10 @@ public sealed class ItwAufgabeViewModel
                 var id = SystemSchluessel["itw:wunschphase-oeffnen:".Length..];
                 return $"/Intensivtransport/Dienstplan/Wachleiter?periodeId={id}";
             }
+            if (SystemSchluessel.StartsWith("itw:urlaub-genehmigen:"))
+            {
+                return "/Intensivtransport/Urlaubsplaner/Antraege";
+            }
             if (SystemSchluessel.StartsWith("itw:fahrzeug-pruefung:"))
             {
                 // Key: itw:fahrzeug-pruefung:{fahrzeugId}:{pruefungId}

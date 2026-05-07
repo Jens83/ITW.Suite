@@ -1,4 +1,5 @@
 using ITW.Application.Personnel.ProfileQueries;
+using ITW.Application.Personnel.Urlaub;
 using ITW.Application.Personnel.Urlaub.Contracts;
 using ITW.Dienstplan.Application.Planung;
 
@@ -34,13 +35,19 @@ public sealed class SaveWachleiterTagesplanungResult
 
 public sealed class SaveWachleiterTagesplanungService
 {
+    private const int UrlaubsAusgleichBonus = 2; // 1 Ersatztag + 1 Bonustag
+
     private readonly ReadItwMitarbeiterprofileService _readItwMitarbeiterprofileService;
     private readonly IMitarbeiterUrlaubszeitraumRepository _mitarbeiterUrlaubszeitraumRepository;
+    private readonly IMitarbeiterUrlaubsanspruchRepository _mitarbeiterUrlaubsanspruchRepository;
+    private readonly SaveMitarbeiterUrlaubsanspruchService _saveUrlaubsanspruchService;
     private readonly SaveGeplanterDienstTagService _saveGeplanterDienstTagService;
 
     public SaveWachleiterTagesplanungService(
         ReadItwMitarbeiterprofileService readItwMitarbeiterprofileService,
         IMitarbeiterUrlaubszeitraumRepository mitarbeiterUrlaubszeitraumRepository,
+        IMitarbeiterUrlaubsanspruchRepository mitarbeiterUrlaubsanspruchRepository,
+        SaveMitarbeiterUrlaubsanspruchService saveUrlaubsanspruchService,
         SaveGeplanterDienstTagService saveGeplanterDienstTagService)
     {
         ArgumentNullException.ThrowIfNull(readItwMitarbeiterprofileService);
@@ -48,6 +55,12 @@ public sealed class SaveWachleiterTagesplanungService
 
         ArgumentNullException.ThrowIfNull(mitarbeiterUrlaubszeitraumRepository);
         _mitarbeiterUrlaubszeitraumRepository = mitarbeiterUrlaubszeitraumRepository;
+
+        ArgumentNullException.ThrowIfNull(mitarbeiterUrlaubsanspruchRepository);
+        _mitarbeiterUrlaubsanspruchRepository = mitarbeiterUrlaubsanspruchRepository;
+
+        ArgumentNullException.ThrowIfNull(saveUrlaubsanspruchService);
+        _saveUrlaubsanspruchService = saveUrlaubsanspruchService;
 
         ArgumentNullException.ThrowIfNull(saveGeplanterDienstTagService);
         _saveGeplanterDienstTagService = saveGeplanterDienstTagService;
@@ -117,20 +130,8 @@ public sealed class SaveWachleiterTagesplanungService
                 return SaveWachleiterTagesplanungResult.Fehler("Der ausgewählte Notfallsanitäter für Slot 2 ist ungültig.");
             }
 
-            if (!string.IsNullOrWhiteSpace(arztUserId) && festangestellteImUrlaubIds.Contains(arztUserId))
-            {
-                return SaveWachleiterTagesplanungResult.Fehler("Ein festangestellter Mitarbeiter mit hinterlegtem Urlaub kann nicht regulär als Arzt eingeplant werden.");
-            }
-
-            if (!string.IsNullOrWhiteSpace(notfallsanitaeter1UserId) && festangestellteImUrlaubIds.Contains(notfallsanitaeter1UserId))
-            {
-                return SaveWachleiterTagesplanungResult.Fehler("Ein festangestellter Mitarbeiter mit hinterlegtem Urlaub kann nicht regulär als NFS 1 eingeplant werden.");
-            }
-
-            if (!string.IsNullOrWhiteSpace(notfallsanitaeter2UserId) && festangestellteImUrlaubIds.Contains(notfallsanitaeter2UserId))
-            {
-                return SaveWachleiterTagesplanungResult.Fehler("Ein festangestellter Mitarbeiter mit hinterlegtem Urlaub kann nicht regulär als NFS 2 eingeplant werden.");
-            }
+            // Urlaubsmitarbeiter können eingeplant werden (Wachleiter-Entscheidung).
+            // Sie erhalten automatisch +2 Urlaubstage als Ausgleich.
 
             var doppelteAuswahl = new[]
                 {
@@ -164,7 +165,66 @@ public sealed class SaveWachleiterTagesplanungService
                 result.ErrorMessage ?? "Die Tagesplanung konnte nicht gespeichert werden.");
         }
 
+        // Urlaubsausgleich: +2 Tage für Festangestellte die aus dem Urlaub eingeplant werden
+        if (!command.PlanungLeeren)
+        {
+            var eingeplanteMitUrlaub = new[] { arztUserId, notfallsanitaeter1UserId, notfallsanitaeter2UserId }
+                .Where(x => !string.IsNullOrWhiteSpace(x) && festangestellteImUrlaubIds.Contains(x!))
+                .Distinct(StringComparer.OrdinalIgnoreCase)
+                .ToArray();
+
+            foreach (var urlaubsMitarbeiterId in eingeplanteMitUrlaub)
+            {
+                await GewahreUrlaubsausgleichAsync(
+                    urlaubsMitarbeiterId!,
+                    command.Datum.Year,
+                    aktiveProfile,
+                    cancellationToken);
+            }
+        }
+
         return SaveWachleiterTagesplanungResult.Erfolg();
+    }
+
+    private async Task GewahreUrlaubsausgleichAsync(
+        string userId,
+        int jahr,
+        IReadOnlyList<ItwMitarbeiterprofilUebersichtDto> aktiveProfile,
+        CancellationToken cancellationToken)
+    {
+        var bestehenderAnspruch = await _mitarbeiterUrlaubsanspruchRepository.GetAsync(
+            userId, jahr, cancellationToken);
+
+        var profil = aktiveProfile.FirstOrDefault(p =>
+            string.Equals(p.UserId, userId, StringComparison.OrdinalIgnoreCase));
+
+        var aktuellerAnspruch = bestehenderAnspruch?.Anspruchstage
+            ?? ErmittleStandardUrlaubsanspruch(profil?.Beschaeftigungsart);
+
+        var uebertrag = bestehenderAnspruch?.Uebertragstage ?? 0;
+        var bemerkung = bestehenderAnspruch?.Bemerkung;
+
+        await _saveUrlaubsanspruchService.ExecuteAsync(
+            new SaveMitarbeiterUrlaubsanspruchCommand
+            {
+                UserId        = userId,
+                Jahr          = jahr,
+                Anspruchstage = aktuellerAnspruch + UrlaubsAusgleichBonus,
+                Uebertragstage = uebertrag,
+                Bemerkung     = bemerkung
+            },
+            cancellationToken);
+    }
+
+    private static int ErmittleStandardUrlaubsanspruch(
+        Domain.Personnel.Enums.MitarbeiterBeschaeftigungsart? beschaeftigungsart)
+    {
+        return beschaeftigungsart switch
+        {
+            Domain.Personnel.Enums.MitarbeiterBeschaeftigungsart.Festangestellt => 30,
+            Domain.Personnel.Enums.MitarbeiterBeschaeftigungsart.Freelancer     => 3,
+            _                                                                   => 0
+        };
     }
 
     private async Task<HashSet<string>> ErmittleFestangestellteImUrlaubUserIdsAsync(

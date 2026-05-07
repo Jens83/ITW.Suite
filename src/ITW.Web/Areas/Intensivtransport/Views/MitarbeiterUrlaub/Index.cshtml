@@ -1,0 +1,176 @@
+@model ITW.Web.Areas.Intensivtransport.ViewModels.Urlaubsplaner.MitarbeiterUrlaubViewModel
+
+@{
+    Layout = ViewData["AreaLayoutPath"]?.ToString();
+    ViewData["Title"] = Model.Titel;
+}
+
+<div class="app-page">
+    <app-page-header title="@Model.Titel"
+                     description="@Model.Beschreibung" />
+
+    @if (Model.KannUrlaub)
+    {
+        <section class="itw-vehicle-detail-kpis">
+            <article class="itw-vehicle-detail-kpi">
+                <span class="itw-vehicle-detail-kpi__label">Urlaubsanspruch</span>
+                <strong class="itw-vehicle-detail-kpi__value">@Model.Anspruchstage</strong>
+                <span class="itw-vehicle-detail-kpi__hint">
+                    @(Model.AnspruchIstStandardwert ? "Standardwert" : "festgelegt")
+                    @if (Model.Uebertragstage > 0)
+                    {
+                        <text>+ @Model.Uebertragstage Übertrag</text>
+                    }
+                </span>
+            </article>
+
+            <article class="itw-vehicle-detail-kpi">
+                <span class="itw-vehicle-detail-kpi__label">Genehmigt</span>
+                <strong class="itw-vehicle-detail-kpi__value">@Model.GenommeneUrlaubstage</strong>
+                <span class="itw-vehicle-detail-kpi__hint">Tage genommener Urlaub</span>
+            </article>
+
+            <article class="itw-vehicle-detail-kpi">
+                <span class="itw-vehicle-detail-kpi__label">Beantragt</span>
+                <strong class="itw-vehicle-detail-kpi__value">@Model.AusstehendeTage</strong>
+                <span class="itw-vehicle-detail-kpi__hint">Tage ausstehend</span>
+            </article>
+
+            <article class="itw-vehicle-detail-kpi">
+                <span class="itw-vehicle-detail-kpi__label">Resturlaub</span>
+                <strong class="itw-vehicle-detail-kpi__value">@Model.Resturlaubstage</strong>
+                <span class="itw-vehicle-detail-kpi__hint">noch verfügbar</span>
+            </article>
+        </section>
+
+        <section class="app-surface">
+            <div class="app-surface__header">
+                <div class="app-surface__heading">
+                    <h2 class="app-surface__title">Urlaub beantragen</h2>
+                    <p class="app-surface__text">Zeitraum auswählen und Antrag einreichen — dein Wachleiter erhält eine Aufgabe zur Genehmigung.</p>
+                </div>
+            </div>
+
+            <div class="app-surface__body">
+                <form asp-action="AntragStellen"
+                      method="post"
+                      class="app-form"
+                      data-app-loading-form
+                      data-app-loading-text="Antrag wird eingereicht...">
+                    @Html.AntiForgeryToken()
+                    <div class="row g-3">
+                        <div class="col-12 col-md-5">
+                            <label class="app-form-label">Von</label>
+                            <input type="date"
+                                   name="von"
+                                   class="form-control"
+                                   min="@DateTime.Today.ToString("yyyy-MM-dd")"
+                                   required />
+                        </div>
+
+                        <div class="col-12 col-md-5">
+                            <label class="app-form-label">Bis</label>
+                            <input type="date"
+                                   name="bis"
+                                   class="form-control"
+                                   min="@DateTime.Today.ToString("yyyy-MM-dd")"
+                                   required />
+                        </div>
+
+                        <div class="col-12 col-md-2 d-flex align-items-end">
+                            <button type="submit" class="app-btn app-btn-accent app-btn-block">
+                                <i class="bi bi-send"></i>
+                                Einreichen
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="row g-3 mt-0">
+                        <div class="col-12">
+                            <label class="app-form-label">Notiz (optional)</label>
+                            <input type="text"
+                                   name="notiz"
+                                   class="form-control"
+                                   maxlength="500"
+                                   placeholder="Optionale Anmerkung zum Urlaubsantrag" />
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </section>
+    }
+    else
+    {
+        <div class="alert alert-info">
+            Urlaubsanträge stehen nur für festangestellte Mitarbeiter zur Verfügung.
+        </div>
+    }
+
+    <section class="app-surface">
+        <div class="app-surface__header">
+            <div class="app-surface__heading">
+                <h2 class="app-surface__title">Meine Urlaubsanträge</h2>
+                <p class="app-surface__text">Alle eingereichten Anträge und deren aktueller Status.</p>
+            </div>
+        </div>
+
+        <div class="app-surface__body--table">
+            @if (Model.Antraege.Count == 0)
+            {
+                <div class="app-surface__body">
+                    <p class="text-muted text-center">Noch keine Urlaubsanträge vorhanden.</p>
+                </div>
+            }
+            else
+            {
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle mb-0 app-table">
+                        <thead>
+                            <tr>
+                                <th>Zeitraum</th>
+                                <th class="text-center">Tage</th>
+                                <th>Status</th>
+                                <th>Notiz / Begründung</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var antrag in Model.Antraege)
+                            {
+                                <tr>
+                                    <td class="text-nowrap">
+                                        <strong>@antrag.VonAnzeige</strong> – @antrag.BisAnzeige
+                                    </td>
+                                    <td class="text-center fw-bold">@antrag.Urlaubstage</td>
+                                    <td>
+                                        <span class="app-pill @antrag.StatusCssClass">@antrag.StatusText</span>
+                                    </td>
+                                    <td>
+                                        @if (!string.IsNullOrWhiteSpace(antrag.Notiz))
+                                        {
+                                            <div class="small text-muted">@antrag.Notiz</div>
+                                        }
+                                        @if (antrag.Status == ITW.Domain.Personnel.Enums.UrlaubszeitraumStatus.Abgelehnt
+                                             && !string.IsNullOrWhiteSpace(antrag.Begruendung))
+                                        {
+                                            <div class="small mt-1">
+                                                <span class="fw-bold text-danger">Begründung:</span>
+                                                @antrag.Begruendung
+                                            </div>
+                                            @if (!string.IsNullOrWhiteSpace(antrag.Loesung))
+                                            {
+                                                <div class="small mt-1">
+                                                    <span class="fw-bold">Lösungsvorschlag:</span>
+                                                    @antrag.Loesung
+                                                </div>
+                                            }
+                                        }
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            }
+        </div>
+    </section>
+</div>

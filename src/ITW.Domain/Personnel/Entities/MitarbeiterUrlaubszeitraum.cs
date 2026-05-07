@@ -1,4 +1,6 @@
-﻿namespace ITW.Domain.Personnel.Entities;
+using ITW.Domain.Personnel.Enums;
+
+namespace ITW.Domain.Personnel.Entities;
 
 public sealed class MitarbeiterUrlaubszeitraum
 {
@@ -17,4 +19,18 @@ public sealed class MitarbeiterUrlaubszeitraum
     public DateTimeOffset ErstelltAmUtc { get; set; }
 
     public DateTimeOffset AktualisiertAmUtc { get; set; }
+
+    // Workflow-Felder (alle nullable/default-kompatibel für bestehende Datensätze)
+
+    public UrlaubszeitraumStatus Status { get; set; } = UrlaubszeitraumStatus.Genehmigt;
+
+    public string? EingereichtVonUserId { get; set; }
+
+    public string? Begruendung { get; set; }
+
+    public string? Loesung { get; set; }
+
+    public DateTimeOffset? EntschiedenAm { get; set; }
+
+    public string? EntschiedenVonUserId { get; set; }
 }
