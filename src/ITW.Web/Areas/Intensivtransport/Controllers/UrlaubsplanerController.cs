@@ -381,8 +381,12 @@ public sealed class UrlaubsplanerController : BereichsControllerBase
                 _dienstwunschRepository.Remove(dienstwunsch);
             }
 
-            await _dienstwunschRepository.SaveChangesAsync(cancellationToken);
             entfernteWuensche += zuEntfernendeWuensche.Length;
+        }
+
+        if (entfernteWuensche > 0)
+        {
+            await _dienstwunschRepository.SaveChangesAsync(cancellationToken);
         }
 
         return entfernteWuensche;

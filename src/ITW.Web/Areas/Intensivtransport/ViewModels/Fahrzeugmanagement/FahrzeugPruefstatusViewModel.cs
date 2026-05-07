@@ -39,15 +39,7 @@ public sealed class FahrzeugPruefstatusItemViewModel
 
     public string? Bemerkung { get; init; }
 
-    public string TypText => Typ switch
-    {
-        FahrzeugPruefungTyp.HuAu => "HU/AU",
-        FahrzeugPruefungTyp.SicherheitspruefungElektrischeAnlage => "Sicherheitsprüfung elektrische Anlage",
-        FahrzeugPruefungTyp.SicherheitspruefungSauerstoffanlage => "Sicherheitsprüfung Sauerstoffanlage",
-        FahrzeugPruefungTyp.SicherheitspruefungAufbau => "Sicherheitsprüfung Aufbau",
-        FahrzeugPruefungTyp.Service => "Service allgemein",
-        _ => "Unbekannt"
-    };
+    public string TypText => Typ.ToDisplayText();
 
     public string FaelligAmText => FaelligAm.HasValue
         ? FaelligAm.Value.ToString("dd.MM.yyyy")
@@ -58,6 +50,8 @@ public sealed class FahrzeugPruefstatusItemViewModel
         : "-";
 
     public DateOnly Heute { get; init; }
+
+    private const int WarnungVorlaufTage = 30;
 
     public bool IstHinterlegt => FaelligAm.HasValue;
 
@@ -83,7 +77,7 @@ public sealed class FahrzeugPruefstatusItemViewModel
                 return false;
             }
 
-            var warnGrenze = Heute.AddDays(30);
+            var warnGrenze = Heute.AddDays(WarnungVorlaufTage);
 
             return FaelligAm.Value <= warnGrenze;
         }

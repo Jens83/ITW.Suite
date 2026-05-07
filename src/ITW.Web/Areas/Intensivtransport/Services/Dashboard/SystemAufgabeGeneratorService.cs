@@ -8,6 +8,10 @@ namespace ITW.Web.Areas.Intensivtransport.Services.Dashboard;
 
 public sealed class SystemAufgabeGeneratorService
 {
+    private const int PruefungVorwarnungTage     = 30;
+    private const int PruefungPrioritaetHochTage = 14;
+    private const int DienstplanFensterTage      = 7;
+
     private readonly IDienstplanPeriodeRepository _perioden;
     private readonly IAufgabeRepository _aufgaben;
     private readonly IFahrzeugRepository _fahrzeuge;
@@ -93,7 +97,7 @@ public sealed class SystemAufgabeGeneratorService
                 continue;
             }
 
-            if (periodStart <= heute.AddDays(7))
+            if (periodStart <= heute.AddDays(DienstplanFensterTage))
             {
                 var schluessel = $"itw:plan-freigeben:{periode.Id}";
                 if (!await _aufgaben.ExistiertOffeneSystemaufgabeAsync(schluessel, cancellationToken))
@@ -147,7 +151,7 @@ public sealed class SystemAufgabeGeneratorService
             {
                 var tageBis = pruefung.FaelligAm.DayNumber - heute.DayNumber;
 
-                if (tageBis > 30) continue;
+                if (tageBis > PruefungVorwarnungTage) continue;
 
                 var schluessel = $"itw:fahrzeug-pruefung:{fahrzeug.Id}:{pruefung.Id}";
                 if (await _aufgaben.ExistiertOffeneSystemaufgabeAsync(schluessel, cancellationToken))
@@ -155,19 +159,11 @@ public sealed class SystemAufgabeGeneratorService
 
                 var prioritaet = tageBis < 0
                     ? AufgabePrioritaet.Dringend
-                    : tageBis < 14
+                    : tageBis < PruefungPrioritaetHochTage
                         ? AufgabePrioritaet.Hoch
                         : AufgabePrioritaet.Normal;
 
-                var typText = pruefung.Typ switch
-                {
-                    FahrzeugPruefungTyp.HuAu => "HU/AU",
-                    FahrzeugPruefungTyp.SicherheitspruefungElektrischeAnlage => "Sicherheitsprüfung Elektrik",
-                    FahrzeugPruefungTyp.SicherheitspruefungSauerstoffanlage => "Sicherheitsprüfung Sauerstoff",
-                    FahrzeugPruefungTyp.SicherheitspruefungAufbau => "Sicherheitsprüfung Aufbau",
-                    FahrzeugPruefungTyp.Service => "Service",
-                    _ => "Prüfung"
-                };
+                var typText = pruefung.Typ.ToDisplayText();
 
                 var aufgabe = new Aufgabe(
                     Guid.NewGuid(),

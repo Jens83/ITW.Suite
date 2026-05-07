@@ -130,7 +130,8 @@ public sealed class GetItwDashboardDataService
             .ToArray();
 
         var heute         = DateOnly.FromDateTime(DateTime.Today);
-        var wochenstart   = heute.AddDays(-(((int)heute.DayOfWeek + 6) % 7)); // Montag
+        // ISO: Sun=0, Mon=1 … Sat=6 → (DayOfWeek + 6) % 7 = Tage zurück bis Montag
+        var wochenstart   = heute.AddDays(-(((int)heute.DayOfWeek + 6) % 7));
         var dieseWocheEnd = wochenstart.AddDays(6);
         var naechsteEnd   = wochenstart.AddDays(13);
 
