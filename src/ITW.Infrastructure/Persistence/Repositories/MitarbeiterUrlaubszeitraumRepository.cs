@@ -287,6 +287,36 @@ public sealed class MitarbeiterUrlaubszeitraumRepository : IMitarbeiterUrlaubsze
             cancellationToken);
     }
 
+    public async Task<IReadOnlyList<MitarbeiterUrlaubszeitraum>> GetAlleAktiveFuerJahrAsync(
+        int jahr,
+        CancellationToken cancellationToken = default)
+    {
+        var start = new DateOnly(jahr, 1, 1).ToDateTime(TimeOnly.MinValue);
+        var ende  = new DateOnly(jahr, 12, 31).ToDateTime(TimeOnly.MinValue);
+
+        var connection = _dbContext.Database.GetDbConnection();
+        await EnsureOpenAsync(connection, cancellationToken);
+
+        await using var command = connection.CreateCommand();
+        command.CommandText = """
+            SELECT
+                Id, UserId, Von, Bis, Notiz, IstAktiv, ErstelltAmUtc, AktualisiertAmUtc,
+                Status, EingereichtVonUserId, Begruendung, Loesung, EntschiedenAm, EntschiedenVonUserId,
+                MitarbeiterBestaetigtAm
+            FROM [Personnel].[MitarbeiterUrlaubszeitraum]
+            WHERE IstAktiv = 1
+              AND Status IN (0, 1)
+              AND Von <= @JahresEnde
+              AND Bis >= @JahresStart
+            ORDER BY UserId, Von;
+            """;
+
+        AddParameter(command, "@JahresStart", start);
+        AddParameter(command, "@JahresEnde", ende);
+
+        return await ReadListAsync(command, cancellationToken);
+    }
+
     public async Task<int> GetAnzahlUnbestaetigenEntscheideAsync(
         string userId,
         CancellationToken cancellationToken = default)

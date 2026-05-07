@@ -3,14 +3,13 @@ using ITW.Application.Organisation.Contracts;
 using ITW.Application.Personnel.ProfileQueries;
 using ITW.Application.Personnel.Urlaub;
 using ITW.Application.Personnel.Urlaub.Contracts;
-using ITW.Dienstplan.Application.Contracts;
 using ITW.Web.Areas.Intensivtransport.ViewModels.Urlaubsplaner;
+using ITW.Dienstplan.Application.Contracts;
 using ITW.Web.Authorization.Modules;
 using ITW.Web.Controllers.Base;
 using ITW.Web.Navigation.AreaNavigation;
 using ITW.Web.Security.CurrentUser;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using System.Globalization;
 using ITW.Web.UI.Feedback;
 
@@ -24,7 +23,6 @@ public sealed class UrlaubsplanerController : BereichsControllerBase
     private static readonly CultureInfo DeutscheKultur = CultureInfo.GetCultureInfo("de-DE");
 
     private readonly ReadItwMitarbeiterprofileService _readItwMitarbeiterprofileService;
-    private readonly IMitarbeiterUrlaubsanspruchRepository _urlaubsanspruchRepository;
     private readonly IMitarbeiterUrlaubszeitraumRepository _urlaubszeitraumRepository;
     private readonly IDienstplanPeriodeRepository _dienstplanPeriodeRepository;
     private readonly IDienstwunschRepository _dienstwunschRepository;
@@ -33,20 +31,20 @@ public sealed class UrlaubsplanerController : BereichsControllerBase
     private readonly DeleteMitarbeiterUrlaubszeitraumService _deleteZeitraumService;
     private readonly ReadMitarbeiterUrlaubsplanerService _readUrlaubsplanerService;
     private readonly ReadWachleiterUrlaubsUebersichtService _readUebersichtService;
+    private readonly ReadWachleiterJahresuebersichtService _readJahresuebersichtService;
     private readonly EntscheidenUrlaubsAntragService _entscheidenService;
     private readonly IDateTimeProvider _dateTimeProvider;
 
     public UrlaubsplanerController(
         ReadItwMitarbeiterprofileService readItwMitarbeiterprofileService,
-        IMitarbeiterUrlaubsanspruchRepository urlaubsanspruchRepository,
         IMitarbeiterUrlaubszeitraumRepository urlaubszeitraumRepository,
         IDienstplanPeriodeRepository dienstplanPeriodeRepository,
         IDienstwunschRepository dienstwunschRepository,
         SaveMitarbeiterUrlaubsanspruchService saveAnspruchService,
         SaveMitarbeiterUrlaubszeitraumService saveZeitraumService,
         DeleteMitarbeiterUrlaubszeitraumService deleteZeitraumService,
-        ReadMitarbeiterUrlaubsplanerService readUrlaubsplanerService,
         ReadWachleiterUrlaubsUebersichtService readUebersichtService,
+        ReadWachleiterJahresuebersichtService readJahresuebersichtService,
         EntscheidenUrlaubsAntragService entscheidenService,
         IDateTimeProvider dateTimeProvider,
         ICurrentUserContextAccessor currentUserContextAccessor)
@@ -54,8 +52,6 @@ public sealed class UrlaubsplanerController : BereichsControllerBase
     {
         ArgumentNullException.ThrowIfNull(readItwMitarbeiterprofileService);
         _readItwMitarbeiterprofileService = readItwMitarbeiterprofileService;
-        ArgumentNullException.ThrowIfNull(urlaubsanspruchRepository);
-        _urlaubsanspruchRepository = urlaubsanspruchRepository;
         ArgumentNullException.ThrowIfNull(urlaubszeitraumRepository);
         _urlaubszeitraumRepository = urlaubszeitraumRepository;
         ArgumentNullException.ThrowIfNull(dienstplanPeriodeRepository);
@@ -68,13 +64,12 @@ public sealed class UrlaubsplanerController : BereichsControllerBase
         _saveZeitraumService = saveZeitraumService;
         ArgumentNullException.ThrowIfNull(deleteZeitraumService);
         _deleteZeitraumService = deleteZeitraumService;
-        ArgumentNullException.ThrowIfNull(readUrlaubsplanerService);
-        _readUrlaubsplanerService = readUrlaubsplanerService;
         ArgumentNullException.ThrowIfNull(readUebersichtService);
         _readUebersichtService = readUebersichtService;
+        ArgumentNullException.ThrowIfNull(readJahresuebersichtService);
+        _readJahresuebersichtService = readJahresuebersichtService;
         ArgumentNullException.ThrowIfNull(entscheidenService);
         _entscheidenService = entscheidenService;
-
         ArgumentNullException.ThrowIfNull(dateTimeProvider);
         _dateTimeProvider = dateTimeProvider;
     }
@@ -82,27 +77,94 @@ public sealed class UrlaubsplanerController : BereichsControllerBase
     protected override OrganisationsbereichCode Bereich => OrganisationsbereichCode.Intensivtransport;
 
     [HttpGet]
-    public async Task<IActionResult> Index(
-        string? userId,
-        int? jahr,
-        CancellationToken cancellationToken)
+    public async Task<IActionResult> Index(int? jahr, CancellationToken cancellationToken)
     {
         var zugriff = await PruefeUrlaubsplanerZugriffAsync(cancellationToken);
         if (zugriff.EarlyResult is not null)
-        {
             return zugriff.EarlyResult;
+
+        var ausgewaehltesJahr = (jahr is >= 2000 and <= 2100)
+            ? jahr.Value
+            : _dateTimeProvider.Today.Year;
+
+        var jahresuebersicht = await _readJahresuebersichtService.ExecuteAsync(
+            ausgewaehltesJahr, cancellationToken);
+
+        var ausstehend = await _urlaubszeitraumRepository.GetAllAusstehendAsync(cancellationToken);
+
+        var tageImJahr = DateTime.IsLeapYear(ausgewaehltesJahr) ? 366.0 : 365.0;
+        var jahresStart = new DateOnly(ausgewaehltesJahr, 1, 1);
+
+        double ToLeft(DateOnly d)
+        {
+            var clamped = d < jahresStart ? jahresStart : d;
+            return (clamped.DayOfYear - 1) / tageImJahr * 100.0;
         }
 
-        var mitarbeiterResult = await _readItwMitarbeiterprofileService.ExecuteAsync(cancellationToken);
-        var ausstehend        = await _urlaubszeitraumRepository.GetAllAusstehendAsync(cancellationToken);
+        double ToWidth(DateOnly von, DateOnly bis)
+        {
+            var jahresEnde  = new DateOnly(ausgewaehltesJahr, 12, 31);
+            var vonC = von < jahresStart ? jahresStart : von;
+            var bisC = bis > jahresEnde  ? jahresEnde  : bis;
+            return Math.Max(0.3, (bisC.DayOfYear - vonC.DayOfYear + 1) / tageImJahr * 100.0);
+        }
 
-        var viewModel = await BaueViewModelAsync(
-            mitarbeiterResult,
-            userId,
-            jahr ?? _dateTimeProvider.Today.Year,
-            cancellationToken);
+        var monatsmarker = Enumerable.Range(1, 12)
+            .Select(m =>
+            {
+                var ersterDeMonats = new DateOnly(ausgewaehltesJahr, m, 1);
+                return new GanttMonatsmarkerViewModel
+                {
+                    Name        = ersterDeMonats.ToString("MMM", DeutscheKultur),
+                    LeftPercent = ToLeft(ersterDeMonats)
+                };
+            })
+            .ToList();
 
-        viewModel.AnzahlAusstehend = ausstehend.Count;
+        var mitarbeiterReihen = jahresuebersicht.Mitarbeiter
+            .Select(ma => new WachleiterGanttReiheViewModel
+            {
+                UserId      = ma.UserId,
+                AnzeigeName = ma.AnzeigeName,
+                GesamtTage  = ma.GesamtTage,
+                Balken      = ma.Zeitraeume
+                    .Select(z => new WachleiterGanttBalkenViewModel
+                    {
+                        ZeitraumId        = z.ZeitraumId,
+                        Von               = z.Von,
+                        Bis               = z.Bis,
+                        Tage              = z.Tage,
+                        Status            = z.Status,
+                        HatUeberschneidung = z.HatUeberschneidung,
+                        LeftPercent       = ToLeft(z.Von),
+                        WidthPercent      = ToWidth(z.Von, z.Bis)
+                    })
+                    .ToList()
+            })
+            .ToList();
+
+        var ueberschneidungVms = jahresuebersicht.Ueberschneidungen
+            .Select(u => new WachleiterUeberschneidungViewModel
+            {
+                Von              = u.Von,
+                Bis              = u.Bis,
+                MitarbeiterNamen = u.MitarbeiterNamen,
+                LeftPercent      = ToLeft(u.Von),
+                WidthPercent     = ToWidth(u.Von, u.Bis)
+            })
+            .ToList();
+
+        var jahrOptionen = Enumerable.Range(_dateTimeProvider.Today.Year - 1, 4).ToList();
+
+        var viewModel = new WachleiterJahresuebersichtViewModel
+        {
+            Jahr              = ausgewaehltesJahr,
+            AnzahlAusstehend  = ausstehend.Count,
+            JahrOptionen      = jahrOptionen,
+            Mitarbeiter       = mitarbeiterReihen,
+            Ueberschneidungen = ueberschneidungVms,
+            Monatsmarker      = monatsmarker
+        };
 
         return BereichsView("Index", viewModel);
     }
@@ -251,96 +313,6 @@ public sealed class UrlaubsplanerController : BereichsControllerBase
 
         TempData[FlashKeys.Success] = "Der Urlaubszeitraum wurde gelöscht.";
         return RedirectToAction(nameof(Index), new { userId, jahr });
-    }
-
-    private async Task<UrlaubsplanerIndexViewModel> BaueViewModelAsync(
-    ReadItwMitarbeiterprofileResult mitarbeiterResult,
-    string? userId,
-    int jahr,
-    CancellationToken cancellationToken)
-    {
-        var urlaubsrelevanteMitarbeiter = mitarbeiterResult.IsSuccess
-            ? mitarbeiterResult.Profile
-                .Where(x =>
-                    !x.IstGesperrt &&
-                    x.HatProfil &&
-                    (x.Beschaeftigungsart == ITW.Domain.Personnel.Enums.MitarbeiterBeschaeftigungsart.Festangestellt
-                     || x.Beschaeftigungsart == ITW.Domain.Personnel.Enums.MitarbeiterBeschaeftigungsart.Freelancer))
-                .OrderBy(x => x.Beschaeftigungsart)
-                .ThenBy(x => x.AnzeigeName, StringComparer.OrdinalIgnoreCase)
-                .ToArray()
-            : Array.Empty<ItwMitarbeiterprofilUebersichtDto>();
-
-        var ausgewaehlterMitarbeiter = urlaubsrelevanteMitarbeiter.FirstOrDefault(x =>
-            string.Equals(x.UserId, userId, StringComparison.OrdinalIgnoreCase))
-            ?? urlaubsrelevanteMitarbeiter.FirstOrDefault();
-
-        var ausgewaehlterUserId = ausgewaehlterMitarbeiter?.UserId;
-        var ausgewaehltesJahr = jahr is >= 2000 and <= 2100 ? jahr : _dateTimeProvider.Today.Year;
-
-        var viewModel = new UrlaubsplanerIndexViewModel
-        {
-            Titel = "Urlaubsplaner",
-            Beschreibung = "Jahresanspruch, Übertrag und Urlaubszeiträume für Mitarbeiter im Intensivtransport.",
-            IsSuccess = mitarbeiterResult.IsSuccess,
-            ErrorMessage = mitarbeiterResult.ErrorMessage,
-            AusgewaehlterUserId = ausgewaehlterUserId,
-            AusgewaehltesJahr = ausgewaehltesJahr,
-            MitarbeiterOptionen = urlaubsrelevanteMitarbeiter
-                .Select(x => new SelectListItem
-                {
-                    Value = x.UserId,
-                    Text = $"{x.AnzeigeName} ({FormatiereBeschaeftigungsart(x.Beschaeftigungsart)})",
-                    Selected = string.Equals(x.UserId, ausgewaehlterUserId, StringComparison.OrdinalIgnoreCase)
-                })
-                .ToArray(),
-            JahrOptionen = Enumerable.Range(_dateTimeProvider.Today.Year - 1, 5)
-                .Select(x => new SelectListItem
-                {
-                    Value = x.ToString(),
-                    Text = x.ToString(),
-                    Selected = x == ausgewaehltesJahr
-                })
-                .ToArray()
-        };
-
-        if (ausgewaehlterMitarbeiter is null)
-        {
-            return viewModel;
-        }
-
-        var readResult = await _readUrlaubsplanerService.ExecuteAsync(
-            new ReadMitarbeiterUrlaubsplanerQuery
-            {
-                UserId = ausgewaehlterMitarbeiter.UserId,
-                Jahr = ausgewaehltesJahr,
-                Beschaeftigungsart = ausgewaehlterMitarbeiter.Beschaeftigungsart
-            },
-            cancellationToken);
-
-        viewModel.IsSuccess = viewModel.IsSuccess && readResult.IsSuccess;
-        viewModel.ErrorMessage ??= readResult.ErrorMessage;
-        viewModel.MitarbeiterAnzeigeName = ausgewaehlterMitarbeiter.AnzeigeName;
-        viewModel.BeschaeftigungsartText = FormatiereBeschaeftigungsart(ausgewaehlterMitarbeiter.Beschaeftigungsart);
-        viewModel.IstFestangestellt = ausgewaehlterMitarbeiter.Beschaeftigungsart == ITW.Domain.Personnel.Enums.MitarbeiterBeschaeftigungsart.Festangestellt;
-        viewModel.IstFreelancer = ausgewaehlterMitarbeiter.Beschaeftigungsart == ITW.Domain.Personnel.Enums.MitarbeiterBeschaeftigungsart.Freelancer;
-        viewModel.Anspruchstage = readResult.Anspruchstage;
-        viewModel.Uebertragstage = readResult.Uebertragstage;
-        viewModel.GenommeneUrlaubstage = readResult.GenommeneUrlaubstage;
-        viewModel.Resturlaubstage = readResult.Resturlaubstage;
-        viewModel.AnspruchIstStandardwert = readResult.AnspruchIstStandardwert;
-        viewModel.Zeitraeume = readResult.Zeitraeume
-            .Select(x => new UrlaubszeitraumEintragViewModel
-            {
-                Id = x.Id,
-                VonAnzeige = x.Von.ToDateTime(TimeOnly.MinValue).ToString("dd.MM.yyyy", DeutscheKultur),
-                BisAnzeige = x.Bis.ToDateTime(TimeOnly.MinValue).ToString("dd.MM.yyyy", DeutscheKultur),
-                Urlaubstage = x.Urlaubstage,
-                Notiz = x.Notiz
-            })
-            .ToArray();
-
-        return viewModel;
     }
 
     private async Task<int> BereinigeOffeneDienstwuenscheImUrlaubszeitraumAsync(
@@ -578,18 +550,6 @@ public sealed class UrlaubsplanerController : BereichsControllerBase
     {
         ViewData["AreaLayoutPath"] = AreaLayoutPath;
         return View($"~/Areas/Intensivtransport/Views/Urlaubsplaner/{viewName}.cshtml", model);
-    }
-
-    private static string FormatiereBeschaeftigungsart(
-    ITW.Domain.Personnel.Enums.MitarbeiterBeschaeftigungsart beschaeftigungsart)
-    {
-        return beschaeftigungsart switch
-        {
-            ITW.Domain.Personnel.Enums.MitarbeiterBeschaeftigungsart.Freelancer => "Freelancer",
-            ITW.Domain.Personnel.Enums.MitarbeiterBeschaeftigungsart.Festangestellt => "Festangestellt",
-            ITW.Domain.Personnel.Enums.MitarbeiterBeschaeftigungsart.Honorarkraft => "Honorarkraft",
-            _ => "Unbekannt"
-        };
     }
 
     private sealed record UrlaubsplanerZugriffResult(CurrentUserContext? CurrentUser, IActionResult? EarlyResult)

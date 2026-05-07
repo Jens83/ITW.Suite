@@ -832,6 +832,15 @@
     border-color: rgba(var(--err-rgb), 0.3);
 }
 
+.itw-dg-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--err);
+    flex-shrink: 0;
+    box-shadow: 0 0 0 2px var(--surface);
+}
+
 /* Mobile (≤767px): Hamburger + Breadcrumb sichtbar, Desktop-Nav versteckt */
 @media (max-width: 768px) {
     .itw-navbar {

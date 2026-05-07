@@ -20,6 +20,10 @@ public interface IMitarbeiterUrlaubszeitraumRepository
     Task<IReadOnlyList<MitarbeiterUrlaubszeitraum>> GetAllAusstehendAsync(
         CancellationToken cancellationToken = default);
 
+    Task<IReadOnlyList<MitarbeiterUrlaubszeitraum>> GetAlleAktiveFuerJahrAsync(
+        int jahr,
+        CancellationToken cancellationToken = default);
+
     Task<int> GetAnzahlUnbestaetigenEntscheideAsync(
         string userId,
         CancellationToken cancellationToken = default);

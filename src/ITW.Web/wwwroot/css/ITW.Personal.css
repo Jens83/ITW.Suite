@@ -1498,3 +1498,175 @@
         height: 2.2rem;
     }
 }
+
+/* ===== URLAUBSPLANER GANTT ===== */
+
+.urlaub-gantt {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    user-select: none;
+}
+
+.urlaub-gantt__header {
+    display: flex;
+    align-items: flex-end;
+    gap: 12px;
+    padding-bottom: 6px;
+    border-bottom: 1px solid var(--surface-3);
+    margin-bottom: 4px;
+}
+
+.urlaub-gantt__row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 3px 0;
+}
+
+.urlaub-gantt__row:hover {
+    background: rgba(var(--pri-rgb), 0.03);
+    border-radius: var(--radius-sm);
+}
+
+.urlaub-gantt__label-col {
+    width: 160px;
+    flex-shrink: 0;
+    font-size: 0.8125rem;
+    font-weight: 500;
+    color: var(--on-sv);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.urlaub-gantt__track-col {
+    flex: 1;
+    min-width: 0;
+}
+
+.urlaub-gantt__tage-col {
+    width: 44px;
+    flex-shrink: 0;
+    font-size: 0.75rem;
+    color: var(--outline);
+    text-align: right;
+}
+
+.urlaub-gantt__track {
+    position: relative;
+    height: 26px;
+    background: var(--surface-2);
+    border-radius: var(--radius-sm);
+    overflow: visible;
+}
+
+.urlaub-gantt__monat-line {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 1px;
+    background: var(--surface-3);
+    pointer-events: none;
+}
+
+.urlaub-gantt__overlap-zone {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    background: rgba(var(--err-rgb), 0.12);
+    border-left: 2px solid rgba(var(--err-rgb), 0.5);
+    border-right: 2px solid rgba(var(--err-rgb), 0.5);
+    pointer-events: none;
+    z-index: 0;
+    border-radius: 2px;
+}
+
+.urlaub-gantt__bar {
+    position: absolute;
+    top: 4px;
+    bottom: 4px;
+    border-radius: 3px;
+    min-width: 4px;
+    cursor: pointer;
+    z-index: 1;
+    transition: filter 0.1s, transform 0.1s;
+}
+
+.urlaub-gantt__bar:hover {
+    filter: brightness(1.1);
+    transform: scaleY(1.15);
+}
+
+.urlaub-gantt__bar--genehmigt {
+    background: var(--ok);
+}
+
+.urlaub-gantt__bar--ausstehend {
+    background: var(--warn);
+    opacity: 0.85;
+    background-image: repeating-linear-gradient(
+        45deg,
+        transparent,
+        transparent 3px,
+        rgba(255,255,255,0.25) 3px,
+        rgba(255,255,255,0.25) 5px
+    );
+}
+
+.urlaub-gantt__bar--conflict {
+    outline: 2px solid var(--err);
+    outline-offset: 1px;
+}
+
+.urlaub-gantt__monat-label {
+    position: absolute;
+    top: 0;
+    font-size: 0.6875rem;
+    font-weight: 600;
+    color: var(--outline);
+    white-space: nowrap;
+    transform: translateX(-2px);
+    line-height: 1;
+}
+
+.urlaub-gantt__legend {
+    display: flex;
+    align-items: center;
+    gap: 1.25rem;
+    margin-top: 1rem;
+    padding-top: 0.75rem;
+    border-top: 1px solid var(--surface-3);
+    font-size: 0.75rem;
+    color: var(--outline);
+}
+
+.urlaub-gantt__legend-item {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+}
+
+.urlaub-gantt__legend-dot {
+    display: inline-block;
+    width: 12px;
+    height: 12px;
+    border-radius: 2px;
+    flex-shrink: 0;
+}
+
+.urlaub-gantt__legend-dot--genehmigt  { background: var(--ok); }
+.urlaub-gantt__legend-dot--ausstehend { background: var(--warn); opacity: 0.85; }
+.urlaub-gantt__legend-dot--overlap    { background: rgba(var(--err-rgb), 0.25); border: 2px solid rgba(var(--err-rgb), 0.5); }
+
+@media (max-width: 640px) {
+    .urlaub-gantt__label-col {
+        width: 90px;
+        font-size: 0.75rem;
+    }
+
+    .urlaub-gantt__tage-col {
+        display: none;
+    }
+}
+}
