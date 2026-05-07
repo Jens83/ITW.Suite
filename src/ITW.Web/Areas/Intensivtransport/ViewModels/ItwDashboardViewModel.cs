@@ -71,17 +71,17 @@ public sealed class ItwAufgabeViewModel
             if (SystemSchluessel.StartsWith("itw:dienstplan-fertigstellen:"))
             {
                 var id = SystemSchluessel["itw:dienstplan-fertigstellen:".Length..];
-                return $"/Intensivtransport/DienstplanWachleiter/Wachleiterkalender?periodeId={id}";
+                return $"/Intensivtransport/Dienstplan/Wachleiterkalender?periodeId={id}";
             }
             if (SystemSchluessel.StartsWith("itw:plan-freigeben:"))
             {
                 var id = SystemSchluessel["itw:plan-freigeben:".Length..];
-                return $"/Intensivtransport/DienstplanWachleiter/Wachleiterkalender?periodeId={id}";
+                return $"/Intensivtransport/Dienstplan/Wachleiterkalender?periodeId={id}";
             }
             if (SystemSchluessel.StartsWith("itw:wunschphase-oeffnen:"))
             {
                 var id = SystemSchluessel["itw:wunschphase-oeffnen:".Length..];
-                return $"/Intensivtransport/DienstplanWachleiter/Index?periodeId={id}";
+                return $"/Intensivtransport/Dienstplan/Wachleiter?periodeId={id}";
             }
             if (SystemSchluessel.StartsWith("itw:fahrzeug-pruefung:"))
             {
