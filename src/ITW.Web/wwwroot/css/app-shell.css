@@ -832,13 +832,25 @@
     border-color: rgba(var(--err-rgb), 0.3);
 }
 
-.itw-dg-dot {
+/* Notification dot: positioned absolutely on the section-header icon */
+.itw-dg-icon-wrap {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.itw-dg-notify-dot {
+    position: absolute;
+    top: -3px;
+    right: -5px;
     width: 8px;
     height: 8px;
     border-radius: 50%;
-    background: var(--err);
-    flex-shrink: 0;
-    box-shadow: 0 0 0 2px var(--surface);
+    background: #ef4444;
+    border: 2px solid var(--surface-0, #fff);
+    pointer-events: none;
 }
 
 /* Mobile (≤767px): Hamburger + Breadcrumb sichtbar, Desktop-Nav versteckt */

@@ -54,8 +54,15 @@
         currentUserLookup.CurrentUser is not null &&
         currentUserLookup.CurrentUser.Rolle == BereichsrolleCode.Mitarbeiter)
     {
-        urlaubsBadgeAnzahl = await UrlaubszeitraumRepository.GetAnzahlUnbestaetigenEntscheideAsync(
-            currentUserLookup.CurrentUser.UserId);
+        try
+        {
+            urlaubsBadgeAnzahl = await UrlaubszeitraumRepository.GetAnzahlUnbestaetigenEntscheideAsync(
+                currentUserLookup.CurrentUser.UserId);
+        }
+        catch
+        {
+            // Badge-Abfrage schlägt nicht fehl (z.B. fehlende Spalte nach Migration)
+        }
     }
 
     var istPasswortResetAktiv =
@@ -74,18 +81,21 @@
 
     <div class="itw-dg">
         @{
-            var hatUrlaubsHinweis = sektion.Titel == "Planung" && urlaubsBadgeAnzahl > 0;
+            var hatPlanungsHinweis = sektion.Titel == "Planung"
+                && (urlaubsBadgeAnzahl > 0 || offeneDienstplanPerioden > 0);
         }
         <button type="button"
                 class="itw-dg-hd @(hatAktiven ? "active" : "collapsed")"
                 data-drawer-toggle="@sektionId"
                 aria-expanded="@(hatAktiven ? "true" : "false")">
-            <i class="@ersterEintrag.IconCssClass itw-dg-hi" aria-hidden="true"></i>
+            <span class="itw-dg-icon-wrap">
+                <i class="@ersterEintrag.IconCssClass itw-dg-hi" aria-hidden="true"></i>
+                @if (hatPlanungsHinweis)
+                {
+                    <span class="itw-dg-notify-dot"></span>
+                }
+            </span>
             <span class="itw-dg-lbl">@sektion.Titel</span>
-            @if (hatUrlaubsHinweis)
-            {
-                <span class="itw-dg-dot" aria-label="Neue Benachrichtigungen"></span>
-            }
             <i class="bi bi-chevron-down itw-dg-chev" aria-hidden="true"></i>
         </button>
         <div class="itw-dg-body @(hatAktiven ? "" : "collapsed")" id="@sektionId">
@@ -111,7 +121,7 @@
                     }
                     @if (istMeinUrlaubEintrag && urlaubsBadgeAnzahl > 0)
                     {
-                        <span class="itw-dg-dot" aria-label="@urlaubsBadgeAnzahl neue Entscheidung(en)"></span>
+                        <span class="itw-dg-badge itw-dg-badge--err">@urlaubsBadgeAnzahl</span>
                     }
                 </a>
             }
