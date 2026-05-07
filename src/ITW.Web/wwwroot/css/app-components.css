@@ -1183,6 +1183,10 @@ textarea.form-control {
     margin: 0;
 }
 
+.app-autoplan-kpi-card__value--success { color: var(--ter); }
+.app-autoplan-kpi-card__value--warning { color: var(--warn); }
+.app-autoplan-kpi-card__value--danger  { color: var(--err); }
+
 .app-report-kpi-card__text,
 .app-autoplan-kpi-card__text {
     color: var(--outline);
@@ -1201,6 +1205,12 @@ textarea.form-control {
     font-size: 1rem;
     flex-shrink: 0;
 }
+
+.app-report-icon--accent  { background: rgba(var(--pri-rgb), 0.12); color: var(--pri); }
+.app-report-icon--info    { background: rgba(var(--pri-rgb), 0.10); color: var(--pri-c); }
+.app-report-icon--success { background: rgba(var(--ter-rgb), 0.12); color: var(--ter); }
+.app-report-icon--warning { background: var(--warn-c); color: var(--warn); }
+.app-report-icon--danger  { background: rgba(var(--err-rgb), 0.12); color: var(--err); }
 
 /* =================================================================
  * INFO-KARTE (Dienstplan / Autoplan)

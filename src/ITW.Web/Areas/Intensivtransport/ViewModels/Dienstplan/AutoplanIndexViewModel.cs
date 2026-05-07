@@ -70,10 +70,10 @@ public sealed class AutoplanIndexViewModel
 
     public string ArbeitsstandBadgeCssClass =>
         PlanIstFreigegeben
-            ? "bg-primary-subtle text-primary border border-primary-subtle"
+            ? "app-pill--success"
             : WunschphaseIstOffen
-                ? "bg-warning-subtle text-warning-emphasis border border-warning-subtle"
-                : "bg-secondary-subtle text-secondary-emphasis border border-secondary-subtle";
+                ? "app-pill--warning"
+                : "app-pill--neutral";
 }
 
 public sealed class AutoplanTagViewModel

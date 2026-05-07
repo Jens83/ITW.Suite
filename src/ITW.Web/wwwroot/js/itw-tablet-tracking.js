@@ -45,7 +45,7 @@
     }
 
     function setStatus(text, cssClass) {
-        elements.statusBadge.className = `badge ${cssClass}`;
+        elements.statusBadge.className = `app-pill ${cssClass}`;
         elements.statusBadge.textContent = text;
     }
 
@@ -56,9 +56,9 @@
         elements.stopButton.disabled = !running;
 
         if (running) {
-            setStatus("Live aktiv", "bg-success");
+            setStatus("Live aktiv", "app-pill--success");
         } else {
-            setStatus("Bereit", "bg-secondary");
+            setStatus("Bereit", "app-pill--neutral");
         }
     }
 
@@ -142,7 +142,7 @@
     }
 
     function handlePositionError() {
-        setStatus("GPS-Fehler", "bg-danger");
+        setStatus("GPS-Fehler", "app-pill--danger");
         setMessage("alert-danger", "Der Standort konnte nicht gelesen werden. Bitte Standortfreigabe prüfen.");
         elements.locationStatus.textContent = "GPS-Fehler";
     }
@@ -183,7 +183,7 @@
         const apiKey = getApiKey();
 
         if (!deviceIdentifier || !apiKey) {
-            setStatus("Nicht eingerichtet", "bg-danger");
+            setStatus("Nicht eingerichtet", "app-pill--danger");
             setMessage(
                 "alert-danger",
                 "Dieses Tablet ist noch nicht eingerichtet. Bitte den QR-Code aus der ITW-Suite scannen.");
@@ -203,7 +203,7 @@
         });
 
         if (!response.ok) {
-            setStatus("Sende-Fehler", "bg-danger");
+            setStatus("Sende-Fehler", "app-pill--danger");
             setMessage("alert-danger", "Standort konnte nicht gesendet werden. Bitte Verbindung prüfen.");
             return;
         }
@@ -213,7 +213,7 @@
         elements.sendCount.textContent = sendCount.toString();
         elements.lastSend.textContent = new Date().toLocaleTimeString();
 
-        setStatus("Live aktiv", "bg-success");
+        setStatus("Live aktiv", "app-pill--success");
         setMessage("alert-success", "Tracking läuft. Standort wird automatisch gesendet.");
     }
 
@@ -223,7 +223,7 @@
         }
 
         if (!getDeviceIdentifier() || !getApiKey()) {
-            setStatus("Nicht eingerichtet", "bg-danger");
+            setStatus("Nicht eingerichtet", "app-pill--danger");
             setMessage(
                 "alert-danger",
                 "Dieses Tablet ist noch nicht eingerichtet. Bitte den QR-Code aus der ITW-Suite scannen.");
@@ -231,7 +231,7 @@
         }
 
         if (!navigator.geolocation) {
-            setStatus("Kein GPS", "bg-danger");
+            setStatus("Kein GPS", "app-pill--danger");
             setMessage("alert-danger", "Dieser Browser unterstützt keine Standortabfrage.");
             return;
         }
@@ -255,7 +255,7 @@
             try {
                 await sendCurrentPosition();
             } catch {
-                setStatus("Sende-Fehler", "bg-danger");
+                setStatus("Sende-Fehler", "app-pill--danger");
                 setMessage("alert-danger", "Fehler beim automatischen Senden.");
             }
         }, sendIntervalMs);
@@ -304,7 +304,7 @@
         return;
     }
 
-    setStatus("Bereit", "bg-secondary");
+    setStatus("Bereit", "app-pill--neutral");
     setMessage("alert-success", "Tablet ist eingerichtet. Tracking kann gestartet werden.");
 
     if (isAutoStartEnabled()) {

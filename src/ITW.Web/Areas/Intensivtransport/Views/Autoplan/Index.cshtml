@@ -129,13 +129,11 @@
                     }
                 </p>
 
-                <div class="app-autoplan-badge-row mt-3">
-                    <span class="badge @(Model.AusgewaehlterModus == AutomatischePlanungAusfuehrungsmodus.NurOffeneSlotsFuellen
-                                                                                                ? "bg-primary-subtle text-primary-emphasis border border-primary-subtle"
-                                                                                                : "bg-warning-subtle text-warning-emphasis border border-warning-subtle") px-3 py-2">
+                <div class="app-autoplan-badge-row" style="margin-top:0.75rem;">
+                    <span class="app-pill @(Model.AusgewaehlterModus == AutomatischePlanungAusfuehrungsmodus.NurOffeneSlotsFuellen ? "app-pill--accent" : "app-pill--warning")">
                         @(Model.AusgewaehlterModus == AutomatischePlanungAusfuehrungsmodus.NurOffeneSlotsFuellen
-                                                ? "Nur offene Slots"
-                                                : "Komplette Neuberechnung")
+                            ? "Nur offene Slots"
+                            : "Komplette Neuberechnung")
                     </span>
                 </div>
             </div>
@@ -149,14 +147,15 @@
                     <h2 class="app-autoplan-info-card__title">@Model.ArbeitsstandTitel</h2>
                     <p class="app-autoplan-info-card__text">@Model.ArbeitsstandHinweis</p>
 
-                    <div class="app-autoplan-badge-row mt-3">
-                        <span class="badge @Model.ArbeitsstandBadgeCssClass px-3 py-2">
-                            <i class="bi @(Model.PlanIstFreigegeben ? "bi-check2-circle" : Model.WunschphaseIstOffen ? "bi-pencil-square" : "bi-search") me-2"></i>@Model.ArbeitsstandTitel
+                    <div class="app-autoplan-badge-row" style="margin-top:0.75rem;">
+                        <span class="app-pill @Model.ArbeitsstandBadgeCssClass">
+                            <i class="bi @(Model.PlanIstFreigegeben ? "bi-check2-circle" : Model.WunschphaseIstOffen ? "bi-pencil-square" : "bi-search")"></i>
+                            @Model.ArbeitsstandTitel
                         </span>
 
                         @if (Model.PlanIstFreigegeben && Model.PlanFreigegebenAm.HasValue)
                         {
-                            <span class="badge bg-light text-muted border px-3 py-2">
+                            <span class="app-pill app-pill--neutral">
                                 Freigegeben am @Model.PlanFreigegebenAm.Value.ToLocalTime().ToString("dd.MM.yyyy HH:mm")
                             </span>
                         }
@@ -173,7 +172,7 @@
                 <div class="app-autoplan-kpi-card">
                     <div class="app-autoplan-kpi-card__body">
                         <div class="app-autoplan-kpi-card__label">Tage ohne Handlungsbedarf</div>
-                        <h2 class="app-autoplan-kpi-card__value text-success">@Model.AnzahlTageOhneHandlungsbedarf</h2>
+                        <h2 class="app-autoplan-kpi-card__value app-autoplan-kpi-card__value--success">@Model.AnzahlTageOhneHandlungsbedarf</h2>
                     </div>
                 </div>
             </div>
@@ -182,7 +181,7 @@
                 <div class="app-autoplan-kpi-card">
                     <div class="app-autoplan-kpi-card__body">
                         <div class="app-autoplan-kpi-card__label">Tage mit Nacharbeit</div>
-                        <h2 class="app-autoplan-kpi-card__value text-warning-emphasis">@Model.AnzahlTageMitNacharbeit</h2>
+                        <h2 class="app-autoplan-kpi-card__value app-autoplan-kpi-card__value--warning">@Model.AnzahlTageMitNacharbeit</h2>
                     </div>
                 </div>
             </div>
@@ -191,7 +190,7 @@
                 <div class="app-autoplan-kpi-card">
                     <div class="app-autoplan-kpi-card__body">
                         <div class="app-autoplan-kpi-card__label">Kritische Tage</div>
-                        <h2 class="app-autoplan-kpi-card__value text-danger">@Model.AnzahlKritischeTage</h2>
+                        <h2 class="app-autoplan-kpi-card__value app-autoplan-kpi-card__value--danger">@Model.AnzahlKritischeTage</h2>
                     </div>
                 </div>
             </div>
@@ -201,22 +200,12 @@
             <div class="app-autoplan-change-panel__body">
                 <h2 class="app-autoplan-change-panel__title">Was sich beim Speichern ändern würde</h2>
 
-                <div class="d-flex flex-wrap gap-2">
-                    <span class="badge bg-secondary-subtle text-secondary-emphasis border border-secondary-subtle px-3 py-2">
-                        Bleibt wie bisher: @Model.AnzahlUnveraenderteSlots
-                    </span>
-                    <span class="badge bg-success-subtle text-success-emphasis border border-success-subtle px-3 py-2">
-                        Neu dazu: @Model.AnzahlNeuGesetzteSlots
-                    </span>
-                    <span class="badge bg-warning-subtle text-warning-emphasis border border-warning-subtle px-3 py-2">
-                        Wird ausgetauscht: @Model.AnzahlErsetzteSlots
-                    </span>
-                    <span class="badge bg-danger-subtle text-danger-emphasis border border-danger-subtle px-3 py-2">
-                        Fällt weg: @Model.AnzahlWirdOffenSlots
-                    </span>
-                    <span class="badge bg-light text-muted border px-3 py-2">
-                        Bleibt offen: @Model.AnzahlBleibtOffenSlots
-                    </span>
+                <div class="app-autoplan-badge-row">
+                    <span class="app-pill app-pill--neutral">Bleibt wie bisher: @Model.AnzahlUnveraenderteSlots</span>
+                    <span class="app-pill app-pill--success">Neu dazu: @Model.AnzahlNeuGesetzteSlots</span>
+                    <span class="app-pill app-pill--warning">Wird ausgetauscht: @Model.AnzahlErsetzteSlots</span>
+                    <span class="app-pill app-pill--danger">Fällt weg: @Model.AnzahlWirdOffenSlots</span>
+                    <span class="app-pill app-pill--neutral">Bleibt offen: @Model.AnzahlBleibtOffenSlots</span>
                 </div>
             </div>
         </section>
@@ -228,9 +217,7 @@
                     <p class="app-autoplan-preview-panel__text">Pro Tag siehst du, ob alles gut aussieht, wo du eingreifen musst und was sich am aktuellen Plan ändern würde.</p>
                 </div>
 
-                <span class="badge bg-light text-dark border fw-medium px-3 py-2">
-                    @Model.Tage.Count Tag(e)
-                </span>
+                <span class="app-page-meta">@Model.Tage.Count Tag(e)</span>
             </div>
 
             <div class="card-body p-0">
@@ -261,8 +248,8 @@
                                             </div>
 
                                             <div class="d-flex flex-wrap gap-2 align-items-center">
-                                                <span class="badge @tag.HandlungsstatusCssClass px-3 py-2">@tag.HandlungsstatusText</span>
-                                                <span class="badge @tag.StatusCssClass px-3 py-2">@tag.StatusText</span>
+                                                <span class="app-pill @tag.HandlungsstatusCssClass">@tag.HandlungsstatusText</span>
+                                                <span class="app-pill @tag.StatusCssClass">@tag.StatusText</span>
                                             </div>
                                         </div>
                                     </button>
@@ -304,8 +291,8 @@
                                                                         </div>
 
                                                                         <div class="text-md-end d-flex flex-column gap-2">
-                                                                            <span class="badge @entscheidung.AenderungsCssClass px-3 py-2">@entscheidung.AenderungsLabel</span>
-                                                                            <span class="badge @entscheidung.ZuweisungsCssClass px-3 py-2">@entscheidung.ZuweisungsLabel</span>
+                                                                            <span class="app-pill @entscheidung.AenderungsCssClass">@entscheidung.AenderungsLabel</span>
+                                                                            <span class="app-pill @entscheidung.ZuweisungsCssClass">@entscheidung.ZuweisungsLabel</span>
                                                                         </div>
                                                                     </div>
 
@@ -329,7 +316,7 @@
                                                         @if (tag.Konflikte.Count == 0)
                                                         {
                                                             <div class="app-autoplan-ok-card h-100">
-                                                                <div class="fw-bold text-success mb-1">Kein Konflikt erkannt</div>
+                                                                <div style="font-weight:700;color:var(--ter);margin-bottom:0.25rem;">Kein Konflikt erkannt</div>
                                                                 <div class="small text-muted">
                                                                     Für diesen Tag liegt aus Sicht des Autoplans aktuell kein zusätzlicher Konflikthinweis vor.
                                                                 </div>
@@ -342,7 +329,7 @@
                                                                 {
                                                                     <div class="app-autoplan-conflict-card">
                                                                         <div class="mb-2">
-                                                                            <span class="badge @konflikt.CssClass px-3 py-2">@konflikt.Label</span>
+                                                                            <span class="app-pill @konflikt.CssClass">@konflikt.Label</span>
                                                                         </div>
                                                                         <div class="small text-dark">@konflikt.Nachricht</div>
                                                                     </div>

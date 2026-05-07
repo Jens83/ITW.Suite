@@ -259,10 +259,10 @@ CancellationToken cancellationToken)
                         : "Noch unvollständig";
 
                 var statusCssClass = x.HatKonflikt
-                    ? "bg-danger-subtle text-danger-emphasis border border-danger-subtle"
+                    ? "app-pill--danger"
                     : hatVollstaendigeBesatzung
-                        ? "bg-success-subtle text-success-emphasis border border-success-subtle"
-                        : "bg-warning-subtle text-warning-emphasis border border-warning-subtle";
+                        ? "app-pill--success"
+                        : "app-pill--warning";
 
                 var handlungsstatus = ErmittleHandlungsstatus(hatVollstaendigeBesatzung, x.HatKonflikt);
                 var kurzbeschreibung = ErmittleKurzbeschreibung(hatVollstaendigeBesatzung, x.HatKonflikt, slotEntscheidungen);
@@ -425,20 +425,20 @@ CancellationToken cancellationToken)
     {
         if (hatKonflikt && !hatVollstaendigeBesatzung)
         {
-            return ("Sofort prüfen", "bg-danger-subtle text-danger-emphasis border border-danger-subtle");
+            return ("Sofort prüfen", "app-pill--danger");
         }
 
         if (hatKonflikt)
         {
-            return ("Bitte prüfen", "bg-warning-subtle text-warning-emphasis border border-warning-subtle");
+            return ("Bitte prüfen", "app-pill--warning");
         }
 
         if (!hatVollstaendigeBesatzung)
         {
-            return ("Nacharbeit nötig", "bg-warning-subtle text-warning-emphasis border border-warning-subtle");
+            return ("Nacharbeit nötig", "app-pill--warning");
         }
 
-        return ("Kein Eingreifen nötig", "bg-success-subtle text-success-emphasis border border-success-subtle");
+        return ("Kein Eingreifen nötig", "app-pill--success");
     }
 
     private static string ErmittleKurzbeschreibung(
@@ -503,14 +503,14 @@ CancellationToken cancellationToken)
     {
         return art switch
         {
-            AutomatischePlanungZuweisungsArt.BestehendePlanung => "bg-secondary-subtle text-secondary-emphasis border border-secondary-subtle",
-            AutomatischePlanungZuweisungsArt.PflichtfallFreelancer => "bg-danger-subtle text-danger-emphasis border border-danger-subtle",
-            AutomatischePlanungZuweisungsArt.FreelancerNachTageskritik => "bg-warning-subtle text-warning-emphasis border border-warning-subtle",
-            AutomatischePlanungZuweisungsArt.HonorarkraftWunsch => "bg-info-subtle text-info-emphasis border border-info-subtle",
-            AutomatischePlanungZuweisungsArt.MitarbeiterWunsch => "bg-primary-subtle text-primary-emphasis border border-primary-subtle",
-            AutomatischePlanungZuweisungsArt.MitarbeiterWunschblock => "bg-success-subtle text-success-emphasis border border-success-subtle",
-            AutomatischePlanungZuweisungsArt.MitarbeiterLueckenfueller => "bg-light text-dark border",
-            _ => "bg-light text-dark border"
+            AutomatischePlanungZuweisungsArt.BestehendePlanung => "app-pill--neutral",
+            AutomatischePlanungZuweisungsArt.PflichtfallFreelancer => "app-pill--danger",
+            AutomatischePlanungZuweisungsArt.FreelancerNachTageskritik => "app-pill--warning",
+            AutomatischePlanungZuweisungsArt.HonorarkraftWunsch => "app-pill--accent",
+            AutomatischePlanungZuweisungsArt.MitarbeiterWunsch => "app-pill--accent",
+            AutomatischePlanungZuweisungsArt.MitarbeiterWunschblock => "app-pill--success",
+            AutomatischePlanungZuweisungsArt.MitarbeiterLueckenfueller => "app-pill--neutral",
+            _ => "app-pill--neutral"
         };
     }
 
@@ -531,12 +531,12 @@ CancellationToken cancellationToken)
     {
         return art switch
         {
-            AutomatischePlanungAenderungsArt.Unveraendert => "bg-secondary-subtle text-secondary-emphasis border border-secondary-subtle",
-            AutomatischePlanungAenderungsArt.NeuGesetzt => "bg-success-subtle text-success-emphasis border border-success-subtle",
-            AutomatischePlanungAenderungsArt.Ersetzt => "bg-warning-subtle text-warning-emphasis border border-warning-subtle",
-            AutomatischePlanungAenderungsArt.WirdOffen => "bg-danger-subtle text-danger-emphasis border border-danger-subtle",
-            AutomatischePlanungAenderungsArt.BleibtOffen => "bg-light text-muted border",
-            _ => "bg-light text-dark border"
+            AutomatischePlanungAenderungsArt.Unveraendert => "app-pill--neutral",
+            AutomatischePlanungAenderungsArt.NeuGesetzt => "app-pill--success",
+            AutomatischePlanungAenderungsArt.Ersetzt => "app-pill--warning",
+            AutomatischePlanungAenderungsArt.WirdOffen => "app-pill--danger",
+            AutomatischePlanungAenderungsArt.BleibtOffen => "app-pill--neutral",
+            _ => "app-pill--neutral"
         };
     }
 
@@ -557,12 +557,12 @@ CancellationToken cancellationToken)
     {
         return art switch
         {
-            AutomatischePlanungKonfliktArt.MindestbesetzungNichtErreichbar => "bg-danger-subtle text-danger-emphasis border border-danger-subtle",
-            AutomatischePlanungKonfliktArt.MehrPflichtfaelleAlsFreieSlots => "bg-danger-subtle text-danger-emphasis border border-danger-subtle",
-            AutomatischePlanungKonfliktArt.FreelancerSollNichtErreichbar => "bg-warning-subtle text-warning-emphasis border border-warning-subtle",
-            AutomatischePlanungKonfliktArt.FreelancerDienstNichtKonfliktfreiVerteilbar => "bg-warning-subtle text-warning-emphasis border border-warning-subtle",
-            AutomatischePlanungKonfliktArt.BestehendePlanungKollidiertMitUrlaub => "bg-secondary-subtle text-secondary-emphasis border border-secondary-subtle",
-            _ => "bg-light text-dark border"
+            AutomatischePlanungKonfliktArt.MindestbesetzungNichtErreichbar => "app-pill--danger",
+            AutomatischePlanungKonfliktArt.MehrPflichtfaelleAlsFreieSlots => "app-pill--danger",
+            AutomatischePlanungKonfliktArt.FreelancerSollNichtErreichbar => "app-pill--warning",
+            AutomatischePlanungKonfliktArt.FreelancerDienstNichtKonfliktfreiVerteilbar => "app-pill--warning",
+            AutomatischePlanungKonfliktArt.BestehendePlanungKollidiertMitUrlaub => "app-pill--neutral",
+            _ => "app-pill--neutral"
         };
     }
 

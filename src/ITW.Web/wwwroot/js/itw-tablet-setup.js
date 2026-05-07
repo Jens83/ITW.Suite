@@ -29,7 +29,7 @@
             return;
         }
 
-        elements.statusBadge.className = `badge ${cssClass}`;
+        elements.statusBadge.className = `app-pill ${cssClass}`;
         elements.statusBadge.textContent = text;
     }
 
@@ -55,7 +55,7 @@
         }
 
         if (code.length !== 6) {
-            setStatus("QR-Code fehlt", "bg-danger");
+            setStatus("QR-Code fehlt", "app-pill--danger");
             setMessage(
                 "alert-danger",
                 "Der QR-Code ist ungültig oder abgelaufen. Bitte in der ITW-Suite einen neuen QR-Code erzeugen.");
@@ -65,7 +65,7 @@
 
         setupIsRunning = true;
 
-        setStatus("Einrichtung läuft", "bg-primary");
+        setStatus("Einrichtung läuft", "app-pill--accent");
         setMessage("alert-info", "Tablet wird eingerichtet...");
 
         try {
@@ -90,7 +90,7 @@
             }
 
             if (!response.ok || !result || result.success !== true) {
-                setStatus("Fehler", "bg-danger");
+                setStatus("Fehler", "app-pill--danger");
                 setMessage(
                     "alert-danger",
                     result && result.message
@@ -117,7 +117,7 @@
                 "itwTabletTracking.autoStart",
                 "true");
 
-            setStatus("Eingerichtet", "bg-success");
+            setStatus("Eingerichtet", "app-pill--success");
             setMessage("alert-success", "Tablet ist eingerichtet. Tracking wird geöffnet...");
 
             window.setTimeout(() => {
