@@ -34,7 +34,8 @@ public sealed class MitarbeiterUrlaubszeitraumRepository : IMitarbeiterUrlaubsze
         command.CommandText = """
             SELECT TOP (1)
                 Id, UserId, Von, Bis, Notiz, IstAktiv, ErstelltAmUtc, AktualisiertAmUtc,
-                Status, EingereichtVonUserId, Begruendung, Loesung, EntschiedenAm, EntschiedenVonUserId
+                Status, EingereichtVonUserId, Begruendung, Loesung, EntschiedenAm, EntschiedenVonUserId,
+                MitarbeiterBestaetigtAm
             FROM [Personnel].[MitarbeiterUrlaubszeitraum]
             WHERE Id = @Id;
             """;
@@ -67,7 +68,8 @@ public sealed class MitarbeiterUrlaubszeitraumRepository : IMitarbeiterUrlaubsze
         command.CommandText = """
             SELECT
                 Id, UserId, Von, Bis, Notiz, IstAktiv, ErstelltAmUtc, AktualisiertAmUtc,
-                Status, EingereichtVonUserId, Begruendung, Loesung, EntschiedenAm, EntschiedenVonUserId
+                Status, EingereichtVonUserId, Begruendung, Loesung, EntschiedenAm, EntschiedenVonUserId,
+                MitarbeiterBestaetigtAm
             FROM [Personnel].[MitarbeiterUrlaubszeitraum]
             WHERE UserId = @UserId
               AND IstAktiv = 1
@@ -99,11 +101,11 @@ public sealed class MitarbeiterUrlaubszeitraumRepository : IMitarbeiterUrlaubsze
         command.CommandText = """
             SELECT
                 Id, UserId, Von, Bis, Notiz, IstAktiv, ErstelltAmUtc, AktualisiertAmUtc,
-                Status, EingereichtVonUserId, Begruendung, Loesung, EntschiedenAm, EntschiedenVonUserId
+                Status, EingereichtVonUserId, Begruendung, Loesung, EntschiedenAm, EntschiedenVonUserId,
+                MitarbeiterBestaetigtAm
             FROM [Personnel].[MitarbeiterUrlaubszeitraum]
             WHERE UserId = @UserId
               AND IstAktiv = 1
-              AND Status IN (0, 1)
               AND Von <= @JahresEnde
               AND Bis >= @JahresStart
             ORDER BY Von, Bis;
@@ -126,7 +128,8 @@ public sealed class MitarbeiterUrlaubszeitraumRepository : IMitarbeiterUrlaubsze
         command.CommandText = """
             SELECT
                 Id, UserId, Von, Bis, Notiz, IstAktiv, ErstelltAmUtc, AktualisiertAmUtc,
-                Status, EingereichtVonUserId, Begruendung, Loesung, EntschiedenAm, EntschiedenVonUserId
+                Status, EingereichtVonUserId, Begruendung, Loesung, EntschiedenAm, EntschiedenVonUserId,
+                MitarbeiterBestaetigtAm
             FROM [Personnel].[MitarbeiterUrlaubszeitraum]
             WHERE IstAktiv = 1
               AND Status = 1
@@ -225,8 +228,9 @@ public sealed class MitarbeiterUrlaubszeitraumRepository : IMitarbeiterUrlaubsze
                     EingereichtVonUserId  = @EingereichtVonUserId,
                     Begruendung           = @Begruendung,
                     Loesung               = @Loesung,
-                    EntschiedenAm         = @EntschiedenAm,
-                    EntschiedenVonUserId  = @EntschiedenVonUserId
+                    EntschiedenAm            = @EntschiedenAm,
+                    EntschiedenVonUserId     = @EntschiedenVonUserId,
+                    MitarbeiterBestaetigtAm  = @MitarbeiterBestaetigtAm
                 WHERE Id = @Id;
             END
             ELSE
@@ -234,12 +238,14 @@ public sealed class MitarbeiterUrlaubszeitraumRepository : IMitarbeiterUrlaubsze
                 INSERT INTO [Personnel].[MitarbeiterUrlaubszeitraum]
                 (
                     Id, UserId, Von, Bis, Notiz, IstAktiv, ErstelltAmUtc, AktualisiertAmUtc,
-                    Status, EingereichtVonUserId, Begruendung, Loesung, EntschiedenAm, EntschiedenVonUserId
+                    Status, EingereichtVonUserId, Begruendung, Loesung, EntschiedenAm, EntschiedenVonUserId,
+                    MitarbeiterBestaetigtAm
                 )
                 VALUES
                 (
                     @Id, @UserId, @Von, @Bis, @Notiz, @IstAktiv, @ErstelltAmUtc, @AktualisiertAmUtc,
-                    @Status, @EingereichtVonUserId, @Begruendung, @Loesung, @EntschiedenAm, @EntschiedenVonUserId
+                    @Status, @EingereichtVonUserId, @Begruendung, @Loesung, @EntschiedenAm, @EntschiedenVonUserId,
+                    @MitarbeiterBestaetigtAm
                 );
             END
             """;
@@ -256,8 +262,9 @@ public sealed class MitarbeiterUrlaubszeitraumRepository : IMitarbeiterUrlaubsze
         AddParameter(command, "@EingereichtVonUserId", zeitraum.EingereichtVonUserId);
         AddParameter(command, "@Begruendung",          zeitraum.Begruendung);
         AddParameter(command, "@Loesung",              zeitraum.Loesung);
-        AddParameter(command, "@EntschiedenAm",        zeitraum.EntschiedenAm.HasValue ? zeitraum.EntschiedenAm.Value : DBNull.Value);
-        AddParameter(command, "@EntschiedenVonUserId", zeitraum.EntschiedenVonUserId);
+        AddParameter(command, "@EntschiedenAm",           zeitraum.EntschiedenAm.HasValue ? zeitraum.EntschiedenAm.Value : DBNull.Value);
+        AddParameter(command, "@EntschiedenVonUserId",    zeitraum.EntschiedenVonUserId);
+        AddParameter(command, "@MitarbeiterBestaetigtAm", zeitraum.MitarbeiterBestaetigtAm.HasValue ? zeitraum.MitarbeiterBestaetigtAm.Value : DBNull.Value);
 
         await command.ExecuteNonQueryAsync(cancellationToken);
     }
@@ -278,6 +285,36 @@ public sealed class MitarbeiterUrlaubszeitraumRepository : IMitarbeiterUrlaubsze
             """,
             [id],
             cancellationToken);
+    }
+
+    public async Task<int> GetAnzahlUnbestaetigenEntscheideAsync(
+        string userId,
+        CancellationToken cancellationToken = default)
+    {
+        if (string.IsNullOrWhiteSpace(userId))
+        {
+            return 0;
+        }
+
+        var connection = _dbContext.Database.GetDbConnection();
+        await EnsureOpenAsync(connection, cancellationToken);
+
+        await using var command = connection.CreateCommand();
+        command.CommandText = """
+            SELECT COUNT(*)
+            FROM [Personnel].[MitarbeiterUrlaubszeitraum]
+            WHERE UserId = @UserId
+              AND IstAktiv = 1
+              AND Status IN (0, 2)
+              AND EntschiedenAm IS NOT NULL
+              AND EingereichtVonUserId IS NOT NULL
+              AND MitarbeiterBestaetigtAm IS NULL;
+            """;
+
+        AddParameter(command, "@UserId", userId.Trim());
+
+        var scalar = await command.ExecuteScalarAsync(cancellationToken);
+        return scalar is int count ? count : Convert.ToInt32(scalar);
     }
 
     public Task SaveChangesAsync(CancellationToken cancellationToken = default)
@@ -315,8 +352,9 @@ public sealed class MitarbeiterUrlaubszeitraumRepository : IMitarbeiterUrlaubsze
             EingereichtVonUserId = reader.IsDBNull(9)  ? null : reader.GetString(9),
             Begruendung          = reader.IsDBNull(10) ? null : reader.GetString(10),
             Loesung              = reader.IsDBNull(11) ? null : reader.GetString(11),
-            EntschiedenAm        = reader.IsDBNull(12) ? null : reader.GetFieldValue<DateTimeOffset>(12),
-            EntschiedenVonUserId = reader.IsDBNull(13) ? null : reader.GetString(13)
+            EntschiedenAm            = reader.IsDBNull(12) ? null : reader.GetFieldValue<DateTimeOffset>(12),
+            EntschiedenVonUserId     = reader.IsDBNull(13) ? null : reader.GetString(13),
+            MitarbeiterBestaetigtAm  = reader.IsDBNull(14) ? null : reader.GetFieldValue<DateTimeOffset>(14)
         };
     }
 

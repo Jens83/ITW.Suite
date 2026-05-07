@@ -36,6 +36,8 @@ public sealed class UrlaubsplanerIndexViewModel
 
     public bool AnspruchIstStandardwert { get; set; }
 
+    public int AnzahlAusstehend { get; set; }
+
     public bool HatMitarbeiterAuswahl => !string.IsNullOrWhiteSpace(AusgewaehlterUserId);
 
     public IReadOnlyList<SelectListItem> MitarbeiterOptionen { get; set; } = Array.Empty<SelectListItem>();

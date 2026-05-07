@@ -18,6 +18,8 @@ public sealed class MitarbeiterUrlaubViewModel
     public bool AnspruchIstStandardwert { get; init; }
     public bool KannUrlaub { get; init; }
 
+    public int AnzahlUnbestaetigt { get; init; }
+
     public IReadOnlyList<MitarbeiterUrlaubAntragViewModel> Antraege { get; init; } = [];
 }
 
@@ -29,9 +31,10 @@ public sealed class MitarbeiterUrlaubAntragViewModel
     public int     Urlaubstage { get; init; }
     public string? Notiz       { get; init; }
 
-    public UrlaubszeitraumStatus Status      { get; init; }
-    public string?               Begruendung { get; init; }
-    public string?               Loesung     { get; init; }
+    public UrlaubszeitraumStatus Status          { get; init; }
+    public string?               Begruendung    { get; init; }
+    public string?               Loesung        { get; init; }
+    public bool                  MussBestaetigt { get; init; }
 
     public string StatusText => Status switch
     {

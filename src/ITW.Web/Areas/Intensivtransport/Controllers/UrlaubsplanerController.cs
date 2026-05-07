@@ -94,12 +94,15 @@ public sealed class UrlaubsplanerController : BereichsControllerBase
         }
 
         var mitarbeiterResult = await _readItwMitarbeiterprofileService.ExecuteAsync(cancellationToken);
+        var ausstehend        = await _urlaubszeitraumRepository.GetAllAusstehendAsync(cancellationToken);
 
         var viewModel = await BaueViewModelAsync(
             mitarbeiterResult,
             userId,
             jahr ?? _dateTimeProvider.Today.Year,
             cancellationToken);
+
+        viewModel.AnzahlAusstehend = ausstehend.Count;
 
         return BereichsView("Index", viewModel);
     }

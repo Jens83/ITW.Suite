@@ -57,7 +57,8 @@ public sealed class PersonnelUrlaubSchemaBootstrapper
                     [Begruendung] NVARCHAR(1000) NULL,
                     [Loesung] NVARCHAR(500) NULL,
                     [EntschiedenAm] DATETIMEOFFSET NULL,
-                    [EntschiedenVonUserId] NVARCHAR(256) NULL
+                    [EntschiedenVonUserId] NVARCHAR(256) NULL,
+                    [MitarbeiterBestaetigtAm] DATETIMEOFFSET NULL
                 );
 
                 CREATE INDEX [IX_MitarbeiterUrlaubszeitraum_UserId_Von_Bis]
@@ -81,6 +82,9 @@ public sealed class PersonnelUrlaubSchemaBootstrapper
 
             IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id = OBJECT_ID(N'[Personnel].[MitarbeiterUrlaubszeitraum]') AND name = N'EntschiedenVonUserId')
                 ALTER TABLE [Personnel].[MitarbeiterUrlaubszeitraum] ADD [EntschiedenVonUserId] NVARCHAR(256) NULL;
+
+            IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id = OBJECT_ID(N'[Personnel].[MitarbeiterUrlaubszeitraum]') AND name = N'MitarbeiterBestaetigtAm')
+                ALTER TABLE [Personnel].[MitarbeiterUrlaubszeitraum] ADD [MitarbeiterBestaetigtAm] DATETIMEOFFSET NULL;
             """,
             cancellationToken);
     }

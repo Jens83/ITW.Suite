@@ -1,4 +1,5 @@
 @using ITW.Application.Organisation.Contracts
+@using ITW.Application.Personnel.Urlaub.Contracts
 @using ITW.Application.Users.CountOffenePasswortResetAnfragen
 @using ITW.Dienstplan.Application.Contracts
 @using ITW.Web.Security.PasswordReset
@@ -6,6 +7,7 @@
 @inject ITW.Web.Security.CurrentUser.ICurrentUserContextAccessor CurrentUserContextAccessor
 @inject CountOffenePasswortResetAnfragenService CountOffenePasswortResetAnfragenService
 @inject IDienstplanPeriodeRepository DienstplanPeriodeRepository
+@inject IMitarbeiterUrlaubszeitraumRepository UrlaubszeitraumRepository
 
 @{
     var areaName = ViewContext.RouteData.Values["area"]?.ToString();
@@ -45,6 +47,17 @@
         offeneDienstplanPerioden = await DienstplanPeriodeRepository.CountOffeneAsync();
     }
 
+    var urlaubsBadgeAnzahl = 0;
+
+    if (aktuellerBereich == OrganisationsbereichCode.Intensivtransport &&
+        currentUserLookup.IsSuccess &&
+        currentUserLookup.CurrentUser is not null &&
+        currentUserLookup.CurrentUser.Rolle == BereichsrolleCode.Mitarbeiter)
+    {
+        urlaubsBadgeAnzahl = await UrlaubszeitraumRepository.GetAnzahlUnbestaetigenEntscheideAsync(
+            currentUserLookup.CurrentUser.UserId);
+    }
+
     var istPasswortResetAktiv =
         string.Equals(aktuellerController, "PasswortReset", StringComparison.OrdinalIgnoreCase) &&
         string.Equals(aktuelleAction, "Index", StringComparison.OrdinalIgnoreCase);
@@ -76,6 +89,9 @@
                     string.Equals(eintrag.Controller, "Dienstplan", StringComparison.OrdinalIgnoreCase) &&
                     string.Equals(eintrag.Action, "Index", StringComparison.OrdinalIgnoreCase);
 
+                var istMeinUrlaubEintrag =
+                    string.Equals(eintrag.Controller, "MitarbeiterUrlaub", StringComparison.OrdinalIgnoreCase);
+
                 <a class="itw-dg-item @(eintrag.IstAktiv ? "active" : "")"
                    asp-area="@eintrag.Area"
                    asp-controller="@eintrag.Controller"
@@ -85,6 +101,10 @@
                     @if (istDienstplanEintrag && offeneDienstplanPerioden > 0)
                     {
                         <span class="itw-dg-badge">@offeneDienstplanPerioden</span>
+                    }
+                    @if (istMeinUrlaubEintrag && urlaubsBadgeAnzahl > 0)
+                    {
+                        <span class="itw-dg-badge itw-dg-badge--err">@urlaubsBadgeAnzahl</span>
                     }
                 </a>
             }

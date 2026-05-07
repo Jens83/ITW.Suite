@@ -23,6 +23,7 @@ public static class WebPersonnelServiceRegistrationExtensions
         services.AddScoped<ReadMitarbeiterUrlaubsplanerService>();
         services.AddScoped<EinreichenUrlaubsAntragService>();
         services.AddScoped<EntscheidenUrlaubsAntragService>();
+        services.AddScoped<BestaetigenUrlaubsEntscheidungService>();
         services.AddScoped<ReadWachleiterUrlaubsUebersichtService>();
 
         services.AddScoped<ReadMitarbeiterDokumenteService>();

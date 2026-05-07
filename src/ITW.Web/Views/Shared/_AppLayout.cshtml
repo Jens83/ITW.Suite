@@ -49,6 +49,7 @@
     <title>@(string.IsNullOrWhiteSpace(ViewData["Title"]?.ToString()) ? meta.TitelSuffix : $"{ViewData["Title"]} – {meta.TitelSuffix}")</title>
 
     <partial name="~/Views/Shared/Komponenten/_AppHeadResources.cshtml" />
+    @await RenderSectionAsync("Styles", required: false)
 </head>
 <body class="@appShellModel.ThemeCssClass app-loading-boot">
     <partial name="~/Views/Shared/Komponenten/_AppLoadingOverlay.cshtml" />

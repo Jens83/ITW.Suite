@@ -9,6 +9,17 @@
     <app-page-header title="@Model.Titel"
                      description="@Model.Beschreibung" />
 
+    @if (Model.AnzahlUnbestaetigt > 0)
+    {
+        <div class="app-callout app-callout--warning">
+            <i class="bi bi-bell-fill app-callout__icon"></i>
+            <div class="app-callout__body">
+                <strong>@Model.AnzahlUnbestaetigt @(Model.AnzahlUnbestaetigt == 1 ? "Urlaubsantrag wurde" : "Urlaubsanträge wurden") entschieden</strong>
+                — bitte prüfe den Status und bestätige die Entscheidung unten.
+            </div>
+        </div>
+    }
+
     @if (Model.KannUrlaub)
     {
         <section class="itw-vehicle-detail-kpis">
@@ -131,12 +142,13 @@
                                 <th class="text-center">Tage</th>
                                 <th>Status</th>
                                 <th>Notiz / Begründung</th>
+                                <th class="app-table__col-action"></th>
                             </tr>
                         </thead>
                         <tbody>
                             @foreach (var antrag in Model.Antraege)
                             {
-                                <tr>
+                                <tr class="@(antrag.MussBestaetigt ? "table-warning" : "")">
                                     <td class="text-nowrap">
                                         <strong>@antrag.VonAnzeige</strong> – @antrag.BisAnzeige
                                     </td>
@@ -163,6 +175,22 @@
                                                     @antrag.Loesung
                                                 </div>
                                             }
+                                        }
+                                    </td>
+                                    <td>
+                                        @if (antrag.MussBestaetigt)
+                                        {
+                                            <form asp-action="Bestaetigen" method="post">
+                                                @Html.AntiForgeryToken()
+                                                <input type="hidden" name="zeitraumId" value="@antrag.Id" />
+                                                <button type="submit"
+                                                        class="app-btn app-btn-sm app-btn-accent"
+                                                        data-app-loading-form
+                                                        data-app-loading-text="Wird bestätigt...">
+                                                    <i class="bi bi-check2-circle"></i>
+                                                    Bestätigen
+                                                </button>
+                                            </form>
                                         }
                                     </td>
                                 </tr>

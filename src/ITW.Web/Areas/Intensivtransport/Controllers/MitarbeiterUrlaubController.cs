@@ -20,12 +20,14 @@ public sealed class MitarbeiterUrlaubController : BereichsControllerBase
 
     private readonly ReadMitarbeiterUrlaubsplanerService _readService;
     private readonly EinreichenUrlaubsAntragService _einreichenService;
+    private readonly BestaetigenUrlaubsEntscheidungService _bestaetigenService;
     private readonly ReadItwMitarbeiterprofileService _profileService;
     private readonly IDateTimeProvider _dateTimeProvider;
 
     public MitarbeiterUrlaubController(
         ReadMitarbeiterUrlaubsplanerService readService,
         EinreichenUrlaubsAntragService einreichenService,
+        BestaetigenUrlaubsEntscheidungService bestaetigenService,
         ReadItwMitarbeiterprofileService profileService,
         IDateTimeProvider dateTimeProvider,
         ICurrentUserContextAccessor currentUserContextAccessor)
@@ -36,6 +38,9 @@ public sealed class MitarbeiterUrlaubController : BereichsControllerBase
 
         ArgumentNullException.ThrowIfNull(einreichenService);
         _einreichenService = einreichenService;
+
+        ArgumentNullException.ThrowIfNull(bestaetigenService);
+        _bestaetigenService = bestaetigenService;
 
         ArgumentNullException.ThrowIfNull(profileService);
         _profileService = profileService;
@@ -74,6 +79,23 @@ public sealed class MitarbeiterUrlaubController : BereichsControllerBase
             .Where(z => z.Status == UrlaubszeitraumStatus.Ausstehend)
             .Sum(z => z.Urlaubstage);
 
+        var antraege = readResult.Zeitraeume
+            .Select(z => new MitarbeiterUrlaubAntragViewModel
+            {
+                Id             = z.Id,
+                VonAnzeige     = z.Von.ToString("dd.MM.yyyy"),
+                BisAnzeige     = z.Bis.ToString("dd.MM.yyyy"),
+                Urlaubstage    = z.Urlaubstage,
+                Notiz          = z.Notiz,
+                Status         = z.Status,
+                Begruendung    = z.Begruendung,
+                Loesung        = z.Loesung,
+                MussBestaetigt = z.Status != UrlaubszeitraumStatus.Ausstehend
+                              && z.EingereichtVonUserId is not null
+                              && !z.MitarbeiterBestaetigtAm.HasValue
+            })
+            .ToList();
+
         var viewModel = new MitarbeiterUrlaubViewModel
         {
             AusgewaehltesJahr       = ausgewaehltesJahr,
@@ -86,19 +108,8 @@ public sealed class MitarbeiterUrlaubController : BereichsControllerBase
             Resturlaubstage         = readResult.Resturlaubstage,
             AnspruchIstStandardwert = readResult.AnspruchIstStandardwert,
             KannUrlaub              = kannUrlaub,
-            Antraege = readResult.Zeitraeume
-                .Select(z => new MitarbeiterUrlaubAntragViewModel
-                {
-                    Id          = z.Id,
-                    VonAnzeige  = z.Von.ToString("dd.MM.yyyy"),
-                    BisAnzeige  = z.Bis.ToString("dd.MM.yyyy"),
-                    Urlaubstage = z.Urlaubstage,
-                    Notiz       = z.Notiz,
-                    Status      = z.Status,
-                    Begruendung = z.Begruendung,
-                    Loesung     = z.Loesung
-                })
-                .ToList()
+            AnzahlUnbestaetigt      = antraege.Count(a => a.MussBestaetigt),
+            Antraege                = antraege
         };
 
         return BereichsView(viewModel);
@@ -144,6 +155,32 @@ public sealed class MitarbeiterUrlaubController : BereichsControllerBase
         else
         {
             TempData[FlashKeys.Success] = "Dein Urlaubsantrag wurde eingereicht und wartet auf Genehmigung.";
+        }
+
+        return RedirectToAction(nameof(Index));
+    }
+
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> Bestaetigen(Guid zeitraumId, CancellationToken cancellationToken)
+    {
+        var zugriff = await PruefeMitarbeiterzugriffAsync(cancellationToken);
+        if (zugriff.EarlyResult is not null)
+        {
+            return zugriff.EarlyResult;
+        }
+
+        var userId  = zugriff.CurrentUser!.UserId;
+        var profil  = await LadeProfilAsync(userId, cancellationToken);
+        var name    = profil?.AnzeigeName ?? userId;
+
+        var (isSuccess, errorMessage) = await _bestaetigenService.ExecuteAsync(
+            new BestaetigenUrlaubsEntscheidungCommand(zeitraumId, userId, name),
+            cancellationToken);
+
+        if (!isSuccess)
+        {
+            TempData[FlashKeys.Error] = errorMessage ?? "Die Bestätigung konnte nicht gespeichert werden.";
         }
 
         return RedirectToAction(nameof(Index));

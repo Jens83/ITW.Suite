@@ -33,4 +33,6 @@ public sealed class MitarbeiterUrlaubszeitraum
     public DateTimeOffset? EntschiedenAm { get; set; }
 
     public string? EntschiedenVonUserId { get; set; }
+
+    public DateTimeOffset? MitarbeiterBestaetigtAm { get; set; }
 }

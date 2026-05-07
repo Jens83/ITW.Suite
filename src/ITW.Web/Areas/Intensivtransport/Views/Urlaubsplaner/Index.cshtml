@@ -29,15 +29,26 @@
         </div>
 
         <div class="app-vacation-hero__actions">
-            <a asp-area="Intensivtransport"
-               asp-controller="DienstplanWachleiter"
-               asp-action="Index"
-               class="app-btn app-btn-neutral"
-               data-app-loading-link
-               data-app-loading-text="Dienstplan wird geöffnet...">
-                <i class="bi bi-arrow-left"></i>
-                Zurück
-            </a>
+            @if (Model.AnzahlAusstehend > 0)
+            {
+                <a asp-action="Antraege"
+                   class="app-btn app-btn-accent"
+                   data-app-loading-link
+                   data-app-loading-text="Anträge werden geladen...">
+                    <i class="bi bi-inbox"></i>
+                    @Model.AnzahlAusstehend @(Model.AnzahlAusstehend == 1 ? "Antrag" : "Anträge") offen
+                </a>
+            }
+            else
+            {
+                <a asp-action="Antraege"
+                   class="app-btn app-btn-outline-accent"
+                   data-app-loading-link
+                   data-app-loading-text="Anträge werden geladen...">
+                    <i class="bi bi-calendar-check"></i>
+                    Urlaubsanträge
+                </a>
+            }
         </div>
     </header>
 

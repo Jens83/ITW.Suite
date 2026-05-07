@@ -23,9 +23,11 @@ public sealed class ReadMitarbeiterUrlaubsplanerZeitraumDto
     public int    Urlaubstage { get; init; }
     public string? Notiz      { get; init; }
 
-    public UrlaubszeitraumStatus Status      { get; init; }
-    public string?               Begruendung { get; init; }
-    public string?               Loesung     { get; init; }
+    public UrlaubszeitraumStatus Status               { get; init; }
+    public string?               Begruendung          { get; init; }
+    public string?               Loesung              { get; init; }
+    public string?               EingereichtVonUserId { get; init; }
+    public DateTimeOffset?       MitarbeiterBestaetigtAm { get; init; }
 }
 
 public sealed class ReadMitarbeiterUrlaubsplanerResult
@@ -174,10 +176,12 @@ public sealed class ReadMitarbeiterUrlaubsplanerService
                 Von         = x.Von,
                 Bis         = x.Bis,
                 Urlaubstage = ZaehleUrlaubstage(x.Von, x.Bis, query.Jahr),
-                Notiz       = x.Notiz,
-                Status      = x.Status,
-                Begruendung = x.Begruendung,
-                Loesung     = x.Loesung
+                Notiz                   = x.Notiz,
+                Status                  = x.Status,
+                Begruendung             = x.Begruendung,
+                Loesung                 = x.Loesung,
+                EingereichtVonUserId    = x.EingereichtVonUserId,
+                MitarbeiterBestaetigtAm = x.MitarbeiterBestaetigtAm
             })
             .ToArray();
 
