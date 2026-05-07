@@ -23,15 +23,6 @@
         .OrderBy(x => x.FaelligAm)
         .FirstOrDefault();
 
-    var pruefstatusText =
-        ueberfaelligePruefungen > 0
-            ? $"{ueberfaelligePruefungen} überfällig"
-            : baldFaelligePruefungen > 0
-                ? $"{baldFaelligePruefungen} bald fällig"
-                : nichtHinterlegtePruefungen == pruefungen.Count
-                    ? "Nicht hinterlegt"
-                    : "In Ordnung";
-
     var pruefstatusBadgeCss =
         ueberfaelligePruefungen > 0
             ? "app-pill--danger"
@@ -40,6 +31,15 @@
                 : nichtHinterlegtePruefungen == pruefungen.Count
                     ? "app-pill--neutral"
                     : "app-pill--success";
+
+    var pruefstatusText =
+        ueberfaelligePruefungen > 0
+            ? $"{ueberfaelligePruefungen} überfällig"
+            : baldFaelligePruefungen > 0
+                ? $"{baldFaelligePruefungen} bald fällig"
+                : nichtHinterlegtePruefungen == pruefungen.Count
+                    ? "Nicht hinterlegt"
+                    : "In Ordnung";
 }
 
 <div class="app-page itw-vehicle-detail-page">
@@ -59,15 +59,6 @@
                 <i class="bi bi-arrow-left"></i>
                 Zurück
             </a>
-
-            <a asp-action="Bearbeiten"
-               asp-route-id="@Model.FahrzeugId"
-               class="app-btn app-btn-accent"
-               data-app-loading-link
-               data-app-loading-text="Stammdaten werden geöffnet...">
-                <i class="bi bi-pencil-square"></i>
-                Stammdaten
-            </a>
         </div>
     </header>
 
@@ -84,8 +75,8 @@
                     ["AutoHide"] = true,
                     ["AutoHideMilliseconds"] = 4500
                 })
-    </div>
-        }
+        </div>
+    }
 
     <div class="app-employee-detail-grid">
         <aside class="app-employee-detail-sidebar">
@@ -94,38 +85,6 @@
         </aside>
 
         <div class="app-employee-detail-content">
-            <section class="itw-vehicle-detail-hero">
-                <div class="itw-vehicle-detail-hero__main">
-                    <div class="itw-vehicle-detail-hero__icon">
-                        <i class="bi bi-truck-front"></i>
-                    </div>
-
-                    <div>
-                        <div class="itw-vehicle-detail-hero__eyebrow">
-                            Operative Fahrzeugakte
-                        </div>
-
-                        <h2 class="itw-vehicle-detail-hero__title">
-                            @Model.Kennzeichen
-                        </h2>
-
-                        <p class="itw-vehicle-detail-hero__text">
-                            @Model.InterneNummer · @Model.FahrzeugnameText
-                        </p>
-                    </div>
-                </div>
-
-                <div class="itw-vehicle-detail-hero__badges">
-                    <span class="app-pill @Model.StatusBadgeCssClass">
-                        @Model.StatusText
-                    </span>
-
-                    <span class="app-pill @pruefstatusBadgeCss">
-                        Prüfstatus: @pruefstatusText
-                    </span>
-                </div>
-            </section>
-
             <section class="itw-vehicle-detail-kpis">
                 <article class="itw-vehicle-detail-kpi">
                     <span class="itw-vehicle-detail-kpi__label">Kilometerstand</span>
@@ -144,80 +103,24 @@
                 </article>
 
                 <article class="itw-vehicle-detail-kpi">
-                    <span class="itw-vehicle-detail-kpi__label">Tankbelege</span>
-                    <strong class="itw-vehicle-detail-kpi__value">@tankbelege.Count</strong>
-                    <span class="itw-vehicle-detail-kpi__hint">hochgeladen</span>
+                    <span class="itw-vehicle-detail-kpi__label">Prüfstatus</span>
+                    <strong class="itw-vehicle-detail-kpi__value">
+                        <span class="app-pill @pruefstatusBadgeCss">@pruefstatusText</span>
+                    </strong>
+                    <span class="itw-vehicle-detail-kpi__hint">Gesamtstatus</span>
                 </article>
             </section>
 
-            <section class="itw-vehicle-quick-actions">
-                <a asp-action="Fahrtenbuch"
-                   asp-route-id="@Model.FahrzeugId"
-                   class="itw-vehicle-quick-action"
-                   data-app-loading-link
-                   data-app-loading-text="Fahrtenbuch wird geöffnet...">
-                    <i class="bi bi-signpost-split"></i>
-                    <span>
-                        <strong>Fahrtenbuch</strong>
-                        <small>Fahrten und Kilometer erfassen</small>
-                    </span>
-                </a>
-
-                <a asp-action="Tankbelege"
-                   asp-route-id="@Model.FahrzeugId"
-                   class="itw-vehicle-quick-action"
-                   data-app-loading-link
-                   data-app-loading-text="Tankbelege werden geöffnet...">
-                    <i class="bi bi-fuel-pump"></i>
-                    <span>
-                        <strong>Tankbelege</strong>
-                        <small>Belege hochladen und einsehen</small>
-                    </span>
-                </a>
-
-                <a asp-action="Pruefstatus"
-                   asp-route-id="@Model.FahrzeugId"
-                   class="itw-vehicle-quick-action"
-                   data-app-loading-link
-                   data-app-loading-text="Prüfstatus wird geöffnet...">
-                    <i class="bi bi-shield-check"></i>
-                    <span>
-                        <strong>Prüfstatus</strong>
-                        <small>HU/AU, Sicherheit, Service</small>
-                    </span>
-                </a>
-
-                <a asp-action="Bearbeiten"
-                   asp-route-id="@Model.FahrzeugId"
-                   class="itw-vehicle-quick-action"
-                   data-app-loading-link
-                   data-app-loading-text="Stammdaten werden geöffnet...">
-                    <i class="bi bi-pencil-square"></i>
-                    <span>
-                        <strong>Stammdaten</strong>
-                        <small>Status und Basisdaten pflegen</small>
-                    </span>
-                </a>
-            </section>
-
-            <section class="app-employee-card">
-                <header class="app-employee-card__header app-employee-card__header--row">
-                    <div>
-                        <h2 class="app-employee-card__title">
-                            <i class="bi bi-info-circle"></i>
-                            Fahrzeugdaten
-                        </h2>
-                        <p class="app-employee-card__text">
-                            Die wichtigsten operativen Stammdaten.
-                        </p>
+            <section class="app-surface">
+                <div class="app-surface__header">
+                    <div class="app-surface__heading">
+                        <h2 class="app-surface__title">Fahrzeugdaten</h2>
+                        <p class="app-surface__text">Operative Stammdaten des Fahrzeugs.</p>
                     </div>
+                    <span class="app-pill @Model.StatusBadgeCssClass">@Model.StatusText</span>
+                </div>
 
-                    <span class="app-pill @Model.StatusBadgeCssClass">
-                        @Model.StatusText
-                    </span>
-                </header>
-
-                <div class="app-employee-card__body app-employee-card__body--soft">
+                <div class="app-surface__body app-surface__body--soft">
                     <div class="app-employee-detail-data-grid">
                         <div class="app-employee-detail-field">
                             <label class="app-employee-detail-field__label">Interne Nummer / Funkrufname</label>
@@ -264,19 +167,15 @@
                 </div>
             </section>
 
-            <section class="app-employee-card">
-                <header class="app-employee-card__header app-employee-card__header--row">
-                    <div>
-                        <h2 class="app-employee-card__title">
-                            <i class="bi bi-shield-check"></i>
-                            Prüfstatus
-                        </h2>
-                        <p class="app-employee-card__text">
-                            HU/AU, Sicherheitsprüfungen und Service auf einen Blick.
-                        </p>
+            <section class="app-surface">
+                <div class="app-surface__header">
+                    <div class="app-surface__heading">
+                        <h2 class="app-surface__title">Prüfstatus</h2>
+                        <p class="app-surface__text">HU/AU, Sicherheitsprüfungen und Service auf einen Blick.</p>
                     </div>
 
-                    <a asp-action="Pruefstatus"
+                    <a asp-controller="FahrzeugPruefungen"
+                       asp-action="Pruefstatus"
                        asp-route-id="@Model.FahrzeugId"
                        class="app-btn app-btn-sm app-btn-outline-accent"
                        data-app-loading-link
@@ -284,20 +183,22 @@
                         <i class="bi bi-pencil-square"></i>
                         Pflegen
                     </a>
-                </header>
+                </div>
 
-                <div class="app-employee-card__body">
+                <div class="app-surface__body--table">
                     @if (pruefungen.Count == 0)
                     {
-                        <div class="app-empty-state">
-                            <div class="app-empty-state__icon">
-                                <i class="bi bi-shield-exclamation"></i>
-                            </div>
-                            <div class="app-empty-state__body">
-                                <h3 class="app-empty-state__title">Noch kein Prüfstatus hinterlegt</h3>
-                                <p class="app-empty-state__text">
-                                    Hinterlege HU/AU, Sicherheitsprüfungen und Service, damit der Wachleiter die Fälligkeiten sieht.
-                                </p>
+                        <div class="app-surface__body">
+                            <div class="app-empty-state">
+                                <div class="app-empty-state__icon">
+                                    <i class="bi bi-shield-exclamation"></i>
+                                </div>
+                                <div class="app-empty-state__body">
+                                    <h3 class="app-empty-state__title">Noch kein Prüfstatus hinterlegt</h3>
+                                    <p class="app-empty-state__text">
+                                        Hinterlege HU/AU, Sicherheitsprüfungen und Service, damit der Wachleiter die Fälligkeiten sieht.
+                                    </p>
+                                </div>
                             </div>
                         </div>
                     }
@@ -321,9 +222,7 @@
                                                 <strong>@pruefung.TypText</strong>
                                                 @if (!string.IsNullOrWhiteSpace(pruefung.Bemerkung) && pruefung.Bemerkung != "-")
                                                 {
-                                                    <div class="text-muted small">
-                                                        @pruefung.BemerkungText
-                                                    </div>
+                                                    <div class="text-muted small">@pruefung.BemerkungText</div>
                                                 }
                                             </td>
                                             <td>@pruefung.FaelligAmText</td>
@@ -342,19 +241,15 @@
                 </div>
             </section>
 
-            <section class="app-employee-card">
-                <header class="app-employee-card__header app-employee-card__header--row">
-                    <div>
-                        <h2 class="app-employee-card__title">
-                            <i class="bi bi-fuel-pump-fill"></i>
-                            Letzte Tankbelege
-                        </h2>
-                        <p class="app-employee-card__text">
-                            Nur Belege. Liter, Kosten und spätere Auswertungen gehören nicht in die Wachleiterakte.
-                        </p>
+            <section class="app-surface">
+                <div class="app-surface__header">
+                    <div class="app-surface__heading">
+                        <h2 class="app-surface__title">Letzte Tankbelege</h2>
+                        <p class="app-surface__text">Hochgeladene Belege der letzten Tankvorgänge.</p>
                     </div>
 
-                    <a asp-action="Tankbelege"
+                    <a asp-controller="FahrzeugDokumente"
+                       asp-action="Tankbelege"
                        asp-route-id="@Model.FahrzeugId"
                        class="app-btn app-btn-sm app-btn-outline-accent"
                        data-app-loading-link
@@ -362,9 +257,9 @@
                         <i class="bi bi-folder2-open"></i>
                         Alle anzeigen
                     </a>
-                </header>
+                </div>
 
-                <div class="app-employee-card__body">
+                <div class="app-surface__body">
                     @if (tankbelege.Count == 0)
                     {
                         <div class="app-empty-state">
@@ -399,15 +294,15 @@
                                         Datei: @dokument.Dateiname
                                     </div>
 
-                                    <div class="app-employee-doc-card__actions gap-2">
-                                        <a asp-action="DokumentHerunterladen"
+                                    <div class="app-employee-doc-card__actions">
+                                        <a asp-controller="FahrzeugDokumente"
+                                           asp-action="DokumentHerunterladen"
                                            asp-route-id="@Model.FahrzeugId"
                                            asp-route-dokumentId="@dokument.DokumentId"
                                            class="app-btn app-btn-sm app-btn-outline-accent justify-content-center"
                                            data-app-loading-link
                                            data-app-loading-download="true"
-                                           data-app-loading-text="Tankbeleg wird geladen..."
-                                           title="Herunterladen">
+                                           data-app-loading-text="Tankbeleg wird geladen...">
                                             <i class="bi bi-download"></i>
                                             <span>Herunterladen</span>
                                         </a>
@@ -430,8 +325,9 @@
                                         Es sind @(tankbelege.Count - 3) weitere Tankbelege vorhanden.
                                     </div>
 
-                                    <div class="app-employee-doc-card__actions gap-2">
-                                        <a asp-action="Tankbelege"
+                                    <div class="app-employee-doc-card__actions">
+                                        <a asp-controller="FahrzeugDokumente"
+                                           asp-action="Tankbelege"
                                            asp-route-id="@Model.FahrzeugId"
                                            class="app-btn app-btn-sm app-btn-accent justify-content-center"
                                            data-app-loading-link

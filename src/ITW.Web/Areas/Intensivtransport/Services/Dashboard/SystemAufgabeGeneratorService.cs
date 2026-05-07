@@ -1,6 +1,8 @@
 using ITW.Application.Aufgaben;
 using ITW.Application.Organisation.Contracts;
 using ITW.Dienstplan.Application.Contracts;
+using ITW.Fahrzeugmanagement.Application.Contracts;
+using ITW.Fahrzeugmanagement.Domain.Enums;
 
 namespace ITW.Web.Areas.Intensivtransport.Services.Dashboard;
 
@@ -8,24 +10,43 @@ public sealed class SystemAufgabeGeneratorService
 {
     private readonly IDienstplanPeriodeRepository _perioden;
     private readonly IAufgabeRepository _aufgaben;
+    private readonly IFahrzeugRepository _fahrzeuge;
+    private readonly IFahrzeugPruefungRepository _pruefungen;
 
     public SystemAufgabeGeneratorService(
         IDienstplanPeriodeRepository perioden,
-        IAufgabeRepository aufgaben)
+        IAufgabeRepository aufgaben,
+        IFahrzeugRepository fahrzeuge,
+        IFahrzeugPruefungRepository pruefungen)
     {
         ArgumentNullException.ThrowIfNull(perioden);
-        ArgumentNullException.ThrowIfNull(aufgaben);
         _perioden = perioden;
+        ArgumentNullException.ThrowIfNull(aufgaben);
         _aufgaben = aufgaben;
+        ArgumentNullException.ThrowIfNull(fahrzeuge);
+        _fahrzeuge = fahrzeuge;
+        ArgumentNullException.ThrowIfNull(pruefungen);
+        _pruefungen = pruefungen;
     }
 
     public async Task AktualisierenAsync(CancellationToken cancellationToken = default)
     {
-        var allePerioden = await _perioden.GetAlleAsync(cancellationToken);
-        var jetzt        = DateTimeOffset.UtcNow;
-        var heute        = DateOnly.FromDateTime(DateTime.Today);
+        var jetzt = DateTimeOffset.UtcNow;
+        var heute = DateOnly.FromDateTime(DateTime.Today);
 
-        // Only consider periods within a relevant window (past 2 months + future 2 months)
+        await GeneriereDisenstplanAufgabenAsync(heute, jetzt, cancellationToken);
+        await GenerierefahrzeugpruefungAufgabenAsync(heute, jetzt, cancellationToken);
+
+        await _aufgaben.SaveChangesAsync(cancellationToken);
+    }
+
+    private async Task GeneriereDisenstplanAufgabenAsync(
+        DateOnly heute,
+        DateTimeOffset jetzt,
+        CancellationToken cancellationToken)
+    {
+        var allePerioden = await _perioden.GetAlleAsync(cancellationToken);
+
         var fensterende = heute.AddMonths(2);
         var fensterbeginn = heute.AddMonths(-2);
 
@@ -43,13 +64,8 @@ public sealed class SystemAufgabeGeneratorService
             var periodStart = new DateOnly(periode.Jahr, periode.Monat, 1);
 
             if (periode.WunschphaseIstOffen)
-            {
-                // Wunschphase is open: nothing to prompt, users are entering wishes
                 continue;
-            }
 
-            // Wunschphase is closed and plan not released:
-            // Suggest freigeben only if the period is current or past
             if (periodStart <= heute.AddDays(7))
             {
                 var schluessel = $"itw:plan-freigeben:{periode.Id}";
@@ -69,7 +85,6 @@ public sealed class SystemAufgabeGeneratorService
             }
             else
             {
-                // Future period, Wunschphase not yet opened
                 var schluessel = $"itw:wunschphase-oeffnen:{periode.Id}";
                 if (!await _aufgaben.ExistiertOffeneSystemaufgabeAsync(schluessel, cancellationToken))
                 {
@@ -87,7 +102,58 @@ public sealed class SystemAufgabeGeneratorService
                 }
             }
         }
+    }
 
-        await _aufgaben.SaveChangesAsync(cancellationToken);
+    private async Task GenerierefahrzeugpruefungAufgabenAsync(
+        DateOnly heute,
+        DateTimeOffset jetzt,
+        CancellationToken cancellationToken)
+    {
+        var alleFahrzeuge = await _fahrzeuge.GetFahrzeugeAsync(cancellationToken);
+
+        foreach (var fahrzeug in alleFahrzeuge)
+        {
+            var fahrzeugPruefungen = await _pruefungen.GetByFahrzeugIdAsync(
+                fahrzeug.Id, cancellationToken);
+
+            foreach (var pruefung in fahrzeugPruefungen)
+            {
+                var tageBis = pruefung.FaelligAm.DayNumber - heute.DayNumber;
+
+                if (tageBis > 30) continue;
+
+                var schluessel = $"itw:fahrzeug-pruefung:{pruefung.Id}";
+                if (await _aufgaben.ExistiertOffeneSystemaufgabeAsync(schluessel, cancellationToken))
+                    continue;
+
+                var prioritaet = tageBis < 0
+                    ? AufgabePrioritaet.Dringend
+                    : tageBis < 14
+                        ? AufgabePrioritaet.Hoch
+                        : AufgabePrioritaet.Normal;
+
+                var typText = pruefung.Typ switch
+                {
+                    FahrzeugPruefungTyp.HuAu => "HU/AU",
+                    FahrzeugPruefungTyp.SicherheitspruefungElektrischeAnlage => "Sicherheitsprüfung Elektrik",
+                    FahrzeugPruefungTyp.SicherheitspruefungSauerstoffanlage => "Sicherheitsprüfung Sauerstoff",
+                    FahrzeugPruefungTyp.SicherheitspruefungAufbau => "Sicherheitsprüfung Aufbau",
+                    FahrzeugPruefungTyp.Service => "Service",
+                    _ => "Prüfung"
+                };
+
+                var aufgabe = new Aufgabe(
+                    Guid.NewGuid(),
+                    OrganisationsbereichCode.Intensivtransport,
+                    $"{typText} fällig – {fahrzeug.Kennzeichen}",
+                    prioritaet,
+                    AufgabeQuelle.System,
+                    pruefung.FaelligAm,
+                    schluessel,
+                    jetzt);
+
+                await _aufgaben.AddAsync(aufgabe, cancellationToken);
+            }
+        }
     }
 }

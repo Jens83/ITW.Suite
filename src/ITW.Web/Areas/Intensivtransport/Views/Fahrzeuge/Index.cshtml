@@ -1,4 +1,4 @@
-﻿@using ITW.Fahrzeugmanagement.Domain.Enums
+@using ITW.Fahrzeugmanagement.Domain.Enums
 @model ITW.Web.Areas.Intensivtransport.ViewModels.Fahrzeugmanagement.FahrzeugeIndexViewModel
 
 @{
@@ -21,7 +21,7 @@
 
 <div class="app-page itw-vehicle-page">
     <app-page-header title="@Model.Titel"
-                     description="Operative Fahrzeugübersicht für den Intensivtransport: Akte, Fahrtenbuch, Tankbelege und Prüfstatus.">
+                     description="Operative Fahrzeugübersicht. Prüftermine und Aufgaben erscheinen automatisch im Dashboard.">
         <a asp-action="Anlegen"
            app-btn="accent"
            data-app-loading-link
@@ -108,69 +108,15 @@
                         </span>
                     </header>
 
-                    <div class="itw-vehicle-card__body">
-                        <div class="itw-vehicle-meta-grid">
-                            <div>
-                                <span>Kilometerstand</span>
-                                <strong>@fahrzeug.KilometerstandText</strong>
-                            </div>
-
-                            <div>
-                                <span>Erstzulassung</span>
-                                <strong>@fahrzeug.ErstzulassungText</strong>
-                            </div>
-
-                            <div>
-                                <span>Kraftstoff</span>
-                                <strong>@fahrzeug.KraftstoffText</strong>
-                            </div>
-
-                            <div>
-                                <span>Leistung</span>
-                                <strong>@fahrzeug.LeistungText</strong>
-                            </div>
-                        </div>
-
-                        <div class="itw-vehicle-action-grid">
-                            <a asp-action="Details"
-                               asp-route-id="@fahrzeug.FahrzeugId"
-                               app-btn="accent sm"
-                               data-app-loading-link
-                               data-app-loading-text="Fahrzeugakte wird geöffnet...">
-                                <i class="bi bi-folder2-open"></i>
-                                Akte
-                            </a>
-
-                            <a asp-controller="Fahrtenbuch"
-                               asp-action="Fahrtenbuch"
-                               asp-route-id="@fahrzeug.FahrzeugId"
-                               app-btn="outline-accent sm"
-                               data-app-loading-link
-                               data-app-loading-text="Fahrtenbuch wird geöffnet...">
-                                <i class="bi bi-signpost-split"></i>
-                                Fahrtenbuch
-                            </a>
-
-                            <a asp-controller="FahrzeugDokumente"
-                               asp-action="Tankbelege"
-                               asp-route-id="@fahrzeug.FahrzeugId"
-                               app-btn="outline-accent sm"
-                               data-app-loading-link
-                               data-app-loading-text="Tankbelege werden geöffnet...">
-                                <i class="bi bi-fuel-pump"></i>
-                                Tankbelege
-                            </a>
-
-                            <a asp-controller="FahrzeugPruefungen"
-                               asp-action="Pruefstatus"
-                               asp-route-id="@fahrzeug.FahrzeugId"
-                               app-btn="outline-accent sm"
-                               data-app-loading-link
-                               data-app-loading-text="Prüfstatus wird geöffnet...">
-                                <i class="bi bi-shield-check"></i>
-                                Prüfstatus
-                            </a>
-                        </div>
+                    <div class="itw-vehicle-card__footer">
+                        <a asp-action="Details"
+                           asp-route-id="@fahrzeug.FahrzeugId"
+                           app-btn="accent sm block"
+                           data-app-loading-link
+                           data-app-loading-text="Fahrzeugakte wird geöffnet...">
+                            <i class="bi bi-folder2-open"></i>
+                            Akte öffnen
+                        </a>
                     </div>
                 </article>
             }
