@@ -64,7 +64,34 @@ public sealed class SystemAufgabeGeneratorService
             var periodStart = new DateOnly(periode.Jahr, periode.Monat, 1);
 
             if (periode.WunschphaseIstOffen)
+            {
+                // Wunschphase läuft: Aufgabe "Dienstplan fertigstellen", fällig am 20. des Vormonats
+                var schluessel = $"itw:dienstplan-fertigstellen:{periode.Id}";
+                if (!await _aufgaben.ExistiertOffeneSystemaufgabeAsync(schluessel, cancellationToken))
+                {
+                    var faelligkeit = new DateOnly(periodStart.Year, periodStart.Month, 1)
+                        .AddMonths(-1)
+                        .AddDays(19); // 1. des Vormonats + 19 = 20. des Vormonats
+
+                    var prioritaet = faelligkeit < heute
+                        ? AufgabePrioritaet.Dringend
+                        : faelligkeit <= heute.AddDays(7)
+                            ? AufgabePrioritaet.Hoch
+                            : AufgabePrioritaet.Normal;
+
+                    var aufgabe = new Aufgabe(
+                        Guid.NewGuid(),
+                        OrganisationsbereichCode.Intensivtransport,
+                        $"Dienstplan {periode.Bezeichnung} fertigstellen",
+                        prioritaet,
+                        AufgabeQuelle.System,
+                        faelligkeit,
+                        schluessel,
+                        jetzt);
+                    await _aufgaben.AddAsync(aufgabe, cancellationToken);
+                }
                 continue;
+            }
 
             if (periodStart <= heute.AddDays(7))
             {
