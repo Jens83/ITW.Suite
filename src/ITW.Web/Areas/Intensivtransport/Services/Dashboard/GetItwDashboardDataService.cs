@@ -144,6 +144,7 @@ public sealed class GetItwDashboardDataService
                 FaelligkeitAnzeige = FormatFaelligkeit(a.Faelligkeitsdatum),
                 IstUeberfaellig    = a.Faelligkeitsdatum.HasValue && a.Faelligkeitsdatum.Value < heute,
                 Gruppe             = ErmittleGruppe(a.Faelligkeitsdatum, heute, dieseWocheEnd, naechsteEnd),
+                SystemSchluessel   = a.SystemSchluessel,
             })
             .ToArray();
 

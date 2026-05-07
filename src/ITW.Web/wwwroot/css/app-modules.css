@@ -601,6 +601,16 @@
     background: color-mix(in srgb, var(--err) 10%, transparent);
 }
 
+.app-task-item__action-btn--nav {
+    text-decoration: none;
+    color: var(--pri);
+}
+
+.app-task-item__action-btn--nav:hover {
+    color: var(--pri);
+    background: rgba(var(--pri-rgb), 0.1);
+}
+
 .app-task-item__action-btn:focus-visible {
     outline: 2px solid var(--pri);
     outline-offset: 1px;

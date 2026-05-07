@@ -59,6 +59,42 @@ public sealed class ItwAufgabeViewModel
     public string? FaelligkeitAnzeige { get; init; }
     public bool    IstUeberfaellig    { get; init; }
     public string  Gruppe             { get; init; } = "Später"; // "Diese Woche" | "Nächste Woche" | "Später"
+    public string? SystemSchluessel   { get; init; }
+
+    // Einzige Stelle für Aufgaben-Navigation: Key-Muster → URL
+    public string? NavigationsUrl
+    {
+        get
+        {
+            if (string.IsNullOrEmpty(SystemSchluessel)) return null;
+
+            if (SystemSchluessel.StartsWith("itw:dienstplan-fertigstellen:"))
+            {
+                var id = SystemSchluessel["itw:dienstplan-fertigstellen:".Length..];
+                return $"/Intensivtransport/DienstplanWachleiter/Wachleiterkalender?periodeId={id}";
+            }
+            if (SystemSchluessel.StartsWith("itw:plan-freigeben:"))
+            {
+                var id = SystemSchluessel["itw:plan-freigeben:".Length..];
+                return $"/Intensivtransport/DienstplanWachleiter/Wachleiterkalender?periodeId={id}";
+            }
+            if (SystemSchluessel.StartsWith("itw:wunschphase-oeffnen:"))
+            {
+                var id = SystemSchluessel["itw:wunschphase-oeffnen:".Length..];
+                return $"/Intensivtransport/DienstplanWachleiter/Index?periodeId={id}";
+            }
+            if (SystemSchluessel.StartsWith("itw:fahrzeug-pruefung:"))
+            {
+                // Key: itw:fahrzeug-pruefung:{fahrzeugId}:{pruefungId}
+                var rest = SystemSchluessel["itw:fahrzeug-pruefung:".Length..];
+                var sep = rest.IndexOf(':');
+                var fahrzeugId = sep > 0 ? rest[..sep] : rest;
+                return $"/Intensivtransport/FahrzeugPruefungen/Pruefstatus/{fahrzeugId}";
+            }
+
+            return null;
+        }
+    }
 }
 
 public sealed class ItwWunschPersonViewModel

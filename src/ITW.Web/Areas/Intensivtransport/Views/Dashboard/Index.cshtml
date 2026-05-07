@@ -95,6 +95,17 @@
                                         </div>
                                     </div>
                                     <div class="app-task-item__actions">
+                                        @if (aufgabe.NavigationsUrl is not null)
+                                        {
+                                            <a href="@aufgabe.NavigationsUrl"
+                                               class="app-task-item__action-btn app-task-item__action-btn--nav"
+                                               title="Seite öffnen"
+                                               aria-label="Zur zugehörigen Seite"
+                                               data-app-loading-link
+                                               data-app-loading-text="Wird geöffnet...">
+                                                <i class="bi bi-arrow-right-circle"></i>
+                                            </a>
+                                        }
                                         <form asp-action="AufgabeAufschieben" asp-controller="Dashboard" asp-area="Intensivtransport" method="post">
                                             <input type="hidden" name="aufgabeId" value="@aufgabe.Id" />
                                             <button type="submit" class="app-task-item__action-btn" title="Um 7 Tage aufschieben" aria-label="Aufschieben">

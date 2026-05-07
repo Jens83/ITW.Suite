@@ -149,7 +149,7 @@ public sealed class SystemAufgabeGeneratorService
 
                 if (tageBis > 30) continue;
 
-                var schluessel = $"itw:fahrzeug-pruefung:{pruefung.Id}";
+                var schluessel = $"itw:fahrzeug-pruefung:{fahrzeug.Id}:{pruefung.Id}";
                 if (await _aufgaben.ExistiertOffeneSystemaufgabeAsync(schluessel, cancellationToken))
                     continue;
 
