@@ -68,7 +68,7 @@ public sealed class ToggleDienstwunschService
             return ToggleDienstwunschResult.Fehler("Die UserId ist erforderlich.");
         }
 
-        if (!Enum.IsDefined(typeof(DienstwunschTyp), command.WunschTyp))
+        if (!Enum.IsDefined(command.WunschTyp))
         {
             return ToggleDienstwunschResult.Fehler("Der ausgewählte Wunschtyp ist ungültig.");
         }

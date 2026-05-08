@@ -33,7 +33,7 @@ public sealed class Dienstwunsch
             throw new ArgumentException("Die UserId ist erforderlich.", nameof(userId));
         }
 
-        if (!Enum.IsDefined(typeof(DienstwunschTyp), wunschTyp))
+        if (!Enum.IsDefined(wunschTyp))
         {
             throw new ArgumentException("Der Wunschtyp ist ungültig.", nameof(wunschTyp));
         }
@@ -60,7 +60,7 @@ public sealed class Dienstwunsch
 
     public void AktualisiereWunschTyp(DienstwunschTyp wunschTyp)
     {
-        if (!Enum.IsDefined(typeof(DienstwunschTyp), wunschTyp))
+        if (!Enum.IsDefined(wunschTyp))
         {
             throw new ArgumentException("Der Wunschtyp ist ungültig.", nameof(wunschTyp));
         }

@@ -71,7 +71,7 @@ public sealed class SystemAufgabeGeneratorService
             {
                 // Wunschphase läuft: Aufgabe "Dienstplan fertigstellen", fällig am 20. des Vormonats
                 var schluessel = $"itw:dienstplan-fertigstellen:{periode.Id}";
-                if (!await _aufgaben.ExistiertOffeneSystemaufgabeAsync(schluessel, cancellationToken))
+                if (!await _aufgaben.ExistiertSystemaufgabeAsync(schluessel, cancellationToken))
                 {
                     var faelligkeit = new DateOnly(periodStart.Year, periodStart.Month, 1)
                         .AddMonths(-1)
@@ -100,7 +100,7 @@ public sealed class SystemAufgabeGeneratorService
             if (periodStart <= heute.AddDays(DienstplanFensterTage))
             {
                 var schluessel = $"itw:plan-freigeben:{periode.Id}";
-                if (!await _aufgaben.ExistiertOffeneSystemaufgabeAsync(schluessel, cancellationToken))
+                if (!await _aufgaben.ExistiertSystemaufgabeAsync(schluessel, cancellationToken))
                 {
                     var aufgabe = new Aufgabe(
                         Guid.NewGuid(),
@@ -117,7 +117,7 @@ public sealed class SystemAufgabeGeneratorService
             else
             {
                 var schluessel = $"itw:wunschphase-oeffnen:{periode.Id}";
-                if (!await _aufgaben.ExistiertOffeneSystemaufgabeAsync(schluessel, cancellationToken))
+                if (!await _aufgaben.ExistiertSystemaufgabeAsync(schluessel, cancellationToken))
                 {
                     var faelligkeit = periodStart.AddDays(-14);
                     var aufgabe = new Aufgabe(
@@ -154,7 +154,7 @@ public sealed class SystemAufgabeGeneratorService
                 if (tageBis > PruefungVorwarnungTage) continue;
 
                 var schluessel = $"itw:fahrzeug-pruefung:{fahrzeug.Id}:{pruefung.Id}";
-                if (await _aufgaben.ExistiertOffeneSystemaufgabeAsync(schluessel, cancellationToken))
+                if (await _aufgaben.ExistiertSystemaufgabeAsync(schluessel, cancellationToken))
                     continue;
 
                 var prioritaet = tageBis < 0

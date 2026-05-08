@@ -23,7 +23,11 @@ public sealed class AufgabeLoeschenService
         if (aufgabe is null || aufgabe.Bereich != bereich)
             return false;
 
-        _aufgaben.Remove(aufgabe);
+        if (aufgabe.SystemSchluessel is not null)
+            aufgabe.AlsErledigtMarkieren(DateTimeOffset.UtcNow);
+        else
+            _aufgaben.Remove(aufgabe);
+
         await _aufgaben.SaveChangesAsync(cancellationToken);
         return true;
     }

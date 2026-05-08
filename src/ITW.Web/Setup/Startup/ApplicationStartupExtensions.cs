@@ -31,6 +31,9 @@ public static class ApplicationStartupExtensions
         var fahrzeugmanagementSchemaBootstrapper = scope.ServiceProvider.GetRequiredService<FahrzeugmanagementSchemaBootstrapper>();
         await fahrzeugmanagementSchemaBootstrapper.EnsureFahrzeugmanagementSchemaAsync();
 
+        var lagermanagementSchemaBootstrapper = scope.ServiceProvider.GetRequiredService<LagermanagementSchemaBootstrapper>();
+        await lagermanagementSchemaBootstrapper.EnsureLagermanagementSchemaAsync();
+
         var aktivitaetsLogSchemaBootstrapper = scope.ServiceProvider.GetRequiredService<AktivitaetsLogSchemaBootstrapper>();
         await aktivitaetsLogSchemaBootstrapper.EnsureAktivitaetsLogSchemaAsync();
 

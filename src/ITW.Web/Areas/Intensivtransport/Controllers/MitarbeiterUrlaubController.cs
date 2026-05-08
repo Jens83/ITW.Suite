@@ -221,6 +221,12 @@ public sealed class MitarbeiterUrlaubController : BereichsControllerBase
             return MitarbeiterUrlaubZugriffResult.MitErgebnis(RedirectToKeinZugriff());
         }
 
+        var profil = await LadeProfilAsync(result.CurrentUser.UserId, cancellationToken);
+        if (profil?.Beschaeftigungsart != MitarbeiterBeschaeftigungsart.Festangestellt)
+        {
+            return MitarbeiterUrlaubZugriffResult.MitErgebnis(RedirectToKeinZugriff());
+        }
+
         return MitarbeiterUrlaubZugriffResult.MitBenutzer(result.CurrentUser);
     }
 

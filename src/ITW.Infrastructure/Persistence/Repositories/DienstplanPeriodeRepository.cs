@@ -63,6 +63,22 @@ public sealed class DienstplanPeriodeRepository : IDienstplanPeriodeRepository
             .CountAsync(x => x.WunschphaseIstOffen, cancellationToken);
     }
 
+    public Task<int> CountOffeneFuerBenutzerOhneWuenscheAsync(
+        string userId,
+        CancellationToken cancellationToken = default)
+    {
+        if (string.IsNullOrWhiteSpace(userId))
+            return Task.FromResult(0);
+
+        return _dbContext.DienstplanPerioden
+            .AsNoTracking()
+            .Where(p => p.WunschphaseIstOffen)
+            .Where(p => !_dbContext.DienstplanWuensche
+                .Any(w => w.DienstplanPeriodeId == p.Id &&
+                          w.UserId == userId))
+            .CountAsync(cancellationToken);
+    }
+
     public async Task<IReadOnlyList<DienstplanPeriode>> GetOffeneAsync(
         CancellationToken cancellationToken = default)
     {

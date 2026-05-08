@@ -44,7 +44,11 @@
          currentUserLookup.CurrentUser.Rolle == BereichsrolleCode.Wachleiter))
     {
         zeigeDienstplanBadge = true;
-        offeneDienstplanPerioden = await DienstplanPeriodeRepository.CountOffeneAsync();
+        if (currentUserLookup.CurrentUser.Rolle == BereichsrolleCode.Mitarbeiter)
+        {
+            offeneDienstplanPerioden = await DienstplanPeriodeRepository.CountOffeneFuerBenutzerOhneWuenscheAsync(
+                currentUserLookup.CurrentUser.UserId);
+        }
     }
 
     var urlaubsBadgeAnzahl = 0;

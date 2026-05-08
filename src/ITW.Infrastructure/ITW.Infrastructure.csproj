@@ -11,6 +11,7 @@
 		<ProjectReference Include="..\ITW.Domain\ITW.Domain.csproj" />
 		<ProjectReference Include="..\ITW.Dienstplan\ITW.Dienstplan.csproj" />
 		<ProjectReference Include="..\ITW.Fahrzeugmanagement\ITW.Fahrzeugmanagement.csproj" />
+		<ProjectReference Include="..\ITW.Lagermanagement\ITW.Lagermanagement.csproj" />
 	</ItemGroup>
 
 	<ItemGroup>

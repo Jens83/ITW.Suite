@@ -3,17 +3,57 @@
 @using ITW.Web.UI.Feedback
 @inject ITW.Web.Security.CurrentUser.ICurrentUserContextAccessor CurrentUserContextAccessor
 @inject IAppLayoutMetadataProvider LayoutMetadataProvider
+@inject ITW.Dienstplan.Application.Contracts.IDienstplanPeriodeRepository NavDienstplanPeriodeRepository
+@inject ITW.Application.Personnel.Urlaub.Contracts.IMitarbeiterUrlaubszeitraumRepository NavUrlaubszeitraumRepository
+@inject ITW.Application.Personnel.ProfileQueries.ReadItwMitarbeiterprofileService NavProfileService
 
 @{
     var areaName = ViewContext.RouteData.Values["area"]?.ToString() ?? string.Empty;
     var meta = LayoutMetadataProvider.GetForArea(areaName);
 
     var currentUserLookup = await CurrentUserContextAccessor.GetCurrentAsync();
+
+    var navOffenePerioden = 0;
+    var navUrlaubsBadge = 0;
+    var navDarfMeinUrlaub = true;
+
+    if (meta.Bereich == OrganisationsbereichCode.Intensivtransport &&
+        currentUserLookup.IsSuccess &&
+        currentUserLookup.CurrentUser is not null)
+    {
+        var rolle = currentUserLookup.CurrentUser.Rolle;
+
+        if (rolle == BereichsrolleCode.Mitarbeiter)
+        {
+            var profileResult = await NavProfileService.ExecuteAsync();
+            var profil = profileResult.Profile.FirstOrDefault(
+                p => string.Equals(p.UserId, currentUserLookup.CurrentUser.UserId, StringComparison.OrdinalIgnoreCase));
+            navDarfMeinUrlaub = profil?.Beschaeftigungsart == ITW.Domain.Personnel.Enums.MitarbeiterBeschaeftigungsart.Festangestellt;
+        }
+
+        if (rolle == BereichsrolleCode.Mitarbeiter)
+        {
+            navOffenePerioden = await NavDienstplanPeriodeRepository.CountOffeneFuerBenutzerOhneWuenscheAsync(
+                currentUserLookup.CurrentUser.UserId);
+        }
+
+        if (rolle == BereichsrolleCode.Mitarbeiter)
+        {
+            try
+            {
+                navUrlaubsBadge = await NavUrlaubszeitraumRepository.GetAnzahlUnbestaetigenEntscheideAsync(
+                    currentUserLookup.CurrentUser.UserId);
+            }
+            catch { }
+        }
+    }
+
     var navigation = ITW.Web.Navigation.AreaNavigation.BereichsNavigationBuilder.Build(
         meta.Bereich,
         currentUserLookup.CurrentUser,
         ViewContext.RouteData.Values["Controller"]?.ToString(),
-        ViewContext.RouteData.Values["Action"]?.ToString());
+        ViewContext.RouteData.Values["Action"]?.ToString(),
+        darfMeinUrlaub: navDarfMeinUrlaub);
 
     var benutzerMenuModel = new ITW.Web.ViewModels.Layout.BereichsBenutzerMenuViewModel
     {
@@ -33,7 +73,9 @@
         MenuBrandSubtitle = "Arbeitsbereich",
         MenuBrandIconCssClass = meta.MenuBrandIconCssClass,
         Navigation = navigation,
-        UserMenu = benutzerMenuModel
+        UserMenu = benutzerMenuModel,
+        OffeneDienstplanPerioden = navOffenePerioden,
+        UrlaubsBadgeAnzahl = navUrlaubsBadge
     };
 
     var flashSuccess = TempData[FlashKeys.Success] as string;

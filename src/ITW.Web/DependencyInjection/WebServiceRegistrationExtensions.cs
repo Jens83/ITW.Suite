@@ -13,6 +13,7 @@ public static class WebServiceRegistrationExtensions
             .AddWebOrganisationModuleServices()
             .AddWebCoreServices()
             .AddWebFahrzeugmanagementServices()
+            .AddWebLagermanagementServices()
             .AddWebDashboardServices();
 
         return services;

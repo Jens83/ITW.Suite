@@ -85,7 +85,7 @@ public sealed class AllgemeinesMitarbeiterprofil
             throw new ArgumentException("Der Nachname ist erforderlich.", nameof(nachname));
         }
 
-        if (!Enum.IsDefined(typeof(MitarbeiterBeschaeftigungsart), beschaeftigungsart))
+        if (!Enum.IsDefined(beschaeftigungsart))
         {
             throw new ArgumentException("Die Beschäftigungsart ist ungültig.", nameof(beschaeftigungsart));
         }

@@ -62,8 +62,7 @@ public sealed class ReadWachleiterJahresuebersichtService
             ? profileResult.Profile
                 .Where(p => !p.IstGesperrt
                          && p.HatProfil
-                         && (p.Beschaeftigungsart == MitarbeiterBeschaeftigungsart.Festangestellt
-                          || p.Beschaeftigungsart == MitarbeiterBeschaeftigungsart.Freelancer))
+                         && p.Beschaeftigungsart == MitarbeiterBeschaeftigungsart.Festangestellt)
                 .OrderBy(p => p.AnzeigeName, StringComparer.OrdinalIgnoreCase)
                 .ToArray()
             : [];

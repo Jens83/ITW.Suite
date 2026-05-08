@@ -29,7 +29,6 @@ public sealed class UrlaubsplanerController : BereichsControllerBase
     private readonly SaveMitarbeiterUrlaubsanspruchService _saveAnspruchService;
     private readonly SaveMitarbeiterUrlaubszeitraumService _saveZeitraumService;
     private readonly DeleteMitarbeiterUrlaubszeitraumService _deleteZeitraumService;
-    private readonly ReadMitarbeiterUrlaubsplanerService _readUrlaubsplanerService;
     private readonly ReadWachleiterUrlaubsUebersichtService _readUebersichtService;
     private readonly ReadWachleiterJahresuebersichtService _readJahresuebersichtService;
     private readonly EntscheidenUrlaubsAntragService _entscheidenService;

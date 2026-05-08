@@ -46,6 +46,14 @@ public sealed class AufgabeRepository : IAufgabeRepository
                 cancellationToken);
     }
 
+    public async Task<bool> ExistiertSystemaufgabeAsync(
+        string systemSchluessel,
+        CancellationToken cancellationToken = default)
+    {
+        return await _dbContext.Aufgaben
+            .AnyAsync(x => x.SystemSchluessel == systemSchluessel, cancellationToken);
+    }
+
     public async Task<Aufgabe?> GetBySystemSchluesselAsync(
         string systemSchluessel,
         CancellationToken cancellationToken = default)

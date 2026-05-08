@@ -71,17 +71,29 @@
                 else
                 {
                     var hatAktiven = sektion.Eintraege.Any(e => e.IstAktiv);
+                    var planungsGesamtBadge = sektion.Titel == "Planung"
+                        ? Model.OffeneDienstplanPerioden + Model.UrlaubsBadgeAnzahl
+                        : 0;
                     <div class="itw-nav-menu__item" data-nav-dropdown>
                         <button type="button"
                                 class="itw-nav-menu__btn @(hatAktiven ? "is-active" : "")"
                                 aria-haspopup="true"
                                 aria-expanded="false">
                             @sektion.Titel
+                            @if (planungsGesamtBadge > 0)
+                            {
+                                <span class="itw-nav-menu__btn-badge" aria-label="@planungsGesamtBadge Hinweise">@planungsGesamtBadge</span>
+                            }
                             <i class="bi bi-chevron-down itw-nav-menu__btn-chevron" aria-hidden="true"></i>
                         </button>
                         <div class="itw-nav-menu__dropdown" role="menu">
                             @foreach (var eintrag in sektion.Eintraege)
                             {
+                                var istDienstplanLink =
+                                    string.Equals(eintrag.Controller, "Dienstplan", StringComparison.OrdinalIgnoreCase) &&
+                                    string.Equals(eintrag.Action, "Index", StringComparison.OrdinalIgnoreCase);
+                                var istUrlaubLink =
+                                    string.Equals(eintrag.Controller, "MitarbeiterUrlaub", StringComparison.OrdinalIgnoreCase);
                                 <a class="itw-nav-menu__link @(eintrag.IstAktiv ? "active" : "")"
                                    asp-area="@eintrag.Area"
                                    asp-controller="@eintrag.Controller"
@@ -89,6 +101,14 @@
                                    role="menuitem">
                                     <i class="@eintrag.IconCssClass itw-nav-menu__link-icon" aria-hidden="true"></i>
                                     @eintrag.Text
+                                    @if (istDienstplanLink && Model.OffeneDienstplanPerioden > 0)
+                                    {
+                                        <span class="itw-nav-menu__link-badge">@Model.OffeneDienstplanPerioden</span>
+                                    }
+                                    @if (istUrlaubLink && Model.UrlaubsBadgeAnzahl > 0)
+                                    {
+                                        <span class="itw-nav-menu__link-badge itw-nav-menu__link-badge--err">@Model.UrlaubsBadgeAnzahl</span>
+                                    }
                                 </a>
                             }
                         </div>

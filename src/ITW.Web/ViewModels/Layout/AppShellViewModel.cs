@@ -23,4 +23,8 @@ public sealed class AppShellViewModel
     public BereichsNavigationViewModel? Navigation { get; init; }
 
     public BereichsBenutzerMenuViewModel? UserMenu { get; init; }
+
+    public int OffeneDienstplanPerioden { get; init; }
+
+    public int UrlaubsBadgeAnzahl { get; init; }
 }

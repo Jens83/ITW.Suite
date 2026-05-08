@@ -16,6 +16,10 @@ public interface IAufgabeRepository
         string systemSchluessel,
         CancellationToken cancellationToken = default);
 
+    Task<bool> ExistiertSystemaufgabeAsync(
+        string systemSchluessel,
+        CancellationToken cancellationToken = default);
+
     Task<Aufgabe?> GetBySystemSchluesselAsync(
         string systemSchluessel,
         CancellationToken cancellationToken = default);

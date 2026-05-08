@@ -60,7 +60,7 @@ public sealed class SaveAllgemeinesMitarbeiterprofilService
             return SaveAllgemeinesMitarbeiterprofilResult.Fehler("Der Nachname ist erforderlich.");
         }
 
-        if (!Enum.IsDefined(typeof(MitarbeiterBeschaeftigungsart), command.Beschaeftigungsart))
+        if (!Enum.IsDefined(command.Beschaeftigungsart))
         {
             _logger.LogWarning("UseCase {UseCase} fehlgeschlagen: Beschaeftigungsart ungültig", nameof(SaveAllgemeinesMitarbeiterprofilService));
             return SaveAllgemeinesMitarbeiterprofilResult.Fehler("Die Beschäftigungsart ist ungültig.");
