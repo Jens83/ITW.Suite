@@ -1,0 +1,193 @@
+@model ITW.Web.Areas.Intensivtransport.ViewModels.Lagermanagement.LagerArtikelIndexViewModel
+@using ITW.Lagermanagement.Domain.Enums
+
+@{
+    ViewData["Title"] = "Artikel & Bestand";
+}
+
+<div class="app-page">
+    <div class="app-page-header">
+        <h1 class="app-page-heading">Artikel & Bestand</h1>
+        <div class="app-page-actions">
+            <a asp-area="Intensivtransport" asp-controller="LagerArtikel" asp-action="Neu"
+               class="app-btn app-btn-primary app-btn-sm">
+                <i class="bi bi-plus-lg"></i> Neuer Artikel
+            </a>
+        </div>
+    </div>
+
+    <div class="app-surface">
+        @if (!Model.Zeilen.Any())
+        {
+            <div style="padding: var(--sp-pad); text-align: center; color: var(--outline);">
+                Noch keine Artikel angelegt.
+            </div>
+        }
+        else
+        {
+            <table class="table table-hover table-sm mb-0">
+                <thead>
+                    <tr>
+                        <th>Artikel</th>
+                        <th>Kategorie</th>
+                        <th>Depot</th>
+                        <th>Fzg. 1</th>
+                        <th>Fzg. 2</th>
+                        <th>Mindestbestand</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var z in Model.Zeilen)
+                    {
+                        <tr class="@(!z.IstAktiv ? "table-secondary" : z.IstUnterMindest ? "table-warning" : "")">
+                            <td>
+                                <strong>@z.Name</strong>
+                                @if (!string.IsNullOrEmpty(z.PackungsAnzeige))
+                                {
+                                    <br /><small class="text-muted">@z.PackungsAnzeige</small>
+                                }
+                                @if (z.VerbrauchProPatient.HasValue)
+                                {
+                                    <br /><small class="text-muted"><i class="bi bi-person"></i> @z.VerbrauchProPatient/Patient</small>
+                                }
+                                @if (z.HatAblaufdatum)
+                                {
+                                    <span class="badge bg-info ms-1">Ablaufdatum</span>
+                                }
+                                @if (!z.IstAktiv)
+                                {
+                                    <span class="badge bg-secondary ms-1">Inaktiv</span>
+                                }
+                            </td>
+                            <td><small>@z.Kategorie</small></td>
+                            <td>@z.MengeDepot @z.Einheit</td>
+                            <td>@z.MengeFahrzeug1 @z.Einheit</td>
+                            <td>@z.MengeFahrzeug2 @z.Einheit</td>
+                            <td>
+                                @if (z.Mindestbestand > 0)
+                                {
+                                    <span class="@(z.IstUnterMindest ? "text-danger fw-bold" : "")">
+                                        @z.Gesamtbestand / @z.Mindestbestand @z.Einheit
+                                    </span>
+                                }
+                                else
+                                {
+                                    <span class="text-muted">–</span>
+                                }
+                            </td>
+                            <td>
+                                <div class="d-flex gap-1 justify-content-end">
+                                    <a asp-area="Intensivtransport" asp-controller="LagerArtikel"
+                                       asp-action="Bearbeiten" asp-route-id="@z.Id"
+                                       class="app-btn app-btn-sm app-btn-neutral" title="Bearbeiten">
+                                        <i class="bi bi-pencil"></i>
+                                    </a>
+                                    <button type="button"
+                                            class="app-btn app-btn-sm app-btn-neutral"
+                                            title="Einbuchen"
+                                            data-lager-einbuchen="@z.Id"
+                                            data-lager-name="@z.Name"
+                                            data-lager-einheit="@z.Einheit"
+                                            data-lager-hat-ablaufdatum="@z.HatAblaufdatum.ToString().ToLower()"
+                                            data-lager-packung-groesse="@z.PackungsGroesse"
+                                            data-lager-packung-einheit="@z.PackungsEinheit">
+                                        <i class="bi bi-box-arrow-in-down"></i>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        }
+    </div>
+</div>
+
+@* Einbuchen-Modal *@
+<div class="modal fade" id="einbuchenModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+        <form asp-area="Intensivtransport" asp-controller="LagerArtikel" asp-action="Einbuchen" method="post">
+            @Html.AntiForgeryToken()
+            <input type="hidden" name="artikelId" id="einbuchenArtikelId" />
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Einbuchen: <span id="einbuchenArtikelName"></span></h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label class="form-label">Lagerort</label>
+                        <select name="lagerort" class="form-select">
+                            <option value="0">Depot</option>
+                            <option value="1">Fahrzeug 1</option>
+                            <option value="2">Fahrzeug 2</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Menge <span id="einbuchenEinheit"></span></label>
+                        <input type="number" name="menge" class="form-control" min="1" value="1" required />
+                    </div>
+                    <div id="packungRow" class="mb-3 d-none">
+                        <div class="form-check">
+                            <input type="checkbox" name="istPackung" value="true" class="form-check-input" id="istPackungCheck" />
+                            <label class="form-check-label" for="istPackungCheck">
+                                Menge in Packungen (<span id="packungInfo"></span>)
+                            </label>
+                        </div>
+                    </div>
+                    <div id="ablaufdatumRow" class="mb-3 d-none">
+                        <label class="form-label">Ablaufdatum *</label>
+                        <input type="date" name="ablaufdatum" class="form-control" />
+                    </div>
+                    <div id="ablaufdatumRow2" class="mb-3 d-none">
+                        <label class="form-label">Chargen-Nummer (optional)</label>
+                        <input type="text" name="chargeNummer" class="form-control" placeholder="z.B. LOT-2025-001" />
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="app-btn app-btn-neutral" data-bs-dismiss="modal">Abbrechen</button>
+                    <button type="submit" class="app-btn app-btn-primary">Einbuchen</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        document.querySelectorAll('[data-lager-einbuchen]').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const id = btn.dataset.lagerEinbuchen;
+                const name = btn.dataset.lagerName;
+                const einheit = btn.dataset.lagerEinheit;
+                const hatAblauf = btn.dataset.lagerHatAblaufdatum === 'true';
+                const packungGroesse = btn.dataset.lagerPackungGroesse;
+                const packungEinheit = btn.dataset.lagerPackungEinheit;
+
+                document.getElementById('einbuchenArtikelId').value = id;
+                document.getElementById('einbuchenArtikelName').textContent = name;
+                document.getElementById('einbuchenEinheit').textContent = einheit;
+
+                const ablaufRow = document.getElementById('ablaufdatumRow');
+                const ablaufRow2 = document.getElementById('ablaufdatumRow2');
+                ablaufRow.classList.toggle('d-none', !hatAblauf);
+                ablaufRow2.classList.toggle('d-none', !hatAblauf);
+                if (hatAblauf) {
+                    ablaufRow.querySelector('input').required = true;
+                }
+
+                const packRow = document.getElementById('packungRow');
+                if (packungGroesse && packungEinheit) {
+                    packRow.classList.remove('d-none');
+                    document.getElementById('packungInfo').textContent =
+                        `1 ${packungEinheit} = ${packungGroesse} ${einheit}`;
+                } else {
+                    packRow.classList.add('d-none');
+                }
+
+                new bootstrap.Modal(document.getElementById('einbuchenModal')).show();
+            });
+        });
+    </script>
+}

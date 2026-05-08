@@ -222,6 +222,9 @@ public sealed class SaveFreelancerMonatswunschMitarbeiterServiceTests
         public Task<int> CountOffeneAsync(CancellationToken cancellationToken = default)
             => Task.FromResult(Periode is not null && Periode.WunschphaseIstOffen ? 1 : 0);
 
+        public Task<int> CountOffeneFuerBenutzerOhneWuenscheAsync(string userId, CancellationToken cancellationToken = default)
+            => Task.FromResult(0);
+
         public Task<IReadOnlyList<DienstplanPeriode>> GetOffeneAsync(
             CancellationToken cancellationToken = default)
         {

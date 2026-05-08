@@ -1,0 +1,80 @@
+@model ITW.Web.Areas.Intensivtransport.ViewModels.Lagermanagement.ArtikelFormViewModel
+@using ITW.Lagermanagement.Domain.Enums
+
+@{
+    var istNeu = Model.Id == Guid.Empty;
+    ViewData["Title"] = istNeu ? "Neuer Artikel" : "Artikel bearbeiten";
+}
+
+<div class="app-page">
+    <div class="app-page-header">
+        <h1 class="app-page-heading">@ViewData["Title"]</h1>
+    </div>
+
+    <div class="app-surface">
+        <form asp-area="Intensivtransport"
+              asp-controller="LagerArtikel"
+              asp-action="@(istNeu ? "Neu" : "Bearbeiten")"
+              method="post"
+              class="app-form">
+            @Html.AntiForgeryToken()
+            @if (!istNeu)
+            {
+                <input type="hidden" asp-for="Id" />
+            }
+
+            <div class="row g-3">
+                <div class="col-md-6">
+                    <label asp-for="Name" class="form-label">Name *</label>
+                    <input asp-for="Name" class="form-control" placeholder="z.B. Arterielle Leitung" />
+                    <span asp-validation-for="Name" class="text-danger small"></span>
+                </div>
+                <div class="col-md-6">
+                    <label asp-for="Kategorie" class="form-label">Kategorie</label>
+                    <select asp-for="Kategorie" class="form-select"
+                            asp-items="@Html.GetEnumSelectList<ArtikelKategorie>()"></select>
+                </div>
+                <div class="col-md-4">
+                    <label asp-for="BasisEinheit" class="form-label">Basiseinheit *</label>
+                    <input asp-for="BasisEinheit" class="form-control" placeholder="z.B. Stück, ml, Ampulle" />
+                    <span asp-validation-for="BasisEinheit" class="text-danger small"></span>
+                </div>
+                <div class="col-md-4">
+                    <label asp-for="PackungsGroesse" class="form-label">Packungsgröße (optional)</label>
+                    <input asp-for="PackungsGroesse" type="number" class="form-control" placeholder="z.B. 100" min="1" />
+                    <div class="form-text">Wie viele Basiseinheiten enthält eine Packung?</div>
+                </div>
+                <div class="col-md-4">
+                    <label asp-for="PackungsEinheit" class="form-label">Packungsbezeichnung</label>
+                    <input asp-for="PackungsEinheit" class="form-control" placeholder="z.B. Karton, Box" />
+                </div>
+                <div class="col-md-4">
+                    <label asp-for="Mindestbestand" class="form-label">Mindestbestand (in Basiseinheiten)</label>
+                    <input asp-for="Mindestbestand" type="number" class="form-control" min="0" />
+                </div>
+                <div class="col-md-4">
+                    <label asp-for="VerbrauchProPatient" class="form-label">Verbrauch pro Patient (optional)</label>
+                    <input asp-for="VerbrauchProPatient" type="number" step="0.5" class="form-control"
+                           placeholder="z.B. 1 (= 1 Stück pro Patient)" />
+                    <div class="form-text">Wird bei Einsatzerfassung automatisch berechnet.</div>
+                </div>
+                <div class="col-md-4 d-flex align-items-end pb-1">
+                    <div class="form-check">
+                        <input asp-for="HatAblaufdatum" type="checkbox" class="form-check-input" />
+                        <label asp-for="HatAblaufdatum" class="form-check-label">
+                            Ablaufdatum erforderlich (Medikament)
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mt-4 d-flex gap-2">
+                <button type="submit" class="app-btn app-btn-primary">
+                    <i class="bi bi-check-lg"></i> Speichern
+                </button>
+                <a asp-area="Intensivtransport" asp-controller="LagerArtikel" asp-action="Index"
+                   class="app-btn app-btn-neutral">Abbrechen</a>
+            </div>
+        </form>
+    </div>
+</div>

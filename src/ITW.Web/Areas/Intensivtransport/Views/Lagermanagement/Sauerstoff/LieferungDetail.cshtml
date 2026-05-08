@@ -1,0 +1,155 @@
+@model ITW.Web.Areas.Intensivtransport.ViewModels.Lagermanagement.SauerstoffLieferungDetailViewModel
+@using ITW.Lagermanagement.Domain.Enums
+
+@{
+    ViewData["Title"] = $"Lieferung {Model.LieferscheinNummer}";
+}
+
+<div class="app-page">
+    <div class="app-page-header">
+        <div>
+            <h1 class="app-page-heading">Lieferung @Model.LieferscheinNummer</h1>
+            <p class="app-page-description">
+                Lieferdatum: <strong>@Model.Lieferdatum.ToString("dd.MM.yyyy")</strong>
+                @if (!string.IsNullOrEmpty(Model.Bemerkung))
+                {
+                    <span class="text-muted"> · @Model.Bemerkung</span>
+                }
+            </p>
+        </div>
+        <div class="app-page-actions">
+            <a asp-area="Intensivtransport" asp-controller="Sauerstoff" asp-action="Lieferungen"
+               class="app-btn app-btn-neutral app-btn-sm">
+                <i class="bi bi-arrow-left"></i> Lieferungen
+            </a>
+        </div>
+    </div>
+
+    @* Flasche hinzufügen *@
+    <div class="app-surface mb-3" style="padding: var(--sp-pad);">
+        <h2 style="font-size: var(--type-h3-size); margin-bottom: var(--sp-el);">Flasche zur Lieferung hinzufügen</h2>
+
+        @* Primär: Barcode-Scanner *@
+        <button type="button" class="app-btn app-btn-primary w-100 mb-3" id="btnScanInline"
+                style="padding: 0.75rem; font-size: 1rem;">
+            <i class="bi bi-qr-code-scan"></i> Barcode scannen
+        </button>
+        <div id="inlineReader" style="display:none; margin-bottom: 1rem; border-radius: var(--r-md); overflow:hidden;"></div>
+
+        @* Sekundär: Manuelle Eingabe *@
+        <form asp-area="Intensivtransport" asp-controller="Sauerstoff" asp-action="FlascheRegistrieren" method="post">
+            @Html.AntiForgeryToken()
+            <input type="hidden" name="lieferungId" value="@Model.Id" />
+            <div class="d-flex gap-2 flex-wrap align-items-end">
+                <div>
+                    <label class="form-label">Größe</label>
+                    <select name="groesse" class="form-select" style="min-width:100px; font-size:16px;">
+                        <option value="10">10 L</option>
+                        <option value="5">5 L</option>
+                        <option value="2">2 L</option>
+                    </select>
+                </div>
+                <div style="flex:1; min-width:180px;">
+                    <label class="form-label">Flaschennummer <span class="text-muted fw-normal">(optional)</span></label>
+                    <input type="text" name="flaschenNummer" id="flaschenNummerInput"
+                           class="form-control" placeholder="z.B. 100000005678"
+                           maxlength="100" inputmode="numeric" autocomplete="off"
+                           style="font-size:16px;" />
+                </div>
+                <div>
+                    <button type="submit" class="app-btn app-btn-primary">
+                        <i class="bi bi-plus-lg"></i> Hinzufügen
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    @* Flaschen dieser Lieferung *@
+    <div class="app-surface">
+        <div style="padding: var(--sp-pad) var(--sp-pad) 0.5rem;">
+            <strong>@Model.Flaschen.Count Flasche(n) in dieser Lieferung</strong>
+        </div>
+        @if (!Model.Flaschen.Any())
+        {
+            <div style="padding: var(--sp-pad); text-align:center; color: var(--outline);">
+                Noch keine Flaschen erfasst. Füge die erste Flasche hinzu.
+            </div>
+        }
+        else
+        {
+            <table class="table table-sm mb-0">
+                <thead>
+                    <tr>
+                        <th>Flasche</th>
+                        <th>Größe</th>
+                        <th>Status</th>
+                        <th>Standort</th>
+                        <th>Tage im System</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var f in Model.Flaschen)
+                    {
+                        <tr>
+                            <td>
+                                @if (!string.IsNullOrEmpty(f.FlaschenNummer))
+                                {
+                                    <span>Nr. @f.FlaschenNummer</span>
+                                }
+                                else
+                                {
+                                    <span class="text-muted">ohne Nummer</span>
+                                }
+                            </td>
+                            <td><span class="app-pill app-pill--neutral">@f.GroesseAnzeige</span></td>
+                            <td>
+                                <span class="app-pill @(f.Status == ITW.Lagermanagement.Domain.Enums.SauerstoffFlaschenStatus.Voll ? "app-pill--success" : "app-pill--muted")">
+                                    @(f.Status == ITW.Lagermanagement.Domain.Enums.SauerstoffFlaschenStatus.Voll ? "Voll" : "Leer")
+                                </span>
+                            </td>
+                            <td>@(f.FahrzeugId is null ? "Depot" : "Fahrzeug")</td>
+                            <td>
+                                <span style="@(f.IstKritisch ? "color:var(--on-err-c);font-weight:700" : f.HatRisiko ? "color:rgb(var(--warn-rgb));font-weight:700" : "")">
+                                    @f.TageImSystem Tage
+                                </span>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        }
+    </div>
+</div>
+
+<script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
+<script>
+    let inlineScanner = null;
+    const btnScan = document.getElementById('btnScanInline');
+    const readerEl = document.getElementById('inlineReader');
+    const nummerInput = document.getElementById('flaschenNummerInput');
+
+    btnScan.addEventListener('click', () => {
+        if (readerEl.style.display === 'none') {
+            readerEl.style.display = 'block';
+            inlineScanner = new Html5Qrcode('inlineReader');
+            inlineScanner.start(
+                { facingMode: 'environment' },
+                { fps: 10, qrbox: { width: 250, height: 120 } },
+                (text) => {
+                    nummerInput.value = text.trim();
+                    inlineScanner.stop().then(() => { readerEl.style.display = 'none'; });
+                },
+                () => {}
+            ).catch(() => {
+                readerEl.style.display = 'none';
+                alert('Kamera nicht verfügbar.');
+            });
+            btnScan.innerHTML = '<i class="bi bi-x-lg"></i>';
+        } else {
+            readerEl.style.display = 'none';
+            btnScan.innerHTML = '<i class="bi bi-qr-code-scan"></i>';
+            if (inlineScanner) inlineScanner.stop().catch(() => {});
+        }
+    });
+</script>

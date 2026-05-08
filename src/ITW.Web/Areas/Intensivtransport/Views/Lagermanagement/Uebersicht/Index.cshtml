@@ -1,0 +1,133 @@
+@model ITW.Web.Areas.Intensivtransport.ViewModels.Lagermanagement.LagerUebersichtViewModel
+
+@{
+    ViewData["Title"] = "Lagerübersicht";
+}
+
+<div class="app-page">
+    <div class="app-page-header">
+        <h1 class="app-page-heading">Lager – Übersicht</h1>
+    </div>
+
+    @* O2-Status *@
+    <div class="app-surface" style="margin-bottom: var(--sp-lg);">
+        <div class="app-card-hd">
+            <span class="app-card-hd__label"><i class="bi bi-wind"></i> Sauerstoffdepot</span>
+        </div>
+        <div class="lager-o2-stats">
+            <div class="lager-stat">
+                <span class="lager-stat__zahl lager-stat__zahl--ok">@Model.AnzahlO2Voll</span>
+                <span class="lager-stat__label">Voll im Depot</span>
+            </div>
+            <div class="lager-stat">
+                <span class="lager-stat__zahl lager-stat__zahl--warn">@Model.AnzahlO2Leer</span>
+                <span class="lager-stat__label">Leer im Depot</span>
+            </div>
+            <div class="lager-stat">
+                <span class="lager-stat__zahl">@Model.AnzahlO2ImFahrzeug</span>
+                <span class="lager-stat__label">In Fahrzeugen</span>
+            </div>
+        </div>
+
+        @if (Model.O2Warnungen.Any())
+        {
+            <div class="lager-warnliste">
+                @foreach (var w in Model.O2Warnungen)
+                {
+                    <div class="lager-warn lager-warn--@(w.IstKritisch ? "err" : "warn")">
+                        <i class="bi bi-exclamation-triangle-fill"></i>
+                        <span>
+                            <strong>@w.Bezeichnung</strong> — @w.TageImSystem Tage im System
+                            @if (w.IstKritisch)
+                            {
+                                <span class="badge bg-danger ms-1">Langzeitmiete!</span>
+                            }
+                            else
+                            {
+                                <span class="badge bg-warning text-dark ms-1">Noch @w.TageVerbleibend Tage</span>
+                            }
+                        </span>
+                        <a asp-area="Intensivtransport" asp-controller="Sauerstoff" asp-action="Index"
+                           class="app-btn app-btn-sm app-btn-neutral ms-auto">Öffnen</a>
+                    </div>
+                }
+            </div>
+        }
+    </div>
+
+    @* Bestandswarnungen *@
+    @if (Model.BestandsWarnungen.Any())
+    {
+        <div class="app-surface" style="margin-bottom: var(--sp-lg);">
+            <div class="app-card-hd">
+                <span class="app-card-hd__label"><i class="bi bi-exclamation-circle"></i> Mindestbestand unterschritten</span>
+                <span class="app-card-hd__meta">@Model.BestandsWarnungen.Count Artikel</span>
+            </div>
+            <div class="lager-warnliste">
+                @foreach (var w in Model.BestandsWarnungen)
+                {
+                    <div class="lager-warn lager-warn--warn">
+                        <i class="bi bi-box-seam"></i>
+                        <span>
+                            <strong>@w.ArtikelName</strong> (@w.Lagerort) —
+                            @w.Menge von @w.Mindestbestand @w.Einheit
+                        </span>
+                        <a asp-area="Intensivtransport" asp-controller="LagerArtikel" asp-action="Index"
+                           class="app-btn app-btn-sm app-btn-neutral ms-auto">Einbuchen</a>
+                    </div>
+                }
+            </div>
+        </div>
+    }
+
+    @* Chargen-Warnungen *@
+    @if (Model.ChargeWarnungen.Any())
+    {
+        <div class="app-surface">
+            <div class="app-card-hd">
+                <span class="app-card-hd__label"><i class="bi bi-calendar-x"></i> Medikamente – Ablaufdaten</span>
+                <span class="app-card-hd__meta">@Model.ChargeWarnungen.Count Chargen</span>
+            </div>
+            <table class="table table-sm mb-0">
+                <thead>
+                    <tr>
+                        <th>Medikament</th>
+                        <th>Ablaufdatum</th>
+                        <th>Menge</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var c in Model.ChargeWarnungen)
+                    {
+                        <tr class="@(c.IstAbgelaufen ? "table-danger" : "table-warning")">
+                            <td>@c.ArtikelName</td>
+                            <td>@c.Ablaufdatum.ToString("dd.MM.yyyy")</td>
+                            <td>@c.Menge @c.Einheit</td>
+                            <td>
+                                @if (c.IstAbgelaufen)
+                                {
+                                    <span class="badge bg-danger">Abgelaufen – ausbuchen</span>
+                                }
+                                else
+                                {
+                                    <span class="badge bg-warning text-dark">Läuft bald ab</span>
+                                }
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+
+    @if (!Model.HatWarnungen)
+    {
+        <div class="app-surface">
+            <div style="padding: var(--sp-pad); text-align: center; color: var(--outline);">
+                <i class="bi bi-check2-circle" style="font-size: 2rem; display: block; margin-bottom: .5rem; color: var(--ok-c, green);"></i>
+                Keine aktiven Warnungen. Alle Bestände und Ablaufdaten sind in Ordnung.
+            </div>
+        </div>
+    }
+</div>

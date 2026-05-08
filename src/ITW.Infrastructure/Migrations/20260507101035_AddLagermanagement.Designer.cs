@@ -4,6 +4,7 @@ using ITW.Infrastructure.Persistence.DbContexts;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ITW.Infrastructure.Migrations
 {
     [DbContext(typeof(PlatformDbContext))]
-    partial class PlatformDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260507101035_AddLagermanagement")]
+    partial class AddLagermanagement
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -1557,14 +1560,14 @@ namespace ITW.Infrastructure.Migrations
                     b.Property<Guid>("FlascheId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid?>("NachFahrzeugId")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<int?>("NachLagerort")
+                        .HasColumnType("int");
 
                     b.Property<int>("Typ")
                         .HasColumnType("int");
 
-                    b.Property<Guid?>("VonFahrzeugId")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<int?>("VonLagerort")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
@@ -1580,6 +1583,11 @@ namespace ITW.Infrastructure.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<string>("Bezeichnung")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
                     b.Property<DateTimeOffset>("ErstelltAm")
                         .HasColumnType("datetimeoffset");
 
@@ -1588,74 +1596,25 @@ namespace ITW.Infrastructure.Migrations
                         .HasMaxLength(450)
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<Guid?>("FahrzeugId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("FlaschenNummer")
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
-                    b.Property<int>("Groesse")
-                        .HasColumnType("int");
-
                     b.Property<bool>("IstAktiv")
                         .HasColumnType("bit");
 
-                    b.Property<Guid>("LieferungId")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<int>("Lagerort")
+                        .HasColumnType("int");
 
                     b.Property<int>("Status")
                         .HasColumnType("int");
 
+                    b.Property<DateTimeOffset?>("VollEingebuchtAmDepot")
+                        .HasColumnType("datetimeoffset");
+
                     b.HasKey("Id");
 
-                    b.HasIndex("FlaschenNummer")
-                        .IsUnique()
-                        .HasDatabaseName("UX_Lager_SauerstoffFlasche_FlaschenNummer")
-                        .HasFilter("[FlaschenNummer] IS NOT NULL");
-
-                    b.HasIndex("LieferungId");
-
-                    b.HasIndex("Status", "FahrzeugId")
-                        .HasDatabaseName("IX_Lager_SauerstoffFlasche_Status_Fahrzeug")
+                    b.HasIndex("Status", "Lagerort")
+                        .HasDatabaseName("IX_Lager_SauerstoffFlasche_Status_Lagerort")
                         .HasFilter("[IstAktiv] = 1");
 
                     b.ToTable("SauerstoffFlasche", "Lager");
-                });
-
-            modelBuilder.Entity("ITW.Lagermanagement.Domain.Entities.SauerstoffLieferung", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("Bemerkung")
-                        .HasMaxLength(500)
-                        .HasColumnType("nvarchar(500)");
-
-                    b.Property<DateTimeOffset>("ErfasstAm")
-                        .HasColumnType("datetimeoffset");
-
-                    b.Property<string>("ErfasstVonUserId")
-                        .IsRequired()
-                        .HasMaxLength(450)
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<DateOnly>("Lieferdatum")
-                        .HasColumnType("date");
-
-                    b.Property<string>("LieferscheinNummer")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("LieferscheinNummer")
-                        .IsUnique()
-                        .HasDatabaseName("UX_Lager_SauerstoffLieferung_Schein");
-
-                    b.ToTable("SauerstoffLieferung", "Lager");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -1813,26 +1772,6 @@ namespace ITW.Infrastructure.Migrations
                         .HasForeignKey("EinsatzVerbrauchId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-                });
-
-            modelBuilder.Entity("ITW.Lagermanagement.Domain.Entities.SauerstoffBewegung", b =>
-                {
-                    b.HasOne("ITW.Lagermanagement.Domain.Entities.SauerstoffFlasche", null)
-                        .WithMany()
-                        .HasForeignKey("FlascheId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired()
-                        .HasConstraintName("FK_Lager_SauerstoffBewegung_Flasche");
-                });
-
-            modelBuilder.Entity("ITW.Lagermanagement.Domain.Entities.SauerstoffFlasche", b =>
-                {
-                    b.HasOne("ITW.Lagermanagement.Domain.Entities.SauerstoffLieferung", null)
-                        .WithMany()
-                        .HasForeignKey("LieferungId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired()
-                        .HasConstraintName("FK_Lager_SauerstoffFlasche_Lieferung");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>

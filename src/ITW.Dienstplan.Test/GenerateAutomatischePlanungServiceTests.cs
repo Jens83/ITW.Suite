@@ -174,6 +174,9 @@ public sealed class GenerateAutomatischePlanungServiceTests
         public Task<int> CountOffeneAsync(CancellationToken cancellationToken = default)
             => Task.FromResult(0);
 
+        public Task<int> CountOffeneFuerBenutzerOhneWuenscheAsync(string userId, CancellationToken cancellationToken = default)
+            => Task.FromResult(0);
+
         public Task<IReadOnlyList<DienstplanPeriode>> GetOffeneAsync(CancellationToken cancellationToken = default)
             => Task.FromResult<IReadOnlyList<DienstplanPeriode>>(Array.Empty<DienstplanPeriode>());
 

@@ -2,6 +2,7 @@
 using ITW.Application.Aufgaben;
 using ITW.Dienstplan.Domain.Entities;
 using ITW.Fahrzeugmanagement.Domain.Entities;
+using ITW.Lagermanagement.Domain.Entities;
 using ITW.Domain.Organisation.Entities;
 using ITW.Domain.Personnel.Entities;
 using ITW.Domain.Personnel.Qualifications;
@@ -62,6 +63,16 @@ public sealed class PlatformDbContext : IdentityDbContext<ApplicationUser>
     public DbSet<TrackingGeraetEinrichtungscode> TrackingGeraetEinrichtungscodes => Set<TrackingGeraetEinrichtungscode>();
 
     public DbSet<FahrzeugPruefung> FahrzeugPruefungen => Set<FahrzeugPruefung>();
+
+    // Lagermanagement
+    public DbSet<LagerArtikel>             LagerArtikel              => Set<LagerArtikel>();
+    public DbSet<ArtikelBestand>           ArtikelBestaende          => Set<ArtikelBestand>();
+    public DbSet<ArtikelCharge>            ArtikelChargen            => Set<ArtikelCharge>();
+    public DbSet<EinsatzVerbrauch>         EinsatzVerbräuche         => Set<EinsatzVerbrauch>();
+    public DbSet<EinsatzVerbrauchPosition> EinsatzVerbrauchPositionen => Set<EinsatzVerbrauchPosition>();
+    public DbSet<SauerstoffLieferung>      SauerstoffLieferungen     => Set<SauerstoffLieferung>();
+    public DbSet<SauerstoffFlasche>        SauerstoffFlaschen        => Set<SauerstoffFlasche>();
+    public DbSet<SauerstoffBewegung>       SauerstoffBewegungen      => Set<SauerstoffBewegung>();
 
     public DbSet<AktivitaetsEintrag> AktivitaetsLog => Set<AktivitaetsEintrag>();
 

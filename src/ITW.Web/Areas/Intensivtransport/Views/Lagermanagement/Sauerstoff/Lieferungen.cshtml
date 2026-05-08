@@ -1,0 +1,98 @@
+@model ITW.Web.Areas.Intensivtransport.ViewModels.Lagermanagement.SauerstoffLieferungenViewModel
+
+@{
+    ViewData["Title"] = "Lieferungen";
+}
+
+<div class="app-page">
+    <div class="app-page-header">
+        <h1 class="app-page-heading">Sauerstoff-Lieferungen</h1>
+        <div class="app-page-actions">
+            <button type="button" class="app-btn app-btn-primary app-btn-sm"
+                    data-bs-toggle="modal" data-bs-target="#neueLieferungModal">
+                <i class="bi bi-plus-lg"></i> Neue Lieferung
+            </button>
+            <a asp-area="Intensivtransport" asp-controller="Sauerstoff" asp-action="Index"
+               class="app-btn app-btn-neutral app-btn-sm">
+                <i class="bi bi-arrow-left"></i> Zum Depot
+            </a>
+        </div>
+    </div>
+
+    <div class="app-surface">
+        @if (!Model.Lieferungen.Any())
+        {
+            <div style="padding: var(--sp-pad); text-align:center; color: var(--outline);">
+                Noch keine Lieferungen erfasst.
+            </div>
+        }
+        else
+        {
+            <table class="table table-hover table-sm mb-0">
+                <thead>
+                    <tr>
+                        <th>Lieferschein</th>
+                        <th>Lieferdatum</th>
+                        <th>Flaschen</th>
+                        <th>Bemerkung</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var l in Model.Lieferungen)
+                    {
+                        <tr>
+                            <td><strong>@l.LieferscheinNummer</strong></td>
+                            <td>@l.Lieferdatum.ToString("dd.MM.yyyy")</td>
+                            <td><span class="app-pill app-pill--neutral">@l.AnzahlFlaschen Fl.</span></td>
+                            <td><small class="text-muted">@l.Bemerkung</small></td>
+                            <td>
+                                <a asp-area="Intensivtransport" asp-controller="Sauerstoff"
+                                   asp-action="LieferungDetail" asp-route-id="@l.Id"
+                                   class="app-btn app-btn-sm app-btn-neutral">
+                                    <i class="bi bi-box-seam"></i> Flaschen
+                                </a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        }
+    </div>
+</div>
+
+<div class="modal fade" id="neueLieferungModal" tabindex="-1"
+     aria-labelledby="neueLieferungModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <form asp-area="Intensivtransport" asp-controller="Sauerstoff" asp-action="LieferungNeu" method="post">
+            @Html.AntiForgeryToken()
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="neueLieferungModalLabel">Neue Lieferung anlegen</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Schließen"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label class="form-label">Lieferscheinnummer <span class="text-danger">*</span></label>
+                        <input type="text" name="lieferscheinNummer" class="form-control"
+                               placeholder="z.B. 4711" required maxlength="100" autofocus />
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Lieferdatum <span class="text-danger">*</span></label>
+                        <input type="date" name="lieferdatum" class="form-control"
+                               value="@DateTime.Today.ToString("yyyy-MM-dd")" required />
+                    </div>
+                    <div class="mb-0">
+                        <label class="form-label">Bemerkung <span class="text-muted fw-normal">(optional)</span></label>
+                        <input type="text" name="bemerkung" class="form-control"
+                               placeholder="z.B. Fahrer Müller" maxlength="500" />
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="app-btn app-btn-neutral" data-bs-dismiss="modal">Abbrechen</button>
+                    <button type="submit" class="app-btn app-btn-primary">Anlegen &amp; Flaschen erfassen</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>

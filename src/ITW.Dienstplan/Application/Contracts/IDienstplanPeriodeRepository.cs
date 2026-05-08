@@ -23,6 +23,10 @@ public interface IDienstplanPeriodeRepository
     Task<int> CountOffeneAsync(
         CancellationToken cancellationToken = default);
 
+    Task<int> CountOffeneFuerBenutzerOhneWuenscheAsync(
+        string userId,
+        CancellationToken cancellationToken = default);
+
     Task<IReadOnlyList<DienstplanPeriode>> GetOffeneAsync(
         CancellationToken cancellationToken = default);
 

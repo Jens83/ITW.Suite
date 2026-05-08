@@ -1,0 +1,516 @@
+@model ITW.Web.Areas.Intensivtransport.ViewModels.Lagermanagement.SauerstoffScanViewModel
+
+@{
+    ViewData["Title"] = "Flasche scannen";
+    Layout = ViewData["AreaLayoutPath"]?.ToString();
+}
+
+<style>
+/* ── Vollbild-Scanner-Layout ── */
+.scan-wrapper {
+    position: fixed;
+    inset: 0;
+    background: #000;
+    z-index: 10;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+}
+
+#reader {
+    flex: 1;
+    width: 100%;
+    min-height: 0;
+}
+
+/* html5-qrcode überschreibungen */
+#reader video              { width: 100% !important; height: 100% !important; object-fit: cover !important; }
+#reader__scan_region       { border: none !important; }
+#reader__dashboard         { display: none !important; }
+#reader__header_message    { display: none !important; }
+
+/* ── Reticle (visueller Scan-Rahmen) ── */
+.scan-reticle {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -60%);
+    width: min(280px, 70vw);
+    height: 110px;
+    border: 3px solid #fff;
+    border-radius: 10px;
+    box-shadow: 0 0 0 2000px rgba(0,0,0,.5);
+    pointer-events: none;
+}
+.scan-reticle::before,
+.scan-reticle::after {
+    content: '';
+    position: absolute;
+    width: 24px;
+    height: 24px;
+    border-color: var(--pri-fixed, #f59e0b);
+    border-style: solid;
+}
+.scan-reticle::before { top: -3px; left: -3px; border-width: 3px 0 0 3px; border-radius: 8px 0 0 0; }
+.scan-reticle::after  { bottom: -3px; right: -3px; border-width: 0 3px 3px 0; border-radius: 0 0 8px 0; }
+
+.scan-hint {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, calc(-60% + 80px));
+    color: rgba(255,255,255,.8);
+    font-size: 0.8rem;
+    text-align: center;
+    white-space: nowrap;
+    pointer-events: none;
+}
+
+/* ── Kopf-Bar ── */
+.scan-topbar {
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    padding: 0.75rem 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    background: linear-gradient(to bottom, rgba(0,0,0,.6), transparent);
+    z-index: 5;
+}
+.scan-topbar-title {
+    color: #fff;
+    font-weight: 700;
+    font-size: 1rem;
+    flex: 1;
+}
+.scan-back-btn {
+    color: #fff;
+    background: rgba(255,255,255,.15);
+    border: none;
+    border-radius: 50%;
+    width: 36px; height: 36px;
+    display: flex; align-items: center; justify-content: center;
+    text-decoration: none;
+    font-size: 1rem;
+    flex-shrink: 0;
+}
+
+/* ── Manuell-Eingabe am unteren Rand ── */
+.scan-manual {
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    padding: 0.875rem 1rem 1.25rem;
+    background: linear-gradient(to top, rgba(0,0,0,.8) 60%, transparent);
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+    z-index: 5;
+}
+.scan-manual input {
+    flex: 1;
+    background: rgba(255,255,255,.12);
+    border: 1px solid rgba(255,255,255,.25);
+    color: #fff;
+    border-radius: var(--r-md, 0.75rem);
+    padding: 0.625rem 0.875rem;
+    font-size: 1rem;
+    outline: none;
+}
+.scan-manual input::placeholder { color: rgba(255,255,255,.5); }
+.scan-manual input:focus { border-color: var(--pri-fixed, #f59e0b); }
+.scan-manual button {
+    background: var(--pri-fixed, #f59e0b);
+    color: #000;
+    border: none;
+    border-radius: var(--r-md, 0.75rem);
+    width: 44px; height: 44px;
+    font-size: 1.1rem;
+    font-weight: 700;
+    flex-shrink: 0;
+    cursor: pointer;
+}
+
+/* ── Bottom-Sheet ── */
+.scan-sheet {
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    background: var(--surface-0, #fff);
+    border-radius: 1.25rem 1.25rem 0 0;
+    padding: 0 1.25rem 2rem;
+    transform: translateY(100%);
+    transition: transform 0.32s cubic-bezier(.4,0,.2,1);
+    z-index: 20;
+    max-height: 72dvh;
+    overflow-y: auto;
+}
+.scan-sheet.open { transform: translateY(0); }
+
+.scan-sheet-drag {
+    width: 40px; height: 4px;
+    background: var(--outline-v, #e5e7eb);
+    border-radius: 2px;
+    margin: 0.75rem auto 1.25rem;
+}
+
+.scan-bottle-title {
+    font-size: 1.25rem;
+    font-weight: 800;
+    line-height: 1.2;
+    margin-bottom: 0.25rem;
+}
+.scan-bottle-meta {
+    font-size: 0.875rem;
+    color: var(--on-sv, #6b7280);
+    margin-bottom: 1rem;
+}
+.scan-days-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    font-size: 0.8rem;
+    font-weight: 600;
+    padding: 0.2rem 0.6rem;
+    border-radius: var(--r-full, 9999px);
+    background: var(--surface-2, #f3f4f6);
+    margin-bottom: 1rem;
+}
+.scan-days-badge.warn  { background: var(--warn-c, #fff7ed); color: rgb(var(--warn-rgb, 234 88 12)); }
+.scan-days-badge.error { background: var(--err-c, #fee2e2); color: var(--on-err-c, #b91c1c); }
+
+.scan-action-btn {
+    display: block;
+    width: 100%;
+    padding: 0.9rem 1rem;
+    font-size: 1rem;
+    font-weight: 700;
+    border-radius: var(--r-md, 0.75rem);
+    border: none;
+    cursor: pointer;
+    text-align: center;
+    margin-bottom: 0.625rem;
+    transition: background 0.2s, transform 0.1s;
+}
+.scan-action-btn:active { transform: scale(0.97); }
+.scan-action-btn.primary {
+    background: var(--pri-fixed, #f59e0b);
+    color: #000;
+}
+.scan-action-btn.danger {
+    background: var(--err-c, #fee2e2);
+    color: var(--on-err-c, #b91c1c);
+    border: 1px solid rgba(var(--err-rgb,239 68 68),.25);
+}
+.scan-action-btn.success {
+    background: var(--on-ter-c, #16a34a);
+    color: #fff;
+    pointer-events: none;
+}
+.scan-action-btn.neutral {
+    background: var(--surface-2, #f3f4f6);
+    color: var(--on-sv, #374151);
+}
+.scan-cancel-btn {
+    display: block;
+    width: 100%;
+    text-align: center;
+    padding: 0.625rem;
+    color: var(--on-sv, #6b7280);
+    font-size: 0.875rem;
+    background: none;
+    border: none;
+    cursor: pointer;
+    margin-top: 0.25rem;
+}
+
+.scan-fahrzeug-block {
+    display: none;
+    margin-top: 0.75rem;
+}
+.scan-fahrzeug-block.visible { display: block; }
+.scan-fahrzeug-block select {
+    width: 100%;
+    padding: 0.75rem;
+    font-size: 1rem;
+    border-radius: var(--r-md, 0.75rem);
+    border: 2px solid var(--pri-fixed, #f59e0b);
+    margin-bottom: 0.625rem;
+    background: var(--surface-0, #fff);
+    color: var(--on-s, #111);
+}
+
+.scan-info-state {
+    text-align: center;
+    padding: 0.5rem 0 1rem;
+}
+.scan-info-icon { font-size: 2.5rem; margin-bottom: 0.5rem; }
+.scan-info-title { font-weight: 700; font-size: 1.1rem; margin-bottom: 0.25rem; }
+.scan-info-text  { color: var(--on-sv); font-size: 0.875rem; }
+
+/* Verhindert iOS-Safari Bottom-Safe-Area Probleme */
+.scan-sheet { padding-bottom: max(2rem, env(safe-area-inset-bottom)); }
+</style>
+
+<div class="scan-wrapper">
+    <div id="reader"></div>
+
+    <div class="scan-reticle"></div>
+    <div class="scan-hint">Barcode in den Rahmen halten</div>
+
+    <div class="scan-topbar">
+        <a asp-area="Intensivtransport" asp-controller="Sauerstoff" asp-action="Index"
+           class="scan-back-btn" id="btnZurueck">
+            <i class="bi bi-arrow-left"></i>
+        </a>
+        <span class="scan-topbar-title">Flasche scannen</span>
+    </div>
+
+    <div class="scan-manual">
+        <input type="text" id="manuelleNummer"
+               placeholder="Nummer manuell eingeben"
+               inputmode="numeric" autocomplete="off"
+               style="font-size:16px;" />
+        <button id="manuelSuchen" type="button">→</button>
+    </div>
+
+    @* Bottom-Sheet: erscheint nach Scan *@
+    <div class="scan-sheet" id="scanSheet" role="dialog" aria-modal="true">
+        <div class="scan-sheet-drag"></div>
+
+        @* Inhalt: wird per JS befüllt *@
+        <div id="sheetContent"></div>
+    </div>
+</div>
+
+@* Versteckter CSRF-Token für fetch-POST *@
+<form style="display:none">@Html.AntiForgeryToken()</form>
+
+<script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
+<script>
+(function () {
+    // ── Zustand ──────────────────────────────────────────────────────────────
+    let isProcessing = false;
+    let lastCode     = '';
+    let lastCodeAt   = 0;
+    let currentData  = null;
+
+    const aktiveFahrzeuge = @Html.Raw(
+        System.Text.Json.JsonSerializer.Serialize(
+            Model.AktiveFahrzeuge.Select(f => new { id = f.Id, kennzeichen = f.Kennzeichen })
+        )
+    );
+
+    // ── Audio + Haptik ────────────────────────────────────────────────────────
+    function beep() {
+        try {
+            const ctx = new (window.AudioContext || window.webkitAudioContext)();
+            const osc = ctx.createOscillator();
+            const gain = ctx.createGain();
+            osc.connect(gain);
+            gain.connect(ctx.destination);
+            osc.frequency.value = 1050;
+            gain.gain.setValueAtTime(0.25, ctx.currentTime);
+            gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.12);
+            osc.start();
+            osc.stop(ctx.currentTime + 0.12);
+        } catch (_) {}
+    }
+
+    function vibrate() {
+        if (navigator.vibrate) navigator.vibrate(120);
+    }
+
+    // ── Scanner ───────────────────────────────────────────────────────────────
+    const scanner = new Html5Qrcode('reader');
+
+    scanner.start(
+        { facingMode: 'environment' },
+        { fps: 15, qrbox: { width: 280, height: 110 }, aspectRatio: window.innerHeight / window.innerWidth },
+        onScanSuccess,
+        () => {}
+    ).catch(() => {
+        document.getElementById('manuelleNummer').placeholder = 'Kamera nicht verfügbar — hier eingeben';
+    });
+
+    function onScanSuccess(text) {
+        const now = Date.now();
+        if (isProcessing || (text === lastCode && now - lastCodeAt < 3000)) return;
+        isProcessing = true;
+        lastCode     = text;
+        lastCodeAt   = now;
+        beep();
+        vibrate();
+        doLookup(text.trim());
+    }
+
+    // ── Manuell ───────────────────────────────────────────────────────────────
+    document.getElementById('manuelSuchen').addEventListener('click', () => {
+        const nr = document.getElementById('manuelleNummer').value.trim();
+        if (!nr) return;
+        isProcessing = true;
+        doLookup(nr);
+    });
+    document.getElementById('manuelleNummer').addEventListener('keydown', e => {
+        if (e.key === 'Enter') { e.preventDefault(); document.getElementById('manuelSuchen').click(); }
+    });
+
+    // ── Lookup ────────────────────────────────────────────────────────────────
+    async function doLookup(nr) {
+        showSheet(renderLaden());
+        try {
+            const resp = await fetch(`/Intensivtransport/Sauerstoff/ScanLookup?flaschenNummer=${encodeURIComponent(nr)}`);
+            const data = await resp.json();
+            currentData = data;
+            showSheet(data.gefunden ? renderErgebnis(data) : renderNichtGefunden(data));
+        } catch {
+            showSheet(renderFehler());
+        }
+    }
+
+    // ── Sheet-Management ──────────────────────────────────────────────────────
+    function showSheet(html) {
+        document.getElementById('sheetContent').innerHTML = html;
+        document.getElementById('scanSheet').classList.add('open');
+        bindActions();
+    }
+
+    function closeSheet() {
+        document.getElementById('scanSheet').classList.remove('open');
+        isProcessing = false;
+        currentData  = null;
+        document.getElementById('manuelleNummer').value = '';
+    }
+
+    // ── Templates ─────────────────────────────────────────────────────────────
+    function renderLaden() {
+        return `<div class="scan-info-state">
+            <div class="scan-info-icon">⏳</div>
+            <div class="scan-info-title">Wird gesucht…</div>
+        </div>`;
+    }
+
+    function renderErgebnis(d) {
+        const tageKlasse = d.istKritisch ? 'error' : (d.tageImSystem >= 150 ? 'warn' : '');
+        const tageText   = d.tageImSystem === 0 ? 'Heute eingetroffen' : `${d.tageImSystem} Tage im System`;
+
+        let actionHtml = '';
+
+        if (d.kannNachFahrzeug) {
+            const optionen = aktiveFahrzeuge.map(f =>
+                `<option value="${f.id}">${f.kennzeichen}</option>`
+            ).join('');
+
+            actionHtml = `
+                <button class="scan-action-btn primary" id="btnFahrzeugAuswahl">
+                    <i class="bi bi-car-front"></i> Auf Fahrzeug ausgeben
+                </button>
+                <div class="scan-fahrzeug-block" id="fahrzeugBlock">
+                    <select id="fahrzeugDropdown">
+                        <option value="">— Fahrzeug wählen —</option>
+                        ${optionen}
+                    </select>
+                    <button class="scan-action-btn primary" id="btnFahrzeugBestaetigen">
+                        <i class="bi bi-check-lg"></i> Ausgabe bestätigen
+                    </button>
+                </div>`;
+
+        } else if (d.kannLeerZurueck) {
+            actionHtml = `
+                <button class="scan-action-btn danger" id="btnLeerZurueck">
+                    <i class="bi bi-arrow-left-circle"></i> Leer ins Depot zurückgeben
+                </button>`;
+
+        } else {
+            actionHtml = `
+                <div class="scan-info-state" style="padding-top:0">
+                    <div class="scan-info-title" style="font-size:0.95rem">Keine Aktion verfügbar</div>
+                    <div class="scan-info-text">${d.statusAnzeige} · ${d.standortAnzeige}</div>
+                </div>`;
+        }
+
+        return `
+            <div class="scan-bottle-title">${escHtml(d.bezeichnung)}</div>
+            <div class="scan-bottle-meta">${escHtml(d.statusAnzeige)} · ${escHtml(d.standortAnzeige)}</div>
+            <div class="scan-days-badge ${tageKlasse}">
+                <i class="bi bi-clock"></i> ${escHtml(tageText)}
+            </div>
+            ${actionHtml}
+            <button class="scan-cancel-btn" id="btnAbbrechen">Abbrechen / neu scannen</button>`;
+    }
+
+    function renderNichtGefunden(d) {
+        return `<div class="scan-info-state">
+            <div class="scan-info-icon">🔍</div>
+            <div class="scan-info-title">Flasche nicht gefunden</div>
+            <div class="scan-info-text">${escHtml(d.fehlerMeldung ?? 'Unbekannte Flaschennummer')}</div>
+            <a asp-area href="/Intensivtransport/Sauerstoff/Lieferungen"
+               class="scan-action-btn neutral" style="display:block;margin-top:1rem;text-decoration:none;">
+               <i class="bi bi-plus-lg"></i> In Lieferung erfassen
+            </a>
+        </div>
+        <button class="scan-cancel-btn" id="btnAbbrechen">Abbrechen / neu scannen</button>`;
+    }
+
+    function renderFehler() {
+        return `<div class="scan-info-state">
+            <div class="scan-info-icon">⚠️</div>
+            <div class="scan-info-title">Verbindungsfehler</div>
+            <div class="scan-info-text">Bitte erneut versuchen.</div>
+        </div>
+        <button class="scan-cancel-btn" id="btnAbbrechen">Abbrechen</button>`;
+    }
+
+    function renderErfolg(text) {
+        return `<div class="scan-info-state">
+            <div class="scan-info-icon">✅</div>
+            <div class="scan-info-title">${escHtml(text)}</div>
+        </div>`;
+    }
+
+    // ── Actions ───────────────────────────────────────────────────────────────
+    function bindActions() {
+        document.getElementById('btnAbbrechen')?.addEventListener('click', closeSheet);
+
+        document.getElementById('btnFahrzeugAuswahl')?.addEventListener('click', () => {
+            document.getElementById('btnFahrzeugAuswahl').style.display = 'none';
+            document.getElementById('fahrzeugBlock').classList.add('visible');
+        });
+
+        document.getElementById('btnFahrzeugBestaetigen')?.addEventListener('click', async () => {
+            const fId = document.getElementById('fahrzeugDropdown')?.value;
+            if (!fId) { alert('Bitte ein Fahrzeug wählen.'); return; }
+            await postAktion('/Intensivtransport/Sauerstoff/NachFahrzeug',
+                { flascheId: currentData.flascheId, fahrzeugId: fId },
+                'Flasche wurde ausgegeben.');
+        });
+
+        document.getElementById('btnLeerZurueck')?.addEventListener('click', async () => {
+            await postAktion('/Intensivtransport/Sauerstoff/AlsLeerZurueck',
+                { flascheId: currentData.flascheId },
+                'Flasche leer ins Depot zurückgebucht.');
+        });
+    }
+
+    async function postAktion(url, body, successText) {
+        const token = document.querySelector('input[name="__RequestVerificationToken"]')?.value ?? '';
+        const params = new URLSearchParams({ ...body, __RequestVerificationToken: token });
+        try {
+            await fetch(url, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                body: params.toString()
+            });
+            beep();
+            vibrate();
+            showSheet(renderErfolg(successText));
+            setTimeout(closeSheet, 1800);
+        } catch {
+            showSheet(renderFehler());
+        }
+    }
+
+    // ── Utils ─────────────────────────────────────────────────────────────────
+    function escHtml(str) {
+        return String(str ?? '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+    }
+})();
+</script>

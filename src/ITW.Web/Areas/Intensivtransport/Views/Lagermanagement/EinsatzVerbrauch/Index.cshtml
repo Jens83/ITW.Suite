@@ -1,0 +1,50 @@
+@model ITW.Web.Areas.Intensivtransport.ViewModels.Lagermanagement.EinsatzVerbrauchIndexViewModel
+
+@{
+    ViewData["Title"] = "Einsatzverbrauch";
+}
+
+<div class="app-page">
+    <div class="app-page-header">
+        <h1 class="app-page-heading">Einsatzverbrauch</h1>
+        <div class="app-page-actions">
+            <a asp-area="Intensivtransport" asp-controller="EinsatzVerbrauch" asp-action="Neu"
+               class="app-btn app-btn-primary app-btn-sm">
+                <i class="bi bi-plus-lg"></i> Verbrauch erfassen
+            </a>
+        </div>
+    </div>
+
+    <div class="app-surface">
+        @if (!Model.Eintraege.Any())
+        {
+            <div style="padding: var(--sp-pad); text-align: center; color: var(--outline);">
+                Noch kein Einsatzverbrauch erfasst (letzte 30 Tage).
+            </div>
+        }
+        else
+        {
+            <table class="table table-hover table-sm mb-0">
+                <thead>
+                    <tr>
+                        <th>Datum</th>
+                        <th>Fahrzeug</th>
+                        <th>Patienten</th>
+                        <th>Bemerkung</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var e in Model.Eintraege)
+                    {
+                        <tr>
+                            <td>@e.Datum.ToString("dd.MM.yyyy")</td>
+                            <td>@e.FahrzeugAnzeige</td>
+                            <td>@e.Patienten</td>
+                            <td><span class="text-muted small">@e.Bemerkung</span></td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        }
+    </div>
+</div>

@@ -1,0 +1,88 @@
+@model ITW.Web.Areas.Intensivtransport.ViewModels.Lagermanagement.EinsatzVerbrauchFormViewModel
+@using ITW.Lagermanagement.Domain.Enums
+
+@{
+    ViewData["Title"] = "Verbrauch erfassen";
+}
+
+<div class="app-page">
+    <div class="app-page-header">
+        <h1 class="app-page-heading">Einsatzverbrauch erfassen</h1>
+    </div>
+
+    <div class="app-surface">
+        <form asp-area="Intensivtransport" asp-controller="EinsatzVerbrauch" asp-action="Neu"
+              method="post" id="verbrauchForm">
+            @Html.AntiForgeryToken()
+
+            <div class="row g-3 mb-4">
+                <div class="col-md-3">
+                    <label asp-for="Datum" class="form-label">Datum *</label>
+                    <input asp-for="Datum" type="date" class="form-control" />
+                </div>
+                <div class="col-md-3">
+                    <label asp-for="Fahrzeug" class="form-label">Fahrzeug</label>
+                    <select asp-for="Fahrzeug" class="form-select">
+                        <option value="1">Fahrzeug 1</option>
+                        <option value="2">Fahrzeug 2</option>
+                    </select>
+                </div>
+                <div class="col-md-3">
+                    <label asp-for="Patienten" class="form-label">Patienten</label>
+                    <input asp-for="Patienten" type="number" class="form-control" min="0" id="patientenInput" />
+                    <div class="form-text">Pro-Patient-Artikel werden automatisch berechnet.</div>
+                </div>
+                <div class="col-md-3">
+                    <label asp-for="Bemerkung" class="form-label">Bemerkung (optional)</label>
+                    <input asp-for="Bemerkung" class="form-control" placeholder="z.B. Einsatznummer" />
+                </div>
+            </div>
+
+            <h6 class="mb-3">Manuelle Positionen</h6>
+            <div class="table-responsive">
+                <table class="table table-sm">
+                    <thead>
+                        <tr>
+                            <th>Artikel</th>
+                            <th>Einheit</th>
+                            <th>Pro Patient</th>
+                            <th style="width: 120px;">Menge</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @for (var i = 0; i < Model.VerfuegbareArtikel.Count; i++)
+                        {
+                            var artikel = Model.VerfuegbareArtikel[i];
+                            <tr>
+                                <td>@artikel.Name</td>
+                                <td>@artikel.Einheit</td>
+                                <td>
+                                    @if (artikel.VerbrauchProPatient.HasValue)
+                                    {
+                                        <span class="badge bg-info" data-pro-patient="@artikel.VerbrauchProPatient">
+                                            @artikel.VerbrauchProPatient/Patient (auto)
+                                        </span>
+                                    }
+                                </td>
+                                <td>
+                                    <input type="hidden" name="Positionen[@i].ArtikelId" value="@artikel.Id" />
+                                    <input type="number" name="Positionen[@i].Menge"
+                                           class="form-control form-control-sm"
+                                           min="0" value="0" />
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="mt-4 d-flex gap-2">
+                <button type="submit" class="app-btn app-btn-primary">
+                    <i class="bi bi-check-lg"></i> Verbrauch speichern
+                </button>
+                <a asp-area="Intensivtransport" asp-controller="EinsatzVerbrauch" asp-action="Index"
+                   class="app-btn app-btn-neutral">Abbrechen</a>
+            </div>
+        </form>
+    </div>
+</div>

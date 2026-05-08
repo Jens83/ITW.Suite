@@ -3,6 +3,7 @@ using ITW.Web.DependencyInjection;
 using ITW.Web.Middleware;
 using ITW.Web.Setup.Identity;
 using ITW.Web.Setup.Startup;
+using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.StaticFiles;
 using Microsoft.EntityFrameworkCore;
 using Serilog;
@@ -56,9 +57,21 @@ builder.Services.AddInfrastructure(options =>
 builder.Services.AddWebIdentitySetup(builder.Configuration);
 builder.Services.AddWebApplicationServices();
 
+// Dev Tunnel / Reverse Proxy: X-Forwarded-Proto und X-Forwarded-Host auswerten
+builder.Services.Configure<ForwardedHeadersOptions>(options =>
+{
+    options.ForwardedHeaders = ForwardedHeaders.XForwardedFor
+                             | ForwardedHeaders.XForwardedProto
+                             | ForwardedHeaders.XForwardedHost;
+    options.KnownNetworks.Clear();
+    options.KnownProxies.Clear();
+});
+
 var app = builder.Build();
 
 await app.InitializeApplicationAsync();
+
+app.UseForwardedHeaders();
 
 if (!app.Environment.IsDevelopment())
 {

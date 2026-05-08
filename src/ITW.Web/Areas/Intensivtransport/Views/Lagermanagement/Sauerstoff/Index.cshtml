@@ -1,0 +1,420 @@
+@model ITW.Web.Areas.Intensivtransport.ViewModels.Lagermanagement.SauerstoffIndexViewModel
+@using ITW.Lagermanagement.Domain.Enums
+
+@{
+    ViewData["Title"] = "Sauerstoffdepot";
+    var fahrzeugMap = Model.FahrzeugBestaende.ToDictionary(x => x.FahrzeugId);
+}
+
+<style>
+/* ── Responsive Stats: scrollbar auf Mobile ── */
+.lager-o2-stats {
+    display: flex;
+    gap: 1rem;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    padding: var(--sp-pad);
+}
+.lager-o2-stats::-webkit-scrollbar { display: none; }
+.lager-stat { flex-shrink: 0; }
+
+/* ── Mobile-Cards ── */
+.lager-mobile-cards { display: none; }
+
+@@media (max-width: 768px) {
+    .lager-desktop-table { display: none !important; }
+    .lager-mobile-cards  { display: block; }
+
+    .lager-flasche-card {
+        background: var(--surface-0);
+        border: 1px solid var(--outline-v);
+        border-radius: var(--r-md);
+        padding: 0.875rem 1rem;
+        margin-bottom: 0.625rem;
+        box-shadow: var(--sh-card);
+    }
+    .lager-flasche-card.risk   { border-left: 3px solid rgb(var(--warn-rgb)); }
+    .lager-flasche-card.danger { border-left: 3px solid var(--on-err-c); }
+
+    .lager-card-head {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        margin-bottom: 0.4rem;
+        gap: 0.5rem;
+    }
+    .lager-card-title { font-weight: 700; font-size: 0.95rem; }
+    .lager-card-nr    { font-size: 0.78rem; color: var(--on-sv); }
+    .lager-card-pills { display: flex; gap: 0.375rem; flex-wrap: wrap; margin-bottom: 0.625rem; }
+    .lager-card-meta  { font-size: 0.78rem; color: var(--on-sv); margin-bottom: 0.625rem; }
+    .lager-card-actions { display: flex; gap: 0.5rem; }
+    .lager-card-actions .app-btn { flex: 1; justify-content: center; }
+}
+
+/* ── Floating Action Button (Scannen) ── */
+.scan-fab {
+    display: none;
+    position: fixed;
+    bottom: 1.5rem;
+    right: 1.25rem;
+    z-index: 100;
+    width: 56px; height: 56px;
+    border-radius: 50%;
+    background: var(--pri-fixed, #f59e0b);
+    color: #000;
+    font-size: 1.4rem;
+    border: none;
+    box-shadow: 0 4px 16px rgba(0,0,0,.25);
+    cursor: pointer;
+    text-decoration: none;
+    align-items: center;
+    justify-content: center;
+}
+@@media (max-width: 768px) {
+    .scan-fab { display: flex; }
+}
+</style>
+
+<div class="app-page">
+    <div class="app-page-header">
+        <h1 class="app-page-heading">Sauerstoffdepot</h1>
+        <div class="app-page-actions">
+            <a asp-area="Intensivtransport" asp-controller="Sauerstoff" asp-action="Scan"
+               class="app-btn app-btn-primary app-btn-sm">
+                <i class="bi bi-qr-code-scan"></i> Scannen
+            </a>
+            <button type="button" class="app-btn app-btn-neutral app-btn-sm"
+                    data-bs-toggle="modal" data-bs-target="#lieferungModal">
+                <i class="bi bi-truck"></i> Neue Lieferung
+            </button>
+            <button type="button" class="app-btn app-btn-neutral app-btn-sm"
+                    data-bs-toggle="modal" data-bs-target="#abgabeModal">
+                <i class="bi bi-box-arrow-right"></i> Abgabe an Lieferant
+            </button>
+        </div>
+    </div>
+
+    @* Schnellstatus (scrollbar auf Mobile) *@
+    <div class="lager-o2-stats app-surface mb-3">
+        <div class="lager-stat">
+            <span class="lager-stat__zahl lager-stat__zahl--ok">@Model.AnzahlVollDepot</span>
+            <span class="lager-stat__label">Voll / Depot</span>
+        </div>
+        <div class="lager-stat">
+            <span class="lager-stat__zahl lager-stat__zahl--warn">@Model.AnzahlLeerDepot</span>
+            <span class="lager-stat__label">Leer / Depot</span>
+        </div>
+        @foreach (var fzg in Model.FahrzeugBestaende)
+        {
+            <div class="lager-stat">
+                <span class="lager-stat__zahl">@fzg.AnzahlFlaschen</span>
+                <span class="lager-stat__label">@fzg.Kennzeichen</span>
+            </div>
+        }
+    </div>
+
+    @* Desktop: Tabelle *@
+    <div class="app-surface lager-desktop-table">
+        @if (!Model.Flaschen.Any())
+        {
+            <div style="padding: var(--sp-pad); text-align:center; color: var(--outline);">
+                Noch keine Flaschen registriert. Beginne mit einer neuen Lieferung.
+            </div>
+        }
+        else
+        {
+            <table class="table table-hover table-sm mb-0">
+                <thead>
+                    <tr>
+                        <th>Flasche</th>
+                        <th>Größe</th>
+                        <th>Status</th>
+                        <th>Standort</th>
+                        <th>Tage im System</th>
+                        <th>Lieferung</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var f in Model.Flaschen.OrderBy(x => x.FahrzeugId == null ? 0 : 1).ThenBy(x => x.Status))
+                    {
+                        var rowStyle = f.IstKritisch ? "background:var(--err-c)" : f.HatRisiko ? "background:var(--warn-c)" : "";
+                        <tr style="@rowStyle">
+                            <td>
+                                <strong>@(f.FahrzeugId is null ? "Depot" : fahrzeugMap.TryGetValue(f.FahrzeugId.Value, out var fzgInfo) ? fzgInfo.Kennzeichen : "Fahrzeug")</strong>
+                                @if (!string.IsNullOrEmpty(f.FlaschenNummer))
+                                {
+                                    <br /><small class="text-muted">Nr. @f.FlaschenNummer</small>
+                                }
+                            </td>
+                            <td><span class="app-pill app-pill--neutral">@f.GroesseAnzeige</span></td>
+                            <td>
+                                @if (f.Status == SauerstoffFlaschenStatus.Voll)
+                                {
+                                    <span class="app-pill app-pill--success">Voll</span>
+                                }
+                                else
+                                {
+                                    <span class="app-pill app-pill--muted">Leer</span>
+                                }
+                            </td>
+                            <td>@(f.FahrzeugId is null ? "Depot" : fahrzeugMap.TryGetValue(f.FahrzeugId.Value, out var fzg2) ? fzg2.Kennzeichen : "Fahrzeug")</td>
+                            <td>
+                                @if (f.TageImSystem > 0)
+                                {
+                                    var textStyle = f.IstKritisch ? "color:var(--on-err-c);font-weight:700" : f.HatRisiko ? "color:rgb(var(--warn-rgb));font-weight:700" : "";
+                                    <span style="@textStyle">
+                                        @f.TageImSystem Tage
+                                        @if (f.HatRisiko && !f.IstKritisch)
+                                        {
+                                            <small>(noch @f.TageVerbleibend)</small>
+                                        }
+                                    </span>
+                                }
+                                else
+                                {
+                                    <span class="text-muted">Heute</span>
+                                }
+                            </td>
+                            <td><small class="text-muted">@f.LieferungInfo</small></td>
+                            <td>
+                                <div class="d-flex gap-1 justify-content-end">
+                                    @if (f.Status == SauerstoffFlaschenStatus.Voll && f.FahrzeugId is null)
+                                    {
+                                        <button type="button"
+                                                class="app-btn app-btn-sm app-btn-neutral"
+                                                title="Auf Fahrzeug"
+                                                data-ausgabe-flasche-id="@f.Id"
+                                                data-bs-toggle="modal" data-bs-target="#ausgabeModal">
+                                            <i class="bi bi-car-front"></i> Ausgabe
+                                        </button>
+                                    }
+                                    @if (f.FahrzeugId is not null)
+                                    {
+                                        <form asp-area="Intensivtransport" asp-controller="Sauerstoff"
+                                              asp-action="AlsLeerZurueck" method="post" class="d-inline">
+                                            @Html.AntiForgeryToken()
+                                            <input type="hidden" name="flascheId" value="@f.Id" />
+                                            <button type="submit" class="app-btn app-btn-sm app-btn-neutral" title="Leer ins Depot">
+                                                <i class="bi bi-arrow-left-circle"></i> Leer zurück
+                                            </button>
+                                        </form>
+                                    }
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        }
+    </div>
+
+    @* Mobile: Cards *@
+    <div class="lager-mobile-cards">
+        @if (!Model.Flaschen.Any())
+        {
+            <div class="app-surface" style="padding: var(--sp-pad); text-align:center; color: var(--outline);">
+                Noch keine Flaschen registriert.
+            </div>
+        }
+        else
+        {
+            @foreach (var f in Model.Flaschen.OrderBy(x => x.FahrzeugId == null ? 0 : 1).ThenBy(x => x.Status))
+            {
+                var cardKlasse = f.IstKritisch ? "danger" : f.HatRisiko ? "risk" : "";
+                var fzgName    = f.FahrzeugId is null ? "Depot"
+                               : fahrzeugMap.TryGetValue(f.FahrzeugId.Value, out var fzgC) ? fzgC.Kennzeichen : "Fahrzeug";
+                <div class="lager-flasche-card @cardKlasse">
+                    <div class="lager-card-head">
+                        <div>
+                            <div class="lager-card-title">@f.GroesseAnzeige Flasche</div>
+                            @if (!string.IsNullOrEmpty(f.FlaschenNummer))
+                            {
+                                <div class="lager-card-nr">Nr. @f.FlaschenNummer</div>
+                            }
+                        </div>
+                        @if (f.Status == SauerstoffFlaschenStatus.Voll)
+                        {
+                            <span class="app-pill app-pill--success">Voll</span>
+                        }
+                        else
+                        {
+                            <span class="app-pill app-pill--muted">Leer</span>
+                        }
+                    </div>
+                    <div class="lager-card-pills">
+                        <span class="app-pill app-pill--neutral">@fzgName</span>
+                        @{
+                            var tStyle = f.IstKritisch ? "app-pill--danger" : f.HatRisiko ? "app-pill--warning" : "app-pill--neutral";
+                        }
+                        <span class="app-pill @tStyle">
+                            @(f.TageImSystem == 0 ? "Heute" : $"{f.TageImSystem} Tage")
+                            @if (f.HatRisiko && !f.IstKritisch)
+                            {
+                                <text>· noch @f.TageVerbleibend</text>
+                            }
+                        </span>
+                    </div>
+                    <div class="lager-card-meta">@f.LieferungInfo</div>
+                    <div class="lager-card-actions">
+                        @if (f.Status == SauerstoffFlaschenStatus.Voll && f.FahrzeugId is null)
+                        {
+                            <button type="button"
+                                    class="app-btn app-btn-sm app-btn-neutral"
+                                    data-ausgabe-flasche-id="@f.Id"
+                                    data-bs-toggle="modal" data-bs-target="#ausgabeModal">
+                                <i class="bi bi-car-front"></i> Ausgabe
+                            </button>
+                        }
+                        @if (f.FahrzeugId is not null)
+                        {
+                            <form asp-area="Intensivtransport" asp-controller="Sauerstoff"
+                                  asp-action="AlsLeerZurueck" method="post">
+                                @Html.AntiForgeryToken()
+                                <input type="hidden" name="flascheId" value="@f.Id" />
+                                <button type="submit" class="app-btn app-btn-sm app-btn-neutral">
+                                    <i class="bi bi-arrow-left-circle"></i> Leer zurück
+                                </button>
+                            </form>
+                        }
+                    </div>
+                </div>
+            }
+        }
+    </div>
+
+    <div class="mt-3">
+        <a asp-area="Intensivtransport" asp-controller="Sauerstoff" asp-action="Lieferungen"
+           class="app-btn app-btn-outline-accent app-btn-sm">
+            <i class="bi bi-list-ul"></i> Alle Lieferungen anzeigen
+        </a>
+    </div>
+</div>
+
+@* FAB: Scannen (nur Mobile) *@
+<a asp-area="Intensivtransport" asp-controller="Sauerstoff" asp-action="Scan"
+   class="scan-fab" title="Flasche scannen">
+    <i class="bi bi-qr-code-scan"></i>
+</a>
+
+@* Ausgabe-Modal *@
+<div class="modal fade" id="ausgabeModal" tabindex="-1" aria-labelledby="ausgabeModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <form asp-area="Intensivtransport" asp-controller="Sauerstoff" asp-action="NachFahrzeug" method="post">
+            @Html.AntiForgeryToken()
+            <input type="hidden" name="flascheId" id="ausgabeFlascheId" />
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="ausgabeModalLabel">Flasche auf Fahrzeug ausgeben</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Schließen"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-0">
+                        <label class="form-label">Fahrzeug <span class="text-danger">*</span></label>
+                        <select name="fahrzeugId" class="form-select" required>
+                            <option value="">— Fahrzeug wählen —</option>
+                            @foreach (var fzg in Model.AktiveFahrzeuge)
+                            {
+                                <option value="@fzg.Id">@fzg.Kennzeichen</option>
+                            }
+                        </select>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="app-btn app-btn-neutral" data-bs-dismiss="modal">Abbrechen</button>
+                    <button type="submit" class="app-btn app-btn-primary">Ausgeben</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+@* Neue Lieferung Modal *@
+<div class="modal fade" id="lieferungModal" tabindex="-1" aria-labelledby="lieferungModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <form asp-area="Intensivtransport" asp-controller="Sauerstoff" asp-action="LieferungNeu" method="post">
+            @Html.AntiForgeryToken()
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="lieferungModalLabel">Neue Lieferung erfassen</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Schließen"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label class="form-label">Lieferscheinnummer <span class="text-danger">*</span></label>
+                        <input type="text" name="lieferscheinNummer" class="form-control"
+                               placeholder="z.B. 4711" required maxlength="100" />
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Lieferdatum <span class="text-danger">*</span></label>
+                        <input type="date" name="lieferdatum" class="form-control"
+                               value="@DateTime.Today.ToString("yyyy-MM-dd")" required />
+                    </div>
+                    <div class="mb-0">
+                        <label class="form-label">Bemerkung <span class="text-muted fw-normal">(optional)</span></label>
+                        <input type="text" name="bemerkung" class="form-control"
+                               placeholder="z.B. Fahrer Müller" maxlength="500" />
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="app-btn app-btn-neutral" data-bs-dismiss="modal">Abbrechen</button>
+                    <button type="submit" class="app-btn app-btn-primary">Anlegen &amp; Flaschen erfassen</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+@* Abgabe-Modal *@
+<div class="modal fade" id="abgabeModal" tabindex="-1" aria-labelledby="abgabeModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <form asp-area="Intensivtransport" asp-controller="Sauerstoff" asp-action="AbgebenAnLieferant" method="post">
+            @Html.AntiForgeryToken()
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="abgabeModalLabel">Leere Flaschen an Lieferant abgeben</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Schließen"></button>
+                </div>
+                <div class="modal-body">
+                    @{
+                        var leereImDepot = Model.Flaschen.Where(f => f.Status == SauerstoffFlaschenStatus.Leer && f.FahrzeugId is null).ToList();
+                    }
+                    @if (!leereImDepot.Any())
+                    {
+                        <p class="text-muted small">Keine leeren Flaschen im Depot.</p>
+                    }
+                    else
+                    {
+                        <p class="text-muted small mb-3">Wähle die Flaschen aus, die an den Lieferanten zurückgegeben werden.</p>
+                        @foreach (var f in leereImDepot)
+                        {
+                            <div class="form-check">
+                                <input type="checkbox" name="LeereFlaschenIds" value="@f.Id"
+                                       class="form-check-input" id="abgabe_@f.Id" />
+                                <label class="form-check-label" for="abgabe_@f.Id">
+                                    @f.BezeichnungAnzeige
+                                    <small class="text-muted">(@f.TageImSystem Tage im System)</small>
+                                </label>
+                            </div>
+                        }
+                    }
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="app-btn app-btn-neutral" data-bs-dismiss="modal">Abbrechen</button>
+                    <button type="submit" class="app-btn app-btn-primary">Abgeben &amp; deaktivieren</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        document.querySelectorAll('[data-ausgabe-flasche-id]').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.getElementById('ausgabeFlascheId').value = btn.dataset.ausgabeFlascheId;
+            });
+        });
+    </script>
+}

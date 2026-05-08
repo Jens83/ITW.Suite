@@ -7,6 +7,7 @@ using ITW.Application.Organisation.Contracts;
 using ITW.Application.Personnel.Urlaub.Contracts;
 using ITW.Dienstplan.Application.Contracts;
 using ITW.Fahrzeugmanagement.Application.Contracts;
+using ITW.Lagermanagement.Application.Contracts;
 using ITW.Infrastructure.Identity.UserManagement;
 using ITW.Infrastructure.Persistence.DbContexts;
 using ITW.Infrastructure.Persistence.Repositories;
@@ -59,6 +60,14 @@ public static class InfrastructureServiceCollectionExtensions
         services.AddScoped<IFahrtenbuchRepository, FahrtenbuchRepository>();
         services.AddScoped<IFahrzeugPruefungRepository, FahrzeugPruefungRepository>();
 
+        // Lagermanagement
+        services.AddScoped<ILagerArtikelRepository, LagerArtikelRepository>();
+        services.AddScoped<IArtikelBestandRepository, ArtikelBestandRepository>();
+        services.AddScoped<IArtikelChargeRepository, ArtikelChargeRepository>();
+        services.AddScoped<ISauerstoffLieferungRepository, SauerstoffLieferungRepository>();
+        services.AddScoped<ISauerstoffFlascheRepository, SauerstoffFlascheRepository>();
+        services.AddScoped<IEinsatzVerbrauchRepository, EinsatzVerbrauchRepository>();
+
         services.AddScoped<IAktivitaetsLogRepository, AktivitaetsLogRepository>();
         services.AddScoped<IAufgabeRepository, AufgabeRepository>();
 
@@ -67,6 +76,7 @@ public static class InfrastructureServiceCollectionExtensions
         services.AddScoped<PersonnelSchemaBootstrapper>();
         services.AddScoped<PersonnelUrlaubSchemaBootstrapper>();
         services.AddScoped<FahrzeugmanagementSchemaBootstrapper>();
+        services.AddScoped<LagermanagementSchemaBootstrapper>();
         services.AddScoped<AktivitaetsLogSchemaBootstrapper>();
         services.AddScoped<AufgabenSchemaBootstrapper>();
 

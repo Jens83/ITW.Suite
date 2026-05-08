@@ -13,7 +13,8 @@ public static class BereichsNavigationBuilder
         OrganisationsbereichCode navigationsBereich,
         CurrentUserContext? currentUser,
         string? aktuellerController,
-        string? aktuelleAction)
+        string? aktuelleAction,
+        bool darfMeinUrlaub = true)
     {
         if (currentUser is null || currentUser.Bereich != navigationsBereich)
         {
@@ -40,7 +41,8 @@ public static class BereichsNavigationBuilder
             navigationsBereich,
             currentUser,
             aktuellerController,
-            aktuelleAction);
+            aktuelleAction,
+            darfMeinUrlaub);
 
         if (dienstplanSektion is not null)
         {
@@ -67,6 +69,17 @@ public static class BereichsNavigationBuilder
         if (fahrzeugmanagementSektion is not null)
         {
             sektionen.Add(fahrzeugmanagementSektion);
+        }
+
+        var lagerSektion = BaueLagermanagementSektionWennErlaubt(
+            navigationsBereich,
+            currentUser,
+            aktuellerController,
+            aktuelleAction);
+
+        if (lagerSektion is not null)
+        {
+            sektionen.Add(lagerSektion);
         }
 
         return new BereichsNavigationViewModel
@@ -136,7 +149,8 @@ public static class BereichsNavigationBuilder
         OrganisationsbereichCode navigationsBereich,
         CurrentUserContext currentUser,
         string? aktuellerController,
-        string? aktuelleAction)
+        string? aktuelleAction,
+        bool darfMeinUrlaub = true)
     {
         if (navigationsBereich != OrganisationsbereichCode.Intensivtransport)
         {
@@ -207,9 +221,8 @@ public static class BereichsNavigationBuilder
                     string.Equals(aktuellerController, "Urlaubsplaner", StringComparison.OrdinalIgnoreCase)
             });
         }
-        else
+        else if (darfMeinUrlaub)
         {
-            // Mitarbeiter: eigene Urlaubsanträge stellen und Status einsehen
             eintraege.Add(new BereichsNavigationItemViewModel
             {
                 Text = "Mein Urlaub",
@@ -346,6 +359,78 @@ public static class BereichsNavigationBuilder
         };
     }
 
+
+    private static BereichsNavigationSectionViewModel? BaueLagermanagementSektionWennErlaubt(
+        OrganisationsbereichCode navigationsBereich,
+        CurrentUserContext currentUser,
+        string? aktuellerController,
+        string? aktuelleAction)
+    {
+        if (navigationsBereich != OrganisationsbereichCode.Intensivtransport)
+            return null;
+
+        if (currentUser.Rolle != BereichsrolleCode.Wachleiter)
+            return null;
+
+        if (!currentUser.HatModul(ModulCode.Lagerlogistik))
+            return null;
+
+        var areaName = BereichsRoutingHelper.GetAreaName(navigationsBereich) ?? string.Empty;
+
+        return new BereichsNavigationSectionViewModel
+        {
+            Titel = "Lager",
+            Eintraege =
+            [
+                new BereichsNavigationItemViewModel
+                {
+                    Text         = "Übersicht",
+                    IconCssClass = "bi bi-boxes",
+                    Area         = areaName,
+                    Controller   = "LagerUebersicht",
+                    Action       = "Index",
+                    IstAktiv     = string.Equals(aktuellerController, "LagerUebersicht", StringComparison.OrdinalIgnoreCase)
+                },
+                new BereichsNavigationItemViewModel
+                {
+                    Text         = "Artikel & Bestand",
+                    IconCssClass = "bi bi-box-seam",
+                    Area         = areaName,
+                    Controller   = "LagerArtikel",
+                    Action       = "Index",
+                    IstAktiv     = string.Equals(aktuellerController, "LagerArtikel", StringComparison.OrdinalIgnoreCase)
+                },
+                new BereichsNavigationItemViewModel
+                {
+                    Text         = "O₂ Depot",
+                    IconCssClass = "bi bi-capsule",
+                    Area         = areaName,
+                    Controller   = "Sauerstoff",
+                    Action       = "Index",
+                    IstAktiv     = string.Equals(aktuellerController, "Sauerstoff", StringComparison.OrdinalIgnoreCase)
+                },
+                new BereichsNavigationItemViewModel
+                {
+                    Text         = "O₂ Scannen",
+                    IconCssClass = "bi bi-qr-code-scan",
+                    Area         = areaName,
+                    Controller   = "Sauerstoff",
+                    Action       = "Scan",
+                    IstAktiv     = string.Equals(aktuellerController, "Sauerstoff", StringComparison.OrdinalIgnoreCase)
+                                   && string.Equals(aktuelleAction, "Scan", StringComparison.OrdinalIgnoreCase)
+                },
+                new BereichsNavigationItemViewModel
+                {
+                    Text         = "Einsatzverbrauch",
+                    IconCssClass = "bi bi-journal-medical",
+                    Area         = areaName,
+                    Controller   = "EinsatzVerbrauch",
+                    Action       = "Index",
+                    IstAktiv     = string.Equals(aktuellerController, "EinsatzVerbrauch", StringComparison.OrdinalIgnoreCase)
+                }
+            ]
+        };
+    }
 
     private static string ErmittleDashboardIcon(OrganisationsbereichCode bereich)
     {

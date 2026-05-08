@@ -2,6 +2,8 @@ using ITW.Application.Abstractions.DateTime;
 using ITW.Web.UI.Feedback;
 using ITW.Application.Abstractions.Identity;
 using ITW.Application.Abstractions.Persistence;
+using ITW.Application.Aktivitaet;
+using ITW.Application.Aufgaben;
 using ITW.Application.Organisation.Contracts;
 using ITW.Application.Personnel.ProfileQueries;
 using ITW.Application.Personnel.Urlaub;
@@ -73,14 +75,15 @@ public sealed class UrlaubsplanerControllerTests
 
         var controller = new UrlaubsplanerController(
             leseMitarbeiterService,
-            urlaubsanspruchRepository,
             urlaubszeitraumRepository,
             dienstplanPeriodeRepository,
             dienstwunschRepository,
             new SaveMitarbeiterUrlaubsanspruchService(urlaubsanspruchRepository, FakeLogger<SaveMitarbeiterUrlaubsanspruchService>.Instance),
             new SaveMitarbeiterUrlaubszeitraumService(urlaubszeitraumRepository, FakeLogger<SaveMitarbeiterUrlaubszeitraumService>.Instance),
             new DeleteMitarbeiterUrlaubszeitraumService(urlaubszeitraumRepository, FakeLogger<DeleteMitarbeiterUrlaubszeitraumService>.Instance),
-            new ReadMitarbeiterUrlaubsplanerService(urlaubsanspruchRepository, urlaubszeitraumRepository, FakeLogger<ReadMitarbeiterUrlaubsplanerService>.Instance),
+            new ReadWachleiterUrlaubsUebersichtService(urlaubszeitraumRepository, leseMitarbeiterService),
+            new ReadWachleiterJahresuebersichtService(urlaubszeitraumRepository, leseMitarbeiterService),
+            new EntscheidenUrlaubsAntragService(urlaubszeitraumRepository, new FakeAufgabeRepository(), new FakeAktivitaetsLogRepository()),
             new FakeDateTimeProvider(),
             currentUserAccessor);
 
@@ -172,14 +175,15 @@ public sealed class UrlaubsplanerControllerTests
 
         var controller = new UrlaubsplanerController(
             leseMitarbeiterService,
-            urlaubsanspruchRepository,
             urlaubszeitraumRepository,
             dienstplanPeriodeRepository,
             dienstwunschRepository,
             new SaveMitarbeiterUrlaubsanspruchService(urlaubsanspruchRepository, FakeLogger<SaveMitarbeiterUrlaubsanspruchService>.Instance),
             new SaveMitarbeiterUrlaubszeitraumService(urlaubszeitraumRepository, FakeLogger<SaveMitarbeiterUrlaubszeitraumService>.Instance),
             new DeleteMitarbeiterUrlaubszeitraumService(urlaubszeitraumRepository, FakeLogger<DeleteMitarbeiterUrlaubszeitraumService>.Instance),
-            new ReadMitarbeiterUrlaubsplanerService(urlaubsanspruchRepository, urlaubszeitraumRepository, FakeLogger<ReadMitarbeiterUrlaubsplanerService>.Instance),
+            new ReadWachleiterUrlaubsUebersichtService(urlaubszeitraumRepository, leseMitarbeiterService),
+            new ReadWachleiterJahresuebersichtService(urlaubszeitraumRepository, leseMitarbeiterService),
+            new EntscheidenUrlaubsAntragService(urlaubszeitraumRepository, new FakeAufgabeRepository(), new FakeAktivitaetsLogRepository()),
             new FakeDateTimeProvider(),
             currentUserAccessor);
 
@@ -263,14 +267,15 @@ public sealed class UrlaubsplanerControllerTests
 
         var controller = new UrlaubsplanerController(
             leseMitarbeiterService,
-            urlaubsanspruchRepository,
             urlaubszeitraumRepository,
             dienstplanPeriodeRepository,
             dienstwunschRepository,
             new SaveMitarbeiterUrlaubsanspruchService(urlaubsanspruchRepository, FakeLogger<SaveMitarbeiterUrlaubsanspruchService>.Instance),
             new SaveMitarbeiterUrlaubszeitraumService(urlaubszeitraumRepository, FakeLogger<SaveMitarbeiterUrlaubszeitraumService>.Instance),
             new DeleteMitarbeiterUrlaubszeitraumService(urlaubszeitraumRepository, FakeLogger<DeleteMitarbeiterUrlaubszeitraumService>.Instance),
-            new ReadMitarbeiterUrlaubsplanerService(urlaubsanspruchRepository, urlaubszeitraumRepository, FakeLogger<ReadMitarbeiterUrlaubsplanerService>.Instance),
+            new ReadWachleiterUrlaubsUebersichtService(urlaubszeitraumRepository, leseMitarbeiterService),
+            new ReadWachleiterJahresuebersichtService(urlaubszeitraumRepository, leseMitarbeiterService),
+            new EntscheidenUrlaubsAntragService(urlaubszeitraumRepository, new FakeAufgabeRepository(), new FakeAktivitaetsLogRepository()),
             new FakeDateTimeProvider(),
             currentUserAccessor);
 
@@ -370,14 +375,15 @@ public sealed class UrlaubsplanerControllerTests
 
         var controller = new UrlaubsplanerController(
             leseMitarbeiterService,
-            urlaubsanspruchRepository,
             urlaubszeitraumRepository,
             dienstplanPeriodeRepository,
             dienstwunschRepository,
             new SaveMitarbeiterUrlaubsanspruchService(urlaubsanspruchRepository, FakeLogger<SaveMitarbeiterUrlaubsanspruchService>.Instance),
             new SaveMitarbeiterUrlaubszeitraumService(urlaubszeitraumRepository, FakeLogger<SaveMitarbeiterUrlaubszeitraumService>.Instance),
             new DeleteMitarbeiterUrlaubszeitraumService(urlaubszeitraumRepository, FakeLogger<DeleteMitarbeiterUrlaubszeitraumService>.Instance),
-            new ReadMitarbeiterUrlaubsplanerService(urlaubsanspruchRepository, urlaubszeitraumRepository, FakeLogger<ReadMitarbeiterUrlaubsplanerService>.Instance),
+            new ReadWachleiterUrlaubsUebersichtService(urlaubszeitraumRepository, leseMitarbeiterService),
+            new ReadWachleiterJahresuebersichtService(urlaubszeitraumRepository, leseMitarbeiterService),
+            new EntscheidenUrlaubsAntragService(urlaubszeitraumRepository, new FakeAufgabeRepository(), new FakeAktivitaetsLogRepository()),
             new FakeDateTimeProvider(),
             currentUserAccessor);
 
@@ -472,14 +478,15 @@ public sealed class UrlaubsplanerControllerTests
 
         var controller = new UrlaubsplanerController(
             leseMitarbeiterService,
-            urlaubsanspruchRepository,
             urlaubszeitraumRepository,
             dienstplanPeriodeRepository,
             dienstwunschRepository,
             new SaveMitarbeiterUrlaubsanspruchService(urlaubsanspruchRepository, FakeLogger<SaveMitarbeiterUrlaubsanspruchService>.Instance),
             new SaveMitarbeiterUrlaubszeitraumService(urlaubszeitraumRepository, FakeLogger<SaveMitarbeiterUrlaubszeitraumService>.Instance),
             new DeleteMitarbeiterUrlaubszeitraumService(urlaubszeitraumRepository, FakeLogger<DeleteMitarbeiterUrlaubszeitraumService>.Instance),
-            new ReadMitarbeiterUrlaubsplanerService(urlaubsanspruchRepository, urlaubszeitraumRepository, FakeLogger<ReadMitarbeiterUrlaubsplanerService>.Instance),
+            new ReadWachleiterUrlaubsUebersichtService(urlaubszeitraumRepository, leseMitarbeiterService),
+            new ReadWachleiterJahresuebersichtService(urlaubszeitraumRepository, leseMitarbeiterService),
+            new EntscheidenUrlaubsAntragService(urlaubszeitraumRepository, new FakeAufgabeRepository(), new FakeAktivitaetsLogRepository()),
             new FakeDateTimeProvider(),
             currentUserAccessor);
 
@@ -565,14 +572,15 @@ public sealed class UrlaubsplanerControllerTests
 
         var controller = new UrlaubsplanerController(
             leseMitarbeiterService,
-            urlaubsanspruchRepository,
             urlaubszeitraumRepository,
             dienstplanPeriodeRepository,
             dienstwunschRepository,
             new SaveMitarbeiterUrlaubsanspruchService(urlaubsanspruchRepository, FakeLogger<SaveMitarbeiterUrlaubsanspruchService>.Instance),
             new SaveMitarbeiterUrlaubszeitraumService(urlaubszeitraumRepository, FakeLogger<SaveMitarbeiterUrlaubszeitraumService>.Instance),
             new DeleteMitarbeiterUrlaubszeitraumService(urlaubszeitraumRepository, FakeLogger<DeleteMitarbeiterUrlaubszeitraumService>.Instance),
-            new ReadMitarbeiterUrlaubsplanerService(urlaubsanspruchRepository, urlaubszeitraumRepository, FakeLogger<ReadMitarbeiterUrlaubsplanerService>.Instance),
+            new ReadWachleiterUrlaubsUebersichtService(urlaubszeitraumRepository, leseMitarbeiterService),
+            new ReadWachleiterJahresuebersichtService(urlaubszeitraumRepository, leseMitarbeiterService),
+            new EntscheidenUrlaubsAntragService(urlaubszeitraumRepository, new FakeAufgabeRepository(), new FakeAktivitaetsLogRepository()),
             new FakeDateTimeProvider(),
             currentUserAccessor);
 
@@ -789,6 +797,23 @@ public sealed class UrlaubsplanerControllerTests
             Guid id,
             CancellationToken cancellationToken = default)
             => Task.CompletedTask;
+
+        public Task<IReadOnlyList<MitarbeiterUrlaubszeitraum>> GetAllAusstehendAsync(
+            CancellationToken cancellationToken = default)
+            => Task.FromResult<IReadOnlyList<MitarbeiterUrlaubszeitraum>>(Array.Empty<MitarbeiterUrlaubszeitraum>());
+
+        public Task<IReadOnlyList<MitarbeiterUrlaubszeitraum>> GetAlleAktiveFuerJahrAsync(
+            int jahr,
+            CancellationToken cancellationToken = default)
+            => Task.FromResult<IReadOnlyList<MitarbeiterUrlaubszeitraum>>(Array.Empty<MitarbeiterUrlaubszeitraum>());
+
+        public Task<int> GetAnzahlUnbestaetigenEntscheideAsync(
+            string userId,
+            CancellationToken cancellationToken = default)
+            => Task.FromResult(0);
+
+        public Task SaveChangesAsync(CancellationToken cancellationToken = default)
+            => Task.CompletedTask;
     }
 
     private sealed class FakeDienstplanPeriodeRepository : IDienstplanPeriodeRepository
@@ -816,6 +841,11 @@ public sealed class UrlaubsplanerControllerTests
             => Task.FromResult<DienstplanPeriode?>(null);
 
         public Task<int> CountOffeneAsync(CancellationToken cancellationToken = default)
+            => Task.FromResult(OffenePerioden.Count);
+
+        public Task<int> CountOffeneFuerBenutzerOhneWuenscheAsync(
+            string userId,
+            CancellationToken cancellationToken = default)
             => Task.FromResult(OffenePerioden.Count);
 
         public Task<IReadOnlyList<DienstplanPeriode>> GetOffeneAsync(
@@ -1101,6 +1131,68 @@ public sealed class UrlaubsplanerControllerTests
 
 
         
+    }
+
+    private sealed class FakeAufgabeRepository : IAufgabeRepository
+    {
+        public Task<IReadOnlyList<Aufgabe>> GetOffeneByBereichAsync(
+            OrganisationsbereichCode bereich,
+            CancellationToken cancellationToken = default)
+            => Task.FromResult<IReadOnlyList<Aufgabe>>(Array.Empty<Aufgabe>());
+
+        public Task<Aufgabe?> GetByIdAsync(
+            Guid id,
+            CancellationToken cancellationToken = default)
+            => Task.FromResult<Aufgabe?>(null);
+
+        public Task<bool> ExistiertOffeneSystemaufgabeAsync(
+            string systemSchluessel,
+            CancellationToken cancellationToken = default)
+            => Task.FromResult(false);
+
+        public Task<bool> ExistiertSystemaufgabeAsync(
+            string systemSchluessel,
+            CancellationToken cancellationToken = default)
+            => Task.FromResult(false);
+
+        public Task<Aufgabe?> GetBySystemSchluesselAsync(
+            string systemSchluessel,
+            CancellationToken cancellationToken = default)
+            => Task.FromResult<Aufgabe?>(null);
+
+        public Task AddAsync(
+            Aufgabe aufgabe,
+            CancellationToken cancellationToken = default)
+            => Task.CompletedTask;
+
+        public void Remove(Aufgabe aufgabe) { }
+
+        public Task SaveChangesAsync(CancellationToken cancellationToken = default)
+            => Task.CompletedTask;
+    }
+
+    private sealed class FakeAktivitaetsLogRepository : IAktivitaetsLogRepository
+    {
+        public Task<IReadOnlyList<AktivitaetsEintrag>> GetByBereichAsync(
+            OrganisationsbereichCode bereich,
+            int maxAnzahl = 10,
+            CancellationToken cancellationToken = default)
+            => Task.FromResult<IReadOnlyList<AktivitaetsEintrag>>(Array.Empty<AktivitaetsEintrag>());
+
+        public Task<bool> ExistiertAktivitaetAsync(
+            OrganisationsbereichCode bereich,
+            string text,
+            DateTimeOffset seit,
+            CancellationToken cancellationToken = default)
+            => Task.FromResult(false);
+
+        public Task AddAsync(
+            AktivitaetsEintrag eintrag,
+            CancellationToken cancellationToken = default)
+            => Task.CompletedTask;
+
+        public Task SaveChangesAsync(CancellationToken cancellationToken = default)
+            => Task.CompletedTask;
     }
 
     private sealed class FakeDateTimeProvider : IDateTimeProvider
